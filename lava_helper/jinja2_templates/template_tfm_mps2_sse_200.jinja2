@@ -1,0 +1,73 @@
+{#------------------------------------------------------------------------------
+# Copyright (c) 2018-2019, Arm Limited and Contributors. All rights reserved.
+#
+# SPDX-License-Identifier: BSD-3-Clause
+#
+#-----------------------------------------------------------------------------#}
+device_type: {{ device_type }}
+job_name: {{ job_name }}
+
+timeouts:
+  job:
+    minutes: {{ job_timeout }}
+  action:
+    minutes: {{ action_timeout }}
+  connections:
+    lava-test-monitor:
+      minutes: {{ monitor_timeout }}
+
+priority: medium
+visibility: public
+
+actions:
+{%- for platform, recovery in platforms.items() -%}
+  {%- for compiler in compilers %}
+    {%- for build_type in build_types %}
+      {%- for boot_type in boot_types %}
+        {%- for name, test in tests.items() -%}
+    - deploy:
+        to: mps
+        images:
+          recovery_image:
+            url: {{ recovery_store_url }}/lastSuccessfulBuild/artifact/{{ recovery }}
+            compression: gz
+        namespace: target
+
+    - deploy:
+        to: mps
+        images:
+          test_binary:
+            url: {{artifact_store_url}}/{{ build_no}}/artifact/build-ci-all/{{ platform }}_{{ compiler }}_Config{{ name }}_{{ build_type }}_{{ boot_type }}/{{ test.binaries.firmware }}
+        namespace: target
+
+    - deploy:
+        to: mps
+        images:
+          test_binary:
+            url: {{artifact_store_url}}/{{ build_no}}/artifact/build-ci-all/{{ platform }}_{{ compiler }}_Config{{ name }}_{{ build_type }}_{{ boot_type }}/{{ test.binaries.bootloader }}
+        namespace: target
+
+    - boot:
+        method: minimal
+        timeout:
+          minutes: 10
+        namespace: target
+
+    - test:
+        namespace: target
+        delay: 5
+        monitors:
+        {%- for monitor in test.monitors %}
+        - name: "{{monitor.name}}_{{ platform }}_{{ compiler }}_{{ name }}_{{ build_type }}_{{ boot_type }}"
+          start: "{{monitor.start}}"
+          end: "{{monitor.end}}"
+          pattern: "{{monitor.pattern}}"
+          fixupdict:
+             '{{monitor.fixup.pass}}': pass
+             '{{monitor.fixup.fail}}': fail
+        {%- endfor %}
+        {%- endfor %}
+      {%- endfor %}
+    {%- endfor %}
+  {%- endfor %}
+{%- endfor %}

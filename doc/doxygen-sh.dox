@@ -1,0 +1,95 @@
+#-------------------------------------------------------------------------------
+# Copyright (c) 2017-2019, Arm Limited and Contributors. All rights reserved.
+#
+# SPDX-License-Identifier: BSD-3-Clause
+#
+#-------------------------------------------------------------------------------
+
+/*! @page pgSoxygenSh Using Doxygen for documenting shell scripts
+
+To overcome Doxygen's shortcoming of not understand shell scripts, a basic
+filter is used to convert the shell scripts to C source. The filter will keep
+lines starting with '##' or '#!' and drop all other lines.
+
+Doxygen must find the C declaration of all documented entities and thus
+fake definitions of each documented entity must be added. It is planned to
+develop a smarter filter program which will eliminate the need of fake C code.
+This task is lowest possible priority though.
+
+@section pgDoxygenShs0 Instrumenting shell scrips
+- Use <em>##</em> to add the Doxygen documentation (i.e. stuff you would add to C
+comments in C source files).
+- Use <em>#!</em> for to add fake C code.
+- The documented item and the and the fake C conterpart must match. I.e. the
+  fingerprint of a variable definition must match the fake C declaration.
+
+Notes:
+ - You can use a "type" like <em>string</em> or <em>path</em> to make more
+   specific what a variable is expected to hold or a function is expected to
+   return. These are still is just documentation hoint's as the
+   "shell comand language" does not support types.
+
+@section pgDoxygenShs1 Example file documentation
+To get any documentation genertased for a shell script file, please incude a
+<em>\@file</em> special command in it.
+
+@code{.sh}
+##
+##@file
+##@brief Shell documentation examples
+##
+##Detailed description.
+##
+@endcode
+
+This is how the generated documentation looks like: \ref examples.sh
+
+@section pgDoxygenShs2 Example variable documentation
+@code{.sh}
+##@var string example_variable
+##@brief Example variable
+##
+##This is an example to show ho to document variables.
+##
+#This is needed for doxygen for now.
+#!string example_variable;
+@endcode
+
+This is how the generated documentation looks like: \ref example_variable.
+
+Notes:
+ - The variable definition at line 1 and line 7, i.e. the documented variable
+   and the fake C conterpart must match.
+
+@section pgDoxygenShs3 Example function documentation
+@code{.sh}
+##@fn example_function(path build_base_dir, string build_config_name)
+##@brief En example function.
+##@param[in] build_base_dir
+##@param[in] build_config_name
+##@returns N/A
+##
+##This function was only made to show how-to document a function.
+##
+##Usage:
+##  command | result
+##  --------|-------
+##  example_function "test_build_st32" "somestring" | Do whatever is done.
+##
+#This is needed for doxygen for now.
+#!void example_function(path build_base_dir, string build_config_name){};
+#
+@endcode
+
+This is how the generated documentation looks like: \ref example_function.
+
+Notes:
+ - The function definition at line 1 and line 15, i.e. the documented function
+   and the fake C conterpart must match.
+
+
+@section pgSoxygenShs2 General documentation
+All documentation which is not documenting source code (shell script)
+shall be added to *.dox files.
+
+*/

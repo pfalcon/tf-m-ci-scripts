@@ -1,0 +1,188 @@
+#!/usr/bin/env python3
+
+""" lava_job_generator_configs.py:
+
+    Default configurations for lava job generator """
+
+from __future__ import print_function
+
+__copyright__ = """
+/*
+ * Copyright (c) 2018-2019, Arm Limited. All rights reserved.
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ *
+ */
+ """
+__author__ = "Minos Galanakis"
+__email__ = "minos.galanakis@linaro.org"
+__project__ = "Trusted Firmware-M Open CI"
+__status__ = "stable"
+__version__ = "1.0"
+
+
+def lava_gen_get_config_subset(config,
+                               default=True,
+                               core=True,
+                               regression=True):
+    """ Allow dynamic generation of configuration combinations by subtracking
+    undesired ones """
+
+    from copy import deepcopy
+    cfg = deepcopy(config)
+    tests = deepcopy(config["tests"])
+
+    # Remove all configs not requests by the caller
+    if not default:
+        tests.pop("Default")
+    if not core:
+        tests.pop("CoreTest")
+    if not regression:
+        tests.pop("Regression")
+
+    cfg["tests"] = tests
+    return cfg
+
+
+tfm_mps2_sse_200 = {
+    "templ": "template_tfm_mps2_sse_200.jinja2",
+    "job_name": "mps2plus-arm-tfm",
+    "device_type": "mps",
+    "job_timeout": 60,
+    "action_timeout": 60,
+    "monitor_timeout": 60,
+    "recovery_store_url": "https://ci.trustedfirmware.org/"
+                          "job/tf-m-build-test-review",
+    "artifact_store_url": "https://ci.trustedfirmware.org/"
+                          "job/tf-m-build-test-review",
+    "platforms": {"AN521": "mps2_sse200_an512.tar.gz"},
+    "compilers": ["GNUARM"],
+    "build_types": ["Debug"],
+    "boot_types": ["BL2"],
+    "tests": {
+        'Default': {
+            "binaries": {
+                "firmware":
+                "install/outputs/AN521/tfm_sign.bin",
+                "bootloader":
+                "install/outputs/AN521/mcuboot.bin"
+            },
+            "monitors": [
+                {
+                    'name': 'Secure_Test_Suites_Summary',
+                    'start': 'Jumping to the first image slot',
+                    'end': '\\x1b\\\[0m',
+                    'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
+                               r'(?P<test_case_id>Secure image '
+                               r'initializing)(?P<result>!)',
+                    'fixup': {"pass": "!", "fail": ""},
+                    'required': ["secure_image_initializing"]
+                }  # Monitors
+            ]
+        },  # Default
+        'CoreTest': {
+            "recovery": "mps2_sse200_an512.tar.gz",
+            "binaries": {
+                "firmware": "install/outputs/AN521/tfm_sign.bin",
+                "bootloader": "install/outputs/AN521/mcuboot.bin"
+            },
+            "monitors": [
+                {
+                    'name': 'Non_Secure_Test_Suites_Summary',
+                    'start': 'TFM level is: 3',
+                    'end': 'End of Non-secure test suites',
+                    'pattern': r"[\x1b]\\[37mTest suite '"
+                               r"(?P<test_case_id>.*)' has [\x1b]\\[32m"
+                               r" (?P<result>PASSED|FAILED)",
+                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
+                    'required': [
+                        "core_non_secure_positive_tests_tfm_core_test_1xxx_"]
+                }  # Monitors
+            ]
+        },  # CoreTest
+        'Regression': {
+            "recovery": "mps2_sse200_an512.tar.gz",
+            "binaries": {
+                "firmware": "install/outputs/AN521/tfm_sign.bin",
+                "bootloader": "install/outputs/AN521/mcuboot.bin"
+            },
+            "monitors": [
+                {
+                    'name': 'Secure_Test_Suites_Summary',
+                    'start': 'Secure test suites summary',
+                    'end': 'End of Secure test suites',
+                    'pattern': r"[\x1b]\\[37mTest suite '(?P<"
+                               r"test_case_id>.*)' has [\x1b]\\[32m "
+                               r"(?P<result>PASSED|FAILED)",
+                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
+                    'required': [
+                        "invert_secure_interface_tests_tfm_invert_test_1xxx_",
+                        "sst_reliability_tests_tfm_sst_test_3xxx_",
+                        "sst_secure_interface_tests_tfm_sst_test_2xxx_"
+                    ]
+                },
+                {
+                    'name': 'Non_Secure_Test_Suites_Summary',
+                    'start': 'Non-secure test suites summary',
+                    'end': r'End of Non-secure test suites',
+                    'pattern': r"[\x1b]\\[37mTest suite '(?P"
+                               r"<test_case_id>.*)' has [\x1b]\\[32m "
+                               r"(?P<result>PASSED|FAILED)",
+                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
+                    'required': [
+                        "core_non_secure_positive_tests_tfm_core_test_1xxx_",
+                        ("invert_non_secure_interface_tests_"
+                         "tfm_invert_test_1xxx_"),
+                        "sst_policy_tests_tfm_sst_test_4xxx_",
+                        "sst_non_secure_interface_tests_tfm_sst_test_1xxx_",
+                        "sst_referenced_access_tests_tfm_sst_test_5xxx_"]
+                }
+            ]  # Monitors
+        },  # Regression
+    }  # Tests
+}
+
+# All configurations should be mapped here
+lava_gen_config_map = {"tfm_mps2_sse_200": tfm_mps2_sse_200}
+lavagen_config_sort_order = [
+    "templ",
+    "job_name",
+    "device_type",
+    "job_timeout",
+    "action_timeout",
+    "monitor_timeout",
+    "recovery_store_url",
+    "artifact_store_url",
+    "platforms",
+    "compilers",
+    "build_types",
+    "boot_types",
+    "tests"
+]
+
+lava_gen_monitor_sort_order = [
+    'name',
+    'start',
+    'end',
+    'pattern',
+    'fixup',
+]
+
+if __name__ == "__main__":
+    import os
+    import sys
+    from lava_helper import sort_lavagen_config
+    try:
+        from tfm_ci_pylib.utils import export_config_map
+    except ImportError:
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+        sys.path.append(os.path.join(dir_path, "../"))
+        from tfm_ci_pylib.utils import export_config_map
+
+    if len(sys.argv) == 2:
+        if sys.argv[1] == "--export":
+            export_config_map(lava_gen_config_map)
+    if len(sys.argv) == 3:
+        if sys.argv[1] == "--export":
+            export_config_map(sort_lavagen_config(lava_gen_config_map),
+                              sys.argv[2])
