@@ -61,6 +61,7 @@ tfm_mps2_sse_200 = {
     "boot_types": ["BL2"],
     "tests": {
         'Default': {
+            "recovery": "mps2_sse200_an512.tar.gz",
             "binaries": {
                 "firmware":
                 "install/outputs/AN521/tfm_sign.bin",
@@ -116,9 +117,16 @@ tfm_mps2_sse_200 = {
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
-                        "invert_secure_interface_tests_tfm_invert_test_1xxx_",
+                        ("psa_protected_storage_"
+                           "s_interface_tests_tfm_sst_test_2xxx_"),
                         "sst_reliability_tests_tfm_sst_test_3xxx_",
-                        "sst_secure_interface_tests_tfm_sst_test_2xxx_"
+                        "sst_rollback_protection_tests_tfm_sst_test_4xxx_",
+                        ("audit_"
+                         "logging_secure_interface_test_tfm_audit_test_1xxx_"),
+                        "crypto_secure_interface_tests_tfm_crypto_test_5xxx_",
+                        ("initial_attestation_service_"
+                         "secure_interface_tests_tfm_attest_test_1xxx_"),
+                        "invert_secure_interface_tests_tfm_invert_test_1xxx_"
                     ]
                 },
                 {
@@ -130,12 +138,18 @@ tfm_mps2_sse_200 = {
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
-                        "core_non_secure_positive_tests_tfm_core_test_1xxx_",
-                        ("invert_non_secure_interface_tests_"
-                         "tfm_invert_test_1xxx_"),
-                        "sst_policy_tests_tfm_sst_test_4xxx_",
-                        "sst_non_secure_interface_tests_tfm_sst_test_1xxx_",
-                        "sst_referenced_access_tests_tfm_sst_test_5xxx_"]
+                        ("psa_protected_storage"
+                         "_ns_interface_tests_tfm_sst_test_1xxx_"),
+                        ("auditlog_"
+                         "non_secure_interface_test_tfm_audit_test_1xxx_"),
+                        ("crypto_"
+                         "non_secure_interface_test_tfm_crypto_test_6xxx_"),
+                        ("initial_attestation_service_"
+                         "secure_interface_tests_tfm_attest_test_2xxx_"),
+                        ("invert_"
+                         "non_secure_interface_tests_tfm_invert_test_1xxx_"),
+                        "core_non_secure_positive_tests_tfm_core_test_1xxx_"
+                    ]
                 }
             ]  # Monitors
         },  # Regression
