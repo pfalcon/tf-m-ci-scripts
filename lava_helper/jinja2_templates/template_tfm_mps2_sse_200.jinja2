@@ -12,6 +12,9 @@ timeouts:
     minutes: {{ job_timeout }}
   action:
     minutes: {{ action_timeout }}
+  actions:
+    power-off:
+      seconds: 30
   connections:
     lava-test-monitor:
       minutes: {{ monitor_timeout }}
