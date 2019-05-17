@@ -52,7 +52,7 @@ tfm_mps2_sse_200 = {
     "action_timeout": 60,
     "monitor_timeout": 60,
     "recovery_store_url": "https://ci.trustedfirmware.org/"
-                          "job/tf-m-build-test-review",
+                          "job/tf-m-fpga-image-store",
     "artifact_store_url": "https://ci.trustedfirmware.org/"
                           "job/tf-m-build-test-review",
     "platforms": {"AN521": "mps2_sse200_an512.tar.gz"},

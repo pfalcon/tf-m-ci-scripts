@@ -20,11 +20,7 @@ priority: medium
 visibility: public
 
 actions:
-{%- for platform, recovery in platforms.items() -%}
-  {%- for compiler in compilers %}
-    {%- for build_type in build_types %}
-      {%- for boot_type in boot_types %}
-        {%- for name, test in tests.items() -%}
+{%- for platform, recovery in platforms.items() %}
     - deploy:
         to: mps
         images:
@@ -32,7 +28,10 @@ actions:
             url: {{ recovery_store_url }}/lastSuccessfulBuild/artifact/{{ recovery }}
             compression: gz
         namespace: target
-
+  {% for compiler in compilers %}
+    {%- for build_type in build_types %}
+      {%- for boot_type in boot_types %}
+        {%- for name, test in tests.items() -%}
     - deploy:
         to: mps
         images:
@@ -66,7 +65,7 @@ actions:
              '{{monitor.fixup.pass}}': pass
              '{{monitor.fixup.fail}}': fail
         {%- endfor %}
-        {%- endfor %}
+        {% endfor %}
       {%- endfor %}
     {%- endfor %}
   {%- endfor %}
