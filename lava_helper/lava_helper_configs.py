@@ -93,7 +93,7 @@ tfm_mps2_sse_200 = {
                     'start': 'TFM level is: 3',
                     'end': 'End of Non-secure test suites',
                     'pattern': r"[\x1b]\\[37mTest suite '"
-                               r"(?P<test_case_id>.*)' has [\x1b]\\[32m"
+                               r"(?P<test_case_id>[^\n]+)' has [\x1b]\\[32m"
                                r" (?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -113,7 +113,7 @@ tfm_mps2_sse_200 = {
                     'start': 'Secure test suites summary',
                     'end': 'End of Secure test suites',
                     'pattern': r"[\x1b]\\[37mTest suite '(?P<"
-                               r"test_case_id>.*)' has [\x1b]\\[32m "
+                               r"test_case_id>[^\n]+)' has [\x1b]\\[32m "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -134,7 +134,7 @@ tfm_mps2_sse_200 = {
                     'start': 'Non-secure test suites summary',
                     'end': r'End of Non-secure test suites',
                     'pattern': r"[\x1b]\\[37mTest suite '(?P"
-                               r"<test_case_id>.*)' has [\x1b]\\[32m "
+                               r"<test_case_id>[^\n]+)' has [\x1b]\\[32m "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
