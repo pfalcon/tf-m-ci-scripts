@@ -28,10 +28,10 @@ actions:
             url: {{ recovery_store_url }}/lastSuccessfulBuild/artifact/{{ recovery }}
             compression: gz
         namespace: target
-  {% for compiler in compilers %}
+  {%- for compiler in compilers %}
     {%- for build_type in build_types %}
       {%- for boot_type in boot_types %}
-        {%- for name, test in tests.items() -%}
+        {% for name, test in tests.items() %}
     - deploy:
         to: mps
         images:
