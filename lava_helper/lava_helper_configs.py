@@ -145,7 +145,7 @@ tfm_mps2_sse_200 = {
                         ("crypto_"
                          "non_secure_interface_test_tfm_crypto_test_6xxx_"),
                         ("initial_attestation_service_"
-                         "secure_interface_tests_tfm_attest_test_2xxx_"),
+                         "non_secure_interface_tests_tfm_attest_test_2xxx_"),
                         ("invert_"
                          "non_secure_interface_tests_tfm_invert_test_1xxx_"),
                         "core_non_secure_positive_tests_tfm_core_test_1xxx_"
