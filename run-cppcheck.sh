@@ -66,7 +66,7 @@ pushd "$bdir" >/dev/null
 echo
 echo '******* Install external projects to their final place ***************'
 echo
-make -j mbedtls_sst_lib_install mbedtls_mcuboot_lib_install
+make -j mbedcrypto_lib_install mbedtls_mcuboot_lib_install
 
 #Now run cppcheck.
 echo
