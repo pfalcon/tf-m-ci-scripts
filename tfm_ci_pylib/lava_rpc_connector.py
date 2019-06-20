@@ -19,7 +19,7 @@ __author__ = "Minos Galanakis"
 __email__ = "minos.galanakis@linaro.org"
 __project__ = "Trusted Firmware-M Open CI"
 __status__ = "stable"
-__version__ = "1.0"
+__version__ = "1.1"
 
 import xmlrpc.client
 import time

@@ -46,6 +46,9 @@ set -e
 #The location from where the script executes
 mypath=$(dirname $0)
 
+#The cmake_exported project file in json format
+cmake_commmands=compile_commands.json
+
 . "$mypath/util_cmake.sh"
 
 
@@ -53,31 +56,94 @@ mypath=$(dirname $0)
 library_file="$(fix_win_path $(get_full_path $mypath))/cppcheck/arm-cortex-m.cfg"
 suppress_file="$(fix_win_path $(get_full_path $mypath))/cppcheck/tfm-suppress-list.txt"
 
+#Enable all additional checks by default
+additional_checklist="all"
+
 #Run cmake to get the compile_commands.json file
 echo
 echo '******* Generating compile_commandas.json ***************'
 echo
 generate_project $(fix_win_path $(get_full_path ./)) "./" "cppcheck" "-DCMAKE_EXPORT_COMPILE_COMMANDS=1  -DTARGET_PLATFORM=AN521 -DCOMPILER=GNUARM"
+
 #Enter the build directory
 bdir=$(make_build_dir_name "./" "cppcheck")
 pushd "$bdir" >/dev/null
+
+#The following snippet allows cppcheck to be run differentially againist a
+#commit hash passed as first argument $1. It does not
+#affect the legacy functionality of the script, checking the whole codebase,
+#when called without an argument
+if [[ ! -z "$1" ]]
+  then
+    echo "Enabled git-diff mode againist hash:  $1"
+
+    # Do not execute unused functioncheck when running in diff-mode
+    additional_checklist="style,performance,portability,information,missingInclude"
+    # Grep will set exit status to 1 if a commit does not contain c/cpp.. files
+    set +e
+    filtered_cmd_f=compile_commands_filtered.json
+    # Get a list of files modified by the commits between the reference and HEAD
+    flist=$(git diff-tree --no-commit-id --name-only -r $1 | grep -E '\S*\.(c|cpp|cc|cxx|inc|h)$')
+    flist=$(echo $flist | xargs)
+    echo -e "[" > $filtered_cmd_f
+    IFS=$' ' read -ra git_flist <<< "${flist}"
+
+    for fl in "${git_flist[@]}"; do
+        echo "Looking for reference of file: $fl"
+
+        # dry run the command to see if there any ouput
+        JSON_CMD=$(grep -B 3 "\"file\": \".*$fl\"" $cmake_commmands)
+
+        if [ -n "${JSON_CMD}" ]; then
+            command_matched=1
+            grep -B 3 "\"file\": \".*$fl\"" $cmake_commmands >> $filtered_cmd_f
+            echo -e "}," >> $filtered_cmd_f
+        fi
+    done
+    set -e
+
+    # Only continue if files in the patch are included in the build commands
+    if [ -n "${command_matched}" ]; then
+        sed -i '$ d' $filtered_cmd_f
+        echo -e "}\n]" >> $filtered_cmd_f
+
+        cat $filtered_cmd_f > $cmake_commmands
+    else
+        # Always generate an empty file for other stages of ci expecting one
+        echo "CppCheck: Ignoring files not contained in the build config"
+        echo "Files Ignored: $flist"
+				cat <<-EOF > chk-config.xml
+				<?xml version="1.0" encoding="UTF-8"?>
+				<results version="2">
+				    <cppcheck version="$(cppcheck --version)"/>
+				    <errors>
+				    </errors>
+				</results>
+				EOF
+        cp chk-config.xml chk-src.xml
+        exit 0
+    fi
+fi
+
+
 #Build the external projects to get all headers installed to plases from where
 #tf-m code uses them
 echo
 echo '******* Install external projects to their final place ***************'
 echo
-make -j mbedcrypto_lib_install mbedtls_mcuboot_lib_install
+make -j mbedtls_mcuboot_lib_install
 
 #Now run cppcheck.
 echo
 echo '******* checking cppcheck configuration ***************'
 echo
-cppcheck --xml -j 4 --check-config --enable=all --library="$library_file" --project=compile_commands.json --suppressions-list="$suppress_file" --inline-suppr 2>chk-config.xml
+
+cppcheck --xml --check-config --enable="$additional_checklist" --library="$library_file" --project=$cmake_commmands --suppressions-list="$suppress_file" --inline-suppr 2>chk-config.xml
 
 echo
 echo '******* analyzing files with cppcheck ***************'
 echo
-cppcheck --xml -j 4 --enable=all --library="$library_file" --project=compile_commands.json --suppressions-list="$suppress_file" --inline-suppr 2>chk-src.xml
+cppcheck --xml --enable="$additional_checklist" --library="$library_file" --project=$cmake_commmands --suppressions-list="$suppress_file" --inline-suppr 2>chk-src.xml
 popd
 
 echo

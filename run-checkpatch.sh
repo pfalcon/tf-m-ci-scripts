@@ -24,7 +24,7 @@
 ##
 #This is needed for Doxygen for now.
 #!string SKIP_PATHS;
-SKIP_PATHS='./build-\*:./test/\*:./platform/\*:*/tz_\*'
+SKIP_PATHS='./build-\*:./test/\*:./platform/\*:*/tz_\*:./lib/ext/qcbor/\*:./platform/ext/\*:./bl2/ext/\*'
 
 ##@var TFM_DIRECTORY_NAME
 ##@brief Default path to tf-m source code.
@@ -201,13 +201,17 @@ check_diff() {
 	#list of files. This is needed to avoid GIT_CMD to break the argument
 	#list length.
 	CARE_LIST=$(eval $FIND_CMD | grep "$(git diff $BASE_COMMIT --name-only)" -)
-	GIT_CMD="git diff $BASE_COMMIT -- $CARE_LIST"
 
-	echo "Checking commits: $(git log "$BASE_COMMIT"..HEAD --format=%h | tr $"\n" " ")"
+	if [ ! -z "$CARE_LIST" ]; then
+		# Only run checkpatch if there are files to check
+		GIT_CMD="git diff $BASE_COMMIT -- $CARE_LIST"
+		echo "$GIT_CMD"
+		echo "Checking commits: $(git log "$BASE_COMMIT"..HEAD --format=%h | tr $"\n" " ")"
 
-	#Modify checkpatch parameters to give more details when working on
-	#diff:s
-	CHECKPATCH_CMD="$CHECKPATCH_CMD --showfile -"
+		#Modify checkpatch parameters to give more details when working on
+		#diff:s
+		CHECKPATCH_CMD="$CHECKPATCH_CMD --showfile -"
+	fi
 
 	if [ $VERBOSE -eq 1 ]; then
 		$GIT_CMD | $CHECKPATCH_CMD | tee -a "$OUTPUT_FILE_PATH"

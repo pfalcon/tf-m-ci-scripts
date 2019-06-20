@@ -19,22 +19,42 @@ __author__ = "Minos Galanakis"
 __email__ = "minos.galanakis@linaro.org"
 __project__ = "Trusted Firmware-M Open CI"
 __status__ = "stable"
-__version__ = "1.0"
+__version__ = "1.1"
 
 import os
+import re
 import sys
 import yaml
+import requests
 import argparse
 import json
 import itertools
+import xmltodict
+from shutil import move
 from collections import OrderedDict, namedtuple
-from subprocess import Popen, PIPE, STDOUT
+from subprocess import Popen, PIPE, STDOUT, check_output
 
 
 def detect_python3():
     """ Return true if script is run with Python3 interpreter """
 
     return sys.version_info > (3, 0)
+
+
+def find_missing_files(file_list):
+    """ Return the files that dot not exist in the file_list """
+
+    F = set(file_list)
+    T = set(list(filter(os.path.isfile, file_list)))
+    return list(F.difference(T))
+
+
+def resolve_rel_path(target_path, origin_path=os.getcwd()):
+    """ Resolve relative path from origin to target. By default origin
+    path is current working directory. """
+
+    common = os.path.commonprefix([origin_path, target_path])
+    return os.path.relpath(target_path, common)
 
 
 def print_test_dict(data_dict,
@@ -248,6 +268,36 @@ def run_proccess(cmd):
     return pcss.returncode
 
 
+def get_pid_status(pid):
+    """ Read the procfc in Linux machines to determine a proccess's statusself.
+    Returns status if proccess exists or None if it does not """
+
+    try:
+        with open("/proc/%s/status" % pid, "r") as F:
+            full_state = F.read()
+            return re.findall(r'(?:State:\t[A-Z]{1} \()(\w+)',
+                              full_state, re.MULTILINE)[0]
+    except Exception as e:
+        print("Exception", e)
+
+
+def check_pid_status(pid, status_list):
+    """ Check a proccess's status againist a provided lists and return True
+    if the proccess exists and has a status included in the list. (Linux) """
+
+    pid_status = get_pid_status(pid)
+
+    if not pid_status:
+        print("PID  %s does not exist." % pid)
+        return False
+
+    ret = pid_status in status_list
+    # TODO Remove debug print
+    if not ret:
+        print("PID status %s not in %s" % (pid_status, ",".join(status_list)))
+    return ret
+
+
 def list_chunks(l, n):
     """ Yield successive n-sized chunks from l. """
 
@@ -276,6 +326,17 @@ def gen_cfg_combinations(name, categories, *args):
     return [build_config(*x) for x in itertools.product(*args)]
 
 
+def show_progress(current_count, total_count):
+    """ Display the percent progress percentage of input metric a over b """
+
+    progress = int((current_count / total_count) * 100)
+    completed_count = int(progress * 0.7)
+    remaining_count = 70 - completed_count
+    print("[ %s%s | %d%% ]" % ("#" * completed_count,
+                               "~" * remaining_count,
+                               progress))
+
+
 def get_cmd_args(descr="", parser=None):
     """ Parse command line arguments """
     # Parse command line arguments to override config
@@ -283,3 +344,230 @@ def get_cmd_args(descr="", parser=None):
     if not parser:
         parser = argparse.ArgumentParser(description=descr)
     return parser.parse_args()
+
+
+def arm_non_eabi_size(filename):
+    """ Run arm-non-eabi-size command and parse the output using regex. Will
+    return a tuple with the formated data as well as the raw output of the
+    command """
+
+    size_info_rex = re.compile(r'^\s+(?P<text>[0-9]+)\s+(?P<data>[0-9]+)\s+'
+                               r'(?P<bss>[0-9]+)\s+(?P<dec>[0-9]+)\s+'
+                               r'(?P<hex>[0-9a-f]+)\s+(?P<file>\S+)',
+                               re.MULTILINE)
+
+    eabi_size = check_output(["arm-none-eabi-size",
+                              filename],
+                             timeout=2).decode('UTF-8').rstrip()
+
+    size_data = re.search(size_info_rex, eabi_size)
+
+    return [{"text": size_data.group("text"),
+             "data": size_data.group("data"),
+             "bss": size_data.group("bss"),
+             "dec": size_data.group("dec"),
+             "hex": size_data.group("hex")}, eabi_size]
+
+
+def list_subdirs(directory):
+
+    directory = os.path.abspath(directory)
+    abs_sub_dirs = [os.path.join(directory, n) for n in os.listdir(directory)]
+    return [n for n in abs_sub_dirs if os.path.isdir(os.path.realpath(n))]
+
+
+def get_local_git_info(directory, json_out_f=None):
+    """ Extract git related information from a target directory. It allows
+    optional export to json file """
+
+    directory = os.path.abspath(directory)
+    cur_dir = os.path.abspath(os.getcwd())
+    os.chdir(directory)
+
+    # System commands to collect information
+    cmd1 = "git log HEAD -n 1 --pretty=format:'%H%x09%an%x09%ae%x09%ai%x09%s'"
+    cmd2 = "git log HEAD -n 1  --pretty=format:'%b'"
+    cmd3 = "git remote -v | head -n 1 | awk '{ print $2}';"
+    cmd4 = ("git ls-remote --heads origin | "
+            "grep $(git rev-parse HEAD) | cut -d / -f 3")
+
+    git_info_rex = re.compile(r'(?P<body>^[\s\S]*?)((?:Change-Id:\s)'
+                              r'(?P<change_id>.*)\n)((?:Signed-off-by:\s)'
+                              r'(?P<sign_off>.*)\n?)', re.MULTILINE)
+
+    proc_res = []
+    for cmd in [cmd1, cmd2, cmd3, cmd4]:
+        r, e = Popen(cmd, shell=True, stdout=PIPE, stderr=PIPE).communicate()
+        if e:
+            print("Error", e)
+            return
+        else:
+            try:
+                txt_body = r.decode('ascii')
+            except UnicodeDecodeError as E:
+                txt_body = r.decode('utf-8')
+            proc_res.append(txt_body.rstrip())
+
+    # Unpack and tag the data
+    hash, name, email, date, subject = proc_res[0].split('\t')
+
+    _raw_body = proc_res[1]
+    _bd_items = re.findall(r'(Signed-off-by|Change-Id)', _raw_body,
+                           re.MULTILINE)
+
+    signed_off = None
+    body = None
+    change_id = None
+    # If both sign-off and gerrit-id exist
+    if len(_bd_items) == 2:
+        m = git_info_rex.search(_raw_body)
+        print(git_info_rex.findall(_raw_body))
+        if m is not None:
+            match_dict = m.groupdict()
+            if "body" in match_dict.keys():
+                body = match_dict["body"]
+            if "sign_off" in match_dict.keys():
+                signed_off = match_dict["sign_off"]
+            if "change_id" in match_dict.keys():
+                change_id = match_dict["change_id"]
+        else:
+            print("Error: Could not regex parse message", repr(_raw_body))
+            body = _raw_body
+    # If only one of sign-off / gerrit-id exist
+    elif len(_bd_items) == 1:
+        _entry_key = _bd_items[0]
+        body, _extra = _raw_body.split(_entry_key)
+        if _entry_key == "Change-Id":
+            change_id = _extra
+        else:
+            signed_off = _extra
+    # If the message contains commit message body only
+    else:
+        body = _raw_body
+
+    # Attempt to read the branch from Gerrit Trigger
+    try:
+        branch = os.environ["GERRIT_BRANCH"]
+    # IF not compare the commit hash with the remote branches to determine the
+    # branch of origin. Warning this assumes that only one branch has its head
+    # on this commit.
+    except KeyError as E:
+        branch = proc_res[3]
+
+    remote = proc_res[2]
+    # Internal Gerrit specific code
+    # Intended for converting the git remote to a more usuable url
+    known_remotes = ["https://gerrit.oss.arm.com",
+                     "http://gerrit.mirror.oss.arm.com"]
+
+    for kr in known_remotes:
+        if kr in remote:
+            print("Applying Remote specific patch to remote", kr)
+
+            remote = remote.split(kr)[-1][1:]
+            print("REMOTE", remote)
+            remote = "%s/gitweb?p=%s.git;a=commit;h=%s" % (kr, remote, hash)
+            break
+
+    out = {"author": name.strip(),
+           "email": email.strip(),
+           "dir": directory.strip(),
+           "remote": remote.strip(),
+           "date": date.strip(),
+           "commit": hash.strip(),
+           "subject": subject.strip(),
+           "message": body.strip(),
+           "change_id": change_id.strip() if change_id is not None else "N.A",
+           "sign_off": signed_off.strip() if signed_off is not None else "N.A",
+           "branch": branch.strip()}
+
+    # Restore the directory path
+    os.chdir(cur_dir)
+    if json_out_f:
+        save_json(json_out_f, out)
+    return out
+
+
+def get_remote_git_info(url):
+    """ Collect git information from a Linux Kernel web repository """
+
+    auth_rex = re.compile(r'(?:<th>author</th>.*)(?:span>)(.*)'
+                          r'(?:;.*\'right\'>)([0-9\+\-:\s]+)')
+    # commiter_rex = re.compile(r'(?:<th>committer</th>.*)(?:</div>)(.*)'
+    #                          r'(?:;.*\'right\'>)([0-9\+\-:\s]+)')
+    subject_rex = re.compile(r'(?:\'commit-subject\'>)(.*)(?:</div>)')
+    body_rex = re.compile(r'(?:\'commit-msg\'>)([\s\S^<]*)(?:</div>'
+                          r'<div class=\'diffstat-header\'>)', re.MULTILINE)
+
+    content = requests.get(url).text
+    author, date = re.search(auth_rex, content).groups()
+    subject = re.search(subject_rex, content).groups()[0]
+    body = re.search(body_rex, content).groups()[0]
+    remote, hash = url.split("=")
+
+    outdict = {"author": author,
+               "remote": remote[:-3],
+               "date": date,
+               "commit": hash,
+               "subject": subject,
+               "message": body}
+    # Clean up html noise
+    return {k: re.sub(r'&[a-z]t;?', "", v) for k, v in outdict.items()}
+
+
+def convert_git_ref_path(dir_path):
+    """ If a git long hash is detected in a path move it to a short hash """
+
+    # Detect a git hash on a directory naming format of name_{hash},
+    # {hash}, name-{hash}
+    git_hash_rex = re.compile(r'(?:[_|-])*([a-f0-9]{40})')
+
+    # if checkout directory name contains a git reference convert to short
+    git_hash = git_hash_rex.findall(dir_path)
+    if len(git_hash):
+        d = dir_path.replace(git_hash[0], git_hash[0][:7])
+        print("Renaming %s -> %s", dir_path, d)
+        move(dir_path, d)
+        dir_path = d
+    return dir_path
+
+
+def xml_read(file):
+    """" Read the contects of an xml file and convert it to python object """
+
+    data = None
+    try:
+        with open(file, "r") as F:
+            data = xmltodict.parse(F.read())
+    except Exception as E:
+        print("Error", E)
+    return data
+
+
+def list_filtered_tree(directory, rex_filter=None):
+    ret = []
+    for path, subdirs, files in os.walk(directory):
+        for fname in files:
+            ret.append(os.path.join(path, fname))
+    if rex_filter:
+        rex = re.compile(rex_filter)
+        return [n for n in ret if rex.search(n)]
+    else:
+        return ret
+
+
+def gerrit_patch_from_changeid(remote, change_id):
+    """ Use Gerrit's REST api for a best effort to retrieve the url of the
+    patch-set under review """
+
+    try:
+        r = requests.get('%s/changes/%s' % (remote, change_id),
+                         headers={'Accept': 'application/json'})
+        resp_data = r.text[r.text.find("{"):].rstrip()
+        change_no = json.loads(resp_data)["_number"]
+        return "%s/#/c/%s" % (remote, change_no)
+    except Exception as E:
+        print("Failed to retrieve change (%s) from URL %s" % (change_id,
+                                                              remote))
+        print("Exception Thrown:", E)
+        raise Exception()

@@ -18,14 +18,15 @@ __author__ = "Minos Galanakis"
 __email__ = "minos.galanakis@linaro.org"
 __project__ = "Trusted Firmware-M Open CI"
 __status__ = "stable"
-__version__ = "1.0"
+__version__ = "1.1"
 
 import os
 import sys
-from pprint import pprint
+from time import time
 from copy import deepcopy
 from .utils import gen_cfg_combinations, list_chunks, load_json,\
-    save_json, print_test
+    save_json, print_test, show_progress, \
+    resolve_rel_path
 from .structured_task import structuredTask
 from .tfm_builder import TFM_Builder
 
@@ -44,31 +45,28 @@ class TFM_Build_Manager(structuredTask):
                             #               "CMAKE_BUILD_TYPE": "Debug"}
                  report=None,        # File to produce report
                  parallel_builds=3,  # Number of builds to run in parallel
-                 build_threads=4,    # Number of threads used per build
-                 markdown=True,      # Create markdown report
-                 html=True,          # Create html report
-                 ret_code=True,      # Set ret_code of script if build failed
-                 install=False):     # Install libraries after build
-
+                 build_threads=3,    # Number of threads used per build
+                 install=False,      # Install libraries after build
+                 img_sizes=False,    # Use arm-none-eabi-size for size info
+                 relative_paths=False):     # Store relative paths in report
         self._tbm_build_threads = build_threads
         self._tbm_conc_builds = parallel_builds
         self._tbm_install = install
-        self._tbm_markdown = markdown
-        self._tbm_html = html
-        self._tbm_ret_code = ret_code
+        self._tbm_img_sizes = img_sizes
+        self._tbm_relative_paths = relative_paths
 
         # Required by other methods, always set working directory first
         self._tbm_work_dir = os.path.abspath(os.path.expanduser(work_dir))
 
         self._tbm_tfm_dir = os.path.abspath(os.path.expanduser(tfm_dir))
 
-        # Entries will be filled after sanity test on cfg_dict dring pre_exec
-        self._tbm_build_dir = None
+        # Internal flag to tag simple (non combination formatted configs)
+        self.simple_config = False
         self._tbm_report = report
 
-        # TODO move them to pre_eval
         self._tbm_cfg = self.load_config(cfg_dict, self._tbm_work_dir)
-        self._tbm_build_cfg_list = self.parse_config(self._tbm_cfg)
+        self._tbm_build_cfg, \
+            self.tbm_common_cfg = self.parse_config(self._tbm_cfg)
 
         super(TFM_Build_Manager, self).__init__(name="TFM_Build_Manager")
 
@@ -79,27 +77,125 @@ class TFM_Build_Manager(structuredTask):
     def pre_exec(self, eval_ret):
         """ """
 
+    def override_tbm_cfg_params(self, config, override_keys, **params):
+        """ Using a dictionay as input, for each key defined in
+        override_keys it will replace the config[key] entries with
+        the key=value parameters provided """
+
+        for key in override_keys:
+            if isinstance(config[key], list):
+                config[key] = [n % params for n in config[key]]
+            elif isinstance(config[key], str):
+                config[key] = config[key] % params
+            else:
+                raise Exception("Config does not contain key %s "
+                                "of type %s" % (key, config[key]))
+        return config
+
     def task_exec(self):
         """ Create a build pool and execute them in parallel """
 
         build_pool = []
-        for i in self._tbm_build_cfg_list:
 
-            name = "%s_%s_%s_%s_%s" % (i.TARGET_PLATFORM,
-                                       i.COMPILER,
-                                       i.PROJ_CONFIG,
-                                       i.CMAKE_BUILD_TYPE,
-                                       "BL2" if i.WITH_MCUBOOT else "NOBL2")
+        # When a config is flagged as a single build config.
+        # Name is evaluated by config type
+        if self.simple_config:
+
+            build_cfg = deepcopy(self.tbm_common_cfg)
+
+            # Extract the common for all elements of config
+            for key in ["build_cmds", "required_artefacts"]:
+                try:
+                    build_cfg[key] = build_cfg[key]["all"]
+                except KeyError:
+                    build_cfg[key] = []
+            name = build_cfg["config_type"]
+
+            # Override _tbm_xxx paths in commands
+            # plafrom in not guaranteed without seeds so _tbm_target_platform
+            # is ignored
+            over_dict = {"_tbm_build_dir_": os.path.join(self._tbm_work_dir,
+                                                         name),
+                         "_tbm_code_dir_": build_cfg["codebase_root_dir"]}
+
+            build_cfg = self.override_tbm_cfg_params(build_cfg,
+                                                     ["build_cmds",
+                                                      "required_artefacts",
+                                                      "artifact_capture_rex"],
+                                                     **over_dict)
+
+            # Overrides path in expected artefacts
             print("Loading config %s" % name)
-            build_pool.append(TFM_Builder(name,
-                              self._tbm_tfm_dir,
-                              self._tbm_work_dir,
-                              dict(i._asdict()),
-                              self._tbm_install,
-                              self._tbm_build_threads))
+
+            build_pool.append(TFM_Builder(
+                              name=name,
+                              work_dir=self._tbm_work_dir,
+                              cfg_dict=build_cfg,
+                              build_threads=self._tbm_build_threads,
+                              img_sizes=self._tbm_img_sizes,
+                              relative_paths=self._tbm_relative_paths))
+        # When a seed pool is provided iterate through the entries
+        # and update platform spefific parameters
+        elif len(self._tbm_build_cfg):
+
+            for name, i in self._tbm_build_cfg.items():
+                # Do not modify the original config
+                build_cfg = deepcopy(self.tbm_common_cfg)
+
+                # Extract the common for all elements of config
+                for key in ["build_cmds", "required_artefacts"]:
+                    try:
+                        build_cfg[key] = deepcopy(self.tbm_common_cfg[key]
+                                                  ["all"])
+                    except KeyError as E:
+                        build_cfg[key] = []
+
+                # Extract the platform specific elements of config
+                for key in ["build_cmds", "required_artefacts"]:
+                    try:
+                        if i.target_platform in self.tbm_common_cfg[key].keys():
+                            build_cfg[key] += deepcopy(self.tbm_common_cfg[key]
+                                                       [i.target_platform])
+                    except Exception as E:
+                        pass
+
+                # Merge the two dictionaries since the template may contain
+                # fixed and combinations seed parameters
+                cmd0 = build_cfg["config_template"] % \
+                    {**dict(i._asdict()), **build_cfg}
+
+                # Prepend configuration commoand as the first cmd
+                build_cfg["build_cmds"] = [cmd0] + build_cfg["build_cmds"]
+
+                # Set the overrid params
+                over_dict = {"_tbm_build_dir_": os.path.join(
+                    self._tbm_work_dir, name),
+                    "_tbm_code_dir_": build_cfg["codebase_root_dir"],
+                    "_tbm_target_platform_": i.target_platform}
+
+                over_params = ["build_cmds",
+                               "required_artefacts",
+                               "artifact_capture_rex"]
+                build_cfg = self.override_tbm_cfg_params(build_cfg,
+                                                         over_params,
+                                                         **over_dict)
+
+                # Overrides path in expected artefacts
+                print("Loading config %s" % name)
+
+                build_pool.append(TFM_Builder(
+                                  name=name,
+                                  work_dir=self._tbm_work_dir,
+                                  cfg_dict=build_cfg,
+                                  build_threads=self._tbm_build_threads,
+                                  img_sizes=self._tbm_img_sizes,
+                                  relative_paths=self._tbm_relative_paths))
+        else:
+            print("Could not find any configuration. Check the rejection list")
 
         status_rep = {}
-        full_rep = {}
+        build_rep = {}
+        completed_build_count = 0
         print("Build: Running %d parallel build jobs" % self._tbm_conc_builds)
         for build_pool_slice in list_chunks(build_pool, self._tbm_conc_builds):
 
@@ -118,11 +214,26 @@ class TFM_Build_Manager(structuredTask):
                 # Similarly print the logs of the other builds as they complete
                 if build_pool_slice.index(build) != 0:
                     build.log()
+                completed_build_count += 1
                 print("Build: Finished %s" % build.get_name())
+                print("Build Progress:")
+                show_progress(completed_build_count, len(build_pool))
 
                 # Store status in report
                 status_rep[build.get_name()] = build.get_status()
-                full_rep[build.get_name()] = build.report()
+                build_rep[build.get_name()] = build.report()
+
+        # Include the original input configuration in the report
+
+        metadata = {"input_build_cfg": self._tbm_cfg,
+                    "build_dir": self._tbm_work_dir
+                    if not self._tbm_relative_paths
+                    else resolve_rel_path(self._tbm_work_dir),
+                    "time": time()}
+
+        full_rep = {"report": build_rep,
+                    "_metadata_": metadata}
+
         # Store the report
         self.stash("Build Status", status_rep)
         self.stash("Build Report", full_rep)
@@ -134,7 +245,10 @@ class TFM_Build_Manager(structuredTask):
     def post_eval(self):
         """ If a single build failed fail the test """
         try:
-            retcode_sum = sum(self.unstash("Build Status").values())
+            status_dict = self.unstash("Build Status")
+            if not status_dict:
+                raise Exception()
+            retcode_sum = sum(status_dict.values())
             if retcode_sum != 0:
                 raise Exception()
             return True
@@ -155,30 +269,6 @@ class TFM_Build_Manager(structuredTask):
     def get_report(self):
         """ Expose the internal report to a new object for external classes """
         return deepcopy(self.unstash("Build Report"))
-
-    def print_summary(self):
-        """ Print an comprehensive list of the build jobs with their status """
-
-        full_rep = self.unstash("Build Report")
-
-        # Filter out build jobs based on status
-        fl = ([k for k, v in full_rep.items() if v['status'] == 'Failed'])
-        ps = ([k for k, v in full_rep.items() if v['status'] == 'Success'])
-
-        print_test(t_list=fl, status="failed", tname="Builds")
-        print_test(t_list=ps, status="passed", tname="Builds")
-
-    def gen_cfg_comb(self, platform_l, compiler_l, config_l, build_l, boot_l):
-        """ Generate all possible configuration combinations from a group of
-        lists of compiler options"""
-        return gen_cfg_combinations("TFM_Build_CFG",
-                                    ("TARGET_PLATFORM COMPILER PROJ_CONFIG"
-                                     " CMAKE_BUILD_TYPE WITH_MCUBOOT"),
-                                    platform_l,
-                                    compiler_l,
-                                    config_l,
-                                    build_l,
-                                    boot_l)
 
     def load_config(self, config, work_dir):
         try:
@@ -209,52 +299,147 @@ class TFM_Build_Manager(structuredTask):
             print("Error:%s \nCould not load a valid config" % e)
             sys.exit(1)
 
-        pprint(ret_cfg)
         return ret_cfg
 
     def parse_config(self, cfg):
         """ Parse a valid configuration file into a set of build dicts """
 
-        # Generate a list of all possible confugration combinations
-        full_cfg = self.gen_cfg_comb(cfg["platform"],
-                                     cfg["compiler"],
-                                     cfg["config"],
-                                     cfg["build"],
-                                     cfg["with_mcuboot"])
+        ret_cfg = {}
 
-        # Generate a list of all invalid combinations
-        rejection_cfg = []
+        # Config entries which are not subject to changes during combinations
+        static_cfg = cfg["common_params"]
 
-        for k in cfg["invalid"]:
-            # Pad the omitted values with wildcard char *
-            res_list = list(k) + ["*"] * (5 - len(k))
+        # Converth the code path to absolute path
+        abs_code_dir = static_cfg["codebase_root_dir"]
+        abs_code_dir = os.path.abspath(os.path.expanduser(abs_code_dir))
+        static_cfg["codebase_root_dir"] = abs_code_dir
 
-            print("Working on rejection input: %s" % (res_list))
+        # seed_params is an optional field. Do not proccess if it is missing
+        if "seed_params" in cfg:
+            comb_cfg = cfg["seed_params"]
+            # Generate a list of all possible confugration combinations
+            ret_cfg = TFM_Build_Manager.generate_config_list(comb_cfg,
+                                                             static_cfg)
 
-            # Key order matters. Use index to retrieve default values When
-            # wildcard * char is present
-            _cfg_keys = ["platform",
-                         "compiler",
-                         "config",
-                         "build",
-                         "with_mcuboot"]
+            # invalid is an optional field. Do not proccess if it is missing
+            if "invalid" in cfg:
+                # Invalid configurations(Do not build)
+                invalid_cfg = cfg["invalid"]
+                # Remove the rejected entries from the test list
+                rejection_cfg = TFM_Build_Manager.generate_rejection_list(
+                    comb_cfg,
+                    static_cfg,
+                    invalid_cfg)
 
-            # Replace wildcard ( "*") entries with every inluded in cfg variant
-            for n in range(len(res_list)):
-                res_list[n] = [res_list[n]] if res_list[n] != "*" \
-                    else cfg[_cfg_keys[n]]
+                # Subtract the two configurations
+                ret_cfg = {k: v for k, v in ret_cfg.items()
+                           if k not in rejection_cfg}
+            self.simple_config = False
+        else:
+            self.simple_config = True
+        return ret_cfg, static_cfg
 
-            rejection_cfg += self.gen_cfg_comb(*res_list)
+    # ----- Override bellow methods when subclassing for other projects ----- #
 
-        # Notfy the user for the rejected configuations
-        for i in rejection_cfg:
+    def print_summary(self):
+        """ Print an comprehensive list of the build jobs with their status """
 
-            name = "%s_%s_%s_%s_%s" % (i.TARGET_PLATFORM,
-                                       i.COMPILER,
-                                       i.PROJ_CONFIG,
-                                       i.CMAKE_BUILD_TYPE,
-                                       "BL2" if i.WITH_MCUBOOT else "NOBL2")
-            print("Rejecting config %s" % name)
+        try:
+            full_rep = self.unstash("Build Report")["report"]
+            fl = ([k for k, v in full_rep.items() if v['status'] == 'Failed'])
+            ps = ([k for k, v in full_rep.items() if v['status'] == 'Success'])
+        except Exception as E:
+            print("No report generated")
+            return
+        if fl:
+            print_test(t_list=fl, status="failed", tname="Builds")
+        if ps:
+            print_test(t_list=ps, status="passed", tname="Builds")
 
-        # Subtract the two lists and convert to dictionary
-        return list(set(full_cfg) - set(rejection_cfg))
+    @staticmethod
+    def generate_config_list(seed_config, static_config):
+        """ Generate all possible configuration combinations from a group of
+        lists of compiler options"""
+        config_list = []
+
+        if static_config["config_type"] == "tf-m":
+            cfg_name = "TFM_Build_CFG"
+            # Ensure the fieds are sorted in the desired order
+            # seed_config can be a subset of sort order for configurations with
+            # optional parameters.
+            tags = [n for n in static_config["sort_order"]
+                    if n in seed_config.keys()]
+
+            data = []
+            for key in tags:
+                data.append(seed_config[key])
+            config_list = gen_cfg_combinations(cfg_name,
+                                               " ".join(tags),
+                                               *data)
+        else:
+            print("Not information for project type: %s."
+                  " Please check config" % static_config["config_type"])
+
+        ret_cfg = {}
+        # Notify the user for the rejected configuations
+        for i in config_list:
+            # Convert named tuples to string with boolean support
+            i_str = "_".join(map(lambda x: repr(x)
+                             if isinstance(x, bool) else x, list(i)))
+
+            # Replace bollean vaiables with more BL2/NOBL2 and use it as"
+            # configuration name.
+            ret_cfg[i_str.replace("True", "BL2").replace("False", "NOBL2")] = i
+
+        return ret_cfg
+
+    @staticmethod
+    def generate_rejection_list(seed_config,
+                                static_config,
+                                rejection_list):
+        rejection_cfg = {}
+
+        if static_config["config_type"] == "tf-m":
+
+            # If rejection list is empty do nothing
+            if not rejection_list:
+                return rejection_cfg
+
+            tags = [n for n in static_config["sort_order"]
+                    if n in seed_config.keys()]
+            sorted_default_lst = [seed_config[k] for k in tags]
+
+            # If tags are not alligned with rejection list entries quit
+            if len(tags) != len(rejection_list[0]):
+                print(len(tags), len(rejection_list[0]))
+                print("Error, tags should be assigned to each "
+                      "of the rejection inputs")
+                return []
+
+            # Replace wildcard ( "*") entries with every
+            # inluded in cfg variant
+            for k in rejection_list:
+                # Pad the omitted values with wildcard char *
+                res_list = list(k) + ["*"] * (5 - len(k))
+                print("Working on rejection input: %s" % (res_list))
+
+                for n in range(len(res_list)):
+
+                    res_list[n] = [res_list[n]] if res_list[n] != "*" \
+                        else sorted_default_lst[n]
+
+                # Generate a configuration and a name for the completed array
+                rj_cfg = TFM_Build_Manager.generate_config_list(
+                    dict(zip(tags, res_list)),
+                    static_config)
+
+                # Append the configuration to the existing ones
+                rejection_cfg = {**rejection_cfg, **rj_cfg}
+
+            # Notfy the user for the rejected configuations
+            for i in rejection_cfg.keys():
+                print("Rejecting config %s" % i)
+        else:
+            print("Not information for project type: %s."
+                  " Please check config" % static_config["config_type"])
+        return rejection_cfg

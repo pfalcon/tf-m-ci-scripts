@@ -19,7 +19,7 @@ __author__ = "Minos Galanakis"
 __email__ = "minos.galanakis@linaro.org"
 __project__ = "Trusted Firmware-M Open CI"
 __status__ = "stable"
-__version__ = "1.0"
+__version__ = "1.1"
 
 import os
 import sys
@@ -31,13 +31,13 @@ from lava_helper_configs import *
 
 try:
     from tfm_ci_pylib.utils import save_json, load_json, sort_dict,\
-        load_yaml, test
+        load_yaml, test, print_test
     from tfm_ci_pylib.lava_rpc_connector import LAVA_RPC_connector
 except ImportError:
     dir_path = os.path.dirname(os.path.realpath(__file__))
     sys.path.append(os.path.join(dir_path, "../"))
     from tfm_ci_pylib.utils import save_json, load_json, sort_dict,\
-        load_yaml, test
+        load_yaml, test, print_test
     from tfm_ci_pylib.lava_rpc_connector import LAVA_RPC_connector
 
 
@@ -165,26 +165,60 @@ def test_lava_results(user_args, config):
     # Call the formatter
     list(map(format_results, test_results))
 
+    # Remove the ignored commits if requested
+    if user_args.ignore_configs:
+        print(user_args.ignore_configs)
+        for cfg in user_args.ignore_configs:
+            try:
+                print("Rejecting config: ", cfg)
+                t_dict.pop(cfg)
+            except KeyError as e:
+                print("Warning! Rejected config %s not found"
+                      " in LAVA results" % cfg)
+
     #  We need to check that each of the tests contained in the test_map exist
     #  AND that they have a passed status
     t_sum = 0
+
+    with open("lava_job.url", "r") as F:
+        job_url = F.read().strip()
+
+    out_rep = {"report": {},
+               "_metadata_": {"job_url": job_url}}
     for k, v in t_dict.items():
         try:
-            t_sum += int(test(test_map[k],
-                         v,
-                         pass_text=["pass"],
-                         error_on_failed=False,
-                         test_name=k,
-                         summary=user_args.lava_summary)["success"])
+            out_rep["report"][k] = test(test_map[k],
+                                        v,
+                                        pass_text=["pass"],
+                                        error_on_failed=False,
+                                        test_name=k,
+                                        summary=user_args.lava_summary)
+            t_sum += int(out_rep["report"][k]["success"])
         # Status can be None if a test did't fully run/complete
         except TypeError as E:
             t_sum = 1
+    print("\n")
+    sl = [x["name"] for x in out_rep["report"].values()
+          if x["success"] is True]
+    fl = [x["name"] for x in out_rep["report"].values()
+          if x["success"] is False]
+
+    if sl:
+        print_test(t_list=sl, status="passed", tname="Tests")
+    if fl:
+        print_test(t_list=fl, status="failed", tname="Tests")
+
+    # Generate the output report is requested
+    if user_args.output_report:
+        save_json(user_args.output_report, out_rep)
 
     # Every single of the tests need to have passed for group to succeed
     if t_sum != len(t_dict):
         print("Group Testing FAILED!")
-        sys.exit(1)
-    print("Group Testing PASS!")
+        if user_args.eif:
+            sys.exit(1)
+    else:
+        print("Group Testing PASS!")
 
 
 def test_lava_dispatch_credentials(user_args):
@@ -226,10 +260,19 @@ def lava_dispatch(user_args):
 
     lava = test_lava_dispatch_credentials(user_args)
     job_id, job_url = lava.submit_job(user_args.dispatch)
-    print("Job submitted at: " + job_url)
+
+    # The reason of failure will be reported to user by LAVA_RPC_connector
+    if job_id is None and job_url is None:
+        sys.exit(1)
+    else:
+        print("Job submitted at: " + job_url)
+
     with open("lava_job.id", "w") as F:
         F.write(str(job_id))
     print("Job id %s stored at lava_job.id file." % job_id)
+    with open("lava_job.url", "w") as F:
+        F.write(str(job_url))
+    print("Job url %s stored at lava_job.url file." % job_id)
 
     # Wait for the job to complete
     status = lava.block_wait_for_job(job_id, int(user_args.dispatch_timeout))
@@ -270,6 +313,18 @@ def load_config_overrides(user_args):
 
     config["build_no"] = user_args.build_no
 
+    # Override with command line provided URL/Job Name
+    if user_args.jenkins_url:
+        _over_d = {"jenkins_url": user_args.jenkins_url,
+                   "jenkins_job": "%(jenkins_job)s"}
+        config["recovery_store_url"] = config["recovery_store_url"] % _over_d
+        config["artifact_store_url"] = config["artifact_store_url"] % _over_d
+
+    if user_args.jenkins_job:
+        _over_d = {"jenkins_job": user_args.jenkins_job}
+        config["recovery_store_url"] = config["recovery_store_url"] % _over_d
+        config["artifact_store_url"] = config["artifact_store_url"] % _over_d
+
     #  Add the template folder
     config["templ"] = os.path.join(user_args.template_dir, config["templ"])
     return config
@@ -289,6 +344,8 @@ def main(user_args):
             save_config(config_file, lava_gen_config_map[config_key])
             print("Configuration exported at %s" % config_file)
         return
+    if user_args.dispatch is not None or user_args.dispatch_cancel is not None:
+        pass
     else:
         config = load_config_overrides(user_args)
 
@@ -372,7 +429,18 @@ def get_cmd_args():
                         dest="platform",
                         action="store",
                         help="Override platform.Only the provided one "
-                             "will be tested ")
+                             "will be tested")
+    over_g.add_argument("-ou", "--override-jenkins-url",
+                        dest="jenkins_url",
+                        action="store",
+                        help="Override %(jenkins_url)s params in config if "
+                             "present. Sets the jenkings address including "
+                             "port")
+    over_g.add_argument("-oj", "--override-jenkins-job",
+                        dest="jenkins_job",
+                        action="store",
+                        help="Override %(jenkins_job)s params in config if "
+                             "present. Sets the jenkings job name")
     parse_g.add_argument("-tp", "--task-lava-parse",
                          dest="lava_results",
                          action="store",
@@ -381,9 +449,24 @@ def get_cmd_args():
                               " of testing")
     parse_g.add_argument("-ls", "--lava-parse-summary",
                          dest="lava_summary",
-                         default=True,
+                         default=False,
                          action="store_true",
                          help="Print full test summary")
+    parse_g.add_argument("-or", "--output-report",
+                         dest="output_report",
+                         action="store",
+                         help="Print full test summary")
+    parser.add_argument("-ef", "--error-if-failed",
+                        dest="eif",
+                        action="store_true",
+                        help="If set will change the script exit code if one "
+                             "or more tests fail")
+    parser.add_argument('-ic', '--ignore-configs',
+                        dest="ignore_configs",
+                        nargs='+',
+                        help="Pass a space separated list of build"
+                             "configurations which will get ignored when"
+                             "evaluation LAVA results")
 
     # Lava job control commands
     disp_g.add_argument("-td", "--task-dispatch",

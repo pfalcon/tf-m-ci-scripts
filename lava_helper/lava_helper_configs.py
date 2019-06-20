@@ -18,7 +18,7 @@ __author__ = "Minos Galanakis"
 __email__ = "minos.galanakis@linaro.org"
 __project__ = "Trusted Firmware-M Open CI"
 __status__ = "stable"
-__version__ = "1.0"
+__version__ = "1.1"
 
 
 def lava_gen_get_config_subset(config,
@@ -35,6 +35,9 @@ def lava_gen_get_config_subset(config,
     # Remove all configs not requests by the caller
     if not default:
         tests.pop("Default")
+    if not core:
+        tests.pop("CoreIPC")
+        tests.pop("CoreIPCTfmLevel2")
     if not regression:
         tests.pop("Regression")
 
@@ -45,26 +48,24 @@ def lava_gen_get_config_subset(config,
 tfm_mps2_sse_200 = {
     "templ": "template_tfm_mps2_sse_200.jinja2",
     "job_name": "mps2plus-arm-tfm",
-    "device_type": "mps",
-    "job_timeout": 60,
-    "action_timeout": 60,
-    "monitor_timeout": 60,
-    "recovery_store_url": "https://ci.trustedfirmware.org/"
-                          "job/tf-m-fpga-image-store",
-    "artifact_store_url": "https://ci.trustedfirmware.org/"
-                          "job/tf-m-build-test-review",
-    "platforms": {"AN521": "mps2_sse200_an512.tar.gz"},
+    "device_type": "mps2plus",
+    "job_timeout": 120,
+    "action_timeout": 90,
+    "monitor_timeout": 90,
+    "poweroff_timeout": 10,
+    "recovery_store_url": "%(jenkins_url)s/"
+                          "job/%(jenkins_job)s",
+    "artifact_store_url": "%(jenkins_url)s/"
+                          "job/%(jenkins_job)s",
+    "platforms": {"AN521": "mps2_an521_v3.0.tar.gz"},
     "compilers": ["GNUARM"],
-    "build_types": ["Debug"],
+    "build_types": ["Debug", "Release"],
     "boot_types": ["BL2"],
     "tests": {
         'Default': {
-            "recovery": "mps2_sse200_an512.tar.gz",
             "binaries": {
-                "firmware":
-                "install/outputs/AN521/tfm_sign.bin",
-                "bootloader":
-                "install/outputs/AN521/mcuboot.bin"
+                "firmware": "tfm_sign.bin",
+                "bootloader": "mcuboot.bin"
             },
             "monitors": [
                 {
@@ -80,10 +81,9 @@ tfm_mps2_sse_200 = {
             ]
         },  # Default
         'Regression': {
-            "recovery": "mps2_sse200_an512.tar.gz",
             "binaries": {
-                "firmware": "install/outputs/AN521/tfm_sign.bin",
-                "bootloader": "install/outputs/AN521/mcuboot.bin"
+                "firmware": "tfm_sign.bin",
+                "bootloader": "mcuboot.bin"
             },
             "monitors": [
                 {
@@ -131,6 +131,42 @@ tfm_mps2_sse_200 = {
                 }
             ]  # Monitors
         },  # Regression
+        'CoreIPC': {
+            "binaries": {
+                "firmware": "tfm_sign.bin",
+                "bootloader": "mcuboot.bin"
+            },
+            "monitors": [
+                {
+                    'name': 'Secure_Test_Suites_Summary',
+                    'start': 'Jumping to the first image slot',
+                    'end': '\\x1b\\\[0m',
+                    'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
+                               r'(?P<test_case_id>Secure image '
+                               r'initializing)(?P<result>!)',
+                    'fixup': {"pass": "!", "fail": ""},
+                    'required': ["secure_image_initializing"]
+                }  # Monitors
+            ]
+        },  # CoreIPC
+        'CoreIPCTfmLevel2': {
+            "binaries": {
+                "firmware": "tfm_sign.bin",
+                "bootloader": "mcuboot.bin"
+            },
+            "monitors": [
+                {
+                    'name': 'Secure_Test_Suites_Summary',
+                    'start': 'Jumping to the first image slot',
+                    'end': '\\x1b\\\[0m',
+                    'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
+                               r'(?P<test_case_id>Secure image '
+                               r'initializing)(?P<result>!)',
+                    'fixup': {"pass": "!", "fail": ""},
+                    'required': ["secure_image_initializing"]
+                }  # Monitors
+            ]
+        },  # CoreIPCTfmLevel2
     }  # Tests
 }
 
