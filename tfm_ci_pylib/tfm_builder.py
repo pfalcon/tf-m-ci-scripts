@@ -111,6 +111,7 @@ class TFM_Builder(structuredTask):
 
         # Append the path for the config
         self._tfb_cfg["PROJ_CONFIG"] = os.path.join(self._tfb_tfm_dir,
+                                                    "configs",
                                                     self._tfb_cfg[("PROJ_"
                                                                    "CONFIG")])
 
