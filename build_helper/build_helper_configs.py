@@ -108,7 +108,7 @@ _common_tfm_builder_cfg = {
 # Configure build manager to build several combinations
 config_AN521 = {"seed_params": {
                 "target_platform": ["AN521"],
-                "compiler": ["GNUARM"],
+                "compiler": ["ARMCLANG", "GNUARM"],
                 "proj_config": ["ConfigRegression",
                                 "ConfigCoreIPC",
                                 "ConfigCoreIPCTfmLevel2",
@@ -127,7 +127,7 @@ config_AN521 = {"seed_params": {
 # Configure build manager to build several combinations
 config_AN519 = {"seed_params": {
                 "target_platform": ["AN519"],
-                "compiler": ["GNUARM"],
+                "compiler": ["ARMCLANG", "GNUARM"],
                 "proj_config": ["ConfigRegression",
                                 "ConfigCoreIPC",
                                 "ConfigCoreIPCTfmLevel2",
@@ -178,7 +178,7 @@ config_full = {"seed_params": {
 
 config_MUSCA_A = {"seed_params": {
                   "target_platform": ["MUSCA_A"],
-                  "compiler": ["GNUARM"],
+                  "compiler": ["ARMCLANG", "GNUARM"],
                   "proj_config": ["ConfigRegression",
                                   "ConfigCoreIPC",
                                   "ConfigCoreIPCTfmLevel2",
@@ -195,7 +195,7 @@ config_MUSCA_A = {"seed_params": {
 
 config_MUSCA_B1 = {"seed_params": {
                    "target_platform": ["MUSCA_B1"],
-                   "compiler": ["GNUARM"],
+                   "compiler": ["ARMCLANG", "GNUARM"],
                    "proj_config": ["ConfigRegression",
                                    "ConfigCoreIPC",
                                    "ConfigCoreIPCTfmLevel2",
