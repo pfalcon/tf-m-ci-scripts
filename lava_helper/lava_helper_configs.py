@@ -35,8 +35,6 @@ def lava_gen_get_config_subset(config,
     # Remove all configs not requests by the caller
     if not default:
         tests.pop("Default")
-    if not core:
-        tests.pop("CoreTest")
     if not regression:
         tests.pop("Regression")
 
@@ -81,26 +79,6 @@ tfm_mps2_sse_200 = {
                 }  # Monitors
             ]
         },  # Default
-        'CoreTest': {
-            "recovery": "mps2_sse200_an512.tar.gz",
-            "binaries": {
-                "firmware": "install/outputs/AN521/tfm_sign.bin",
-                "bootloader": "install/outputs/AN521/mcuboot.bin"
-            },
-            "monitors": [
-                {
-                    'name': 'Non_Secure_Test_Suites_Summary',
-                    'start': 'TFM level is: 3',
-                    'end': 'End of Non-secure test suites',
-                    'pattern': r"[\x1b]\\[37mTest suite '"
-                               r"(?P<test_case_id>[^\n]+)' has [\x1b]\\[32m"
-                               r" (?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        "core_non_secure_positive_tests_tfm_core_test_1xxx_"]
-                }  # Monitors
-            ]
-        },  # CoreTest
         'Regression': {
             "recovery": "mps2_sse200_an512.tar.gz",
             "binaries": {

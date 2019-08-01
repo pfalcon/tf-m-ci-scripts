@@ -25,8 +25,7 @@ __version__ = "1.0"
 config_AN521 = {"platform": ["AN521"],
                 "compiler": ["GNUARM"],
                 "config": ["ConfigRegression",
-                           "ConfigDefault",
-                           "ConfigCoreTest"],
+                           "ConfigDefault"],
                 "build": ["Debug"],
                 "with_mcuboot": [True],
                 # invalid configuations can be added as tuples of adjustable

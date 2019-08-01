@@ -160,11 +160,7 @@ class TFM_Builder(structuredTask):
 
         else:
             binaries += [os.path.join(self._tfb_build_dir, "app", "tfm_ns")]
-            if "ConfigCoreTest" in self._tfb_build_dir:
-                binaries += [os.path.join(self._tfb_build_dir,
-                                          "unit_test", "tfm_s")]
-            else:
-                binaries += [os.path.join(self._tfb_build_dir, "app",
+            binaries += [os.path.join(self._tfb_build_dir, "app",
                                           "secure_fw", "tfm_s")]
             if self._tfb_cfg["WITH_MCUBOOT"]:
                 binaries += [os.path.join(self._tfb_build_dir,
