@@ -57,7 +57,6 @@ actions:
 
     - test:
         namespace: target
-        delay: 5
         monitors:
         {%- for monitor in test.monitors %}
         - name: "{{monitor.name}}_{{ platform }}_{{ compiler }}_{{ name }}_{{ build_type }}_{{ boot_type }}"
