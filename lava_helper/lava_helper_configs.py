@@ -99,6 +99,9 @@ tfm_mps2_sse_200 = {
                            "s_interface_tests_tfm_sst_test_2xxx_"),
                         "sst_reliability_tests_tfm_sst_test_3xxx_",
                         "sst_rollback_protection_tests_tfm_sst_test_4xxx_",
+                        ("psa_internal_trusted_storage_"
+                           "s_interface_tests_tfm_its_test_2xxx_"),
+                        "its_reliability_tests_tfm_its_test_3xxx_",
                         ("audit_"
                          "logging_secure_interface_test_tfm_audit_test_1xxx_"),
                         "crypto_secure_interface_tests_tfm_crypto_test_5xxx_",
@@ -118,6 +121,8 @@ tfm_mps2_sse_200 = {
                     'required': [
                         ("psa_protected_storage"
                          "_ns_interface_tests_tfm_sst_test_1xxx_"),
+                        ("psa_internal_trusted_storage"
+                         "_ns_interface_tests_tfm_its_test_1xxx_"),
                         ("auditlog_"
                          "non_secure_interface_test_tfm_audit_test_1xxx_"),
                         ("crypto_"
