@@ -144,11 +144,9 @@ class TFM_Builder(structuredTask):
 
                 # When building with bootloader extra binaries are expected
                 binaries += [os.path.join(platform_path, b) for b in
-                             ["tfm_sign.bin",
-                              "tfm_full.bin"]]
+                             ["tfm_sign.bin"]]
                 binaries += [os.path.join(fvp_path, b) for b in
-                             ["tfm_s_ns_concatenated.bin",
-                              "tfm_s_ns_signed.bin"]]
+                             ["tfm_s_ns_signed.bin"]]
 
             binaries += [os.path.join(p, b) for p in [fvp_path, platform_path]
                          for b in common_bin_list]
