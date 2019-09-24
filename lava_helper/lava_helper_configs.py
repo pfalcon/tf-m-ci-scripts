@@ -57,9 +57,8 @@ tfm_mps2_sse_200 = {
                           "job/%(jenkins_job)s",
     "artifact_store_url": "%(jenkins_url)s/"
                           "job/%(jenkins_job)s",
-    "platforms": {"AN521": "mps2_an521_v3.0.tar.gz",
-                  "AN519": "mps2_an519_v3.0.tar.gz"},
-    "compilers": ["ARMCLANG", "GNUARM"],
+    "platforms": {"AN521": "mps2_an521_v3.0.tar.gz"},
+    "compilers": ["GNUARM"],
     "build_types": ["Debug", "Release"],
     "boot_types": ["BL2"],
     "tests": {
