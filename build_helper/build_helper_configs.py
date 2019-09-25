@@ -144,7 +144,7 @@ config_AN519 = {"seed_params": {
 
 config_IPC = {"seed_params": {
               "target_platform": ["AN521", "AN519", "MUSCA_A", "MUSCA_B1"],
-              "compiler": ["ARMCLANG", "GNUARM"],
+              "compiler": ["GNUARM"],
               "proj_config": ["ConfigCoreIPC",
                               "ConfigCoreIPCTfmLevel2"],
               "cmake_build_type": ["Debug", "Release"],
@@ -160,7 +160,7 @@ config_IPC = {"seed_params": {
 # Configure build manager to build the maximum number of configurations
 config_full = {"seed_params": {
                "target_platform": ["AN521", "AN519", "MUSCA_A", "MUSCA_B1"],
-               "compiler": ["ARMCLANG", "GNUARM"],
+               "compiler": ["GNUARM"],
                "proj_config": ["ConfigRegression",
                                "ConfigCoreIPC",
                                "ConfigCoreIPCTfmLevel2",
