@@ -48,7 +48,7 @@ def lava_gen_get_config_subset(config,
 tfm_mps2_sse_200 = {
     "templ": "template_tfm_mps2_sse_200.jinja2",
     "job_name": "mps2plus-arm-tfm",
-    "device_type": "mps2plus",
+    "device_type": "mps",
     "job_timeout": 120,
     "action_timeout": 90,
     "monitor_timeout": 90,
