@@ -433,13 +433,13 @@ def get_cmd_args():
     over_g.add_argument("-ou", "--override-jenkins-url",
                         dest="jenkins_url",
                         action="store",
-                        help="Override %(jenkins_url)s params in config if "
+                        help="Override %%(jenkins_url)s params in config if "
                              "present. Sets the jenkings address including "
                              "port")
     over_g.add_argument("-oj", "--override-jenkins-job",
                         dest="jenkins_job",
                         action="store",
-                        help="Override %(jenkins_job)s params in config if "
+                        help="Override %%(jenkins_job)s params in config if "
                              "present. Sets the jenkings job name")
     parse_g.add_argument("-tp", "--task-lava-parse",
                          dest="lava_results",

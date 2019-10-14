@@ -52,7 +52,7 @@ tfm_mps2_sse_200 = {
     "job_timeout": 120,
     "action_timeout": 90,
     "monitor_timeout": 90,
-    "poweroff_timeout": 10,
+    "poweroff_timeout": 50,
     "recovery_store_url": "%(jenkins_url)s/"
                           "job/%(jenkins_job)s",
     "artifact_store_url": "%(jenkins_url)s/"
