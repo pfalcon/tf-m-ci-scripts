@@ -49,10 +49,10 @@ tfm_mps2_sse_200 = {
     "templ": "template_tfm_mps2_sse_200.jinja2",
     "job_name": "mps2plus-arm-tfm",
     "device_type": "mps",
-    "job_timeout": 120,
+    "job_timeout": 180,
     "action_timeout": 90,
     "monitor_timeout": 90,
-    "poweroff_timeout": 50,
+    "poweroff_timeout": 5,
     "recovery_store_url": "%(jenkins_url)s/"
                           "job/%(jenkins_job)s",
     "artifact_store_url": "%(jenkins_url)s/"
@@ -70,7 +70,7 @@ tfm_mps2_sse_200 = {
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Jumping to the first image slot',
+                    'start': '[Sec Thread]',
                     'end': '\\x1b\\\[0m',
                     'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
                                r'(?P<test_case_id>Secure image '
@@ -144,7 +144,7 @@ tfm_mps2_sse_200 = {
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Jumping to the first image slot',
+                    'start': '[Sec Thread]',
                     'end': '\\x1b\\\[0m',
                     'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
                                r'(?P<test_case_id>Secure image '
@@ -162,7 +162,7 @@ tfm_mps2_sse_200 = {
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Jumping to the first image slot',
+                    'start': '[Sec Thread]',
                     'end': '\\x1b\\\[0m',
                     'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
                                r'(?P<test_case_id>Secure image '
