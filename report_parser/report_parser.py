@@ -76,6 +76,9 @@ def dependencies_mdt_collect(path_list,
     # Create an empty dataset
     data = {n: {} for n in set(expected_paths).union(set(cpaths.keys()))}
 
+    # identify paths passes that are not required/expected
+    extra_data = {n: {} for n in set(cpaths.keys()).difference(set(expected_paths))}
+
     # Perform basic sanity check
     if not set(data.keys()).issubset(set(cpaths.keys())):
         err_msg = "Error locating required paths.\nNeeded: %s\nHas:    %s" % (
@@ -145,6 +148,40 @@ def dependencies_mdt_collect(path_list,
                                       "version": ver,
                                       "recovery": os.path.join(cpaths["fpga"],
                                                                d)}
+
+    #Attempt to detect what the unexpected paths contain
+    for e_path in extra_data.keys():
+        for d in list_subdirs(cpaths[e_path]):
+            print("%s subdir: %s" % (e_path, d))
+            # If it contains a version.info
+            if os.path.isfile(os.path.join(d, "version.info")):
+                json_info = load_json(os.path.join(d, "version.info"))
+                json_info["dir"] = os.path.relpath(d, cwd)
+
+                tag = json_info["version"]
+                # Absolute paths will not work in jenkins since it will change
+                # the workspaace directory between stages convert to rel-path
+                extra_data[e_path][tag] = json_info
+            # If it contains git information
+            elif os.path.exists(os.path.join(d, ".git")):
+                d = convert_git_ref_path(d)
+
+                git_info = get_local_git_info(d)
+                tag = os.path.split(git_info["dir"])[-1].split("-")[-1]
+
+                # Absolute paths will not work in jenkins since it will change
+                # the workspaace directory between stages convert to rel-path
+                git_info["dir"] = os.path.relpath(git_info["dir"], cwd)
+                extra_data[e_path][tag] = git_info
+            # Do not break flow if detection fails
+            else:
+                print("Error determining contents of directory: %s/%s for "
+                      "indexing purposes" % (e_path, d))
+                extra_data[e_path][tag] = {"info": "N.A"}
+
+    # Add the extra paths to the expected ones
+    for k, v in extra_data.items():
+        data[k] = v
     if out_f:
         print("Exporting metadata to", out_f)
         save_json(out_f, data)
