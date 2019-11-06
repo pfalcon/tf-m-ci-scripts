@@ -73,10 +73,10 @@ _common_tfm_builder_cfg = {
                    "MUSCA_B1": [("srec_cat "
                                  "%(_tbm_build_dir_)s/install/outputs/"
                                  "%(_tbm_target_platform_)s/mcuboot.bin "
-                                 "-Binary -offset 0x200000 "
+                                 "-Binary -offset 0xA000000 "
                                  "%(_tbm_build_dir_)s/install/outputs/"
                                  "%(_tbm_target_platform_)s/tfm_sign.bin "
-                                 "-Binary -offset 0x220000 -o "
+                                 "-Binary -offset 0xA020000 -o "
                                  "%(_tbm_build_dir_)s/install/outputs/"
                                  "%(_tbm_target_platform_)s"
                                  "/tfm.hex -Intel")]
