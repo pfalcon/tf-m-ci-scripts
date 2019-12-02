@@ -33,8 +33,6 @@ variableScope
 //CppCheck fails to understand macro definitions in compile_commands.json, which
 //have \ characters escaping the opening and closing ". As a result we get the
 //following false alarms.
-preprocessorErrorDirective:*/mbedtls/platform.h:29
-preprocessorErrorDirective:*/mbedtls/sha256.h:29
 
 //CppCheck ignores macros defined on the command line when using a project file
 //(e.g. compile_commands.json). As a result we ca not set compiler specific

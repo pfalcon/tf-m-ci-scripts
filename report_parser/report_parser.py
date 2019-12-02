@@ -64,8 +64,7 @@ def split_keys(joint_arg, sep="="):
 
 def dependencies_mdt_collect(path_list,
                              out_f=None,
-                             expected_paths=["mbedtls",
-                                             "mbedcrypto",
+                             expected_paths=["mbedcrypto",
                                              "cmsis",
                                              "checkpatch"]):
     """ Collect dependencies checkout metadata. It creates a json report which
@@ -84,19 +83,6 @@ def dependencies_mdt_collect(path_list,
         )
         print(err_msg)
         raise Exception(err_msg)
-
-    for d in list_subdirs(cpaths["mbedtls"]):
-        print("mbedtls dir: ", d)
-        # if checkout directory name contains a git reference convert to short
-        d = convert_git_ref_path(d)
-
-        git_info = get_local_git_info(d)
-        tag = os.path.split(git_info["dir"])[-1].split("-")[-1]
-
-        # Absolute paths will not work in jenkins since it will change the
-        # workspaace directory between stages convert to relative path
-        git_info["dir"] = os.path.relpath(git_info["dir"], cwd)
-        data["mbedtls"][tag] = git_info
 
     for d in list_subdirs(cpaths["mbedcrypto"]):
         print("mbed-crypto dir: ", d)

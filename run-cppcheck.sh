@@ -131,7 +131,7 @@ fi
 echo
 echo '******* Install external projects to their final place ***************'
 echo
-make -j mbedtls_mcuboot_lib_install
+make -j mbedcrypto_mcuboot_lib_install
 
 #Now run cppcheck.
 echo
