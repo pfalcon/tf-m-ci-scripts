@@ -237,7 +237,12 @@ def checkpatch_mdt_collect(file_name, out_f=None):
 
         for en in checkpath_entries:
             _file, _line, _ = en[0].split(":")
-            _type, _subtype, _ = en[1].split(":")
+            try:
+                _type, _subtype, _ = en[1].split(":")
+            except Exception as e:
+                print("WARNING: Ignoring Malformed checkpatch line: %s" %
+                      "".join(en))
+                continue
             _msg = en[2]
 
             out_data["_metadata_"] = {"errors": _errors,
