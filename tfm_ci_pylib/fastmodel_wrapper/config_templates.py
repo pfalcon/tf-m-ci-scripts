@@ -146,13 +146,11 @@ class template_regression_config(template_cfg):
         'Crypto non-secure interface test (TFM_CRYPTO_TEST_6XXX)',
         'Initial Attestation Service '
         'non-secure interface tests(TFM_ATTEST_TEST_2XXX)',
-        'Invert non-secure interface tests (TFM_INVERT_TEST_1XXX)',
         'SST rollback protection tests (TFM_SST_TEST_4XXX)',
         'Audit Logging secure interface test (TFM_AUDIT_TEST_1XXX)',
         'Crypto secure interface tests (TFM_CRYPTO_TEST_5XXX)',
         'Initial Attestation Service secure '
         'interface tests(TFM_ATTEST_TEST_1XXX)',
-        'Invert secure interface tests (TFM_INVERT_TEST_1XXX)',
     ]
     _cfg["test_end_string"] = "End of Non-secure test suites"
 
