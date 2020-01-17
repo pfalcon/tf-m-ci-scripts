@@ -1,0 +1,54 @@
+#!/usr/bin/env groovy
+//-------------------------------------------------------------------------------
+// Copyright (c) 2020, Arm Limited and Contributors. All rights reserved.
+//
+// SPDX-License-Identifier: BSD-3-Clause
+//
+//-------------------------------------------------------------------------------
+
+node("docker-amd64-xenial") {
+  stage("Init") {
+    cleanWs()
+    dir("trusted-firmware-m") {
+      checkout(
+        poll: false,
+        scm: [
+          $class: 'GitSCM',
+          branches: [[name: '$GERRIT_BRANCH']],
+          extensions: [[$class: 'BuildChooserSetting', buildChooser: [$class: 'GerritTriggerBuildChooser']]],
+          userRemoteConfigs: [[
+            credentialsId: 'GIT_SSH_KEY',
+            refspec: '$GERRIT_REFSPEC', url: '$CODE_REPO'
+          ]]
+        ])
+    }
+    dir("tf-m-ci-scripts") {
+      git url: '$CI_SCRIPTS_REPO', branch: 'master', credentialsId: 'GIT_SSH_KEY'
+    }
+    dir("mbed-crypto") {
+      checkout(
+        changelog: false,
+        poll: false,
+        scm: [
+          $class: 'GitSCM',
+          branches: [[name: 'FETCH_HEAD']], 
+          userRemoteConfigs: [[
+            refspec: 'refs/tags/$MBEDCRYPTO_VERSION',
+            url: 'https://github.com/ARMmbed/mbed-crypto.git'
+          ]]
+        ]
+      )
+    }
+    sh """
+wget -O cmsis.pack -q https://github.com/ARM-software/CMSIS_5/releases/download/${CMSIS_VERSION}/ARM.CMSIS.${CMSIS_VERSION}.pack
+unzip -o -d CMSIS_5 cmsis.pack
+"""
+  }
+  stage("Build") {
+    sh "tf-m-ci-scripts/build-docs.sh"
+  }
+  stage("Post") {
+    archiveArtifacts 'trusted-firmware-m/build/install/**'
+    cleanWs()
+  }
+}

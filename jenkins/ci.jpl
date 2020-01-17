@@ -1,0 +1,120 @@
+#!/usr/bin/env groovy
+//-------------------------------------------------------------------------------
+// Copyright (c) 2020, Arm Limited and Contributors. All rights reserved.
+//
+// SPDX-License-Identifier: BSD-3-Clause
+//
+//-------------------------------------------------------------------------------
+
+def listConfigs(ci_scripts_dir, config_list, filter_group) {
+  dir(ci_scripts_dir) {
+    echo "Obtaining list of configs."
+    echo "Running: ./configs.py -g ${filter_group}"
+    def build_config_list_raw = sh(script: """\
+./configs.py -g ${filter_group}
+""", returnStdout: true).trim()
+    def build_config_list = build_config_list_raw.tokenize('\n')
+    config_list.addAll(build_config_list)
+  }
+}
+
+def buildConfig(ci_scripts_dir, config, filter_group) {
+  def params = []
+  def build_config_params
+  dir(ci_scripts_dir) {
+    echo "Obtaining build configuration for config ${config}"
+    echo "Running: ./configs.py -g ${filter_group} ${config}"
+    build_config_params = sh(script: """\
+./configs.py -g ${filter_group} ${config}
+""", returnStdout: true).trim()
+  }
+  def lines = build_config_params.tokenize('\n')
+  for (String line : lines) {
+    def key, value
+    (key, value) = line.tokenize('=')
+    params += string(name: key, value: value)
+  }
+  params += string(name: 'GERRIT_BRANCH', value: env.GERRIT_BRANCH)
+  params += string(name: 'GERRIT_REFSPEC', value: env.GERRIT_REFSPEC)
+  params += string(name: 'CMSIS_VERSION', value: env.CMSIS_VERSION)
+  params += string(name: 'MBEDCRYPTO_VERSION', value: env.MBEDCRYPTO_VERSION)
+  params += string(name: 'CODE_REPO', value: env.CODE_REPO)
+  return {
+    def res = build(job: 'tf-m-build-config', parameters: params, propagate: false)
+    print("${res.number}: ${config} ${res.result} ${res.getAbsoluteUrl()}")
+    if (res.result == "FAILURE") {
+      error("Build failed at ${res.getAbsoluteUrl()}")
+    }
+  }
+}
+
+def buildDocs() {
+  def params = []
+  params += string(name: 'GERRIT_BRANCH', value: env.GERRIT_BRANCH)
+  params += string(name: 'GERRIT_REFSPEC', value: env.GERRIT_REFSPEC)
+  params += string(name: 'CMSIS_VERSION', value: env.CMSIS_VERSION)
+  params += string(name: 'MBEDCRYPTO_VERSION', value: env.MBEDCRYPTO_VERSION)
+  params += string(name: 'CODE_REPO', value: env.CODE_REPO)
+  return {
+    def res = build(job: 'tf-m-build-docs', parameters: params, propagate:false)
+    print("${res.number}: Docs ${res.result} ${res.getAbsoluteUrl()}")
+    if (res.result == "FAILURE") {
+      error("Build failed at ${res.getAbsoluteUrl()}")
+    }
+  }
+}
+
+def verifyStatus(value, stage_name) {
+  node("docker-amd64-xenial") {
+    cleanWs()
+    dir("tf-m-ci-scripts") {
+      git url: '$CI_SCRIPTS_REPO', branch: 'master', credentialsId: 'GIT_SSH_KEY'
+    }
+    withCredentials([usernamePassword(credentialsId: 'VERIFY_STATUS', passwordVariable: 'VERIFY_PASSWORD', usernameVariable: 'VERIFY_USER')]) {
+      sh("""
+    if [ -z "\$GERRIT_HOST" ] ; then
+      echo Not running for a Gerrit change, skipping vote.
+      exit 0
+    fi
+    if [ ! -d venv ] ; then
+      virtualenv -p \$(which python3) venv
+    fi
+    . venv/bin/activate
+    pip -q install requests
+    ./tf-m-ci-scripts/jenkins/verify.py --value ${value} --verify-name tf-m-${stage_name} --user \$VERIFY_USER
+    """)
+    }
+  }
+}
+
+def configs = []
+def builds = [:]
+
+node("master") {
+  stage("Init") {
+    cleanWs()
+    dir("tf-m-ci-scripts") {
+      git url: '$CI_SCRIPTS_REPO', branch: 'master', credentialsId: 'GIT_SSH_KEY'
+    }
+  }
+  stage("Configs") {
+    // Populate configs
+    listConfigs('tf-m-ci-scripts', configs, env.FILTER_GROUP)
+    for (config in configs) {
+      builds[config] = buildConfig("tf-m-ci-scripts", config, env.FILTER_GROUP)
+    }
+    builds["docs"] = buildDocs()
+  }
+}
+stage("Builds") {
+  def verify = 1
+  try {
+    parallel(builds)
+  } catch (Exception e) {
+    manager.buildFailure()
+    verify = -1
+  } finally {
+    verifyStatus(verify, 'build')
+  }
+}
+// TODO Test phase

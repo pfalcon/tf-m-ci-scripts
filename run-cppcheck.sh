@@ -13,7 +13,7 @@
 ##This bash script can be used to execute cppcheck for the tf-m project.
 ##It will use the CMake generated "compile_commands.json" file.
 ##CMake is executed to generate the build commands for the "default" build
-##configuration (i.e. no build config file is specifyed on the command-line).
+##configuration (i.e. no build config file is specified on the command-line).
 ##
 ##This file shall be executed from the root directory of the tf-m working copy.
 ##
@@ -32,25 +32,42 @@
 ##       possible to define additional macros and include paths on the command
 ##       line. This results in some incorrect error and warning messages.
 ##@todo The file cppcheck/arm-cortex-m.cfg needs to be revised. Some settings
-##      might be invalid, and also a differnet file may be needed based on
-##      used compiler switches (i.e. to match witdh specification and or default
+##      might be invalid, and also a different file may be needed based on
+##      used compiler switches (i.e. to match width specification and or default
 ##      sign for some types).
 ##@todo Currently cppcheck is only executed for the default build configuration
 ##      "ConfigDefault.cmake"for target AN521 of the "top level" project.
-##      This might need to be revied/changed in the future.
+##      This might need to be revised/changed in the future.
 ##
 
 #Fail if any command exit with error.
 set -e
 
+RAW_OUTPUT=0
+
+while getopts "hr" opt ; do
+  case "$opt" in
+    h)
+      echo "Usage: $(basename -- "$0") [-h] [-r] [git_hash]"
+      echo " -r, Raw output. (Default is to create xml reports)."
+      echo " -h, Script help"
+      exit 0
+      ;;
+    r)
+      RAW_OUTPUT=1
+      ;;
+  esac
+done
+
+shift $((OPTIND-1))
+
 #The location from where the script executes
 mypath=$(dirname $0)
 
 #The cmake_exported project file in json format
-cmake_commmands=compile_commands.json
+cmake_commands=compile_commands.json
 
 . "$mypath/util_cmake.sh"
-
 
 #Library file for cppcheck
 library_file="$(fix_win_path $(get_full_path $mypath))/cppcheck/arm-cortex-m.cfg"
@@ -61,7 +78,7 @@ additional_checklist="all"
 
 #Run cmake to get the compile_commands.json file
 echo
-echo '******* Generating compile_commandas.json ***************'
+echo '******* Generating compile_commands.json ***************'
 echo
 generate_project $(fix_win_path $(get_full_path ./)) "./" "cppcheck" "-DCMAKE_EXPORT_COMPILE_COMMANDS=1  -DTARGET_PLATFORM=AN521 -DCOMPILER=GNUARM"
 
@@ -69,15 +86,15 @@ generate_project $(fix_win_path $(get_full_path ./)) "./" "cppcheck" "-DCMAKE_EX
 bdir=$(make_build_dir_name "./" "cppcheck")
 pushd "$bdir" >/dev/null
 
-#The following snippet allows cppcheck to be run differentially againist a
+#The following snippet allows cppcheck to be run differentially against a
 #commit hash passed as first argument $1. It does not
 #affect the legacy functionality of the script, checking the whole codebase,
 #when called without an argument
 if [[ ! -z "$1" ]]
   then
-    echo "Enabled git-diff mode againist hash:  $1"
+    echo "Enabled git-diff mode against hash:  $1"
 
-    # Do not execute unused functioncheck when running in diff-mode
+    # Do not execute unused function check when running in diff-mode
     additional_checklist="style,performance,portability,information,missingInclude"
     # Grep will set exit status to 1 if a commit does not contain c/cpp.. files
     set +e
@@ -91,12 +108,12 @@ if [[ ! -z "$1" ]]
     for fl in "${git_flist[@]}"; do
         echo "Looking for reference of file: $fl"
 
-        # dry run the command to see if there any ouput
-        JSON_CMD=$(grep -B 3 "\"file\": \".*$fl\"" $cmake_commmands)
+        # dry run the command to see if there any output
+        JSON_CMD=$(grep -B 3 "\"file\": \".*$fl\"" $cmake_commands)
 
         if [ -n "${JSON_CMD}" ]; then
             command_matched=1
-            grep -B 3 "\"file\": \".*$fl\"" $cmake_commmands >> $filtered_cmd_f
+            grep -B 3 "\"file\": \".*$fl\"" $cmake_commands >> $filtered_cmd_f
             echo -e "}," >> $filtered_cmd_f
         fi
     done
@@ -107,26 +124,42 @@ if [[ ! -z "$1" ]]
         sed -i '$ d' $filtered_cmd_f
         echo -e "}\n]" >> $filtered_cmd_f
 
-        cat $filtered_cmd_f > $cmake_commmands
+        cat $filtered_cmd_f > $cmake_commands
     else
-        # Always generate an empty file for other stages of ci expecting one
         echo "CppCheck: Ignoring files not contained in the build config"
-        echo "Files Ignored: $flist"
-				cat <<-EOF > chk-config.xml
-				<?xml version="1.0" encoding="UTF-8"?>
-				<results version="2">
-				    <cppcheck version="$(cppcheck --version)"/>
-				    <errors>
-				    </errors>
-				</results>
-				EOF
-        cp chk-config.xml chk-src.xml
+        if [ "$RAW_OUTPUT" == "0" ] ; then
+          # Always generate an empty file for other stages of ci expecting one
+          echo "Files Ignored: $flist"
+          cat > chk-config.xml << EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<results version="2">
+  <cppcheck version="$(cppcheck --version)"/>
+  <errors>
+  </errors>
+</results>
+EOF
+          cp chk-config.xml chk-src.xml
+        fi
         exit 0
     fi
 fi
 
+function cppcheck_failed {
+  echo "cppcheck failed."
+  echo "Check log for errors."
+  exit 1
+}
 
-#Build the external projects to get all headers installed to plases from where
+EXTRA_ARGS="--error-exitcode=1"
+if [ "$RAW_OUTPUT" != "1" ] ; then
+  # If not in raw output mode, use xml output.
+  EXTRA_ARGS="--xml"
+else
+  trap cppcheck_failed ERR
+fi
+CPPCHECK_ARGS="$EXTRA_ARGS --enable="$additional_checklist" --library="$library_file" --project=$cmake_commands --suppressions-list="$suppress_file" --inline-suppr"
+
+#Build the external projects to get all headers installed to places from where
 #tf-m code uses them
 echo
 echo '******* Install external projects to their final place ***************'
@@ -138,14 +171,23 @@ echo
 echo '******* checking cppcheck configuration ***************'
 echo
 
-cppcheck --xml --check-config --enable="$additional_checklist" --library="$library_file" --project=$cmake_commmands --suppressions-list="$suppress_file" --inline-suppr 2>chk-config.xml
+if [ "$RAW_OUTPUT" == "1" ] ; then
+  cppcheck $CPPCHECK_ARGS --check-config > /dev/null
+else
+  cppcheck $CPPCHECK_ARGS --check-config 2>chk-config.xml
+fi
 
 echo
 echo '******* analyzing files with cppcheck ***************'
 echo
-cppcheck --xml --enable="$additional_checklist" --library="$library_file" --project=$cmake_commmands --suppressions-list="$suppress_file" --inline-suppr 2>chk-src.xml
+if [ "$RAW_OUTPUT" == "1" ] ; then
+  cppcheck $CPPCHECK_ARGS > /dev/null
+  echo '******* cppcheck complete ***************'
+else
+  cppcheck $CPPCHECK_ARGS 2>chk-src.xml
+  echo
+  echo '******* Please check chk-config.xml and chk-src.xml for the results. ***************'
+  echo
+fi
 popd
 
-echo
-echo '******* Please check chk-config.xml and chk-src.xml for the results. ***************'
-echo

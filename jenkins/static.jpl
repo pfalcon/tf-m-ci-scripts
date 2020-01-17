@@ -1,0 +1,33 @@
+#!/usr/bin/env groovy
+//-------------------------------------------------------------------------------
+// Copyright (c) 2020, Arm Limited and Contributors. All rights reserved.
+//
+// SPDX-License-Identifier: BSD-3-Clause
+//
+//-------------------------------------------------------------------------------
+
+
+def trigger(job_name) {
+  return {
+    def params = []
+    params += string(name: 'GERRIT_HOST', value: env.GERRIT_HOST ?: '')
+    params += string(name: 'GERRIT_BRANCH', value: env.GERRIT_BRANCH ?: '')
+    params += string(name: 'GERRIT_REFSPEC', value: env.GERRIT_REFSPEC ?: '')
+    params += string(name: 'GERRIT_CHANGE_NUMBER', value: env.GERRIT_CHANGE_NUMBER ?: '')
+    params += string(name: 'GERRIT_PATCHSET_REVISION', value: env.GERRIT_PATCHSET_REVISION ?: '')
+    params += string(name: 'CMSIS_VERSION', value: env.CMSIS_VERSION)
+    params += string(name: 'MBEDCRYPTO_VERSION', value: env.MBEDCRYPTO_VERSION)
+    params += string(name: 'CODE_REPO', value: env.CODE_REPO)
+    build(job: job_name, parameters: params)
+  }
+}
+
+stage("Static Checks") {
+  def checks = [:]
+  checks["cppcheck"] = trigger("tf-m-cppcheck")
+  checks["checkpatch"] = trigger("tf-m-checkpatch")
+  parallel(checks)
+}
+stage("Trigger Build") {
+  parallel(["build":trigger("tf-m-build-and-test")])
+}

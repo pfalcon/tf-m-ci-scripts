@@ -73,7 +73,8 @@ usage() {
 	echo " -f, <output_filename>, Output filename"
 	echo " -u, Update checkpatch files using curl"
 	echo " -l <number>, Check only the last <number> commits (HEAD~<number>)."
-	echo " -p <path>, Provide location of directory containing checkpath."
+	echo " -p <path>, Provide location of directory containing checkpatch."
+	echo " -r, Print raw output. Implies verbose."
 	echo -e "\nNOTE: make sure checkpatch is located in '$CHECKPATCH_PATH'"
 }
 
@@ -171,8 +172,10 @@ check_tree() {
 	CHECKPATCH_CMD="$CHECKPATCH_CMD -f "
 	if [ $VERBOSE -eq 1 ]; then
 		eval "$FIND_CMD" | xargs -n 1 -i -P 8 $CHECKPATCH_CMD {} |tee -a "$OUTPUT_FILE_PATH"
+		RETURN_CODE=${PIPESTATUS[1]}
 	else
 		eval "$FIND_CMD" | xargs -n 1 -i -P 8 $CHECKPATCH_CMD {} >> $OUTPUT_FILE_PATH
+		RETURN_CODE=${PIPESTATUS[1]}
 	fi
 }
 
@@ -215,8 +218,10 @@ check_diff() {
 
 	if [ $VERBOSE -eq 1 ]; then
 		$GIT_CMD | $CHECKPATCH_CMD | tee -a "$OUTPUT_FILE_PATH"
+		RETURN_CODE=${PIPESTATUS[1]}
 	else
 		$GIT_CMD | $CHECKPATCH_CMD >> $OUTPUT_FILE_PATH
+		RETURN_CODE=${PIPESTATUS[1]}
 	fi
 
 	popd > /dev/null
@@ -241,9 +246,12 @@ UPDATE_CHECKPATCH_FILES=0
 #!path CHECK_LAST_COMMITS;
 CHECK_LAST_COMMITS=0
 
+# Whether to print the output to screen.
+RAW_OUTPUT=0
+
 # Getting options and setting variables required to execute the script. This
 # script starts executing from here.
-while getopts "uvhd:f:l:p:" opt
+while getopts "uvhd:f:l:p:r" opt
 do
 	case $opt in
 		v) VERBOSE=1 ;;
@@ -253,6 +261,8 @@ do
 		u) UPDATE_CHECKPATCH_FILES=1 ;;
 		l) CHECK_LAST_COMMITS="$OPTARG" ;;
 		p) CHECKPATCH_PATH="$OPTARG" ;;
+		r) RAW_OUTPUT=1
+		   VERBOSE=1 ;;
 		\?) usage ; exit 1 ;;
 	esac
 done
@@ -260,7 +270,7 @@ done
 # Update checkpatch files
 if [ $UPDATE_CHECKPATCH_FILES -eq 1 ]; then
 	update_checkpatch
-	echo "Checkpatch update was successfull."
+	echo "Checkpatch update was successful."
 	exit 0
 fi
 
@@ -294,4 +304,9 @@ else
 	check_diff
 fi
 
-echo "checkpatch report \"$OUTPUT_FILE_PATH\" is ready!"
+if [ "$RAW_OUTPUT" == "1" ] ; then
+	rm $OUTPUT_FILE_PATH
+	exit $RETURN_CODE
+else
+	echo "checkpatch report \"$OUTPUT_FILE_PATH\" is ready!"
+fi
