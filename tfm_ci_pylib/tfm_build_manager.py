@@ -70,6 +70,38 @@ class TFM_Build_Manager(structuredTask):
 
         super(TFM_Build_Manager, self).__init__(name="TFM_Build_Manager")
 
+    def print_config(self):
+        """Prints a list of available build configurations"""
+        print("\n".join(list(self._tbm_build_cfg.keys())))
+
+    def print_config_environment(self, config):
+        """
+        For a given build configuration from output of print_config
+        method, print environment variables to build.
+        """
+        if config not in self._tbm_build_cfg:
+            print("Error: no such config {}".format(config), file=sys.stderr)
+            sys.exit(1)
+        config_details = self._tbm_build_cfg[config]
+        argument_list = [
+            "TARGET_PLATFORM={}",
+            "COMPILER={}",
+            "PROJ_CONFIG={}",
+            "CMAKE_BUILD_TYPE={}",
+            "BL2={}",
+        ]
+        print(
+            "\n".join(argument_list)
+            .format(
+                config_details.target_platform,
+                config_details.compiler,
+                config_details.proj_config,
+                config_details.cmake_build_type,
+                config_details.with_mcuboot,
+            )
+            .strip()
+        )
+
     def pre_eval(self):
         """ Tests that need to be run in set-up state """
         return True
