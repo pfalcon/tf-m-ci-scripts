@@ -29,7 +29,6 @@ import requests
 import argparse
 import json
 import itertools
-import xmltodict
 from shutil import move
 from collections import OrderedDict, namedtuple
 from subprocess import Popen, PIPE, STDOUT, check_output
@@ -530,18 +529,6 @@ def convert_git_ref_path(dir_path):
         move(dir_path, d)
         dir_path = d
     return dir_path
-
-
-def xml_read(file):
-    """" Read the contects of an xml file and convert it to python object """
-
-    data = None
-    try:
-        with open(file, "r") as F:
-            data = xmltodict.parse(F.read())
-    except Exception as E:
-        print("Error", E)
-    return data
 
 
 def list_filtered_tree(directory, rex_filter=None):

@@ -194,7 +194,7 @@ class TFM_Build_Manager(structuredTask):
                 # Merge the two dictionaries since the template may contain
                 # fixed and combinations seed parameters
                 cmd0 = build_cfg["config_template"] % \
-                    {**dict(i._asdict()), **build_cfg}
+                    dict(dict(i._asdict()), **build_cfg)
 
                 # Prepend configuration commoand as the first cmd
                 build_cfg["build_cmds"] = [cmd0] + build_cfg["build_cmds"]
@@ -466,7 +466,7 @@ class TFM_Build_Manager(structuredTask):
                     static_config)
 
                 # Append the configuration to the existing ones
-                rejection_cfg = {**rejection_cfg, **rj_cfg}
+                rejection_cfg = dict(rejection_cfg, **rj_cfg)
 
             # Notfy the user for the rejected configuations
             for i in rejection_cfg.keys():

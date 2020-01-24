@@ -32,6 +32,7 @@ import re
 import sys
 import json
 import argparse
+import xmltodict
 from pprint import pprint
 
 try:
@@ -45,6 +46,18 @@ except ImportError:
     from tfm_ci_pylib.utils import load_json, get_local_git_info, \
         save_json, list_subdirs, get_remote_git_info, \
         convert_git_ref_path, xml_read
+
+
+def xml_read(file):
+    """" Read the contects of an xml file and convert it to python object """
+
+    data = None
+    try:
+        with open(file, "r") as F:
+            data = xmltodict.parse(F.read())
+    except Exception as E:
+        print("Error", E)
+    return data
 
 
 def split_keys(joint_arg, sep="="):
