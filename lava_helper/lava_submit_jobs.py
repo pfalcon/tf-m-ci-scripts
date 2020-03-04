@@ -104,7 +104,7 @@ def lava_dispatch(user_args):
             print("Job submitted at: " + job_url)
             job_id_list.append(job_id)
 
-    print("\n".join(str(x) for x in job_id_list))
+    print("JOBS: {}".format(",".join(str(x) for x in job_id_list)))
 
 def main(user_args):
     lava_dispatch(user_args)

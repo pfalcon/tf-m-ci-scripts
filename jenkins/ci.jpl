@@ -13,23 +13,24 @@ import org.trustedfirmware.Summary
 def listConfigs(ci_scripts_dir, config_list, filter_group) {
   dir(ci_scripts_dir) {
     echo "Obtaining list of configs."
-    echo "Running: ./configs.py -g ${filter_group}"
+    echo "Running: python3 ./configs.py -g ${filter_group.replace(" ", " -g ")}"
     def build_config_list_raw = sh(script: """\
-./configs.py -g ${filter_group}
+python3 ./configs.py -g ${filter_group.replace(" ", " -g ")}
 """, returnStdout: true).trim()
     def build_config_list = build_config_list_raw.tokenize('\n')
     config_list.addAll(build_config_list)
   }
 }
 
-def buildConfig(ci_scripts_dir, config, filter_group) {
+def buildConfig(ci_scripts_dir, config, filter_group, results) {
   def params = []
+  def params_collection = [:]
   def build_config_params
   dir(ci_scripts_dir) {
     echo "Obtaining build configuration for config ${config}"
-    echo "Running: ./configs.py -g ${filter_group} ${config}"
+    echo "Running: python3 ./configs.py -g ${filter_group.replace(" ", " -g ")} ${config}"
     build_config_params = sh(script: """\
-./configs.py -g ${filter_group} ${config}
+python3 ./configs.py -g ${filter_group.replace(" ", " -g ")} ${config}
 """, returnStdout: true).trim()
   }
   def lines = build_config_params.tokenize('\n')
@@ -37,6 +38,7 @@ def buildConfig(ci_scripts_dir, config, filter_group) {
     def key, value
     (key, value) = line.tokenize('=')
     params += string(name: key, value: value)
+    params_collection[key] = value
   }
   params += string(name: 'GERRIT_BRANCH', value: env.GERRIT_BRANCH)
   params += string(name: 'GERRIT_HOST', value: env.GERRIT_HOST)
@@ -60,8 +62,14 @@ def buildConfig(ci_scripts_dir, config, filter_group) {
       print("Doing LAVA stuff for ${build_url}")
       params += string(name: 'BUILD_NUMBER', value: "${build_res.number}")
       params += string(name: 'BUILD_URL', value: build_url)
+      params += string(name: 'LAVA_URL', value: env.LAVA_URL)
       def lava_res = build(job: 'tf-m-lava-submit', parameters: params, propagate: false)
-      results['lava_jobs'] += lava_res.getDescription()
+      if (lava_res.result in failure_states) {
+        error("LAVA Create and Submit failed at ${lava_res.getAbsoluteUrl()}")
+      }
+      else {
+        results['lava_jobs'] += lava_res.getDescription()
+      }
     }
   }
 }
@@ -104,14 +112,37 @@ def writeSummary(results) {
   }
 }
 
+def lineInString(string, match) {
+  def lines = string.split("\n")
+  def result = lines.findAll { it.contains(match) }
+  return result[0]
+}
+
+def getResult(string, match) {
+  line = lineInString(string, match)
+  return(line.split(match)[1].split(' '))
+}
+
+def submitJobsToList(results) {
+  def all_jobs = []
+  for (String result : results){
+    jobs_s = result.split('JOBS: ')
+    if (jobs_s.size() > 1) {
+      all_jobs += jobs_s[1]
+    }
+  }
+  return(all_jobs)
+}
+
 def configs = []
 def builds = [:]
+def results = [:]
 
-node("master") {
+node("docker-amd64-xenial") {
   stage("Init") {
     cleanWs()
     dir("tf-m-ci-scripts") {
-      git url: '$CI_SCRIPTS_REPO', branch: 'master', credentialsId: 'GIT_SSH_KEY'
+      git url: '$CI_SCRIPTS_REPO', branch: '$CI_SCRIPTS_BRANCH', credentialsId: 'GIT_SSH_KEY'
     }
   }
   stage("Configs") {
@@ -120,7 +151,7 @@ node("master") {
     results['builds'] = [:]
     results['lava_jobs'] = []
     for (config in configs) {
-      builds[config] = buildConfig("tf-m-ci-scripts", config, env.FILTER_GROUP)
+      builds[config] = buildConfig("tf-m-ci-scripts", config, env.FILTER_GROUP, results)
     }
     builds["docs"] = buildDocs()
   }
@@ -145,12 +176,50 @@ stage("Builds") {
 node("docker-amd64-xenial") {
   stage("Tests") {
     dir("tf-m-ci-scripts") {
-      git url: '$CI_SCRIPTS_REPO', branch: 'master', credentialsId: 'GIT_SSH_KEY'
+      git url: '$CI_SCRIPTS_REPO', branch: '$CI_SCRIPTS_BRANCH', credentialsId: 'GIT_SSH_KEY'
     }
+    def all_jobs = []
+    def success = true
     print("Wait for LAVA results here...")
-    results['lava_jobs'].each { result ->
-      print(result)
+    try {
+      all_jobs = submitJobsToList(results['lava_jobs'])
+      if (all_jobs.size() > 0) {
+        dir("tf-m-ci-scripts") {
+          withCredentials([usernamePassword(credentialsId: 'LAVA_CREDENTIALS', passwordVariable: 'LAVA_TOKEN', usernameVariable: 'LAVA_USER')]) {
+            output = sh(script: """./lava_helper/lava_wait_jobs.py --job-ids ${all_jobs.join(",")} \
+  --lava-url ${env.LAVA_URL} --lava-user ${LAVA_USER} --lava-token ${LAVA_TOKEN} \
+  --artifacts-path lava_artifacts \
+  """, returnStdout: true).trim()
+            archiveArtifacts artifacts: 'test_summary.*', allowEmptyArchive: true
+            print(output)
+            g = new Gerrit()
+            def boot_result = getResult(output, 'BOOT_RESULT: ')[0]
+            if (boot_result) {
+              g.verifyStatus(boot_result, "lava_boot", "test")
+            }
+            def test_result = getResult(output, 'TEST_RESULT: ')[0]
+            if (test_result) {
+              g.verifyStatus(test_result, "lava_test", "test")
+            }
+            if (boot_result.toInteger() < 1 || test_result.toInteger() < 1) {
+              error("Marking job as failed due to failed boots/tests")
+            }
+          }
+        }
+      }
+      else {
+        print("There were no LAVA jobs to test.")
+      }
+    }
+    catch (Exception e) {
+      print("ERROR: ${e}")
+      success = false
+    } finally {
+      archiveArtifacts artifacts: 'tf-m-ci-scripts/lava_artifacts/**', allowEmptyArchive: true
+      cleanWs()
+      if (!success) {
+        error("There was an Error waiting for LAVA jobs")
+      }
     }
   }
-  cleanWs()
 }

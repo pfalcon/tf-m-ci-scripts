@@ -20,7 +20,12 @@ def getBuildCsv(results) {
     } else {
       bl2_string = 'NOBL2'
     }
-    row_string = "${params['TARGET_PLATFORM']}_${params['COMPILER']}_${params['CMAKE_BUILD_TYPE']}_${bl2_string}"
+    if (params["PSA_API_SUITE"].isEmpty()) {
+      psa_string = ""
+    } else {
+      psa_string = "_${params['PSA_API_SUITE']}"
+    }
+    row_string = "${params['TARGET_PLATFORM']}_${params['COMPILER']}_${params['CMAKE_BUILD_TYPE']}_${bl2_string}${psa_string}"
     column_string = "${params['PROJ_CONFIG']}"
     row = table[row_string]
     if (row == null) {

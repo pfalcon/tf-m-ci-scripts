@@ -1,0 +1,42 @@
+{#------------------------------------------------------------------------------
+# Copyright (c) 2020, Arm Limited and Contributors. All rights reserved.
+#
+# SPDX-License-Identifier: BSD-3-Clause
+#
+#-----------------------------------------------------------------------------#}
+{%- block metadata %}
+metadata:
+  build_no: {{ build_no }}
+  compiler: {{ compiler }}
+  build_type: {{ build_type }}
+  boot_type: {{ boot_type }}
+  name: {{ name }}
+  platform: {{ platform }}
+  build_name: {{ build_name }}
+  recovery_image_url: {{ recovery_image_url }}
+  firmware_url: {{ firmware_url }}
+  bootloader_url: {{ bootloader_url }}
+  build_job_url: {{ build_job_url }}
+{%- endblock %}
+
+{%- block base %}
+device_type: {{ device_type }}
+job_name: {{ job_name }}
+
+timeouts:
+  job:
+    minutes: {{ job_timeout }}
+  action:
+    minutes: {{ action_timeout }}
+  actions:
+    power-off:
+      minutes: {{ poweroff_timeout }}
+  connections:
+    lava-test-monitor:
+      minutes: {{ monitor_timeout }}
+
+priority: medium
+visibility: public
+{% endblock %}
+{% block actions %}
+{% endblock %}

@@ -31,7 +31,7 @@ node(nodeLabel) {
         ])
     }
     dir("tf-m-ci-scripts") {
-      git url: '$CI_SCRIPTS_REPO', branch: 'master', credentialsId: 'GIT_SSH_KEY'
+      git url: '$CI_SCRIPTS_REPO', branch: '$CI_SCRIPTS_BRANCH', credentialsId: 'GIT_SSH_KEY'
     }
     dir("mbed-crypto") {
       checkout(
@@ -39,7 +39,7 @@ node(nodeLabel) {
         poll: false,
         scm: [
           $class: 'GitSCM',
-          branches: [[name: 'FETCH_HEAD']], 
+          branches: [[name: 'FETCH_HEAD']],
           userRemoteConfigs: [[
             refspec: 'refs/tags/$MBEDCRYPTO_VERSION',
             url: params.MBEDCRYPTO_URL
@@ -63,7 +63,7 @@ unzip -o -d CMSIS_5 cmsis.pack
             branches: [[name: 'FETCH_HEAD']],
             userRemoteConfigs: [[
               refspec: 'refs/tags/v20.03_API1.0',
-              url: 'https://github.com/ARM-software/psa-arch-tests'
+              url: params.PSA_ARCH_TESTS_URL
             ]]
           ]
         )
@@ -86,6 +86,8 @@ unzip -o -d CMSIS_5 cmsis.pack
   } finally {
     g = new Gerrit()
     g.verifyStatusInWorkspace(verify, env.CONFIG_NAME, 'build')
+    def buildStatus = (verify == 1) ? 'Successful' : 'Failed'
+    //g.commentInWorkspace("Build configuration ${env.CONFIG_NAME} ${buildStatus}: ${env.RUN_DISPLAY_URL}")
     cleanWs()
   }
 }

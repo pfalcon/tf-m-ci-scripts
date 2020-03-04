@@ -71,7 +71,7 @@ tfm_mps2_sse_200 = {
                 {
                     'name': 'Secure_Test_Suites_Summary',
                     'start': '[Sec Thread]',
-                    'end': '\\x1b\\\[0m',
+                    'end': 'system starting',
                     'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
                                r'(?P<test_case_id>Secure image '
                                r'initializing)(?P<result>!)',
@@ -142,7 +142,7 @@ tfm_mps2_sse_200 = {
                 {
                     'name': 'Secure_Test_Suites_Summary',
                     'start': '[Sec Thread]',
-                    'end': '\\x1b\\\[0m',
+                    'end': 'system starting',
                     'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
                                r'(?P<test_case_id>Secure image '
                                r'initializing)(?P<result>!)',
@@ -173,22 +173,152 @@ tfm_mps2_sse_200 = {
 }
 
 
-tfm_mps2_fvp = {
+tfm_mps2_fvp_bl2 = {
     "templ": "template_tfm_mps2_fvp.jinja2",
-    "job_name": "mps-fvp",
+    "job_name": "mps2plus-arm-tfm-fvp",
     "device_type": "fvp",
-    "job_timeout": 180,
-    "action_timeout": 90,
-    "monitor_timeout": 90,
-    "poweroff_timeout": 5,
+    "job_timeout": 5,
+    "action_timeout": 2,
+    "monitor_timeout": 2,
+    "poweroff_timeout": 1,
     "recovery_store_url": "%(jenkins_url)s/"
                           "job/%(jenkins_job)s",
     "artifact_store_url": "%(jenkins_url)s/"
                           "job/%(jenkins_job)s",
-    "platforms": {"AN519": "mps2_an521_v3.0.tar.gz"},
-    "compilers": ["GNUARM"],
+    "platforms": {"AN521": "mps2_an521_v3.0.tar.gz"},
+    "compilers": ["GNUARM", "ARMCLANG"],
     "build_types": ["Debug", "Release"],
     "boot_types": ["BL2"],
+    "data_bin_offset": "0x10080000",
+    "tests": {
+        'Default': {
+            "binaries": {
+                "firmware": "mcuboot.axf",
+                "bootloader": "tfm_s_ns_signed.bin"
+            },
+            "monitors": [
+                {
+                    'name': 'Secure_Test_Suites_Summary',
+                    'start': r'[Sec Thread]',
+                    'end': r'system starting',
+                    'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
+                               r'(?P<test_case_id>Secure image '
+                               r'initializing)(?P<result>!)',
+                    'fixup': {"pass": "!", "fail": ""},
+                    'required': ["secure_image_initializing"]
+                } # Monitors
+            ]
+        },  # Default
+        'Regression': {
+            "binaries": {
+                "firmware": "mcuboot.axf",
+                "bootloader": "tfm_s_ns_signed.bin"
+            },
+            "monitors": [
+                {
+                    'name': 'Secure_Test_Suites_Summary',
+                    'start': 'Secure test suites summary',
+                    'end': 'End of Secure test suites',
+                    'pattern': r"[\x1b]\\[37mTest suite '(?P<"
+                               r"test_case_id>[^\n]+)' has [\x1b]\\[32m "
+                               r"(?P<result>PASSED|FAILED)",
+                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
+                    'required': [
+                        ("psa_protected_storage_"
+                           "s_interface_tests_tfm_sst_test_2xxx_"),
+                        "sst_reliability_tests_tfm_sst_test_3xxx_",
+                        "sst_rollback_protection_tests_tfm_sst_test_4xxx_",
+                        ("psa_internal_trusted_storage_"
+                           "s_interface_tests_tfm_its_test_2xxx_"),
+                        "its_reliability_tests_tfm_its_test_3xxx_",
+                        ("audit_"
+                         "logging_secure_interface_test_tfm_audit_test_1xxx_"),
+                        "crypto_secure_interface_tests_tfm_crypto_test_5xxx_",
+                        ("initial_attestation_service_"
+                         "secure_interface_tests_tfm_attest_test_1xxx_"),
+                    ]
+                },
+                {
+                    'name': 'Non_Secure_Test_Suites_Summary',
+                    'start': 'Non-secure test suites summary',
+                    'end': r'End of Non-secure test suites',
+                    'pattern': r"[\x1b]\\[37mTest suite '(?P"
+                               r"<test_case_id>[^\n]+)' has [\x1b]\\[32m "
+                               r"(?P<result>PASSED|FAILED)",
+                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
+                    'required': [
+                        ("psa_protected_storage"
+                         "_ns_interface_tests_tfm_sst_test_1xxx_"),
+                        ("psa_internal_trusted_storage"
+                         "_ns_interface_tests_tfm_its_test_1xxx_"),
+                        ("auditlog_"
+                         "non_secure_interface_test_tfm_audit_test_1xxx_"),
+                        ("crypto_"
+                         "non_secure_interface_test_tfm_crypto_test_6xxx_"),
+                        ("initial_attestation_service_"
+                         "non_secure_interface_tests_tfm_attest_test_2xxx_"),
+                        "core_non_secure_positive_tests_tfm_core_test_1xxx_"
+                    ]
+                }
+            ]  # Monitors
+        },  # Regression
+        'CoreIPC': {
+            "binaries": {
+                "firmware": "mcuboot.axf",
+                "bootloader": "tfm_s_ns_signed.bin"
+            },
+            "monitors": [
+                {
+                    'name': 'Secure_Test_Suites_Summary',
+                    'start': r'[Sec Thread]',
+                    'end': r'system starting',
+                    'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
+                               r'(?P<test_case_id>Secure image '
+                               r'initializing)(?P<result>!)',
+                    'fixup': {"pass": "!", "fail": ""},
+                    'required': ["secure_image_initializing"]
+                }  # Monitors
+            ]
+        },  # CoreIPC
+        'CoreIPCTfmLevel2': {
+            "binaries": {
+                "firmware": "mcuboot.axf",
+                "bootloader": "tfm_s_ns_signed.bin"
+            },
+            "monitors": [
+                {
+                    'name': 'Secure_Test_Suites_Summary',
+                    'start': r'[Sec Thread]',
+                    'end': r'system starting',
+                    'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
+                               r'(?P<test_case_id>Secure image '
+                               r'initializing)(?P<result>!)',
+                    'fixup': {"pass": "!", "fail": ""},
+                    'required': ["secure_image_initializing"]
+                }  # Monitors
+            ]
+        },  # CoreIPCTfmLevel2
+    }  # Tests
+}
+
+
+tfm_mps2_fvp_nobl2 = {
+    "templ": "template_tfm_mps2_fvp.jinja2",
+    "job_name": "mps2plus-arm-tfm-fvp",
+    "device_type": "fvp",
+    "job_timeout": 5,
+    "action_timeout": 2,
+    "monitor_timeout": 2,
+    "poweroff_timeout": 1,
+    "recovery_store_url": "%(jenkins_url)s/"
+                          "job/%(jenkins_job)s",
+    "artifact_store_url": "%(jenkins_url)s/"
+                          "job/%(jenkins_job)s",
+    "platforms": {"AN521": "mps2_an521_v3.0.tar.gz"},
+    "compilers": ["GNUARM", "ARMCLANG"],
+    "build_types": ["Debug", "Release"],
+    "boot_types": ["NOBL2"],
+    "data_bin_offset": "0x00100000",
     "tests": {
         'Default': {
             "binaries": {
@@ -198,14 +328,14 @@ tfm_mps2_fvp = {
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
-                    'start': '[Sec Thread]',
-                    'end': '\\x1b\\\[0m',
+                    'start': r'[Sec Thread]',
+                    'end': r'system starting',
                     'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
                                r'(?P<test_case_id>Secure image '
                                r'initializing)(?P<result>!)',
                     'fixup': {"pass": "!", "fail": ""},
                     'required': ["secure_image_initializing"]
-                }  # Monitors
+                }
             ]
         },  # Default
         'Regression': {
@@ -269,8 +399,8 @@ tfm_mps2_fvp = {
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
-                    'start': '[Sec Thread]',
-                    'end': '\\x1b\\\[0m',
+                    'start': r'[Sec Thread]',
+                    'end': r'system starting',
                     'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
                                r'(?P<test_case_id>Secure image '
                                r'initializing)(?P<result>!)',
@@ -287,8 +417,8 @@ tfm_mps2_fvp = {
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
-                    'start': '[Sec Thread]',
-                    'end': '\\x1b\\\[0m',
+                    'start': r'[Sec Thread]',
+                    'end': r'system starting',
                     'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
                                r'(?P<test_case_id>Secure image '
                                r'initializing)(?P<result>!)',
@@ -302,7 +432,8 @@ tfm_mps2_fvp = {
 
 # All configurations should be mapped here
 lava_gen_config_map = {"tfm_mps2_sse_200": tfm_mps2_sse_200,
-                       "tfm_mps2_fvp": tfm_mps2_fvp}
+                       "tfm_mps2_fvp_bl2": tfm_mps2_fvp_bl2,
+                       "tfm_mps2_fvp_nobl2": tfm_mps2_fvp_nobl2}
 lavagen_config_sort_order = [
     "templ",
     "job_name",

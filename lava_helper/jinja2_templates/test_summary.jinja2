@@ -1,0 +1,49 @@
+<html>
+<head>
+  <title>TF Test Summary</title>
+  <meta charset="UTF-8">
+</head>
+<body>
+
+{% for job in jobs %}
+{% for job_id, data in job.items() %}
+<h3>
+{% if data[0]['health'] == 'Complete' %}
+<font color="green">
+{% else %}
+<font color="red">
+{% endif %}
+Job: {{ job_id }}<br/>
+Description: {{ data[0]['description'] }}<br/>
+Device Type: {{ data[0]['device_type']}}  Health: {{ data[0]['health'] }}  <a href="{{ data[0]['metadata']['build_job_url'] }}">Build Job</a></br>
+<a href="{{ data[0]['artifacts_dir'] }}/definition.yaml">LAVA Definition</a>  <a href="{{ data[0]['lava_url'] }}">LAVA Job</a>  <a href="{{ data[0]['artifacts_dir'] }}/target_log.txt">Target Log</a></br>
+</font>
+</h3>
+{% if data[1] %}
+<h3>
+<table>
+<tr>
+<th>Name</th>
+<th>Suite</th>
+<th>Result</th>
+</tr>
+{% for result in data[1] %}
+<tr>
+<td>{{ result['name'] }} </td>
+<td>{{ result['suite'] }} </td>
+{% if result['result'] == 'pass' %}
+<td style="background-color:green">
+{% else %}
+<td style="background-color:red">
+{% endif %}
+{{ result['result'] }}</td>
+</tr>
+{% endfor %}
+</table>
+</h3>
+{% endif %}
+{% endfor %}
+{% endfor %}
+
+</body>
+</html>

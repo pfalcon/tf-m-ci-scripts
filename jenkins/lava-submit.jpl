@@ -10,7 +10,7 @@ node("docker-amd64-xenial") {
   stage("Init") {
     cleanWs()
     dir("tf-m-ci-scripts") {
-      git url: '$CI_SCRIPTS_REPO', branch: 'master', credentialsId: 'GIT_SSH_KEY'
+      git url: '$CI_SCRIPTS_REPO', branch: '$CI_SCRIPTS_BRANCH', credentialsId: 'GIT_SSH_KEY'
     }
   }
   stage("LAVA") {
@@ -25,12 +25,13 @@ node("docker-amd64-xenial") {
 --build-number ${env.BUILD_NUMBER} --output-dir lava_jobs \
 --compiler ${env.COMPILER} --platform ${env.TARGET_PLATFORM} \
 ${bl2_string} --build-type ${env.CMAKE_BUILD_TYPE} \
---jenkins-build-url ${env.BUILD_URL} --proj-config ${env.PROJ_CONFIG}
+--jenkins-build-url ${env.BUILD_URL} --proj-config ${env.PROJ_CONFIG} \
+--docker-prefix ${env.DOCKER_PREFIX} --license-variable "${env.LICENSE_VARIABLE}"
 """, returnStdout: true).trim()
         print(res)
         job_ids = sh(script: """./lava_helper/lava_submit_jobs.py \
-  --lava-url https://tf.validation.linaro.org --job-dir lava_jobs \
-  --lava-user ${LAVA_USER} --lava-token ${LAVA_TOKEN}
+  --lava-url ${env.LAVA_URL} --job-dir lava_jobs \
+  --lava-user ${LAVA_USER} --lava-token ${LAVA_TOKEN} | egrep "^JOBS"
   """, returnStdout: true).trim()
         currentBuild.setDescription(job_ids)
       }

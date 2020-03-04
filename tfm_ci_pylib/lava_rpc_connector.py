@@ -23,6 +23,7 @@ __version__ = "1.1"
 
 import xmlrpc.client
 import time
+import yaml
 
 
 class LAVA_RPC_connector(xmlrpc.client.ServerProxy, object):
@@ -73,6 +74,53 @@ class LAVA_RPC_connector(xmlrpc.client.ServerProxy, object):
             with open(yaml_out_file, "w") as F:
                 F.write(results)
         return results
+
+    def get_job_definition(self, job_id, yaml_out_file=None):
+        job_def = self.scheduler.jobs.definition(job_id)
+        if yaml_out_file:
+            with open(yaml_out_file, "w") as F:
+                F.write(str(job_def))
+        def_o = yaml.load(job_def)
+        return job_def, def_o.get('metadata', [])
+
+    def write_target_lines(self, target_out_file, log):
+        log = yaml.load(str(log))
+        with open(target_out_file, "w+") as F:
+            for line in log:
+                if line['lvl'] in ['target', 'feedback']:
+                    F.write("{}\n".format(line['msg']))
+
+    def get_job_log(self, job_id, yaml_out_file=None, target_out_file=None):
+        job_res, job_log = self.scheduler.jobs.logs(job_id)
+        if yaml_out_file:
+            with open(yaml_out_file, "w") as F:
+                F.write(str(job_log))
+        if target_out_file:
+            self.write_target_lines(target_out_file, job_log)
+        return job_log
+
+    def get_job_config(self, job_id, yaml_out_file=None):
+        job_config = self.scheduler.jobs.configuration(job_id)
+        if yaml_out_file:
+            with open(yaml_out_file, "w") as F:
+                for data in job_config:
+                    if data:
+                        F.write(str(data))
+        return job_config
+
+    def get_job_info(self, job_id, yaml_out_file=None):
+        job_info = self.scheduler.jobs.show(job_id)
+        if yaml_out_file:
+            with open(yaml_out_file, "w") as F:
+                F.write(str(job_info))
+        return job_info
+
+    def get_error_reason(self, job_id):
+        lava_res = self.results.get_testsuite_results_yaml(job_id, 'lava')
+        results = yaml.load(lava_res)
+        for test in results:
+            if test['name'] == 'job':
+                return(test.get('metadata', {}).get('error_type', ''))
 
     def get_job_state(self, job_id):
         return self.scheduler.job_state(job_id)["job_state"]
@@ -146,6 +194,31 @@ class LAVA_RPC_connector(xmlrpc.client.ServerProxy, object):
             else:
                 break
         return self.scheduler.job_health(job_id)["job_health"]
+
+    def block_wait_for_jobs(self, job_ids, timeout, poll_freq=10):
+        """ Wait for multiple LAVA job ids to finish and return finished list """
+
+        start_t = int(time.time())
+        finished_jobs = {}
+        while(True):
+            cur_t = int(time.time())
+            if cur_t - start_t >= timeout:
+                print("Breaking because of timeout")
+                break
+            for job_id in job_ids:
+                # Check if the job is not running
+                cur_status = self.get_job_info(job_id)
+                # If in queue or running wait
+                if cur_status['state'] in ["Canceling","Finished"]:
+                    cur_status['error_reason'] = self.get_error_reason(job_id)
+                    finished_jobs[job_id] = cur_status
+                if len(job_ids) == len(finished_jobs):
+                    break
+                else:
+                    time.sleep(poll_freq)
+            if len(job_ids) == len(finished_jobs):
+                break
+        return finished_jobs
 
     def test_credentials(self):
         """ Attempt to querry the back-end and verify that the user provided

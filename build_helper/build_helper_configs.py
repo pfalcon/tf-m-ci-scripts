@@ -529,7 +529,27 @@ config_ci = {
     "seed_params": {
         "target_platform": ["AN521"],
         "compiler": ["ARMCLANG", "GNUARM"],
-        "proj_config": ["ConfigDefault", "ConfigCoreIPCTfmLevel2"],
+        "proj_config": ["ConfigDefault", "ConfigCoreIPCTfmLevel2", "ConfigCoreIPC", "ConfigRegression"],
+        "cmake_build_type": ["Release"],
+        "with_mcuboot": [True, False],
+    },
+    "common_params": _common_tfm_builder_cfg,
+    "invalid": [
+        ("AN521", "ARMCLANG", "ConfigDefault", "Release", False),
+        ("AN521", "ARMCLANG", "ConfigCoreIPCTfmLevel2", "Release", False),
+        ("AN521", "ARMCLANG", "ConfigCoreIPCTfmLevel2", "Release", True),
+        ("AN521", "ARMCLANG", "ConfigCoreIPC", "Release", False),
+        ("AN521", "ARMCLANG", "ConfigCoreIPC", "Release", True),
+        ("AN521", "ARMCLANG", "ConfigRegression", "Release", False),
+        ("AN521", "ARMCLANG", "ConfigRegression", "Release", True),
+    ],
+}
+
+config_lava_debug = {
+    "seed_params": {
+        "target_platform": ["AN521"],
+        "compiler": ["GNUARM"],
+        "proj_config": ["ConfigCoreIPC", "ConfigCoreIPCTfmLevel2", "ConfigRegression"],
         "cmake_build_type": ["Release"],
         "with_mcuboot": [True],
     },
@@ -561,6 +581,8 @@ _builtin_configs = {
                     "release": config_release,
                     "an521_psa_api": config_AN521_PSA_API,
                     "an521_psa_ipc": config_AN521_PSA_IPC,
+                    "debug": config_debug,
+                    "lava_debug": config_lava_debug,
                     "ci": config_ci}
 
 if __name__ == '__main__':

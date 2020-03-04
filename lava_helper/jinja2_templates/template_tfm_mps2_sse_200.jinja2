@@ -4,63 +4,44 @@
 # SPDX-License-Identifier: BSD-3-Clause
 #
 #-----------------------------------------------------------------------------#}
-device_type: {{ device_type }}
-job_name: {{ job_name }}
-
-timeouts:
-  job:
-    minutes: {{ job_timeout }}
-  action:
-    minutes: {{ action_timeout }}
-  actions:
-    power-off:
-      minutes: {{ poweroff_timeout }}
-  connections:
-    lava-test-monitor:
-      minutes: {{ monitor_timeout }}
-
-priority: medium
-visibility: public
-
+{% extends 'jinja2_templates/base.jinja2' %}
+{% block metadata %}
+{{ super() }}
+{% endblock %}
+{% block base %}
+{{ super() }}
+{% endblock %}
+{% block actions %}
 actions:
-{%- for platform, recovery in platforms.items()|sort(reverse=false) %}
-  {% for compiler in compilers|sort(reverse=true) %}
-    {%- for build_type in build_types|sort(reverse=false) %}
-      {%- for boot_type in boot_types|sort(reverse=false) %}
-        {%- for name, test in tests.items()|sort(reverse=false) %}
-    - deploy:
-        to: flasher
-        images:
-          recovery_image:
-            url: {{ recovery_store_url }}/{{ build_no }}/artifact/{{ recovery }}
-            compression: gz
-          test_binary_1:
-            url: {{artifact_store_url}}/{{ build_no }}/artifact/build-ci-all/{{ platform }}_{{ compiler }}_Config{{ name }}_{{ build_type }}_{{ boot_type }}/install/outputs/{{ platform }}/{{ test.binaries.firmware }}
-          test_binary_2:
-            url: {{artifact_store_url}}/{{ build_no }}/artifact/build-ci-all/{{ platform }}_{{ compiler }}_Config{{ name }}_{{ build_type }}_{{ boot_type }}/install/outputs/{{ platform }}/{{ test.binaries.bootloader }}
-        namespace: target
+- deploy:
+    to: flasher
+    images:
+      recovery_image:
+        url: {{ recovery_image_url }}
+        compression: gz
+    namespace: target
+    test_binary_1:
+      url: {{ firmware_url}}
+    test_binary_2:
+      url: {{ bootloader_url }}
+    namespace: target
 
-    - boot:
-        method: minimal
-        timeout:
-          minutes: 10
-        namespace: target
+- boot:
+    method: minimal
+    timeout:
+      minutes: 10
+    namespace: target
 
-    - test:
-        namespace: target
-        monitors:
-        {%- for monitor in test.monitors %}
-        - name: "{{monitor.name}}_{{ platform }}_{{ compiler }}_{{ name }}_{{ build_type }}_{{ boot_type }}"
-          start: "{{monitor.start}}"
-          end: "{{monitor.end}}"
-          pattern: "{{monitor.pattern}}"
-          fixupdict:
-             '{{monitor.fixup.pass}}': pass
-             '{{monitor.fixup.fail}}': fail
-
-        {%- endfor %}
-        {%- endfor %}
-      {%- endfor %}
-    {%- endfor %}
-  {%- endfor %}
-{%- endfor %}
+- test:
+    namespace: target
+    monitors:
+    {%- for monitor in test.monitors %}
+    - name: "{{monitor.name}}"
+      start: "{{monitor.start}}"
+      end: "{{monitor.end}}"
+      pattern: "{{monitor.pattern}}"
+      fixupdict:
+         '{{monitor.fixup.pass}}': pass
+         '{{monitor.fixup.fail}}': fail
+    {% endfor %}
+{% endblock %}

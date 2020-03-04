@@ -2,7 +2,7 @@
 
 """ lava_helper.py:
 
-    Generate custom defined LAVA definitions redered from Jinja2 templates.
+    Generate custom defined LAVA definitions rendered from Jinja2 templates.
     It can also parse the yaml output of LAVA and verify the test outcome """
 
 from __future__ import print_function
@@ -23,6 +23,7 @@ __version__ = "1.1"
 
 import os
 import sys
+import shutil
 import argparse
 from copy import deepcopy
 from collections import OrderedDict
@@ -75,20 +76,101 @@ def print_configs():
         print("\t * %s" % k)
 
 
-def generate_test_definitions(config, work_dir):
+def get_artifact_url(artifact_store_url, params, filename):
+    return "{}/{}/artifact/build-ci-all/{}_{}_Config{}_{}_{}/install/outputs/{}/{}".format(
+        artifact_store_url,
+        params['build_no'],
+        params['platform'],
+        params['compiler'],
+        params['name'],
+        params['build_type'],
+        params['boot_type'],
+        params['platform'],
+        filename,
+    )
+
+def get_recovery_url(recovery_store_url, build_no, recovery):
+    return("{}/{}/artifact/{}".format(
+        recovery_store_url,
+        build_no,
+        recovery
+    ))
+
+def get_job_name(name, params, job):
+    return("{}_{}_{}_{}_{}_{}_{}_{}".format(
+        name,
+        job,
+        params['platform'],
+        params['build_no'],
+        params['compiler'],
+        params['build_type'],
+        params['boot_type'],
+        params['name'],
+        ))
+
+def generate_test_definitions(config, work_dir, user_args):
     """ Get a dictionary configuration, and an existing jinja2 template
     and generate a LAVA compatbile yaml definition """
 
     template_loader = FileSystemLoader(searchpath=work_dir)
     template_env = Environment(loader=template_loader)
-
-    # Ensure that the jinja2 template is always rendered the same way
-    config = sort_lavagen_config(config)
-
+    recovery_store_url = "{}/job/{}".format(
+        user_args.jenkins_url,
+        user_args.jenkins_job
+    )
+    build_no = user_args.build_no
+    artifact_store_url = recovery_store_url
     template_file = config.pop("templ")
 
-    definition = template_env.get_template(template_file).render(**config)
-    return definition
+    definitions = {}
+
+    for platform, recovery in config['platforms'].items():
+        recovery_image_url = get_recovery_url(
+            recovery_store_url,
+            build_no,
+            recovery)
+        for compiler in config['compilers']:
+            for build_type in config['build_types']:
+                for boot_type in config['boot_types']:
+                    for test_name, test_dict in config['tests'].items():
+                        params = {
+                            "device_type": config['device_type'],
+                            "job_timeout": config['job_timeout'],
+                            "action_timeout": config['action_timeout'],
+                            "monitor_timeout": config['monitor_timeout'],
+                            "poweroff_timeout": config['poweroff_timeout'],
+                            'compiler': compiler,
+                            'build_type': build_type,
+                            'build_no': build_no,
+                            'boot_type': boot_type,
+                            'name': test_name,
+                            'test': test_dict,
+                            'platform': platform,
+                            'recovery_image_url': recovery_image_url,
+                            }
+                        params.update({
+                            'firmware_url': get_artifact_url(
+                                artifact_store_url,
+                                params,
+                                test_dict['binaries']['firmware']
+                                ),
+                            'bootloader_url': get_artifact_url(
+                                artifact_store_url,
+                                params,
+                                test_dict['binaries']['bootloader']
+                                )
+                        })
+                        params.update({
+                            'job_name': get_job_name(
+                                config['job_name'],
+                                params,
+                                user_args.jenkins_job,
+                                )
+                        })
+
+                        definition = template_env.get_template(template_file).render(params)
+                        definitions.update({params['job_name']: definition})
+    return definitions
 
 
 def generate_lava_job_defs(user_args, config):
@@ -107,14 +189,18 @@ def generate_lava_job_defs(user_args, config):
         config["platforms"] = {platform: config["platforms"][platform]}
 
     # Generate the ouptut definition
-    definition = generate_test_definitions(config, work_dir)
+    definitions = generate_test_definitions(config, work_dir, user_args)
 
     # Write it into a file
-    out_file = os.path.abspath(user_args.lava_def_output)
-    with open(out_file, "w") as F:
-        F.write(definition)
-
-    print("Definition created at %s" % out_file)
+    out_dir = os.path.abspath(user_args.lava_def_output)
+    if os.path.exists(out_dir):
+        shutil.rmtree(out_dir)
+    os.makedirs(out_dir)
+    for name, definition in definitions.items():
+        out_file = os.path.join(out_dir, "{}{}".format(name, ".yaml"))
+        with open(out_file, "w") as F:
+           F.write(definition)
+        print("Definition created at %s" % out_file)
 
 
 def test_map_from_config(lvg_cfg=tfm_mps2_sse_200):
@@ -409,10 +495,10 @@ def get_cmd_args():
                        default="lastSuccessfulBuild",
                        help="JENKINGS Build number selector. "
                             "Default: lastSuccessfulBuild")
-    def_g.add_argument("-co", "--create-definition-output-file",
+    def_g.add_argument("-co", "--create-definition-output-dir",
                        dest="lava_def_output",
                        action="store",
-                       default="job_results.yaml",
+                       default="job_results",
                        help="Set LAVA compatible .yaml output file")
 
     # Parameter override commands
