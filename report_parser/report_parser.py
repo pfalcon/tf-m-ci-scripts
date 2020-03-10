@@ -14,7 +14,7 @@ from __future__ import print_function
 
 __copyright__ = """
 /*
- * Copyright (c) 2018-2019, Arm Limited. All rights reserved.
+ * Copyright (c) 2018-2020, Arm Limited. All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  *
@@ -64,6 +64,11 @@ def split_keys(joint_arg, sep="="):
 
 def dependencies_mdt_collect(path_list,
                              out_f=None,
+                             known_content_types=["mbedcrypto",
+                                                  "cmsis",
+                                                  "checkpatch",
+                                                  "fpga",
+                                                  "fastmodel"],
                              expected_paths=["mbedcrypto",
                                              "cmsis",
                                              "checkpatch"]):
@@ -73,19 +78,23 @@ def dependencies_mdt_collect(path_list,
     cpaths = {k: v for k, v in [n.split("=") for n in path_list]}
     cwd = os.path.abspath(os.getcwd())
 
-    # Create an empty dataset
-    data = {n: {} for n in set(expected_paths).union(set(cpaths.keys()))}
-
-    # identify paths passes that are not required/expected
-    extra_data = {n: {} for n in set(cpaths.keys()).difference(set(expected_paths))}
-
-    # Perform basic sanity check
-    if not set(data.keys()).issubset(set(cpaths.keys())):
-        err_msg = "Error locating required paths.\nNeeded: %s\nHas:    %s" % (
-            ",".join(data.keys()), ",".join(cpaths.keys())
+    # Test that all the required paths are present
+    intsec_set = set(expected_paths).intersection(set(cpaths.keys()))
+    if len(intsec_set) != len(set(expected_paths)):
+        _missing = set(expected_paths).difference(intsec_set)
+        err_msg = "Error missing core paths.\nRequired: %s\nPresent: %s" % (
+            ",".join(_missing), ",".join(cpaths.keys())
         )
         print(err_msg)
         raise Exception(err_msg)
+
+    # Create a dataset for the entires of known data format
+    known_data = {n: {} for n in
+                  set(known_content_types).intersection(set(cpaths.keys()))}
+
+    # Create a dataset for unexpected data entries of unknown format
+    extra_data = {n: {}
+                  for n in set(cpaths.keys()).difference(set(known_data))}
 
     for d in list_subdirs(cpaths["mbedcrypto"]):
         print("mbed-crypto dir: ", d)
@@ -98,7 +107,7 @@ def dependencies_mdt_collect(path_list,
         # Absolute paths will not work in jenkins since it will change the
         # workspaace directory between stages convert to relative path
         git_info["dir"] = os.path.relpath(git_info["dir"], cwd)
-        data["mbedcrypto"][tag] = git_info
+        known_data["mbedcrypto"][tag] = git_info
 
     for d in list_subdirs(cpaths["cmsis"]):
         print("CMS subdir: ", d)
@@ -109,18 +118,7 @@ def dependencies_mdt_collect(path_list,
         # Absolute paths will not work in jenkins since it will change the
         # workspaace directory between stages convert to relative path
         git_info["dir"] = os.path.relpath(git_info["dir"], cwd)
-        data["cmsis"][tag] = git_info
-
-    if "fastmodel" in cpaths:
-        for d in list_subdirs(cpaths["fastmodel"]):
-            print("Fastmodel subdir:", d)
-            json_info = load_json(os.path.join(d, "version.info"))
-            json_info["dir"] = os.path.relpath(d, cwd)
-
-            tag = json_info["version"]
-            # Absolute paths will not work in jenkins since it will change the
-            # workspaace directory between stages convert to relative path
-            data["fastmodel"][tag] = json_info
+        known_data["cmsis"][tag] = git_info
 
     for d in list_subdirs(cpaths["checkpatch"]):
         print("Checkpatch subdir:", d)
@@ -136,18 +134,31 @@ def dependencies_mdt_collect(path_list,
         # Absolute paths will not work in jenkins since it will change the
         # workspaace directory between stages convert to relative path
         git_info["dir"] = os.path.relpath(git_info["dir"], cwd)
-        data["checkpatch"][tag] = git_info
+        known_data["checkpatch"][tag] = git_info
+
+    if "fastmodel" in cpaths:
+        for d in list_subdirs(cpaths["fastmodel"]):
+            print("Fastmodel subdir:", d)
+            json_info = load_json(os.path.join(d, "version.info"))
+            json_info["dir"] = os.path.relpath(d, cwd)
+
+            tag = json_info["version"]
+            # Absolute paths will not work in jenkins since it will change the
+            # workspaace directory between stages convert to relative path
+            known_data["fastmodel"][tag] = json_info
+
     if "fpga" in cpaths:
         for d in os.listdir(cpaths["fpga"]):
             print("FPGA imagefile:", d)
             if ".tar.gz" in d:
                 name = d.split(".tar.gz")[0]
                 platform, subsys, ver = name.split("_")
-                data["fpga"][name] = {"platform": platform,
-                                      "subsys": subsys,
-                                      "version": ver,
-                                      "recovery": os.path.join(cpaths["fpga"],
-                                                               d)}
+                known_data["fpga"][name] = {"platform": platform,
+                                            "subsys": subsys,
+                                            "version": ver,
+                                            "recovery": os.path.join(
+                                                                 cpaths["fpga"],
+                                                                 d)}
 
     #Attempt to detect what the unexpected paths contain
     for e_path in extra_data.keys():
@@ -181,12 +192,12 @@ def dependencies_mdt_collect(path_list,
 
     # Add the extra paths to the expected ones
     for k, v in extra_data.items():
-        data[k] = v
+        known_data[k] = v
     if out_f:
         print("Exporting metadata to", out_f)
-        save_json(out_f, data)
+        save_json(out_f, known_data)
     else:
-        pprint(data)
+        pprint(known_data)
 
 
 def cppcheck_mdt_collect(file_list, out_f=None):
