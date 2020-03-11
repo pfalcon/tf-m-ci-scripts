@@ -138,11 +138,11 @@ class LAVA_RPC_connector(xmlrpc.client.ServerProxy, object):
             # Check if the job is not running
             cur_status = self.get_job_state(job_id)
             # If in queue or running wait
-            if cur_status == "Running" or cur_status == "Submitted":
+            if cur_status not in ["Canceling","Finished"]:
                 time.sleep(poll_freq)
             else:
                 break
-        return self.get_job_state(job_id)
+        return self.scheduler.job_health(job_id)["job_health"]
 
     def test_credentials(self):
         """ Attempt to querry the back-end and verify that the user provided
