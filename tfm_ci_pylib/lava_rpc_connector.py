@@ -9,7 +9,7 @@ from __future__ import print_function
 
 __copyright__ = """
 /*
- * Copyright (c) 2018-2019, Arm Limited. All rights reserved.
+ * Copyright (c) 2018-2020, Arm Limited. All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  *
@@ -77,9 +77,6 @@ class LAVA_RPC_connector(xmlrpc.client.ServerProxy, object):
     def get_job_state(self, job_id):
         return self.scheduler.job_state(job_id)["job_state"]
 
-    def get_job_status(self, job_id):
-        return self.scheduler.job_status(job_id)["job_status"]
-
     def cancel_job(self, job_id):
         """ Cancell job with id=job_id. Returns True if successfull """
 
@@ -139,13 +136,13 @@ class LAVA_RPC_connector(xmlrpc.client.ServerProxy, object):
                 print("Breaking because of timeout")
                 break
             # Check if the job is not running
-            cur_status = self.get_job_status(job_id)
+            cur_status = self.get_job_state(job_id)
             # If in queue or running wait
             if cur_status == "Running" or cur_status == "Submitted":
                 time.sleep(poll_freq)
             else:
                 break
-        return self.get_job_status(job_id)
+        return self.get_job_state(job_id)
 
     def test_credentials(self):
         """ Attempt to querry the back-end and verify that the user provided
