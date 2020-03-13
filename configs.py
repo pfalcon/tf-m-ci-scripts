@@ -41,13 +41,13 @@ def get_build_manager(group=None):
 def list_configs(group):
     """Lists available configurations"""
     build_manager = get_build_manager(group)
-    build_manager.print_config()
+    return build_manager.get_config()
 
 
-def print_config_environment(config, group=None):
+def print_config_environment(config, group=None, silence_stderr=False):
     """Prints particular configuration environment variables"""
     build_manager = get_build_manager(group)
-    build_manager.print_config_environment(config)
+    build_manager.print_config_environment(config, silence_stderr=silence_stderr)
 
 
 if __name__ == "__main__":
@@ -63,14 +63,29 @@ if __name__ == "__main__":
     PARSER.add_argument(
         "-g",
         "--group",
-        default=None,
+        default=[],
+        action="append",
         help="Only list configurations under a certain group. ",
         choices=list(_builtin_configs.keys()),
     )
     ARGS = PARSER.parse_args()
 
-    # By default print available configs
-    if not ARGS.config:
-        list_configs(ARGS.group)
-    else:
-        print_config_environment(ARGS.config, group=ARGS.group)
+    all_configs = set()
+    for group in ARGS.group:
+        # By default print available configs
+        if not ARGS.config:
+            all_configs.update(list_configs(group))
+        else:
+            try:
+                print_config_environment(ARGS.config, group=group, silence_stderr=True)
+                break
+            except SystemExit:
+                if group == ARGS.group[-1]:
+                    print(
+                        "Could not find configuration {} in groups {}".format(
+                            ARGS.config, ARGS.group
+                        )
+                    )
+
+    for config in all_configs:
+        print(config)

@@ -51,13 +51,15 @@ node("docker-amd64-xenial") {
           branches: [[name: 'FETCH_HEAD']], 
           userRemoteConfigs: [[
             refspec: 'refs/tags/$MBEDCRYPTO_VERSION',
-            url: 'https://github.com/ARMmbed/mbed-crypto.git'
+            url: params.MBEDCRYPTO_URL
           ]]
         ]
       )
     }
     sh """
-wget -O cmsis.pack -q https://github.com/ARM-software/CMSIS_5/releases/download/${CMSIS_VERSION}/ARM.CMSIS.${CMSIS_VERSION}.pack
+# Host https://github.com/Arm-software/CMSIS_5/releases/download/5.5.0/ARM.CMSIS.5.5.0.pack
+# under \$JENKINS_HOME/userContent
+wget -O cmsis.pack -q \${JENKINS_URL}/userContent/ARM.CMSIS.${CMSIS_VERSION}.pack
 unzip -o -d CMSIS_5 cmsis.pack
 """
   }

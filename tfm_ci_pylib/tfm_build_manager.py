@@ -75,17 +75,17 @@ class TFM_Build_Manager(structuredTask):
 
         super(TFM_Build_Manager, self).__init__(name="TFM_Build_Manager")
 
-    def print_config(self):
-        """Prints a list of available build configurations"""
-        print("\n".join(list(self._tbm_build_cfg.keys())))
+    def get_config(self):
+            return list(self._tbm_build_cfg.keys())
 
-    def print_config_environment(self, config):
+    def print_config_environment(self, config, silence_stderr=False):
         """
         For a given build configuration from output of print_config
         method, print environment variables to build.
         """
         if config not in self._tbm_build_cfg:
-            print("Error: no such config {}".format(config), file=sys.stderr)
+            if not silence_stderr:
+                print("Error: no such config {}".format(config), file=sys.stderr)
             sys.exit(1)
         config_details = self._tbm_build_cfg[config]
         argument_list = [

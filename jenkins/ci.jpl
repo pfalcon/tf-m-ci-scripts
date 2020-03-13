@@ -6,6 +6,8 @@
 //
 //-------------------------------------------------------------------------------
 
+library identifier: 'local-lib@master', retriever: legacySCM(scm)
+
 def listConfigs(ci_scripts_dir, config_list, filter_group) {
   dir(ci_scripts_dir) {
     echo "Obtaining list of configs."
@@ -39,11 +41,22 @@ def buildConfig(ci_scripts_dir, config, filter_group) {
   params += string(name: 'CMSIS_VERSION', value: env.CMSIS_VERSION)
   params += string(name: 'MBEDCRYPTO_VERSION', value: env.MBEDCRYPTO_VERSION)
   params += string(name: 'CODE_REPO', value: env.CODE_REPO)
-  return {
-    def res = build(job: 'tf-m-build-config', parameters: params, propagate: false)
-    print("${res.number}: ${config} ${res.result} ${res.getAbsoluteUrl()}")
-    if (res.result == "FAILURE") {
-      error("Build failed at ${res.getAbsoluteUrl()}")
+  return { -> results
+    def build_res = build(job: 'tf-m-build-config', parameters: params, propagate: false)
+    def build_info = [build_res, config, params_collection]
+    results['builds'][build_res.number] = build_info
+    def build_url = build_res.getAbsoluteUrl()
+    print("${build_res.number}: ${config} ${build_res.result} ${build_url}")
+    failure_states = ["FAILURE", "ABORTED", "UNSTABLE", "NOT_BUILT"]
+    if (build_res.result in failure_states) {
+      error("Build failed at ${build_url}")
+    }
+    else {
+      print("Doing LAVA stuff for ${build_url}")
+      params += string(name: 'BUILD_NUMBER', value: "${build_res.number}")
+      params += string(name: 'BUILD_URL', value: build_url)
+      def lava_res = build(job: 'tf-m-lava-submit', parameters: params, propagate: false)
+      results['lava_jobs'] += lava_res.getDescription()
     }
   }
 }
@@ -58,9 +71,26 @@ def buildDocs() {
   return {
     def res = build(job: 'tf-m-build-docs', parameters: params, propagate:false)
     print("${res.number}: Docs ${res.result} ${res.getAbsoluteUrl()}")
-    if (res.result == "FAILURE") {
+    if (res.result in ["FAILURE", "ABORTED", "UNSTABLE", "NOT_BUILT"]) {
       error("Build failed at ${res.getAbsoluteUrl()}")
     }
+  }
+}
+
+
+def buildCsv(results) {
+  def csvContent = summary.getBuildCsv(results)
+  node("master") {
+    writeCSV file: 'build_results.csv', records: csvContent, format: CSVFormat.EXCEL
+    archiveArtifacts 'build_results.csv'
+  }
+}
+
+def writeSummary(results) {
+  def buildLinks = summary.getLinks(results)
+  node("master") {
+    writeFile file: "build_links.html", text: buildLinks
+    archiveArtifacts 'build_links.html'
   }
 }
 
@@ -100,6 +130,8 @@ node("master") {
   stage("Configs") {
     // Populate configs
     listConfigs('tf-m-ci-scripts', configs, env.FILTER_GROUP)
+    results['builds'] = [:]
+    results['lava_jobs'] = []
     for (config in configs) {
       builds[config] = buildConfig("tf-m-ci-scripts", config, env.FILTER_GROUP)
     }
@@ -111,10 +143,26 @@ stage("Builds") {
   try {
     parallel(builds)
   } catch (Exception e) {
+    print(e)
     manager.buildFailure()
     verify = -1
   } finally {
+    print("Verifying status")
     verifyStatus(verify, 'build')
+    print("Building CSV")
+    buildCsv(results['builds'])
+    writeSummary(results['builds'])
   }
 }
-// TODO Test phase
+node("docker-amd64-xenial") {
+  stage("Tests") {
+    dir("tf-m-ci-scripts") {
+      git url: '$CI_SCRIPTS_REPO', branch: 'master', credentialsId: 'GIT_SSH_KEY'
+    }
+    print("Wait for LAVA results here...")
+    results['lava_jobs'].each { result ->
+      print(result)
+    }
+  }
+  cleanWs()
+}

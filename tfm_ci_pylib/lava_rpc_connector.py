@@ -112,10 +112,13 @@ class LAVA_RPC_connector(xmlrpc.client.ServerProxy, object):
                   job_definition)
             print(e)
             return None, None
-
-        job_id = self.scheduler.submit_job(job_data)
-        job_url = self.server_job_prefix % job_id
-        return(job_id, job_url)
+        try:
+            job_id = self.scheduler.submit_job(job_data)
+            job_url = self.server_job_prefix % job_id
+            return(job_id, job_url)
+        except Exception as e:
+            print(e)
+            return(None, None)
 
     def resubmit_job(self, job_id):
         """ Re-submit job with provided id. Returns resulting job id,

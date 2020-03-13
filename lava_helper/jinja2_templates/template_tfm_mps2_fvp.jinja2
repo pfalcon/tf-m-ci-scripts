@@ -1,0 +1,77 @@
+{#------------------------------------------------------------------------------
+# Copyright (c) 2018-2019, Arm Limited and Contributors. All rights reserved.
+#
+# SPDX-License-Identifier: BSD-3-Clause
+#
+#-----------------------------------------------------------------------------#}
+{% extends 'jinja2_templates/base.jinja2' %}
+{% block metadata %}
+{{ super() }}
+{% endblock %}
+{% block base %}
+{{ super() }}
+{% endblock %}
+{% block actions %}
+context:
+  kernel_start_message: ''
+
+actions:
+- deploy:
+    namespace: docker
+    to: fvp
+    images:
+      ns:
+        url: {{ firmware_url }}
+      s:
+        url: {{ bootloader_url }}
+
+- boot:
+    namespace: docker
+    method: fvp
+    docker:
+      name: 'replace_docker_prefix/lava-fvp-mps2'
+    prompts:
+    - 'root@lava '
+    image: /opt/model/FVP_MPS2_AEMv8M
+    timeout:
+      minutes: 5
+    console_string: 'telnetterminal0: Listening for serial connection on port (?P<PORT>\d+)'
+    license_variable: 'replace_licence_variable'
+    arguments:
+    -  "--application cpu0={S}"
+    -  "--data cpu0={NS}@0x00100000"
+    -  "--simlimit 1200"
+    -  "--parameter fvp_mps2.platform_type=2"
+    -  "--parameter cpu0.INITVTOR_S=0x10000000"
+    -  "--parameter cpu0.semihosting-enable=0"
+    -  "--parameter fvp_mps2.DISABLE_GATING=0"
+    -  "--parameter fvp_mps2.telnetterminal0.start_telnet=1"
+    -  "--parameter fvp_mps2.telnetterminal1.start_telnet=1"
+    -  "--parameter fvp_mps2.telnetterminal2.start_telnet=1"
+    -  "--parameter fvp_mps2.telnetterminal0.quiet=0"
+    -  "--parameter fvp_mps2.telnetterminal1.quiet=0"
+    -  "--parameter fvp_mps2.telnetterminal2.quiet=0"
+    -  "--parameter fvp_mps2.UART0.unbuffered_output=1"
+    -  "--parameter fvp_mps2.UART0.shutdown_on_eot=1"
+    -  "--parameter fvp_mps2.UART1.unbuffered_output=1"
+    -  "--parameter fvp_mps2.UART1.shutdown_on_eot=1"
+    -  "--parameter fvp_mps2.UART2.unbuffered_output=1"
+    -  "--parameter fvp_mps2.UART2.shutdown_on_eot=1"
+    -  "--parameter fvp_mps2.mps2_visualisation.disable-visualisation=1"
+    -  "--parameter cpu0.baseline=1"
+    prompts:
+    - 'Jumping to non-secure code'
+
+- test:
+    namespace: target
+    monitors:
+    {%- for monitor in test.monitors %}
+    - name: "{{monitor.name}}_{{ platform }}_{{ compiler }}_{{ name }}_{{ build_type }}_{{ boot_type }}"
+      start: "{{monitor.start}}"
+      end: "{{monitor.end}}"
+      pattern: "{{monitor.pattern}}"
+      fixupdict:
+         '{{monitor.fixup.pass}}': pass
+         '{{monitor.fixup.fail}}': fail
+    {% endfor %}
+{% endblock %}
