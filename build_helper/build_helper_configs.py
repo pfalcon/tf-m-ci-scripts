@@ -251,6 +251,22 @@ config_debug = {"seed_params": {
                             ]
                 }
 
+# Configuration used in CI
+config_ci = {
+    "seed_params": {
+        "target_platform": ["AN521"],
+        "compiler": ["ARMCLANG", "GNUARM"],
+        "proj_config": ["ConfigDefault", "ConfigCoreIPCTfmLevel2"],
+        "cmake_build_type": ["Release"],
+        "with_mcuboot": [True],
+    },
+    "common_params": _common_tfm_builder_cfg,
+    "invalid": [
+        ("AN521", "ARMCLANG", "ConfigDefault", "Release", True),
+        ("AN521", "GNUARM", "ConfigCoreIPCTfmLevel2", "Release", True),
+    ],
+}
+
 _builtin_configs = {"full": config_full,
                     "an521": config_AN521,
                     "an519": config_AN519,
@@ -258,7 +274,8 @@ _builtin_configs = {"full": config_full,
                     "musca_b1": config_MUSCA_B1,
                     "ipc": config_IPC,
                     "doxygen": config_doxygen,
-                    "debug": config_debug}
+                    "debug": config_debug,
+                    "ci": config_ci}
 
 if __name__ == '__main__':
     import os
