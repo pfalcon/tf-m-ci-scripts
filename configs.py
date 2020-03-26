@@ -50,6 +50,12 @@ def print_config_environment(config, group=None, silence_stderr=False):
     build_manager.print_config_environment(config, silence_stderr=silence_stderr)
 
 
+def print_build_commands(config, group=None):
+    """Prints particular configuration environment variables"""
+    build_manager = get_build_manager(group)
+    build_manager.print_build_commands(config, silence_stderr=True)
+
+
 if __name__ == "__main__":
     PARSER = argparse.ArgumentParser(description="Extract build configurations.")
     PARSER.add_argument(
@@ -61,14 +67,28 @@ if __name__ == "__main__":
         "If not specified, the available configurations are printed",
     )
     PARSER.add_argument(
+        "-b",
+        "--build_commands",
+        default=None,
+        action='store_true',
+        help="Instead of printing environment variables, print raw "
+        "build commands to be run."
+    )
+    PARSER.add_argument(
         "-g",
         "--group",
         default=[],
         action="append",
-        help="Only list configurations under a certain group. ",
-        choices=list(_builtin_configs.keys()),
+        help="Only list configurations under a certain group. "
+        "'all' will look through all configurations. "
+        "Leaving blank will just look at config 'full'.",
+        choices=list(_builtin_configs.keys())+['all'],
     )
     ARGS = PARSER.parse_args()
+    if not ARGS.group:
+        ARGS.group = ['full']
+    if ARGS.group == ['all']:
+        ARGS.group = list(_builtin_configs.keys())
 
     all_configs = set()
     for group in ARGS.group:
@@ -77,10 +97,13 @@ if __name__ == "__main__":
             all_configs.update(list_configs(group))
         else:
             try:
-                print_config_environment(ARGS.config, group=group, silence_stderr=True)
+                if not ARGS.build_commands:
+                    print_config_environment(ARGS.config, group=group, silence_stderr=True)
+                else:
+                    print_build_commands(ARGS.config, group=group)
                 break
-            except SystemExit:
-                if group == ARGS.group[-1]:
+            except (SystemExit, KeyError):
+                if group == ARGS.group[-1] or ARGS.group == []:
                     print(
                         "Could not find configuration {} in groups {}".format(
                             ARGS.config, ARGS.group

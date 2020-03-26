@@ -14,18 +14,20 @@
 #
 
 set -ex
+
+if [ -z "$CONFIG_NAME" ] ; then
+	echo "Set CONFIG_NAME to run a build."
+	exit 1
+fi
+
+build_commands=$(python3 tf-m-ci-scripts/configs.py -b -g all $CONFIG_NAME)
+
+if [ -z "$build_commands" ] ; then
+	echo "No build commands found."
+	exit 1
+fi
+
 mkdir trusted-firmware-m/build
 cd trusted-firmware-m/build
-cmake -G "Unix Makefiles" -DPROJ_CONFIG=`readlink -f ../configs/$PROJ_CONFIG.cmake` -DTARGET_PLATFORM=$TARGET_PLATFORM -DCOMPILER=$COMPILER -DCMAKE_BUILD_TYPE=$CMAKE_BUILD_TYPE -DBL2=$BL2 ..
-cmake --build ./ -- -j 2 install
-if [ "$TARGET_PLATFORM" == "MUSCA_A" ] ; then
-  export OFFSET1=0x200000
-  export OFFSET2=0x220000
-elif [ "$TARGET_PLATFORM" == "MUSCA_B1" ] ; then
-  export OFFSET1=0xA000000
-  export OFFSET2=0xA020000
-fi
-if [ ! -z "$OFFSET1" ] && [ ! -z "$OFFSET2" ] ; then
-  # Cleanup offset(s)?
-  srec_cat install/outputs/$TARGET_PLATFORM/mcuboot.bin -Binary -offset $OFFSET1 install/outputs/$TARGET_PLATFORM/tfm_sign.bin -Binary -offset $OFFSET2 -o install/outputs/$TARGET_PLATFORM/tfm.hex -Intel
-fi
+
+eval "set -ex ; $build_commands"

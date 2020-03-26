@@ -6,7 +6,9 @@
 //
 //-------------------------------------------------------------------------------
 
-library identifier: 'local-lib@master', retriever: legacySCM(scm)
+@Library('trustedfirmware') _
+import org.trustedfirmware.Gerrit
+import org.trustedfirmware.Summary
 
 def listConfigs(ci_scripts_dir, config_list, filter_group) {
   dir(ci_scripts_dir) {
@@ -37,6 +39,9 @@ def buildConfig(ci_scripts_dir, config, filter_group) {
     params += string(name: key, value: value)
   }
   params += string(name: 'GERRIT_BRANCH', value: env.GERRIT_BRANCH)
+  params += string(name: 'GERRIT_HOST', value: env.GERRIT_HOST)
+  params += string(name: 'GERRIT_CHANGE_NUMBER', value: env.GERRIT_CHANGE_NUMBER)
+  params += string(name: 'GERRIT_PATCHSET_REVISION', value: env.GERRIT_PATCHSET_REVISION)
   params += string(name: 'GERRIT_REFSPEC', value: env.GERRIT_REFSPEC)
   params += string(name: 'CMSIS_VERSION', value: env.CMSIS_VERSION)
   params += string(name: 'MBEDCRYPTO_VERSION', value: env.MBEDCRYPTO_VERSION)
@@ -64,6 +69,9 @@ def buildConfig(ci_scripts_dir, config, filter_group) {
 def buildDocs() {
   def params = []
   params += string(name: 'GERRIT_BRANCH', value: env.GERRIT_BRANCH)
+  params += string(name: 'GERRIT_HOST', value: env.GERRIT_HOST)
+  params += string(name: 'GERRIT_CHANGE_NUMBER', value: env.GERRIT_CHANGE_NUMBER)
+  params += string(name: 'GERRIT_PATCHSET_REVISION', value: env.GERRIT_PATCHSET_REVISION)
   params += string(name: 'GERRIT_REFSPEC', value: env.GERRIT_REFSPEC)
   params += string(name: 'CMSIS_VERSION', value: env.CMSIS_VERSION)
   params += string(name: 'MBEDCRYPTO_VERSION', value: env.MBEDCRYPTO_VERSION)
@@ -79,6 +87,7 @@ def buildDocs() {
 
 
 def buildCsv(results) {
+  def summary = new Summary();
   def csvContent = summary.getBuildCsv(results)
   node("master") {
     writeCSV file: 'build_results.csv', records: csvContent, format: CSVFormat.EXCEL
@@ -87,33 +96,11 @@ def buildCsv(results) {
 }
 
 def writeSummary(results) {
+  def summary = new Summary();
   def buildLinks = summary.getLinks(results)
   node("master") {
     writeFile file: "build_links.html", text: buildLinks
     archiveArtifacts 'build_links.html'
-  }
-}
-
-def verifyStatus(value, stage_name) {
-  node("docker-amd64-xenial") {
-    cleanWs()
-    dir("tf-m-ci-scripts") {
-      git url: '$CI_SCRIPTS_REPO', branch: 'master', credentialsId: 'GIT_SSH_KEY'
-    }
-    withCredentials([usernamePassword(credentialsId: 'VERIFY_STATUS', passwordVariable: 'VERIFY_PASSWORD', usernameVariable: 'VERIFY_USER')]) {
-      sh("""
-    if [ -z "\$GERRIT_HOST" ] ; then
-      echo Not running for a Gerrit change, skipping vote.
-      exit 0
-    fi
-    if [ ! -d venv ] ; then
-      virtualenv -p \$(which python3) venv
-    fi
-    . venv/bin/activate
-    pip -q install requests
-    ./tf-m-ci-scripts/jenkins/verify.py --value ${value} --verify-name tf-m-${stage_name} --user \$VERIFY_USER
-    """)
-    }
   }
 }
 
@@ -148,7 +135,8 @@ stage("Builds") {
     verify = -1
   } finally {
     print("Verifying status")
-    verifyStatus(verify, 'build')
+    g = new Gerrit()
+    g.verifyStatus(verify, 'tf-m-build', 'build')
     print("Building CSV")
     buildCsv(results['builds'])
     writeSummary(results['builds'])

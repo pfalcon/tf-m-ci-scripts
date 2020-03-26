@@ -6,6 +6,9 @@
 //
 //-------------------------------------------------------------------------------
 
+@Library('trustedfirmware') _
+import org.trustedfirmware.Gerrit
+
 node("docker-amd64-xenial") {
   stage("Init") {
     cleanWs()
@@ -46,11 +49,20 @@ wget -O cmsis.pack -q \${JENKINS_URL}/userContent/ARM.CMSIS.${CMSIS_VERSION}.pac
 unzip -o -d CMSIS_5 cmsis.pack
 """
   }
-  stage("Build") {
-    sh "tf-m-ci-scripts/build-docs.sh"
-  }
-  stage("Post") {
-    archiveArtifacts 'trusted-firmware-m/build/install/**'
+  try {
+    verify = 1
+    stage("Build") {
+      sh "tf-m-ci-scripts/build-docs.sh"
+    }
+    stage("Post") {
+      archiveArtifacts 'trusted-firmware-m/build/install/**'
+    }
+  } catch (Exception e) {
+    manager.buildFailure()
+    verify = -1
+  } finally {
+    g = new Gerrit()
+    g.verifyStatusInWorkspace(verify, 'tf-m-build-docs', 'build')
     cleanWs()
   }
 }

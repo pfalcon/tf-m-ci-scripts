@@ -6,22 +6,8 @@
 //
 //-------------------------------------------------------------------------------
 
-def verifyStatus(value, stage_name) {
-  withCredentials([usernamePassword(credentialsId: 'VERIFY_STATUS', passwordVariable: 'VERIFY_PASSWORD', usernameVariable: 'VERIFY_USER')]) {
-    sh """
-if [ -z "\$GERRIT_HOST" ] ; then
-  echo Not running for a Gerrit change, skipping vote.
-  exit 0
-fi
-if [ ! -d venv ] ; then
-  virtualenv -p \$(which python3) venv
-fi
-. venv/bin/activate
-pip -q install requests
-./tf-m-ci-scripts/jenkins/verify.py --value ${value} --verify-name tf-m-${stage_name} --user \$VERIFY_USER
-"""
-  }
-}
+@Library('trustedfirmware') _
+import org.trustedfirmware.Gerrit
 
 node("docker-amd64-xenial") {
   stage("Init") {
@@ -78,7 +64,8 @@ fi
       manager.buildFailure()
       verify = -1
     } finally {
-      verifyStatus(verify, 'cppcheck')
+      g = new Gerrit()
+      g.verifyStatusInWorkspace(verify, 'cppcheck', 'static')
       cleanWs()
     }
   }

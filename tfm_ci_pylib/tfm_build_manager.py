@@ -89,23 +89,56 @@ class TFM_Build_Manager(structuredTask):
             sys.exit(1)
         config_details = self._tbm_build_cfg[config]
         argument_list = [
+            "CONFIG_NAME={}",
             "TARGET_PLATFORM={}",
             "COMPILER={}",
             "PROJ_CONFIG={}",
             "CMAKE_BUILD_TYPE={}",
             "BL2={}",
+            "PSA_API_SUITE={}"
         ]
         print(
             "\n".join(argument_list)
             .format(
+                config,
                 config_details.target_platform,
                 config_details.compiler,
                 config_details.proj_config,
                 config_details.cmake_build_type,
                 config_details.with_mcuboot,
+                getattr(config_details, 'psa_api_suit', "''")
             )
             .strip()
         )
+
+    def print_build_commands(self, config, silence_stderr=False):
+        config_details = self._tbm_build_cfg[config]
+        codebase_dir = os.path.join(os.getcwd(),"trusted-firmware-m")
+        build_dir=os.path.join(os.getcwd(),'trusted-firmware-m/build')
+        build_config = self.get_build_config(config_details, config, silence=silence_stderr, build_dir=build_dir, codebase_dir=codebase_dir)
+        build_commands = build_config['build_cmds']
+        psa_commands = build_config.get('build_psa_api', None)
+        if psa_commands:
+            manifest_command_list = []
+            # Also need manifest commands
+            if 'build_ff_ipc' in build_config:
+                manifest_command_list += [
+                    "pushd ../../psa-arch-tests/api-tests",
+                    "python3 tools/scripts/manifest_update.py",
+                    "popd",
+                    "pushd ../",
+                    "python3 tools/tfm_parse_manifest_list.py -m tools/tfm_psa_ff_test_manifest_list.yaml append",
+                    "popd",
+                ]
+            else:
+                manifest_command_list += [
+                    "pushd ..",
+                    "python3 tools/tfm_parse_manifest_list.py",
+                    "popd"
+                ]
+            psa_command_list = psa_commands.split(" ; ")
+            build_commands = manifest_command_list + ["mkdir ../../psa-arch-tests/api-tests/build","pushd ../../psa-arch-tests/api-tests/build"] + psa_command_list + ["popd"] + build_commands
+        print(" ;\n".join(build_commands)) 
 
     def pre_eval(self):
         """ Tests that need to be run in set-up state """
@@ -238,96 +271,7 @@ class TFM_Build_Manager(structuredTask):
              % (self._tbm_build_cfg, self.tbm_common_cfg))
             for name, i in self._tbm_build_cfg.items():
                 # Do not modify the original config
-                build_cfg = deepcopy(self.tbm_common_cfg)
-
-                # Extract the common for all elements of config
-                for key in ["build_cmds", "required_artefacts"]:
-                    try:
-                        build_cfg[key] = deepcopy(self.tbm_common_cfg[key]
-                                                  ["all"])
-                    except KeyError as E:
-                        build_cfg[key] = []
-
-                # Extract the platform specific elements of config
-                for key in ["build_cmds", "required_artefacts"]:
-                    try:
-                        if i.target_platform in self.tbm_common_cfg[key].keys():
-                            build_cfg[key] += deepcopy(self.tbm_common_cfg[key]
-                                                       [i.target_platform])
-                    except Exception as E:
-                        pass
-
-                # Merge the two dictionaries since the template may contain
-                # fixed and combinations seed parameters
-                if i.proj_config.startswith("ConfigPsaApiTest"):
-                    #PSA API tests only
-                    #TODO i._asdict()["tfm_build_dir"] = self._tbm_work_dir
-                    cmd0 = build_cfg["config_template_psa_api"] % \
-                        {**dict(i._asdict()), **build_cfg}
-                    cmd0 += " -DPSA_API_TEST_BUILD_PATH=" + self._tbm_work_dir + \
-                            "/" + name + "/BUILD"
-
-                    if i.psa_api_suit == "FF":
-                        cmd0 += " -DPSA_API_TEST_IPC=ON"
-                        cmd2 = "cmake " + build_cfg["codebase_root_dir"] + "/../psa-arch-tests/api-tests/ " + \
-                            "-G\"Unix Makefiles\" -DTARGET=tgt_ff_tfm_" + \
-                            i.target_platform.lower() +" -DCPU_ARCH=armv8m_ml -DTOOLCHAIN=" + \
-                            i.compiler + " -DSUITE=IPC -DPSA_INCLUDE_PATHS=\"" + \
-                            build_cfg["codebase_root_dir"] + "/interface/include/"
-
-                        cmd2 += ";" + build_cfg["codebase_root_dir"] + \
-                            "/../psa-arch-tests/api-tests/platform/manifests\"" + \
-                            " -DINCLUDE_PANIC_TESTS=1 -DPLATFORM_PSA_ISOLATION_LEVEL=" + \
-                            (("2") if i.proj_config.find("TfmLevel2") > 0 else "1") + \
-                            " -DSP_HEAP_MEM_SUPP=0"
-                        if i.target_platform == "MUSCA_B1":
-                            cmd0 += " -DSST_RAM_FS=ON"
-                        build_cfg["build_ff_ipc"] = "IPC"
-                    else:
-                        cmd0 += " -DPSA_API_TEST_" + i.psa_api_suit + "=ON"
-                        cmd2 = "cmake " + build_cfg["codebase_root_dir"] + "/../psa-arch-tests/api-tests/ " + \
-                            "-G\"Unix Makefiles\" -DTARGET=tgt_dev_apis_tfm_" + \
-                            i.target_platform.lower() +" -DCPU_ARCH=armv8m_ml -DTOOLCHAIN=" + \
-                            i.compiler + " -DSUITE=" + i.psa_api_suit +" -DPSA_INCLUDE_PATHS=\"" + \
-                            build_cfg["codebase_root_dir"] + "/interface/include/\""
-
-                    cmd2 += " -DCMAKE_BUILD_TYPE=" + i.cmake_build_type
-
-                    cmd3 = "cmake --build ."
-                    build_cfg["build_psa_api"] = cmd2 + " ; " + cmd3
-
-                else:
-                    cmd0 = build_cfg["config_template"] % \
-                        {**dict(i._asdict()), **build_cfg}
-
-                try:
-                    if i.__str__().find("with_OTP") > 0:
-                        cmd0 += " -DCRYPTO_HW_ACCELERATOR_OTP_STATE=ENABLED"
-                    else:
-                        build_cfg["build_cmds"][0] += " -j 2"
-                    if cmd0.find("SST_RAM_FS=ON") < 0 and i.target_platform == "MUSCA_B1":
-                        cmd0 += " -DSST_RAM_FS=OFF -DITS_RAM_FS=OFF"
-                except Exception as E:
-                    pass
-
-                # Prepend configuration commoand as the first cmd [cmd1] + [cmd2] + [cmd3] +
-                build_cfg["build_cmds"] = [cmd0] + build_cfg["build_cmds"]
-                print("cmd0 %s\r\n" % (build_cfg["build_cmds"]))
-                if "build_psa_api" in build_cfg:
-                    print("cmd build_psa_api %s\r\n" % build_cfg["build_psa_api"])
-
-                # Set the overrid params
-                over_dict = {"_tbm_build_dir_": os.path.join(
-                    self._tbm_work_dir, name),
-                    "_tbm_code_dir_": build_cfg["codebase_root_dir"],
-                    "_tbm_target_platform_": i.target_platform}
-
-                over_params = ["build_cmds",
-                               "required_artefacts",
-                               "artifact_capture_rex"]
-                build_cfg = self.override_tbm_cfg_params(build_cfg,
-                                                         over_params,
-                                                         **over_dict)
+                build_cfg = self.get_build_config(i, name)
                 self.pre_build(build_cfg)
                 # Overrides path in expected artefacts
                 print("Loading config %s" % name)
@@ -390,6 +334,103 @@ class TFM_Build_Manager(structuredTask):
         if self._tbm_report:
             print("Exported build report to file:", self._tbm_report)
             save_json(self._tbm_report, full_rep)
+
+    def get_build_config(self, i, name, silence=False, build_dir=None, codebase_dir=None):
+        psa_build_dir = self._tbm_work_dir + "/" + name + "/BUILD"
+        if not build_dir:
+            build_dir = os.path.join(self._tbm_work_dir, name)
+        else:
+            psa_build_dir = os.path.join(build_dir, "../../psa-arch-tests/api-tests/build")
+        build_cfg = deepcopy(self.tbm_common_cfg)
+        if not codebase_dir:
+            codebase_dir = build_cfg["codebase_root_dir"]
+        else:
+            # Would prefer to do all with the new variable
+            # However, many things use this from build_cfg elsewhere
+            build_cfg["codebase_root_dir"] = codebase_dir
+        # Extract the common for all elements of config
+        for key in ["build_cmds", "required_artefacts"]:
+            try:
+                build_cfg[key] = deepcopy(self.tbm_common_cfg[key]
+                                          ["all"])
+            except KeyError as E:
+                build_cfg[key] = []
+        # Extract the platform specific elements of config
+        for key in ["build_cmds", "required_artefacts"]:
+            try:
+                if i.target_platform in self.tbm_common_cfg[key].keys():
+                    build_cfg[key] += deepcopy(self.tbm_common_cfg[key]
+                                               [i.target_platform])
+            except Exception as E:
+                pass
+        # Merge the two dictionaries since the template may contain
+        # fixed and combinations seed parameters
+        if i.proj_config.startswith("ConfigPsaApiTest"):
+            # PSA API tests only
+            # TODO i._asdict()["tfm_build_dir"] = self._tbm_work_dir
+            cmd0 = build_cfg["config_template_psa_api"] % \
+                   dict(dict(i._asdict()), **build_cfg)
+            cmd0 += " -DPSA_API_TEST_BUILD_PATH=" + psa_build_dir
+
+            if i.psa_api_suit == "FF":
+                cmd0 += " -DPSA_API_TEST_IPC=ON"
+                cmd2 = "cmake " + codebase_dir + "/../psa-arch-tests/api-tests/ " + \
+                       "-G\"Unix Makefiles\" -DTARGET=tgt_ff_tfm_" + \
+                       i.target_platform.lower() + " -DCPU_ARCH=armv8m_ml -DTOOLCHAIN=" + \
+                       i.compiler + " -DSUITE=IPC -DPSA_INCLUDE_PATHS=\"" + \
+                       codebase_dir + "/interface/include/"
+
+                cmd2 += ";" + codebase_dir + \
+                        "/../psa-arch-tests/api-tests/platform/manifests\"" + \
+                        " -DINCLUDE_PANIC_TESTS=1 -DPLATFORM_PSA_ISOLATION_LEVEL=" + \
+                        (("2") if i.proj_config.find("TfmLevel2") > 0 else "1") + \
+                        " -DSP_HEAP_MEM_SUPP=0"
+                if i.target_platform == "MUSCA_B1":
+                    cmd0 += " -DSST_RAM_FS=ON"
+                build_cfg["build_ff_ipc"] = "IPC"
+            else:
+                cmd0 += " -DPSA_API_TEST_" + i.psa_api_suit + "=ON"
+                cmd2 = "cmake " + codebase_dir + "/../psa-arch-tests/api-tests/ " + \
+                       "-G\"Unix Makefiles\" -DTARGET=tgt_dev_apis_tfm_" + \
+                       i.target_platform.lower() + " -DCPU_ARCH=armv8m_ml -DTOOLCHAIN=" + \
+                       i.compiler + " -DSUITE=" + i.psa_api_suit + " -DPSA_INCLUDE_PATHS=\"" + \
+                       codebase_dir + "/interface/include/\""
+
+            cmd2 += " -DCMAKE_BUILD_TYPE=" + i.cmake_build_type
+
+            cmd3 = "cmake --build ."
+            build_cfg["build_psa_api"] = cmd2 + " ; " + cmd3
+
+        else:
+            cmd0 = build_cfg["config_template"] % \
+                   dict(dict(i._asdict()), **build_cfg)
+        try:
+            if i.__str__().find("with_OTP") > 0:
+                cmd0 += " -DCRYPTO_HW_ACCELERATOR_OTP_STATE=ENABLED"
+            else:
+                build_cfg["build_cmds"][0] += " -j 2"
+            if cmd0.find("SST_RAM_FS=ON") < 0 and i.target_platform == "MUSCA_B1":
+                cmd0 += " -DSST_RAM_FS=OFF -DITS_RAM_FS=OFF"
+        except Exception as E:
+            pass
+        # Prepend configuration commoand as the first cmd [cmd1] + [cmd2] + [cmd3] +
+        build_cfg["build_cmds"] = [cmd0] + build_cfg["build_cmds"]
+        if not silence:
+            print("cmd0 %s\r\n" % (build_cfg["build_cmds"]))
+        if "build_psa_api" in build_cfg:
+            if not silence:
+                print("cmd build_psa_api %s\r\n" % build_cfg["build_psa_api"])
+        # Set the overrid params
+        over_dict = {"_tbm_build_dir_": build_dir,
+            "_tbm_code_dir_": codebase_dir,
+            "_tbm_target_platform_": i.target_platform}
+        over_params = ["build_cmds",
+                       "required_artefacts",
+                       "artifact_capture_rex"]
+        build_cfg = self.override_tbm_cfg_params(build_cfg,
+                                                 over_params,
+                                                 **over_dict)
+        return build_cfg
 
     def post_eval(self):
         """ If a single build failed fail the test """

@@ -6,7 +6,15 @@
 //
 //-------------------------------------------------------------------------------
 
-node("docker-amd64-xenial") {
+@Library('trustedfirmware') _
+import org.trustedfirmware.Gerrit
+
+def nodeLabel = "docker-amd64-xenial"
+if (env.COMPILER == "ARMCLANG") {
+  nodeLabel = "docker-amd64-xenial-armclang"
+}
+
+node(nodeLabel) {
   stage("Init") {
     cleanWs()
     dir("trusted-firmware-m") {
@@ -45,12 +53,39 @@ node("docker-amd64-xenial") {
 wget -O cmsis.pack -q \${JENKINS_URL}/userContent/ARM.CMSIS.${CMSIS_VERSION}.pack
 unzip -o -d CMSIS_5 cmsis.pack
 """
+    if (env.PSA_API_SUITE != "") {
+      dir("psa-arch-tests") {
+        checkout(
+          changelog: false,
+          poll: false,
+          scm: [
+            $class: 'GitSCM',
+            branches: [[name: 'FETCH_HEAD']],
+            userRemoteConfigs: [[
+              refspec: 'refs/tags/v20.03_API1.0',
+              url: 'https://github.com/ARM-software/psa-arch-tests'
+            ]]
+          ]
+        )
+      }
+    }
   }
-  stage("Build") {
-    sh "tf-m-ci-scripts/run-build.sh 2>&1 | tee build.log"
-  }
-  stage("Post") {
-    archiveArtifacts 'trusted-firmware-m/build/install/**,build.log'
+  try {
+    verify = 1
+    stage("Build") {
+      tee("build.log") {
+        sh "tf-m-ci-scripts/run-build.sh"
+      }
+    }
+    stage("Post") {
+      archiveArtifacts 'trusted-firmware-m/build/install/**,build.log'
+    }
+  } catch (Exception e) {
+    manager.buildFailure()
+    verify = -1
+  } finally {
+    g = new Gerrit()
+    g.verifyStatusInWorkspace(verify, env.CONFIG_NAME, 'build')
     cleanWs()
   }
 }
