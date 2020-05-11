@@ -317,30 +317,8 @@ config_IPC = {"seed_params": {
 config_full = {"seed_params": {
                "target_platform": ["AN521", "AN519",
                                    "MUSCA_A", "MUSCA_B1",
-                                   "AN524", "AN539"],
-               "compiler": ["ARMCLANG", "GNUARM"],
-               "proj_config": ["ConfigRegression",
-                               "ConfigRegressionIPC",
-                               "ConfigRegressionIPCTfmLevel2",
-                               "ConfigCoreIPC",
-                               "ConfigCoreIPCTfmLevel2",
-                               "ConfigDefault"],
-               "cmake_build_type": ["Debug", "Release"],
-               "with_mcuboot": [True, False],
-               },
-               "common_params": _common_tfm_builder_cfg,
-               # invalid configuations can be added as tuples of adjustable
-               # resolution "AN521" will reject all combinations for that
-               # platform while ("AN521", "GNUARM") will only reject GCC ones
-               "invalid": [("MUSCA_A", "*", "*", "*", False),
-                           ("MUSCA_B1", "*", "*", "*", False)]
-               }
-
-# Configure build manager to build the maximum number of configurations
-config_full_gnuarm = {"seed_params": {
-               "target_platform": ["AN521", "AN519",
-                                   "MUSCA_A", "MUSCA_B1",
-                                   "AN524", "AN539"],
+                                   "AN524", "AN539",
+                                   "psoc64"],
                "compiler": ["ARMCLANG", "GNUARM"],
                "proj_config": ["ConfigRegression",
                                "ConfigRegressionIPC",
@@ -357,7 +335,42 @@ config_full_gnuarm = {"seed_params": {
                # platform while ("AN521", "GNUARM") will only reject GCC ones
                "invalid": [("MUSCA_A", "*", "*", "*", False),
                            ("MUSCA_B1", "*", "*", "*", False),
-                           ("*", "ARMCLANG", "*", "*", "*")]
+                           ("psoc64", "*", "*", "*", True),
+                           ("psoc64", "*", "*", "Debug", "*"),
+                           ("psoc64", "*", "ConfigRegression", "*", "*"),
+                           ("psoc64", "*", "ConfigCoreIPC", "*", "*"),
+                           ("psoc64", "*", "ConfigCoreIPCTfmLevel2", "*", "*"),
+                           ("psoc64", "*", "ConfigDefault", "*", "*")]
+               }
+
+# Configure build manager to build the maximum number of configurations
+config_full_gnuarm = {"seed_params": {
+               "target_platform": ["AN521", "AN519",
+                                   "MUSCA_A", "MUSCA_B1",
+                                   "AN524", "AN539",
+                                   "psoc64"],
+               "compiler": ["GNUARM"],
+               "proj_config": ["ConfigRegression",
+                               "ConfigRegressionIPC",
+                               "ConfigRegressionIPCTfmLevel2",
+                               "ConfigCoreIPC",
+                               "ConfigCoreIPCTfmLevel2",
+                               "ConfigDefault"],
+               "cmake_build_type": ["Debug", "Release"],
+               "with_mcuboot": [True, False],
+               },
+               "common_params": _common_tfm_builder_cfg,
+               # invalid configuations can be added as tuples of adjustable
+               # resolution "AN521" will reject all combinations for that
+               # platform while ("AN521", "GNUARM") will only reject GCC ones
+               "invalid": [("MUSCA_A", "*", "*", "*", False),
+                           ("MUSCA_B1", "*", "*", "*", False),
+                           ("psoc64", "*", "*", "*", True),
+                           ("psoc64", "*", "*", "Debug", "*"),
+                           ("psoc64", "*", "ConfigRegression", "*", "*"),
+                           ("psoc64", "*", "ConfigCoreIPC", "*", "*"),
+                           ("psoc64", "*", "ConfigCoreIPCTfmLevel2", "*", "*"),
+                           ("psoc64", "*", "ConfigDefault", "*", "*")]
                }
 
 # Configure build manager to build the maximum number of configurations
