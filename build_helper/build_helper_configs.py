@@ -261,6 +261,22 @@ config_PSA_FF_OTP = {"seed_params": {
                 }
 
 # Configure build manager to build several combinations
+config_PSOC64 = {"seed_params": {
+                "target_platform": ["psoc64"],
+                "compiler": ["ARMCLANG", "GNUARM"],
+                "proj_config": ["ConfigRegressionIPC",
+                                "ConfigRegressionIPCTfmLevel2"],
+                "cmake_build_type": ["Release"],
+                "with_mcuboot": [False],
+                },
+                "common_params": _common_tfm_builder_cfg,
+                # invalid configuations can be added as tuples of adjustable
+                # resolution "AN521" will reject all combinations for that
+                # platform while ("AN521", "GNUARM") will only reject GCC ones
+                "invalid": []
+                }
+
+# Configure build manager to build several combinations
 config_AN519 = {"seed_params": {
                 "target_platform": ["AN519"],
                 "compiler": ["ARMCLANG", "GNUARM"],
@@ -623,6 +639,7 @@ _builtin_configs = {
                     "an519": config_AN519,
                     "musca_a": config_MUSCA_A,
                     "musca_b1": config_MUSCA_B1,
+                    "psoc64": config_PSOC64,
                     "ipc": config_IPC,
                     "doxygen": config_doxygen,
                     "debug": config_debug,
