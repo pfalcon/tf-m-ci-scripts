@@ -45,7 +45,13 @@ node("docker-amd64-xenial") {
     sh """
 # Host https://github.com/Arm-software/CMSIS_5/releases/download/5.5.0/ARM.CMSIS.5.5.0.pack
 # under \$JENKINS_HOME/userContent
+set +e
 wget -O cmsis.pack -q \${JENKINS_URL}/userContent/ARM.CMSIS.${CMSIS_VERSION}.pack
+if [ "\$?" != "0" ] ; then
+set -e
+wget -O cmsis.pack -q https://github.com/Arm-software/CMSIS_5/releases/download/${CMSIS_VERSION}/ARM.CMSIS.${CMSIS_VERSION}.pack
+fi
+set -e
 unzip -o -d CMSIS_5 cmsis.pack
 """
   }
