@@ -321,6 +321,30 @@ config_full = {"seed_params": {
                }
 
 # Configure build manager to build the maximum number of configurations
+config_full_gnuarm = {"seed_params": {
+               "target_platform": ["AN521", "AN519",
+                                   "MUSCA_A", "MUSCA_B1",
+                                   "AN524", "AN539"],
+               "compiler": ["ARMCLANG", "GNUARM"],
+               "proj_config": ["ConfigRegression",
+                               "ConfigRegressionIPC",
+                               "ConfigRegressionIPCTfmLevel2",
+                               "ConfigCoreIPC",
+                               "ConfigCoreIPCTfmLevel2",
+                               "ConfigDefault"],
+               "cmake_build_type": ["Debug", "Release"],
+               "with_mcuboot": [True, False],
+               },
+               "common_params": _common_tfm_builder_cfg,
+               # invalid configuations can be added as tuples of adjustable
+               # resolution "AN521" will reject all combinations for that
+               # platform while ("AN521", "GNUARM") will only reject GCC ones
+               "invalid": [("MUSCA_A", "*", "*", "*", False),
+                           ("MUSCA_B1", "*", "*", "*", False),
+                           ("*", "ARMCLANG", "*", "*", "*")]
+               }
+
+# Configure build manager to build the maximum number of configurations
 config_tfm_test = {"seed_params": {
                   "target_platform": ["AN521", "MUSCA_A", "MUSCA_B1", "MUSCA_S1"],
                   "compiler": ["ARMCLANG", "GNUARM"],
@@ -545,6 +569,29 @@ config_ci = {
     ],
 }
 
+# Configuration used in CI if armclang not available
+config_ci_gnuarm = {
+    "seed_params": {
+        "target_platform": ["AN521"],
+        "compiler": ["ARMCLANG", "GNUARM"],
+        "proj_config": ["ConfigDefault", "ConfigCoreIPCTfmLevel2", "ConfigCoreIPC", "ConfigRegression"],
+        "cmake_build_type": ["Release"],
+        "with_mcuboot": [True, False],
+    },
+    "common_params": _common_tfm_builder_cfg,
+    "invalid": [
+        ("AN521", "ARMCLANG", "ConfigDefault", "Release", False),
+        ("AN521", "ARMCLANG", "ConfigCoreIPCTfmLevel2", "Release", False),
+        ("AN521", "ARMCLANG", "ConfigCoreIPCTfmLevel2", "Release", True),
+        ("AN521", "ARMCLANG", "ConfigCoreIPC", "Release", False),
+        ("AN521", "ARMCLANG", "ConfigCoreIPC", "Release", True),
+        ("AN521", "ARMCLANG", "ConfigRegression", "Release", False),
+        ("AN521", "ARMCLANG", "ConfigRegression", "Release", True),
+        ("*", "ARMCLANG", "*", "*", "*"),  # Disable ARMCLANG for now
+    ],
+}
+
+
 config_lava_debug = {
     "seed_params": {
         "target_platform": ["AN521"],
@@ -569,6 +616,7 @@ _builtin_configs = {
                     "psa_ff": config_PSA_FF,
                     "psa_ff_otp": config_PSA_FF_OTP,
                     "full": config_full,
+                    "full_gnuarm": config_full_gnuarm,
                     "an539": config_AN539,
                     "an524": config_AN524,
                     "an521": config_AN521,
@@ -583,7 +631,8 @@ _builtin_configs = {
                     "an521_psa_ipc": config_AN521_PSA_IPC,
                     "debug": config_debug,
                     "lava_debug": config_lava_debug,
-                    "ci": config_ci}
+                    "ci": config_ci,
+                    "ci_gnuarm": config_ci_gnuarm}
 
 if __name__ == '__main__':
     import os
