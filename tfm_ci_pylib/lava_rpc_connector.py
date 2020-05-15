@@ -84,7 +84,7 @@ class LAVA_RPC_connector(xmlrpc.client.ServerProxy, object):
         return job_def, def_o.get('metadata', [])
 
     def write_target_lines(self, target_out_file, log):
-        log = yaml.load(str(log))
+        log = yaml.load(log)
         with open(target_out_file, "w+") as F:
             for line in log:
                 if line['lvl'] in ['target', 'feedback']:
@@ -92,9 +92,10 @@ class LAVA_RPC_connector(xmlrpc.client.ServerProxy, object):
 
     def get_job_log(self, job_id, yaml_out_file=None, target_out_file=None):
         job_res, job_log = self.scheduler.jobs.logs(job_id)
+        job_log = job_log.data.decode('utf-8')
         if yaml_out_file:
             with open(yaml_out_file, "w") as F:
-                F.write(str(job_log))
+                F.write(job_log)
         if target_out_file:
             self.write_target_lines(target_out_file, job_log)
         return job_log
@@ -105,7 +106,8 @@ class LAVA_RPC_connector(xmlrpc.client.ServerProxy, object):
             with open(yaml_out_file, "w") as F:
                 for data in job_config:
                     if data:
-                        F.write(str(data))
+                        line = data.data.decode('utf-8')
+                        F.write(line)
         return job_config
 
     def get_job_info(self, job_id, yaml_out_file=None):
