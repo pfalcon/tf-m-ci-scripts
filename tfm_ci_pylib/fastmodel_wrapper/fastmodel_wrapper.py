@@ -257,6 +257,7 @@ class FastmodelWrapper(object):
 
         # Convert to list
         cmd = self.compile_cmd().split(" ")
+        print("fvp cmd ", self.compile_cmd())
 
         # Run it as subproccess
         self.fvp_proc = Popen(cmd, stdout=PIPE, stderr=STDOUT, shell=False)
@@ -286,9 +287,10 @@ class FastmodelWrapper(object):
                     queue.put(line)
 
                 # If the text end string is found terminate
-                if self.test_end_string in str(line):
+                if str(line).find(self.test_end_string) > 0:
 
                     queue.put("Found End String \"%s\"" % self.test_end_string)
+                    print("Found End String \"%s\"" % self.test_end_string)
                     self.test_complete = True
                     self.stop()
                     break
@@ -344,7 +346,7 @@ class FastmodelWrapper(object):
             print("Could not find all binaries from %s" % ", ".join(bin_list))
             print("Missing Files:", ", ".join(find_missing_files(bin_list)))
             sys.exit(1)
-
+        self.show_cmd()
         self.pids.append(self.run_fpv())
         self.pids.append(self.run_monitor())
         print("Spawned Proccesses with PID %s" % repr(self.pids)[1:-1])

@@ -200,6 +200,25 @@ def config_variant(**override_params):
                 _cfg["application"] = _cfg["application"] % _vdict
                 _cfg["data"] = _cfg["data"] % _vdict
 
+                if _vdict["psa_suite"] == "FF":
+                    print("TfmFastModelConfig override:")
+                    _cfg["parameters"] = [
+                        "fvp_mps2.platform_type=2",
+                        "cpu0.baseline=0",
+                        "cpu0.INITVTOR_S=0x10080400",
+                        "cpu0.semihosting-enable=0",
+                        "fvp_mps2.DISABLE_GATING=0",
+                        "fvp_mps2.telnetterminal0.start_telnet=0",
+                        "fvp_mps2.telnetterminal1.start_telnet=0",
+                        "fvp_mps2.telnetterminal2.start_telnet=0",
+                        "fvp_mps2.telnetterminal0.quiet=1",
+                        "fvp_mps2.telnetterminal1.quiet=1",
+                        "fvp_mps2.telnetterminal2.quiet=1",
+                        "fvp_mps2.UART2.out_file=$TERM_FILE",
+                        "fvp_mps2.UART2.unbuffered_output=1",
+                        "fvp_mps2.UART0.shutdown_on_eot=1",
+                        "fvp_mps2.mps2_visualisation.disable-visualisation=1"]
+
                 _name = cls._name % _vdict
 
         return TfmFastModelConfig

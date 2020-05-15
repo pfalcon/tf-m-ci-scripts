@@ -357,7 +357,7 @@ def arm_non_eabi_size(filename):
 
     eabi_size = check_output(["arm-none-eabi-size",
                               filename],
-                             timeout=2).decode('UTF-8').rstrip()
+                             timeout=18).decode('UTF-8').rstrip()
 
     size_data = re.search(size_info_rex, eabi_size)
 

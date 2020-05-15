@@ -44,6 +44,7 @@ class template_cfg(fpv_wrapper_config):
         "config": "%(config)s",
         "platform": "%(platform)s",
         "compiler": "%(compiler)s",
+        "psa_suite": "%(psa_suite)s",
         "build_type": "%(build_type)s",
         "bootloader": "%(bootloader)s"
     }
@@ -227,4 +228,109 @@ class template_coreipctfmlevel2_config(template_cfg):
     ]
     # Testing will stop if string is reached
     _cfg["test_end_string"] = "Secure image initializing"
+    _cfg["simlimit"] = "1200"
+
+class template_psaapitestipctfmlevel2_config(template_cfg):
+    """ Will automatically populate the required information for tfm
+    coreipc tfmlevel2 configuration testing. User still needs to set the
+    buildpath, platform, compiler variants """
+
+    _cfg = deepcopy(template_cfg._cfg)
+
+    _vdict = deepcopy(template_cfg._vdict)
+
+    # Set defaults across all variants
+    _vdict["build_path"] = "build-ci-all"
+
+    _vdict["app_bin_path"] = "install/outputs/fvp"
+    _vdict["data_bin_path"] = "install/outputs/fvp"
+
+    _vdict["variant_name_tpl"] = "%(platform)s_%(compiler)s_%(config)s_" + \
+        "%(psa_suite)s_%(build_type)s_%(bootloader)s"
+
+    # Mofify the %(config)s parameter of the template
+    _vdict["config"] = "ConfigPsaApiTestIPCTfmLevel2"
+    _cfg["terminal_log"] = _cfg["terminal_log"] % _vdict
+
+    # System supports two types of matching with
+    # test_case_id and result match group and only test_case_id
+    _cfg["test_rex"] = (r'Entering standby'
+                        )
+
+    # test_case_id capture group Should match test_cases entries
+    _cfg["test_cases"] = [
+        'Secure image initializing!',
+    ]
+    # Testing will stop if string is reached
+    _cfg["test_end_string"] = "Entering standby.."
+    _cfg["simlimit"] = "1200"
+
+class template_psaapitestipc_config(template_cfg):
+    """ Will automatically populate the required information for tfm
+    coreipc tfmlevel2 configuration testing. User still needs to set the
+    buildpath, platform, compiler variants """
+
+    _cfg = deepcopy(template_cfg._cfg)
+
+    _vdict = deepcopy(template_cfg._vdict)
+
+    # Set defaults across all variants
+    _vdict["build_path"] = "build-ci-all"
+
+    _vdict["app_bin_path"] = "install/outputs/fvp"
+    _vdict["data_bin_path"] = "install/outputs/fvp"
+
+    _vdict["variant_name_tpl"] = "%(platform)s_%(compiler)s_%(config)s_" + \
+        "%(psa_suite)s_%(build_type)s_%(bootloader)s"
+
+    # Mofify the %(config)s parameter of the template
+    _vdict["config"] = "ConfigPsaApiTestIPC"
+    _cfg["terminal_log"] = _cfg["terminal_log"] % _vdict
+
+    # System supports two types of matching with
+    # test_case_id and result match group and only test_case_id
+    _cfg["test_rex"] = (r'Entering standby'
+                        )
+
+    # test_case_id capture group Should match test_cases entries
+    _cfg["test_cases"] = [
+        'Secure image initializing!',
+    ]
+    # Testing will stop if string is reached
+    _cfg["test_end_string"] = "Entering standby.."
+    _cfg["simlimit"] = "1200"
+
+class template_psaapitest_config(template_cfg):
+    """ Will automatically populate the required information for tfm
+    coreipc tfmlevel2 configuration testing. User still needs to set the
+    buildpath, platform, compiler variants """
+
+    _cfg = deepcopy(template_cfg._cfg)
+
+    _vdict = deepcopy(template_cfg._vdict)
+
+    # Set defaults across all variants
+    _vdict["build_path"] = "build-ci-all"
+
+    _vdict["app_bin_path"] = "install/outputs/fvp"
+    _vdict["data_bin_path"] = "install/outputs/fvp"
+
+    _vdict["variant_name_tpl"] = "%(platform)s_%(compiler)s_%(config)s_" + \
+        "%(psa_suite)s_%(build_type)s_%(bootloader)s"
+
+    # Mofify the %(config)s parameter of the template
+    _vdict["config"] = "ConfigPsaApiTest"
+    _cfg["terminal_log"] = _cfg["terminal_log"] % _vdict
+
+    # System supports two types of matching with
+    # test_case_id and result match group and only test_case_id
+    _cfg["test_rex"] = (r'Entering standby'
+                        )
+
+    # test_case_id capture group Should match test_cases entries
+    _cfg["test_cases"] = [
+        'Secure image initializing!',
+    ]
+    # Testing will stop if string is reached
+    _cfg["test_end_string"] = "Entering standby.."
     _cfg["simlimit"] = "1200"

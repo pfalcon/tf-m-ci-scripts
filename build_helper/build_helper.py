@@ -51,6 +51,7 @@ def build(tfm_dir,
     """ Instantiate a build manager class and build all configurations """
 
     start_time = time.time()
+    print("relative_paths %s done \r\n" % relative_paths)
 
     bm = TFM_Build_Manager(tfm_dir=tfm_dir,
                            work_dir=build_dir,
@@ -83,6 +84,7 @@ def main(user_args):
     elif user_args.config:
         if user_args.config in _builtin_configs.keys():
             build_config = _builtin_configs[user_args.config.lower()]
+            print("main %s done \r\n" % build_config)
         else:
             print("Configuration %s is not defined in built-in configs" %
                   user_args.config)
@@ -94,9 +96,10 @@ def main(user_args):
     # Build everything
     build_status, build_report = build(user_args.tfm_dir,
                                        user_args.build_dir,
-                                       user_args.report,
+                                       #user_args.report,
+                                       "summary_" + user_args.config.lower() + ".json",
                                        build_config,
-                                       user_args.parallel_builds,
+                                       os.cpu_count(),
                                        user_args.thread_no,
                                        user_args.install,
                                        user_args.image_sizes,

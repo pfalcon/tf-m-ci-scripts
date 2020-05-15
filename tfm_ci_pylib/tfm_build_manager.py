@@ -22,6 +22,7 @@ __version__ = "1.1"
 
 import os
 import sys
+from .utils import *
 from time import time
 from copy import deepcopy
 from .utils import gen_cfg_combinations, list_chunks, load_json,\
@@ -60,6 +61,8 @@ class TFM_Build_Manager(structuredTask):
 
         self._tbm_tfm_dir = os.path.abspath(os.path.expanduser(tfm_dir))
 
+        print("bm param tfm_dir %s" % tfm_dir)
+        print("bm %s %s %s" % (work_dir, cfg_dict, self._tbm_work_dir))
         # Internal flag to tag simple (non combination formatted configs)
         self.simple_config = False
         self._tbm_report = report
@@ -67,6 +70,8 @@ class TFM_Build_Manager(structuredTask):
         self._tbm_cfg = self.load_config(cfg_dict, self._tbm_work_dir)
         self._tbm_build_cfg, \
             self.tbm_common_cfg = self.parse_config(self._tbm_cfg)
+        self._tfb_code_base_updated = False
+        self._tfb_log_f = "CodeBasePrepare.log"
 
         super(TFM_Build_Manager, self).__init__(name="TFM_Build_Manager")
 
@@ -124,6 +129,66 @@ class TFM_Build_Manager(structuredTask):
                                 "of type %s" % (key, config[key]))
         return config
 
+    def pre_build(self, build_cfg):
+        print("pre_build start %s \r\nself._tfb_cfg %s\r\n" %
+                (self, build_cfg))
+
+        try:
+            if self._tfb_code_base_updated:
+                print("Code base has been updated")
+                return True
+
+            self._tfb_code_base_updated = True
+
+            if "build_psa_api" in build_cfg:
+                # FF IPC build needs repo manifest update for TFM and PSA arch test
+                if "build_ff_ipc" in build_cfg:
+                    print("Checkout to FF IPC code base")
+                    os.chdir(build_cfg["codebase_root_dir"] + "/../psa-arch-tests/api-tests")
+                    _api_test_manifest = "git checkout . ; python3 tools/scripts/manifest_update.py"
+                    if subprocess_log(_api_test_manifest,
+                                      self._tfb_log_f,
+                                      append=True,
+                                      prefix=_api_test_manifest):
+
+                        raise Exception("Python Failed please check log: %s" %
+                                        self._tfb_log_f)
+
+                    _api_test_manifest_tfm = "python3 tools/tfm_parse_manifest_list.py -m tools/tfm_psa_ff_test_manifest_list.yaml append"
+                    os.chdir(build_cfg["codebase_root_dir"])
+                    if subprocess_log(_api_test_manifest_tfm,
+                                      self._tfb_log_f,
+                                      append=True,
+                                      prefix=_api_test_manifest_tfm):
+
+                        raise Exception("Python TFM Failed please check log: %s" %
+                                        self._tfb_log_f)
+                    return True
+
+            print("Checkout to default code base")
+            os.chdir(build_cfg["codebase_root_dir"] + "/../psa-arch-tests/api-tests")
+            _api_test_manifest = "git checkout ."
+            if subprocess_log(_api_test_manifest,
+                              self._tfb_log_f,
+                              append=True,
+                              prefix=_api_test_manifest):
+
+                raise Exception("Python Failed please check log: %s" %
+                                self._tfb_log_f)
+
+            _api_test_manifest_tfm = "python3 tools/tfm_parse_manifest_list.py"
+            os.chdir(build_cfg["codebase_root_dir"])
+            if subprocess_log(_api_test_manifest_tfm,
+                              self._tfb_log_f,
+                              append=True,
+                              prefix=_api_test_manifest_tfm):
+
+                raise Exception("Python TFM Failed please check log: %s" %
+                                self._tfb_log_f)
+        finally:
+            print("python pass after builder prepare")
+            os.chdir(build_cfg["codebase_root_dir"] + "/../")
+
     def task_exec(self):
         """ Create a build pool and execute them in parallel """
 
@@ -169,7 +234,8 @@ class TFM_Build_Manager(structuredTask):
         # When a seed pool is provided iterate through the entries
         # and update platform spefific parameters
         elif len(self._tbm_build_cfg):
-
+            print("\r\n_tbm_build_cfg %s\r\n tbm_common_cfg %s\r\n" \
+             % (self._tbm_build_cfg, self.tbm_common_cfg))
             for name, i in self._tbm_build_cfg.items():
                 # Do not modify the original config
                 build_cfg = deepcopy(self.tbm_common_cfg)
@@ -193,11 +259,62 @@ class TFM_Build_Manager(structuredTask):
 
                 # Merge the two dictionaries since the template may contain
                 # fixed and combinations seed parameters
-                cmd0 = build_cfg["config_template"] % \
-                    dict(dict(i._asdict()), **build_cfg)
+                if i.proj_config.startswith("ConfigPsaApiTest"):
+                    #PSA API tests only
+                    #TODO i._asdict()["tfm_build_dir"] = self._tbm_work_dir
+                    cmd0 = build_cfg["config_template_psa_api"] % \
+                        {**dict(i._asdict()), **build_cfg}
+                    cmd0 += " -DPSA_API_TEST_BUILD_PATH=" + self._tbm_work_dir + \
+                            "/" + name + "/BUILD"
 
-                # Prepend configuration commoand as the first cmd
+                    if i.psa_api_suit == "FF":
+                        cmd0 += " -DPSA_API_TEST_IPC=ON"
+                        cmd2 = "cmake " + build_cfg["codebase_root_dir"] + "/../psa-arch-tests/api-tests/ " + \
+                            "-G\"Unix Makefiles\" -DTARGET=tgt_ff_tfm_" + \
+                            i.target_platform.lower() +" -DCPU_ARCH=armv8m_ml -DTOOLCHAIN=" + \
+                            i.compiler + " -DSUITE=IPC -DPSA_INCLUDE_PATHS=\"" + \
+                            build_cfg["codebase_root_dir"] + "/interface/include/"
+
+                        cmd2 += ";" + build_cfg["codebase_root_dir"] + \
+                            "/../psa-arch-tests/api-tests/platform/manifests\"" + \
+                            " -DINCLUDE_PANIC_TESTS=1 -DPLATFORM_PSA_ISOLATION_LEVEL=" + \
+                            (("2") if i.proj_config.find("TfmLevel2") > 0 else "1") + \
+                            " -DSP_HEAP_MEM_SUPP=0"
+                        if i.target_platform == "MUSCA_B1":
+                            cmd0 += " -DSST_RAM_FS=ON"
+                        build_cfg["build_ff_ipc"] = "IPC"
+                    else:
+                        cmd0 += " -DPSA_API_TEST_" + i.psa_api_suit + "=ON"
+                        cmd2 = "cmake " + build_cfg["codebase_root_dir"] + "/../psa-arch-tests/api-tests/ " + \
+                            "-G\"Unix Makefiles\" -DTARGET=tgt_dev_apis_tfm_" + \
+                            i.target_platform.lower() +" -DCPU_ARCH=armv8m_ml -DTOOLCHAIN=" + \
+                            i.compiler + " -DSUITE=" + i.psa_api_suit +" -DPSA_INCLUDE_PATHS=\"" + \
+                            build_cfg["codebase_root_dir"] + "/interface/include/\""
+
+                    cmd2 += " -DCMAKE_BUILD_TYPE=" + i.cmake_build_type
+
+                    cmd3 = "cmake --build ."
+                    build_cfg["build_psa_api"] = cmd2 + " ; " + cmd3
+
+                else:
+                    cmd0 = build_cfg["config_template"] % \
+                        {**dict(i._asdict()), **build_cfg}
+
+                try:
+                    if i.__str__().find("with_OTP") > 0:
+                        cmd0 += " -DCRYPTO_HW_ACCELERATOR_OTP_STATE=ENABLED"
+                    else:
+                        build_cfg["build_cmds"][0] += " -j 2"
+                    if cmd0.find("SST_RAM_FS=ON") < 0 and i.target_platform == "MUSCA_B1":
+                        cmd0 += " -DSST_RAM_FS=OFF -DITS_RAM_FS=OFF"
+                except Exception as E:
+                    pass
+
+                # Prepend configuration commoand as the first cmd [cmd1] + [cmd2] + [cmd3] +
                 build_cfg["build_cmds"] = [cmd0] + build_cfg["build_cmds"]
+                print("cmd0 %s\r\n" % (build_cfg["build_cmds"]))
+                if "build_psa_api" in build_cfg:
+                    print("cmd build_psa_api %s\r\n" % build_cfg["build_psa_api"])
 
                 # Set the overrid params
                 over_dict = {"_tbm_build_dir_": os.path.join(
@@ -211,7 +328,7 @@ class TFM_Build_Manager(structuredTask):
                 build_cfg = self.override_tbm_cfg_params(build_cfg,
                                                          over_params,
                                                          **over_dict)
-
+                self.pre_build(build_cfg)
                 # Overrides path in expected artefacts
                 print("Loading config %s" % name)
 
@@ -381,7 +498,7 @@ class TFM_Build_Manager(structuredTask):
             fl = ([k for k, v in full_rep.items() if v['status'] == 'Failed'])
             ps = ([k for k, v in full_rep.items() if v['status'] == 'Success'])
         except Exception as E:
-            print("No report generated")
+            print("No report generated", E)
             return
         if fl:
             print_test(t_list=fl, status="failed", tname="Builds")
@@ -401,6 +518,7 @@ class TFM_Build_Manager(structuredTask):
             # optional parameters.
             tags = [n for n in static_config["sort_order"]
                     if n in seed_config.keys()]
+            print("!!!!!!!!!!!gen list %s\r\n" % tags)
 
             data = []
             for key in tags:
@@ -421,7 +539,12 @@ class TFM_Build_Manager(structuredTask):
 
             # Replace bollean vaiables with more BL2/NOBL2 and use it as"
             # configuration name.
-            ret_cfg[i_str.replace("True", "BL2").replace("False", "NOBL2")] = i
+            i_str = i_str.replace("True", "BL2").replace("False", "NOBL2")
+            i_str = i_str.replace("CRYPTO", "Crypto")
+            i_str = i_str.replace("PROTECTED_STORAGE", "PS")
+            i_str = i_str.replace("INITIAL_ATTESTATION", "Attest")
+            i_str = i_str.replace("INTERNAL_TRUSTED_STORAGE", "ITS")
+            ret_cfg[i_str] = i
 
         return ret_cfg
 

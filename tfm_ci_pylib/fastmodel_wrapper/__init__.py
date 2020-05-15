@@ -18,4 +18,6 @@ from .fastmodel_config_map import FastmodelConfigMap
 
 from .config_templates import template_default_config, \
     template_regression_config, template_coreipc_config, \
-    template_coreipctfmlevel2_config
+    template_coreipctfmlevel2_config, template_regressionipc_config, \
+    template_regressionipctfmlevel2_config, template_psaapitestipctfmlevel2_config, \
+    template_psaapitestipc_config, template_psaapitest_config

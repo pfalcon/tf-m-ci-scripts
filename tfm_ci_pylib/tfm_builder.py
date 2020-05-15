@@ -22,6 +22,7 @@ __version__ = "1.1"
 
 import os
 import re
+import time
 import shutil
 from .utils import *
 from .structured_task import structuredTask
@@ -105,11 +106,165 @@ class TFM_Builder(structuredTask):
             if not os.path.exists(p):
                 os.makedirs(p)
 
+    def pre_build(self):
+        print("builder start %s \r\nself._tfb_cfg %s\r\n" %
+                (self, self._tfb_cfg))
+
+        try:
+            self._lock.acquire()
+            if self._tfb_code_base_updated:
+                print("Code base has been updated")
+                return True
+
+            self._tfb_code_base_updated = True
+            self._lock.release()
+
+            if "build_psa_api" in self._tfb_cfg:
+                # FF IPC build needs repo manifest update for TFM and PSA arch test
+                if "build_ff_ipc" in self._tfb_cfg:
+                    print("Checkout to FF IPC code base")
+                    os.chdir(self._tfb_cfg["codebase_root_dir"] + "/../psa-arch-tests/api-tests")
+                    _api_test_manifest = "git checkout . ; python3 tools/scripts/manifest_update.py"
+                    if subprocess_log(_api_test_manifest,
+                                      self._tfb_log_f,
+                                      append=True,
+                                      prefix=_api_test_manifest,
+                                      silent=self._tfb_silent):
+
+                        raise Exception("Python Failed please check log: %s" %
+                                        self._tfb_log_f)
+
+                    _api_test_manifest_tfm = "python3 tools/tfm_parse_manifest_list.py -m tools/tfm_psa_ff_test_manifest_list.yaml append"
+                    os.chdir(self._tfb_cfg["codebase_root_dir"])
+                    if subprocess_log(_api_test_manifest_tfm,
+                                      self._tfb_log_f,
+                                      append=True,
+                                      prefix=_api_test_manifest_tfm,
+                                      silent=self._tfb_silent):
+
+                        raise Exception("Python TFM Failed please check log: %s" %
+                                        self._tfb_log_f)
+                else:
+                    print("Checkout to default code base")
+                    os.chdir(self._tfb_cfg["codebase_root_dir"] + "/../psa-arch-tests/api-tests")
+                    _api_test_manifest = "git checkout ."
+                    if subprocess_log(_api_test_manifest,
+                                      self._tfb_log_f,
+                                      append=True,
+                                      prefix=_api_test_manifest,
+                                      silent=self._tfb_silent):
+
+                        raise Exception("Python Failed please check log: %s" %
+                                        self._tfb_log_f)
+
+                    _api_test_manifest_tfm = "python3 tools/tfm_parse_manifest_list.py"
+                    os.chdir(self._tfb_cfg["codebase_root_dir"])
+                    if subprocess_log(_api_test_manifest_tfm,
+                                      self._tfb_log_f,
+                                      append=True,
+                                      prefix=_api_test_manifest_tfm,
+                                      silent=self._tfb_silent):
+
+                        raise Exception("Python TFM Failed please check log: %s" %
+                                        self._tfb_log_f)
+        finally:
+            print("python pass after builder prepare")
+
+            p = self._tfb_build_dir + "/BUILD"
+            if not os.path.exists(p):
+                os.makedirs(p)
+
+            os.chdir(p)
+            if subprocess_log(self._tfb_cfg["build_psa_api"],
+                              self._tfb_log_f,
+                              append=True,
+                              prefix=self._tfb_cfg["build_psa_api"],
+                              silent=self._tfb_silent):
+
+                raise Exception("Build Failed please check log: %s" %
+                                self._tfb_log_f)
+    def copy_tfm(self):
+        """ Copy a new TFM for crypto compile """
+
+        cp_cmd = "cp -r " + self._tfb_cfg["codebase_root_dir"] + " " + \
+            self._tfb_build_dir
+        if subprocess_log(cp_cmd,
+                          self._tfb_log_f,
+                          append=True,
+                          prefix=cp_cmd,
+                          silent=self._tfb_silent):
+
+            raise Exception("Build Failed please check log: %s" %
+                            self._tfb_log_f)
+
+        cp_cmd = "cp -r " + self._tfb_cfg["codebase_root_dir"] + "/../mbed-crypto " + \
+            self._tfb_build_dir
+        if subprocess_log(cp_cmd,
+                          self._tfb_log_f,
+                          append=True,
+                          prefix=cp_cmd,
+                          silent=self._tfb_silent):
+
+            raise Exception("Build Failed please check log: %s" %
+                            self._tfb_log_f)
+
+        cp_cmd = "cp -r " + self._tfb_cfg["codebase_root_dir"] + "/../psa-arch-tests " + \
+            self._tfb_build_dir
+        if subprocess_log(cp_cmd,
+                          self._tfb_log_f,
+                          append=True,
+                          prefix=cp_cmd,
+                          silent=self._tfb_silent):
+
+            raise Exception("Build Failed please check log: %s" %
+                            self._tfb_log_f)
+
+
+        cp_cmd = "mkdir -p " + self._tfb_build_dir + "/CMSIS_5/CMSIS ; "
+        cp_cmd += "cp -r " + self._tfb_cfg["codebase_root_dir"] + "/../CMSIS_5/CMSIS/RTOS2 " + \
+                self._tfb_build_dir + "/CMSIS_5/CMSIS"
+
+        if subprocess_log(cp_cmd,
+                          self._tfb_log_f,
+                          append=True,
+                          prefix=cp_cmd,
+                          silent=self._tfb_silent):
+
+            raise Exception("Build Failed please check log: %s" %
+                            self._tfb_log_f)
+
+        self._tfb_cfg["build_cmds"][0] = \
+            self._tfb_cfg["build_cmds"][0].replace(self._tfb_cfg["codebase_root_dir"],
+            self._tfb_build_dir + "/tf-m")
+
     def task_exec(self):
         """ Main tasks """
 
         # Mark proccess running as status
         self.set_status(-1)
+        print("builder _tfb_cfg %s" % self._tfb_cfg)
+
+        if "build_psa_api" in self._tfb_cfg:
+            p = self._tfb_build_dir + "/BUILD"
+            if not os.path.exists(p):
+                os.makedirs(p)
+            os.chdir(p)
+            if subprocess_log(self._tfb_cfg["build_psa_api"],
+                              self._tfb_log_f,
+                              append=True,
+                              prefix=self._tfb_cfg["build_psa_api"],
+                              silent=self._tfb_silent):
+                raise Exception("Build Failed please check log: %s" %
+                                self._tfb_log_f)
+
+        if self._tfb_cfg["build_cmds"].__str__().find( \
+                "CRYPTO_HW_ACCELERATOR_OTP_STATE=ENABLED") > 0:
+            self.copy_tfm()
+            time.sleep(15)
+            os.sync()
+            print("new build cmd ", self._tfb_cfg["build_cmds"][0])
+
+        print("Go to build directory")
         # Go to build directory
         os.chdir(self._tfb_build_dir)
 
@@ -141,6 +296,7 @@ class TFM_Builder(structuredTask):
                                               "-j %s " % thread_no)
 
             # Build it
+            print("~builder build_cmd %s\r\n" % build_cmd)
             if subprocess_log(build_cmd,
                               self._tfb_log_f,
                               append=True,

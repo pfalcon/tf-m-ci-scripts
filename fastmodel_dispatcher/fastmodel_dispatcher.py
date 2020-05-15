@@ -81,10 +81,12 @@ def main(user_args):
         # build and test configs share common key name enties
         config_list = list(map(str.lower,
                                (map(str, build_report["report"].keys()))))
+        print("zss config_list %s" % config_list)
 
         # Only choose the tests that have been defined in the map
         test_config_list = [n for n in fvp_config_map.list()
                             if n in config_list]
+        print("zss test_config_list original %s" % test_config_list)
 
         # Use the Build manager to calcuate the rejection list in the same
         # manner.
@@ -117,13 +119,14 @@ def main(user_args):
     else:
         pass
 
-    print("Working on Test list: \n%s" % "\n".join(sorted(test_config_list)))
-
+#    print("Working on Test list: \n%s" % "\n".join(sorted(test_config_list)))
+ 
     if user_args.p_command:
 
         for test_cfg in test_config_list:
 
             test_cfg_obj = fvp_config_map.get_config_object(test_cfg)
+
             _tmp_cfg = FastmodelWrapper(fvp_cfg=test_cfg_obj.get_config())
 
             print("\nCommand line:")
@@ -135,12 +138,17 @@ def main(user_args):
     # Run tests
     rep = []
     test_count = 0
+#    print("zss print_list list")
+#    fvp_config_map.print_list()
+    print("zss test_config_list", test_config_list)
     for test_cfg in test_config_list:
 
         # Check if the config hardcoded binary path is same as the one
         # in the build report. If not update the config
         test_cfg_obj = fvp_config_map.get_config_object(test_cfg)
+        print("+++test_cfg_obj %s\r\n %s\r\ntest_cfg %s" % (test_cfg_obj, test_cfg_obj.get_config(), test_cfg))
 
+        print("---- test_cfg_obj.get_config()", test_cfg_obj.get_config())
         rep.append(FastmodelWrapper(
                    fvp_cfg=test_cfg_obj.get_config())
                    .start().block_wait().test().save_report().get_report())
@@ -214,7 +222,7 @@ def get_cmd_args():
     parser.add_argument("-p", "--print-command",
                         dest="p_command",
                         action="store_true",
-                        help="Print the FPV launch command to console & exit")
+                        help="Print the FVP launch command to console & exit")
     return parser.parse_args()
 
 
