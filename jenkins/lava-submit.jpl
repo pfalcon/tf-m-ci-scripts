@@ -17,14 +17,19 @@ node("docker-amd64-xenial") {
     withCredentials([usernamePassword(credentialsId: 'LAVA_CREDENTIALS', passwordVariable: 'LAVA_TOKEN', usernameVariable: 'LAVA_USER')]) {
       print("Generating LAVA jobs...")
       def bl2_string = ""
+      def psa_string = ""
       if (env.BL2.equals("True")) {
         bl2_string = "--bl2"
+      }
+      // work around this string containing quotes?
+      if (!env.PSA_API_SUITE.replace('\'', '').isEmpty()) {
+        psa_string = "--psa-api-suite ${env.PSA_API_SUITE}"
       }
       dir("tf-m-ci-scripts") {
         def res = sh(script: """./lava_helper/lava_create_jobs.py \
 --build-number ${env.BUILD_NUMBER} --output-dir lava_jobs \
 --compiler ${env.COMPILER} --platform ${env.TARGET_PLATFORM} \
-${bl2_string} --build-type ${env.CMAKE_BUILD_TYPE} \
+${bl2_string} ${psa_string} --build-type ${env.CMAKE_BUILD_TYPE} \
 --jenkins-build-url ${env.BUILD_URL} --proj-config ${env.PROJ_CONFIG} \
 --docker-prefix ${env.DOCKER_PREFIX} --license-variable "${env.LICENSE_VARIABLE}"
 """, returnStdout: true).trim()

@@ -137,6 +137,8 @@ def generate_test_definitions(config, work_dir, user_args):
                             "docker_prefix": vars(user_args).get('docker_prefix', ''),
                             "license_variable": vars(user_args).get('license_variable', ''),
                             "build_job_url": artifact_store_url,
+                            "cpu0_baseline": config.get("cpu0_baseline", 0),
+                            "cpu0_initvtor_s": config.get("cpu0_initvtor_s", "0x10000000")
                         }
                         params.update(
                             {
@@ -179,7 +181,6 @@ def generate_lava_job_defs(user_args, config):
         # Only test this platform
         platform = user_args.platform
         config["platforms"] = {platform: config["platforms"][platform]}
-
     # Generate the ouptut definition
     definitions = generate_test_definitions(config, work_dir, user_args)
 
@@ -269,6 +270,9 @@ def get_cmd_args():
         "--license-variable", dest="license_variable", action="store", help="License string for Fastmodels"
     )
     cmdargs.add_argument("--bl2", dest="bl2", action="store_true", help="BL2")
+    cmdargs.add_argument(
+        "--psa-api-suite", dest="psa_suite", action="store", help="PSA API Suite name"
+    )
     return parser.parse_args()
 
 

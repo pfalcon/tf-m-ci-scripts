@@ -594,11 +594,11 @@ config_ci_gnuarm = {
 
 config_lava_debug = {
     "seed_params": {
-        "target_platform": ["AN521"],
+        "target_platform": ["AN521", "AN519"],
         "compiler": ["GNUARM"],
-        "proj_config": ["ConfigCoreIPC", "ConfigCoreIPCTfmLevel2", "ConfigRegression"],
+        "proj_config": ["ConfigRegressionIPC", "ConfigRegressionIPCTfmLevel2", "ConfigRegression"],
         "cmake_build_type": ["Release"],
-        "with_mcuboot": [True],
+        "with_mcuboot": [True, False],
     },
     "common_params": _common_tfm_builder_cfg,
     "invalid": [

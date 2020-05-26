@@ -118,11 +118,14 @@ class LAVA_RPC_connector(xmlrpc.client.ServerProxy, object):
         return job_info
 
     def get_error_reason(self, job_id):
-        lava_res = self.results.get_testsuite_results_yaml(job_id, 'lava')
-        results = yaml.load(lava_res)
-        for test in results:
-            if test['name'] == 'job':
-                return(test.get('metadata', {}).get('error_type', ''))
+        try:
+            lava_res = self.results.get_testsuite_results_yaml(job_id, 'lava')
+            results = yaml.load(lava_res)
+            for test in results:
+                if test['name'] == 'job':
+                    return(test.get('metadata', {}).get('error_type', ''))
+        except Exception:
+            return("Unknown")
 
     def get_job_state(self, job_id):
         return self.scheduler.job_state(job_id)["job_state"]
