@@ -149,6 +149,19 @@ class LAVA_RPC_connector(xmlrpc.client.ServerProxy, object):
                 print(E)
             return False
 
+    def device_type_from_def(self, job_data):
+        def_yaml = yaml.load(job_data)
+        return(def_yaml['device_type'])
+
+    def has_device_type(self, job_data):
+        d_type = self.device_type_from_def(job_data)
+        all_d = self.scheduler.devices.list()
+        for device in all_d:
+            if device['type'] == d_type:
+                if device['health'] in ['Good', 'Unknown']:
+                    return(True)
+        return(False)
+
     def submit_job(self, job_definition):
         """ Will submit a yaml definition pointed by job_definition after
         validating it againist the remote backend. Returns resulting job id,

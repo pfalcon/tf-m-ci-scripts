@@ -38,6 +38,7 @@ actions:
       minutes: 5
     console_string: 'telnetterminal0: Listening for serial connection on port (?P<PORT>\d+)'
     license_variable: '{{ license_variable }}'
+    use_telnet: False
     arguments:
     -  "--application cpu0={NS}"
     -  "--data cpu0={S}@{{ data_bin_offset }}"
@@ -53,6 +54,7 @@ actions:
     -  "--parameter fvp_mps2.telnetterminal1.quiet=0"
     -  "--parameter fvp_mps2.telnetterminal2.quiet=0"
     -  "--parameter fvp_mps2.UART0.shutdown_on_eot=1"
+    -  "--parameter 'fvp_mps2.UART0.out_file=-'"
     -  "--parameter fvp_mps2.mps2_visualisation.disable-visualisation=1"
     prompts:
     - '(.*)'
