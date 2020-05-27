@@ -188,7 +188,7 @@ node("docker-amd64-xenial") {
           withCredentials([usernamePassword(credentialsId: 'LAVA_CREDENTIALS', passwordVariable: 'LAVA_TOKEN', usernameVariable: 'LAVA_USER')]) {
             output = sh(script: """./lava_helper/lava_wait_jobs.py --job-ids ${all_jobs.join(",")} \
   --lava-url ${env.LAVA_URL} --lava-user ${LAVA_USER} --lava-token ${LAVA_TOKEN} \
-  --artifacts-path lava_artifacts \
+  --artifacts-path lava_artifacts --lava-timeout 7200 \
   """, returnStdout: true).trim()
             archiveArtifacts artifacts: 'test_summary.*', allowEmptyArchive: true
             print(output)
