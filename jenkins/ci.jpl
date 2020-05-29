@@ -120,7 +120,14 @@ def lineInString(string, match) {
 
 def getResult(string, match) {
   line = lineInString(string, match)
-  return(line.split(match)[1].split(' '))
+  a = line.split(match)[1].split(' ')
+  score = a[0]
+  if (a.size() > 1)
+  {
+    fail_text = a[1..-1].join(" ")
+    return [score, fail_text]
+  }
+  return [score, ""]
 }
 
 def submitJobsToList(results) {
@@ -193,16 +200,16 @@ node("docker-amd64-xenial") {
             archiveArtifacts artifacts: 'test_summary.*', allowEmptyArchive: true
             print(output)
             g = new Gerrit()
-            def boot_result = getResult(output, 'BOOT_RESULT: ')[0]
+            def (boot_result, boot_output) = getResult(output, 'BOOT_RESULT: ')
             if (boot_result) {
               g.verifyStatus(boot_result, "lava_boot", "test")
             }
-            def test_result = getResult(output, 'TEST_RESULT: ')[0]
+            def (test_result, test_output) = getResult(output, 'TEST_RESULT: ')
             if (test_result) {
               g.verifyStatus(test_result, "lava_test", "test")
             }
             if (boot_result.toInteger() < 1 || test_result.toInteger() < 1) {
-              error("Marking job as failed due to failed boots/tests")
+              error("Marking job as failed due to failed boots: ${boot_output} or tests: ${test_output}")
             }
           }
         }

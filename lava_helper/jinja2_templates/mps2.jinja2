@@ -19,11 +19,10 @@ actions:
       recovery_image:
         url: {{ recovery_image_url }}
         compression: gz
-    namespace: target
-    test_binary_1:
-      url: {{ firmware_url}}
-    test_binary_2:
-      url: {{ bootloader_url }}
+      test_binary_1:
+        url: {{ firmware_url }}
+      test_binary_2:
+        url: {{ bootloader_url }}
     namespace: target
 
 - boot:

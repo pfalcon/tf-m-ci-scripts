@@ -179,9 +179,12 @@ class LAVA_RPC_connector(xmlrpc.client.ServerProxy, object):
             print(e)
             return None, None
         try:
-            job_id = self.scheduler.submit_job(job_data)
-            job_url = self.server_job_prefix % job_id
-            return(job_id, job_url)
+            if self.has_device_type(job_data):
+                job_id = self.scheduler.submit_job(job_data)
+                job_url = self.server_job_prefix % job_id
+                return(job_id, job_url)
+            else:
+                raise Exception("No devices online with required device_type")
         except Exception as e:
             print(e)
             return(None, None)

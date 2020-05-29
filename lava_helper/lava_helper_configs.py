@@ -284,11 +284,7 @@ fvp_mps2_an521_bl2 = {
     "action_timeout": 10,
     "monitor_timeout": 10,
     "poweroff_timeout": 1,
-    "recovery_store_url": "%(jenkins_url)s/"
-                          "job/%(jenkins_job)s",
-    "artifact_store_url": "%(jenkins_url)s/"
-                          "job/%(jenkins_job)s",
-    "platforms": {"AN521": "mps2_an521_v3.0.tar.gz"},
+    "platforms": {"AN521": ""},
     "compilers": ["GNUARM", "ARMCLANG"],
     "build_types": ["Debug", "Release", "Minsizerel"],
     "boot_types": ["BL2"],
@@ -519,15 +515,12 @@ fvp_mps2_an521_nobl2 = {
     "action_timeout": 10,
     "monitor_timeout": 10,
     "poweroff_timeout": 1,
-    "recovery_store_url": "%(jenkins_url)s/"
-                          "job/%(jenkins_job)s",
-    "artifact_store_url": "%(jenkins_url)s/"
-                          "job/%(jenkins_job)s",
-    "platforms": {"AN521": "mps2_an521_v3.0.tar.gz"},
+    "platforms": {"AN521": ""},
     "compilers": ["GNUARM", "ARMCLANG"],
     "build_types": ["Debug", "Release", "Minsizerel"],
     "boot_types": ["NOBL2"],
     "data_bin_offset": "0x00100000",
+    "cpu_baseline": 1,
     "tests": {
         'Default': {
             "binaries": {
