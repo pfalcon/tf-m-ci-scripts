@@ -20,6 +20,7 @@ def verifyStatus(value, verify_name, category) {
 def verifyStatusInWorkspace(value, verify_name, category) {
   withCredentials([usernamePassword(credentialsId: 'VERIFY_STATUS', passwordVariable: 'VERIFY_PASSWORD', usernameVariable: 'VERIFY_USER')]) {
     sh("""
+  set +e
   if [ -z "\$GERRIT_HOST" ] ; then
     echo Not running for a Gerrit change, skipping vote.
     exit 0
