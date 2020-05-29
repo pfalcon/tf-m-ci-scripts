@@ -129,16 +129,16 @@ if [[ ! -z "$1" ]]
         echo "CppCheck: Ignoring files not contained in the build config"
         if [ "$RAW_OUTPUT" == "0" ] ; then
           # Always generate an empty file for other stages of ci expecting one
-          echo "Files Ignored: $flist"
-          cat > chk-config.xml <<- EOF
-          <?xml version="1.0" encoding="UTF-8"?>
-          <results version="2">
-            <cppcheck version="$(cppcheck --version)"/>
-            <errors>
-            </errors>
-          </results>
-          EOF
-          cp chk-config.xml chk-src.xml
+        echo "Files Ignored: $flist"
+				cat <<-EOF > chk-config.xml
+				<?xml version="1.0" encoding="UTF-8"?>
+				<results version="2">
+				    <cppcheck version="$(cppcheck --version)"/>
+				    <errors>
+				    </errors>
+				</results>
+				EOF
+        cp chk-config.xml chk-src.xml
         fi
         exit 0
     fi
