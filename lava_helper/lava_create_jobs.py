@@ -45,8 +45,7 @@ def load_config_overrides(user_args, config_key):
         sys.exit(1)
 
     config["build_no"] = user_args.build_no
-    config["recovery_store_url"] = user_args.jenkins_build_url
-    config["artifact_store_url"] = config["recovery_store_url"]
+    config["artifact_store_url"] = user_args.jenkins_build_url
 
     #  Add the template folder
     config["templ"] = os.path.join(user_args.template_dir, config["templ"])
@@ -63,7 +62,7 @@ def get_artifact_url(artifact_store_url, params, filename):
 
 
 def get_recovery_url(recovery_store_url, recovery):
-    return "{}/artifact/{}".format(recovery_store_url.rstrip('/'), recovery)
+    return "{}/{}".format(recovery_store_url.rstrip('/'), recovery)
 
 
 def get_job_name(name, params, job):
@@ -95,9 +94,9 @@ def generate_test_definitions(config, work_dir, user_args):
 
     template_loader = FileSystemLoader(searchpath=work_dir)
     template_env = Environment(loader=template_loader)
-    recovery_store_url = user_args.jenkins_build_url
+    recovery_store_url = config.get('recovery_store_url', '')
     build_no = user_args.build_no
-    artifact_store_url = recovery_store_url
+    artifact_store_url = config["artifact_store_url"]
     template_file = config.pop("templ")
 
     definitions = {}
