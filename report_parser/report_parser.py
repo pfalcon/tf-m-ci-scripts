@@ -38,14 +38,14 @@ from pprint import pprint
 try:
     from tfm_ci_pylib.utils import load_json, get_local_git_info, \
         save_json, list_subdirs, get_remote_git_info, \
-        convert_git_ref_path, xml_read
+        convert_git_ref_path
 except ImportError:
     dir_path = os.path.dirname(os.path.realpath(__file__))
     sys.path.append(os.path.join(dir_path, "../"))
 
     from tfm_ci_pylib.utils import load_json, get_local_git_info, \
         save_json, list_subdirs, get_remote_git_info, \
-        convert_git_ref_path, xml_read
+        convert_git_ref_path
 
 
 def xml_read(file):
