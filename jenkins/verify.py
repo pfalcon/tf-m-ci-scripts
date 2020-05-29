@@ -29,7 +29,7 @@ def check_plugins(base_url, auth):
         request = requests.get(plugin_url, auth=auth, headers=headers)
     except requests.exceptions.RequestException as exception:
         print("Error checking plugins: {}".format(str(exception)), file=sys.stderr)
-        sys.exit(1)
+        sys.exit(0)
     if request.status_code != 200:
         print("Could not check if verify-status plugin is installed")
         return
@@ -69,7 +69,7 @@ def submit_verification(base_url, auth, changeset, patchset_revision, verify_det
     except requests.exceptions.RequestException as exception:
         print("Error posting to verify-status:", file=sys.stderr)
         print(str(exception), file=sys.stderr)
-        sys.exit(1)
+        sys.exit(0)
     if post.status_code == 204:
         print("Gerrit verify-status posted successfully.")
     else:
@@ -78,7 +78,7 @@ def submit_verification(base_url, auth, changeset, patchset_revision, verify_det
             file=sys.stderr,
         )
         print(post.text, file=sys.stderr)
-        sys.exit(1)
+        sys.exit(0)
 
 
 if __name__ == "__main__":
