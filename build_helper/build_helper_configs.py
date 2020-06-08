@@ -394,6 +394,7 @@ config_tfm_test = {"seed_params": {
                               ("MUSCA_S1", "*", "*", "*", False),
                               ("MUSCA_B1", "*", "*", "*", False)]
                   }
+
 # Configure build manager to build the maximum number of configurations
 config_tfm_test2 = {"seed_params": {
                   "target_platform": ["AN519", "AN524", "AN539", "SSE-200_AWS"],
@@ -404,6 +405,22 @@ config_tfm_test2 = {"seed_params": {
                                   "ConfigCoreIPC",
                                   "ConfigCoreIPCTfmLevel2",
                                   "ConfigDefault"],
+                  "cmake_build_type": ["Debug", "Release", "Minsizerel"],
+                  "with_mcuboot": [True, False],
+                  },
+                  "common_params": _common_tfm_builder_cfg,
+                  # invalid configuations can be added as tuples of adjustable
+                  # resolution "AN521" will reject all combinations for that
+                  # platform while ("AN521", "GNUARM") will only reject GCC ones
+                  "invalid": []
+                  }
+
+# Configure build manager to build the maximum number of configurations
+config_tfm_profile = {"seed_params": {
+                  "target_platform": ["AN519", "AN521"],
+                  "compiler": ["ARMCLANG", "GNUARM"],
+                  "proj_config": ["ConfigDefaultProfileS",
+                                  "ConfigRegressionProfileS"],
                   "cmake_build_type": ["Debug", "Release", "Minsizerel"],
                   "with_mcuboot": [True, False],
                   },
@@ -536,6 +553,179 @@ config_AN521_PSA_IPC = {"seed_params": {
                 "invalid": []
                 }
 
+# Configure build manager to build the maximum number of configurations
+config_nightly = {"seed_params": {
+               "target_platform": ["AN521", "AN519",
+                                   "MUSCA_A", "MUSCA_B1", "MUSCA_S1",
+                                   "AN524", "AN539", "SSE-200_AWS",
+                                   "psoc64"],
+               "compiler": ["ARMCLANG", "GNUARM"],
+               "proj_config": ["ConfigRegression",
+                               "ConfigRegressionIPC",
+                               "ConfigRegressionIPCTfmLevel2",
+                               "ConfigDefault"],
+               "cmake_build_type": ["Debug", "Release", "Minsizerel"],
+               "with_mcuboot": [True, False],
+               },
+               "common_params": _common_tfm_builder_cfg,
+               # invalid configuations can be added as tuples of adjustable
+               # resolution "AN521" will reject all combinations for that
+               # platform while ("AN521", "GNUARM") will only reject GCC ones
+               "invalid": [("MUSCA_A", "*", "*", "*", False),
+                           ("MUSCA_B1", "*", "*", "*", False),
+                           ("psoc64", "*", "*", "*", True),
+                           ("psoc64", "*", "*", "Debug", "*"),
+                           ("psoc64", "*", "*", "Minsizerel", "*"),
+                           ("psoc64", "*", "ConfigDefault", "*", "*"),
+                           ("psoc64", "*", "ConfigRegression", "*", "*")]
+               }
+
+# Configure build manager to build the maximum number of configurations
+config_nightly_profile = {"seed_params": {
+                  "target_platform": ["AN519", "AN521"],
+                  "compiler": ["ARMCLANG", "GNUARM"],
+                  "proj_config": ["ConfigDefaultProfileS",
+                                  "ConfigRegressionProfileS"],
+                  "cmake_build_type": ["Debug", "Release", "Minsizerel"],
+                  "with_mcuboot": [True, False],
+                  },
+                  "common_params": _common_tfm_builder_cfg,
+                  # invalid configuations can be added as tuples of adjustable
+                  # resolution "AN521" will reject all combinations for that
+                  # platform while ("AN521", "GNUARM") will only reject GCC ones
+                  "invalid": []
+                  }
+
+# Configure build manager to build several combinations
+config_nightly_PSA_API = {"seed_params": {
+                "target_platform": ["AN521"],
+                "compiler": ["ARMCLANG", "GNUARM"],
+                "proj_config": ["ConfigPsaApiTest",
+                                "ConfigPsaApiTestIPC",
+                                "ConfigPsaApiTestIPCTfmLevel2"],
+                "psa_api_suit": ["CRYPTO",
+                                 "PROTECTED_STORAGE",
+                                 "INITIAL_ATTESTATION",
+                                 "INTERNAL_TRUSTED_STORAGE"],
+                "cmake_build_type": ["Debug", "Release"],
+                "with_mcuboot": [True],
+                },
+                "common_params": _common_tfm_builder_cfg,
+                # invalid configuations can be added as tuples of adjustable
+                # resolution "AN521" will reject all combinations for that
+                # platform while ("AN521", "GNUARM") will only reject GCC ones
+                "invalid": []
+                }
+
+# Configure build manager to build several combinations
+config_nightly_PSA_FF = {"seed_params": {
+                "target_platform": ["AN521"],
+                "compiler": ["ARMCLANG", "GNUARM"],
+                "proj_config": ["ConfigPsaApiTestIPC",
+                                "ConfigPsaApiTestIPCTfmLevel2"],
+                # Prefer to use "IPC" from compile command perspective
+                # But the name style is prefer "FF"
+                "psa_api_suit": ["FF"],
+                "cmake_build_type": ["Debug", "Release"],
+                "with_mcuboot": [True],
+                },
+                "common_params": _common_tfm_builder_cfg,
+                # invalid configuations can be added as tuples of adjustable
+                # resolution "AN521" will reject all combinations for that
+                # platform while ("AN521", "GNUARM") will only reject GCC ones
+                "invalid": []
+                }
+
+# Configure build manager to build the maximum number of configurations
+config_nightly_OTP = {"seed_params": {
+                  "target_platform": ["MUSCA_B1"],
+                  "compiler": ["ARMCLANG", "GNUARM"],
+                  "proj_config": ["ConfigRegression",
+                                  "ConfigRegressionIPC",
+                                  "ConfigRegressionIPCTfmLevel2"],
+                  "with_OTP": ["OTP"],
+                  "cmake_build_type": ["Debug", "Release"],
+                  "with_mcuboot": [True],
+                  },
+                  "common_params": _common_tfm_builder_cfg,
+                  # invalid configuations can be added as tuples of adjustable
+                  # resolution "AN521" will reject all combinations for that
+                  # platform while ("AN521", "GNUARM") will only reject GCC ones
+                  "invalid": []
+                  }
+
+# Configure build manager to build the maximum number of configurations
+config_pp_test = {"seed_params": {
+                  "target_platform": ["AN521", "AN519", "MUSCA_B1"],
+                  "compiler": ["ARMCLANG", "GNUARM"],
+                  "proj_config": ["ConfigRegression",
+                                  "ConfigRegressionIPC",
+                                  "ConfigRegressionIPCTfmLevel2",
+                                  "ConfigRegressionProfileS"],
+                  "cmake_build_type": ["Release"],
+                  "with_mcuboot": [True],
+                  },
+                  "common_params": _common_tfm_builder_cfg,
+                  # invalid configuations can be added as tuples of adjustable
+                  # resolution "AN521" will reject all combinations for that
+                  # platform while ("AN521", "GNUARM") will only reject GCC ones
+                  "invalid": [("MUSCA_B1", "*", "ConfigRegressionProfileS", "*", "*")]
+                  }
+
+# Configure build manager to build the maximum number of configurations
+config_pp_OTP = {"seed_params": {
+                  "target_platform": ["MUSCA_B1"],
+                  "compiler": ["GNUARM"],
+                  "proj_config": ["ConfigRegression",
+                                  "ConfigRegressionIPC",
+                                  "ConfigRegressionIPCTfmLevel2"],
+                  "with_OTP": ["OTP"],
+                  "cmake_build_type": ["Release"],
+                  "with_mcuboot": [True],
+                  },
+                  "common_params": _common_tfm_builder_cfg,
+                  # invalid configuations can be added as tuples of adjustable
+                  # resolution "AN521" will reject all combinations for that
+                  # platform while ("AN521", "GNUARM") will only reject GCC ones
+                  "invalid": []
+                  }
+
+# Configure build manager to build several combinations
+config_pp_PSA_API = {"seed_params": {
+                "target_platform": ["AN521"],
+                "compiler": ["GNUARM"],
+                "proj_config": ["ConfigPsaApiTestIPCTfmLevel2"],
+                "psa_api_suit": ["FF",
+                                 "CRYPTO",
+                                 "PROTECTED_STORAGE",
+                                 "INITIAL_ATTESTATION",
+                                 "INTERNAL_TRUSTED_STORAGE"],
+                "cmake_build_type": ["Release"],
+                "with_mcuboot": [True],
+                },
+                "common_params": _common_tfm_builder_cfg,
+                # invalid configuations can be added as tuples of adjustable
+                # resolution "AN521" will reject all combinations for that
+                # platform while ("AN521", "GNUARM") will only reject GCC ones
+                "invalid": []
+                }
+
+# Configure build manager to build several combinations
+config_pp_PSoC64 = {"seed_params": {
+                "target_platform": ["psoc64"],
+                "compiler": ["GNUARM"],
+                "proj_config": ["ConfigRegressionIPC",
+                                "ConfigRegressionIPCTfmLevel2"],
+                "cmake_build_type": ["Release"],
+                "with_mcuboot": [False],
+                },
+                "common_params": _common_tfm_builder_cfg,
+                # invalid configuations can be added as tuples of adjustable
+                # resolution "AN521" will reject all combinations for that
+                # platform while ("AN521", "GNUARM") will only reject GCC ones
+                "invalid": []
+                }
+
 # Configruation used for document building
 config_doxygen = {"common_params": {
                   "config_type": "tf-m_documents",
@@ -637,18 +827,39 @@ config_lava_debug = {
 }
 
 _builtin_configs = {
+                    #release test group
                     "tfm_test": config_tfm_test,
                     "tfm_test2": config_tfm_test2,
+                    "tfm_profile": config_tfm_profile,
                     "tfm_test_otp": config_tfm_test_OTP,
                     "psa_api": config_PSA_API,
                     "psa_api_otp": config_PSA_API_OTP,
                     "psa_ff": config_PSA_FF,
                     "psa_ff_otp": config_PSA_FF_OTP,
+                    "tfm_psoc64": config_PSOC64,
+
+                    #nightly test group
+                    "nightly_test": config_nightly,
+                    "nightly_profile": config_nightly_profile,
+                    "nightly_psa_api": config_nightly_PSA_API,
+                    "nightly_ff": config_nightly_PSA_FF,
+                    "nightly_otp": config_nightly_OTP,
+
+                    #per patch test group
+                    "pp_test": config_pp_test,
+                    "pp_OTP": config_pp_OTP,
+                    "pp_PSA_API": config_pp_PSA_API,
+                    "pp_psoc64": config_pp_PSoC64,
+
+                    #full test group in the old CI
                     "full": config_full,
-                    "full_gnuarm": config_full_gnuarm,
+
+                    #specific test group
                     "an539": config_AN539,
                     "an524": config_AN524,
                     "an521": config_AN521,
+                    "an521_psa_api": config_AN521_PSA_API,
+                    "an521_psa_ipc": config_AN521_PSA_IPC,
                     "an519": config_AN519,
                     "musca_a": config_MUSCA_A,
                     "musca_b1": config_MUSCA_B1,
@@ -657,9 +868,10 @@ _builtin_configs = {
                     "doxygen": config_doxygen,
                     "debug": config_debug,
                     "release": config_release,
-                    "an521_psa_api": config_AN521_PSA_API,
-                    "an521_psa_ipc": config_AN521_PSA_IPC,
                     "debug": config_debug,
+
+                    #DevOps team test group
+                    "full_gnuarm": config_full_gnuarm,
                     "lava_debug": config_lava_debug,
                     "ci": config_ci,
                     "ci_gnuarm": config_ci_gnuarm}
