@@ -47,6 +47,20 @@ node(nodeLabel) {
         ]
       )
     }
+    dir("mcuboot") {
+      checkout(
+        changelog: false,
+        poll: false,
+        scm: [
+          $class: 'GitSCM',
+          branches: [[name: 'FETCH_HEAD']],
+          userRemoteConfigs: [[
+            refspec: 'refs/tags/$MCUBOOT_VERSION',
+            url: params.MCUBOOT_URL
+          ]]
+        ]
+      )
+    }
     sh """
     # Host https://github.com/Arm-software/CMSIS_5/releases/download/5.5.0/ARM.CMSIS.5.5.0.pack
     # under \$JENKINS_HOME/userContent
