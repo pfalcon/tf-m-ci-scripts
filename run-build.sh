@@ -20,6 +20,18 @@ if [ -z "$CONFIG_NAME" ] ; then
 	exit 1
 fi
 
+set +e
+echo "output current build environment"
+cat /etc/issue
+uname -a
+grep -c ^processor /proc/cpuinfo
+armclang --version
+arm-none-eabi-gcc --version
+cmake --version
+python --version
+make --version
+
+set -ex
 build_commands=$(python3 tf-m-ci-scripts/configs.py -b -g all $CONFIG_NAME)
 
 if [ -z "$build_commands" ] ; then
