@@ -24,7 +24,8 @@ __version__ = "1.1"
 import xmlrpc.client
 import time
 import yaml
-
+import requests
+import shutil
 
 class LAVA_RPC_connector(xmlrpc.client.ServerProxy, object):
 
@@ -54,6 +55,7 @@ class LAVA_RPC_connector(xmlrpc.client.ServerProxy, object):
                                            hostname)
 
         self.server_job_prefix = "%s/scheduler/job/%%s" % self.server_url
+        self.server_results_prefix = "%s/results/%%s" % self.server_url
         super(LAVA_RPC_connector, self).__init__(server_addr)
 
     def _rpc_cmd_raw(self, cmd, params=None):
@@ -68,12 +70,18 @@ class LAVA_RPC_connector(xmlrpc.client.ServerProxy, object):
 
         print("\n".join(self.system.listMethods()))
 
-    def get_job_results(self, job_id, yaml_out_file=None):
-        results = self.results.get_testjob_results_yaml(job_id)
-        if yaml_out_file:
-            with open(yaml_out_file, "w") as F:
-                F.write(results)
-        return results
+    def fetch_file(self, url, out_file):
+        try:
+            with requests.get(url, stream=True) as r:
+                with open(out_file, 'wb') as f:
+                    shutil.copyfileobj(r.raw, f)
+            return(out_file)
+        except:
+            return(False)
+
+    def get_job_results(self, job_id, yaml_out_file):
+        results_url = "{}/yaml".format(self.server_results_prefix % job_id)
+        return(self.fetch_file(results_url, yaml_out_file))
 
     def get_job_definition(self, job_id, yaml_out_file=None):
         job_def = self.scheduler.jobs.definition(job_id)
@@ -83,32 +91,30 @@ class LAVA_RPC_connector(xmlrpc.client.ServerProxy, object):
         def_o = yaml.load(job_def)
         return job_def, def_o.get('metadata', [])
 
-    def write_target_lines(self, target_out_file, log):
-        log = yaml.load(log)
-        with open(target_out_file, "w+") as F:
-            for line in log:
-                if line['lvl'] in ['target', 'feedback']:
-                    F.write("{}\n".format(line['msg']))
+    def get_job_log(self, job_id, target_out_file):
+        log_url = "{}/log_file/plain".format(self.server_job_prefix % job_id)
+        r = requests.get(log_url, stream=True)
+        if not r:
+            return
+        with open(target_out_file, "w") as target_out:
+            try:
+                for line in r.iter_lines():
+                    line = line.decode('utf-8')
+                    try:
+                        if ('target' in line) or ('feedback' in line):
+                            line_yaml = yaml.load(line)[0]
+                            if line_yaml['lvl'] in ['target', 'feedback']:
+                                target_out.write("{}\n".format(line_yaml['msg']))
+                    except yaml.parser.ParserError as e:
+                        continue
+                    except yaml.scanner.ScannerError as e:
+                        continue
+            except Exception as e:
+                pass
 
-    def get_job_log(self, job_id, yaml_out_file=None, target_out_file=None):
-        job_res, job_log = self.scheduler.jobs.logs(job_id)
-        job_log = job_log.data.decode('utf-8')
-        if yaml_out_file:
-            with open(yaml_out_file, "w") as F:
-                F.write(job_log)
-        if target_out_file:
-            self.write_target_lines(target_out_file, job_log)
-        return job_log
-
-    def get_job_config(self, job_id, yaml_out_file=None):
-        job_config = self.scheduler.jobs.configuration(job_id)
-        if yaml_out_file:
-            with open(yaml_out_file, "w") as F:
-                for data in job_config:
-                    if data:
-                        line = data.data.decode('utf-8')
-                        F.write(line)
-        return job_config
+    def get_job_config(self, job_id, config_out_file):
+        config_url = "{}/configuration".format(self.server_job_prefix % job_id)
+        self.fetch_file(config_url, config_out_file)
 
     def get_job_info(self, job_id, yaml_out_file=None):
         job_info = self.scheduler.jobs.show(job_id)

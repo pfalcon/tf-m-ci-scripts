@@ -66,14 +66,16 @@ def fetch_artifacts(jobs, user_args, lava):
         os.makedirs(job_dir, exist_ok=True)
         def_path = os.path.join(job_dir, 'definition.yaml')
         target_log = os.path.join(job_dir, 'target_log.txt')
-        config = os.path.join(job_dir, 'config.yaml')
+        config = os.path.join(job_dir, 'config.tar.bz2')
+        results_file = os.path.join(job_dir, 'results.yaml')
         definition, metadata = lava.get_job_definition(job_id, def_path)
         jobs[job_id]['metadata'] = metadata
         time.sleep(0.2) # be friendly to LAVA
-        lava.get_job_log(job_id, None, target_log)
+        lava.get_job_log(job_id, target_log)
         time.sleep(0.2)
         lava.get_job_config(job_id, config)
         time.sleep(0.2)
+        lava.get_job_results(job_id, results_file)
     return(jobs)
 
 
@@ -108,13 +110,13 @@ def test_report(jobs, user_args, lava):
     fail_j = []
     jinja_data = []
     for job, info in jobs.items():
-        if user_args.artifacts_path:
-            results_file = os.path.join(info['job_dir'], 'results.yaml')
-            results = lava.get_job_results(job, results_file)
-        else:
-            results = lava.get_job_results(job)
-        results = yaml.load(results)
-        #results = remove_lava_dupes(results)
+        results_file = os.path.join(info['job_dir'], 'results.yaml')
+        if not os.path.exists(results_file) or (os.path.getsize(results_file) == 0):
+            fail_j.append(job)
+            continue
+        with open(results_file, "r") as F:
+            res_data = F.read()
+        results = yaml.load(res_data)
         non_lava_results = [x for x in results if x['suite'] != 'lava']
         info['lava_url'] = lava_id_to_url(job, user_args)
         info['artifacts_dir'] = "tf-m-ci-scripts/{}".format(info['job_dir'])
