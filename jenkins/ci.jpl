@@ -74,7 +74,7 @@ python3 ./configs.py -g ${filter_group.replace(" ", " -g ")} ${config}
   }
 }
 
-def buildDocs() {
+def buildDocs(results) {
   def params = []
   params += string(name: 'GERRIT_BRANCH', value: env.GERRIT_BRANCH)
   params += string(name: 'GERRIT_HOST', value: env.GERRIT_HOST)
@@ -84,9 +84,10 @@ def buildDocs() {
   params += string(name: 'CMSIS_VERSION', value: env.CMSIS_VERSION)
   params += string(name: 'MBEDCRYPTO_VERSION', value: env.MBEDCRYPTO_VERSION)
   params += string(name: 'CODE_REPO', value: env.CODE_REPO)
-  return {
+  return { -> results
     def res = build(job: 'tf-m-build-docs', parameters: params, propagate:false)
     print("${res.number}: Docs ${res.result} ${res.getAbsoluteUrl()}")
+    results['docs'] = [res.number, res.result, params]
     if (res.result in ["FAILURE", "ABORTED", "UNSTABLE", "NOT_BUILT"]) {
       error("Build failed at ${res.getAbsoluteUrl()}")
     }
@@ -160,7 +161,7 @@ node("docker-amd64-xenial") {
     for (config in configs) {
       builds[config] = buildConfig("tf-m-ci-scripts", config, env.FILTER_GROUP, results)
     }
-    builds["docs"] = buildDocs()
+    builds["docs"] = buildDocs(results)
   }
 }
 stage("Builds") {
@@ -180,7 +181,14 @@ stage("Builds") {
     writeSummary(results['builds'])
   }
 }
+
 node("docker-amd64-xenial") {
+  stage("Copy Docs") {
+    step([$class: 'CopyArtifact', projectName: 'tf-m-build-docs',
+    selector: specific("${results['docs'][0]}"), target: './docs/',
+    optional: true])
+    archiveArtifacts artifacts: 'docs/**', allowEmptyArchive: true
+  }
   stage("Tests") {
     dir("tf-m-ci-scripts") {
       git url: '$CI_SCRIPTS_REPO', branch: '$CI_SCRIPTS_BRANCH', credentialsId: 'GIT_SSH_KEY'
