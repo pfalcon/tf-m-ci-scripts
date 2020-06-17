@@ -73,6 +73,20 @@ node(nodeLabel) {
     set -e
     unzip -o -d CMSIS_5 cmsis.pack
     """
+    dir("tf-m-tests") {
+      checkout(
+        changelog: false,
+        poll: false,
+        scm: [
+          $class: 'GitSCM',
+          branches: [[name: 'FETCH_HEAD']],
+          userRemoteConfigs: [[
+            refspec: '$TFM_TESTS_REFSPEC',
+            url: params.TFM_TESTS_URL
+          ]]
+        ]
+      )
+    }
     if (env.PSA_API_SUITE != "") {
       dir("psa-arch-tests") {
         checkout(
