@@ -82,7 +82,7 @@ node(nodeLabel) {
             $class: 'GitSCM',
             branches: [[name: 'FETCH_HEAD']],
             userRemoteConfigs: [[
-              refspec: 'refs/tags/v20.03_API1.0',
+              refspec: '$PSA_ARCH_TESTS_VERSION',
               url: params.PSA_ARCH_TESTS_URL
             ]]
           ]
