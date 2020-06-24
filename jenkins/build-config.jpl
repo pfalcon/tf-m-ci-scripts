@@ -9,9 +9,9 @@
 @Library('trustedfirmware') _
 import org.trustedfirmware.Gerrit
 
-def nodeLabel = "docker-amd64-xenial"
+def nodeLabel = "docker-amd64-bionic"
 if (env.COMPILER == "ARMCLANG") {
-  nodeLabel = "docker-amd64-xenial-armclang"
+  nodeLabel = "docker-amd64-bionic-armclang"
 }
 
 node(nodeLabel) {

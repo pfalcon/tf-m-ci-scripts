@@ -146,7 +146,7 @@ def configs = []
 def builds = [:]
 def results = [:]
 
-node("docker-amd64-xenial") {
+node("docker-amd64-bionic") {
   stage("Init") {
     cleanWs()
     dir("tf-m-ci-scripts") {
@@ -164,6 +164,7 @@ node("docker-amd64-xenial") {
     builds["docs"] = buildDocs(results)
   }
 }
+
 stage("Builds") {
   def verify = 1
   try {
@@ -182,7 +183,7 @@ stage("Builds") {
   }
 }
 
-node("docker-amd64-xenial") {
+node("docker-amd64-bionic") {
   stage("Copy Docs") {
     step([$class: 'CopyArtifact', projectName: 'tf-m-build-docs',
     selector: specific("${results['docs'][0]}"), target: './docs/',

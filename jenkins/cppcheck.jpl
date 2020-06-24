@@ -9,7 +9,7 @@
 @Library('trustedfirmware') _
 import org.trustedfirmware.Gerrit
 
-node("docker-amd64-xenial") {
+node("docker-amd64-bionic") {
   stage("Init") {
     cleanWs()
     dir("trusted-firmware-m") {
