@@ -429,7 +429,7 @@ config_tfm_test2 = {"seed_params": {
                   # invalid configuations can be added as tuples of adjustable
                   # resolution "AN521" will reject all combinations for that
                   # platform while ("AN521", "GNUARM") will only reject GCC ones
-                  "invalid": []
+                  "invalid": [("AN519", "GNUARM", "*", "Minsizerel", "*")]
                   }
 
 # Configure build manager to build the maximum number of configurations
@@ -445,7 +445,7 @@ config_tfm_profile = {"seed_params": {
                   # invalid configuations can be added as tuples of adjustable
                   # resolution "AN521" will reject all combinations for that
                   # platform while ("AN521", "GNUARM") will only reject GCC ones
-                  "invalid": []
+                  "invalid": [("AN519", "GNUARM", "*", "Minsizerel", "*")]
                   }
 
 # Configure build manager to build the maximum number of configurations
@@ -547,7 +547,8 @@ config_release = {"seed_params": {
                   # platform while ("AN521", "GNUARM") will only reject GCC ones
                   "invalid": [("MUSCA_A", "*", "*", "*", False),
                               ("MUSCA_S1", "*", "*", "*", False),
-                              ("MUSCA_B1", "*", "*", "*", False)]
+                              ("MUSCA_B1", "*", "*", "*", False),
+                              ("AN519", "GNUARM", "*", "MINSIZEREL", "*")]
                   }
 
 # Configure build manager to build several combinations
@@ -569,7 +570,8 @@ config_AN521_PSA_API = {"seed_params": {
                 # invalid configuations can be added as tuples of adjustable
                 # resolution "AN521" will reject all combinations for that
                 # platform while ("AN521", "GNUARM") will only reject GCC ones
-                "invalid": [("*", "*", "*", "IPC", "*", "*")]
+                "invalid": [("*", "*", "*", "IPC", "*", "*"),
+                            ("AN519", "GNUARM", "*", "MINSIZEREL", "*")]
                 }
 
 # Configure build manager to build several combinations
@@ -586,7 +588,7 @@ config_AN521_PSA_IPC = {"seed_params": {
                 # invalid configuations can be added as tuples of adjustable
                 # resolution "AN521" will reject all combinations for that
                 # platform while ("AN521", "GNUARM") will only reject GCC ones
-                "invalid": []
+                "invalid": [("AN519", "GNUARM", "*", "*", "MINSIZEREL", "*")]
                 }
 
 # Configure build manager to build the maximum number of configurations
@@ -610,6 +612,7 @@ config_nightly = {"seed_params": {
                "invalid": [("MUSCA_A", "*", "*", "*", False),
                            ("MUSCA_B1", "*", "*", "*", False),
                            ("MUSCA_S1", "*", "*", "*", False),
+                           ("AN519", "GNUARM", "*", "Minsizerel", "*"),
                            ("psoc64", "*", "*", "*", True),
                            ("psoc64", "*", "*", "Debug", "*"),
                            ("psoc64", "*", "*", "Minsizerel", "*"),
@@ -630,7 +633,7 @@ config_nightly_profile = {"seed_params": {
                   # invalid configuations can be added as tuples of adjustable
                   # resolution "AN521" will reject all combinations for that
                   # platform while ("AN521", "GNUARM") will only reject GCC ones
-                  "invalid": []
+                  "invalid": [("AN519", "GNUARM", "*", "Minsizerel", "*")]
                   }
 
 # Configure build manager to build several combinations
@@ -903,7 +906,7 @@ config_tfm_test2_gnu = {"seed_params": {
                   # invalid configuations can be added as tuples of adjustable
                   # resolution "AN521" will reject all combinations for that
                   # platform while ("AN521", "GNUARM") will only reject GCC ones
-                  "invalid": []
+                  "invalid": [("AN519", "GNUARM", "*", "Minsizerel", "*")]
                   }
 
 # Configure build manager to build the maximum number of configurations
@@ -919,7 +922,7 @@ config_tfm_profile_gnu = {"seed_params": {
                   # invalid configuations can be added as tuples of adjustable
                   # resolution "AN521" will reject all combinations for that
                   # platform while ("AN521", "GNUARM") will only reject GCC ones
-                  "invalid": []
+                  "invalid": [("AN519", "GNUARM", "*", "Minsizerel", "*")]
                   }
 
 # Configure build manager to build the maximum number of configurations
@@ -1062,6 +1065,7 @@ config_nightly_gnu = {"seed_params": {
                "invalid": [("MUSCA_A", "*", "*", "*", False),
                            ("MUSCA_B1", "*", "*", "*", False),
                            ("MUSCA_S1", "*", "*", "*", False),
+                           ("AN519", "GNUARM", "*", "Minsizerel", "*"),
                            ("psoc64", "*", "*", "*", True),
                            ("psoc64", "*", "*", "Debug", "*"),
                            ("psoc64", "*", "*", "Minsizerel", "*"),
@@ -1082,7 +1086,7 @@ config_nightly_profile_gnu = {"seed_params": {
                   # invalid configuations can be added as tuples of adjustable
                   # resolution "AN521" will reject all combinations for that
                   # platform while ("AN521", "GNUARM") will only reject GCC ones
-                  "invalid": []
+                  "invalid": [("AN519", "GNUARM", "*", "Minsizerel", "*")]
                   }
 
 # Configure build manager to build several combinations
