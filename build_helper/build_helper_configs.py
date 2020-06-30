@@ -92,6 +92,16 @@ _common_tfm_builder_cfg = {
                                  "-Binary -offset 0xA020000 -o "
                                  "%(_tbm_build_dir_)s/install/outputs/"
                                  "%(_tbm_target_platform_)s"
+                                 "/tfm.hex -Intel")],
+                   "MUSCA_S1": [("srec_cat "
+                                 "%(_tbm_build_dir_)s/install/outputs/"
+                                 "%(_tbm_target_platform_)s/mcuboot.bin "
+                                 "-Binary -offset 0xA000000 "
+                                 "%(_tbm_build_dir_)s/install/outputs/"
+                                 "%(_tbm_target_platform_)s/tfm_sign.bin "
+                                 "-Binary -offset 0xA020000 -o "
+                                 "%(_tbm_build_dir_)s/install/outputs/"
+                                 "%(_tbm_target_platform_)s"
                                  "/tfm.hex -Intel")]
                    },
 
@@ -109,6 +119,13 @@ _common_tfm_builder_cfg = {
                            "%(_tbm_build_dir_)s/install/outputs/"
                            "%(_tbm_target_platform_)s/tfm_sign.bin"],
                            "MUSCA_B1": [
+                           "%(_tbm_build_dir_)s/install/outputs/"
+                           "%(_tbm_target_platform_)s/tfm.hex",
+                           "%(_tbm_build_dir_)s/install/outputs/"
+                           "%(_tbm_target_platform_)s/mcuboot.bin",
+                           "%(_tbm_build_dir_)s/install/outputs/"
+                           "%(_tbm_target_platform_)s/tfm_sign.bin"],
+                           "MUSCA_S1": [
                            "%(_tbm_build_dir_)s/install/outputs/"
                            "%(_tbm_target_platform_)s/tfm.hex",
                            "%(_tbm_build_dir_)s/install/outputs/"
@@ -180,7 +197,7 @@ config_AN521 = {"seed_params": {
 
 # Configure build manager to build several combinations
 config_PSA_API = {"seed_params": {
-                "target_platform": ["AN521", "MUSCA_B1"],
+                "target_platform": ["AN521", "MUSCA_B1", "MUSCA_S1"],
                 "compiler": ["ARMCLANG", "GNUARM"],
                 "proj_config": ["ConfigPsaApiTest",
                                 "ConfigPsaApiTestIPC",
@@ -490,6 +507,25 @@ config_MUSCA_B1 = {"seed_params": {
                    "invalid": [("MUSCA_B1", "*", "*", "*", False)]
                    }
 
+config_MUSCA_S1 = {"seed_params": {
+                   "target_platform": ["MUSCA_S1"],
+                   "compiler": ["ARMCLANG", "GNUARM"],
+                   "proj_config": ["ConfigRegression",
+                                   "ConfigRegressionIPC",
+                                   "ConfigRegressionIPCTfmLevel2",
+                                   "ConfigCoreIPC",
+                                   "ConfigCoreIPCTfmLevel2",
+                                   "ConfigDefault"],
+                   "cmake_build_type": ["Debug", "Release"],
+                   "with_mcuboot": [True],
+                   },
+                   "common_params": _common_tfm_builder_cfg,
+                   # invalid configuations can be added as tuples of adjustable
+                   # resolution "AN521" will reject all combinations for that
+                   # platform while ("AN521", "GNUARM") will only reject GCC
+                   "invalid": [("MUSCA_S1", "*", "*", "*", False)]
+                   }
+
 # Configure build manager to build the maximum number of configurations
 config_release = {"seed_params": {
                   "target_platform": ["AN521", "AN519",
@@ -573,6 +609,7 @@ config_nightly = {"seed_params": {
                # platform while ("AN521", "GNUARM") will only reject GCC ones
                "invalid": [("MUSCA_A", "*", "*", "*", False),
                            ("MUSCA_B1", "*", "*", "*", False),
+                           ("MUSCA_S1", "*", "*", "*", False),
                            ("psoc64", "*", "*", "*", True),
                            ("psoc64", "*", "*", "Debug", "*"),
                            ("psoc64", "*", "*", "Minsizerel", "*"),
@@ -1024,6 +1061,7 @@ config_nightly_gnu = {"seed_params": {
                # platform while ("AN521", "GNUARM") will only reject GCC ones
                "invalid": [("MUSCA_A", "*", "*", "*", False),
                            ("MUSCA_B1", "*", "*", "*", False),
+                           ("MUSCA_S1", "*", "*", "*", False),
                            ("psoc64", "*", "*", "*", True),
                            ("psoc64", "*", "*", "Debug", "*"),
                            ("psoc64", "*", "*", "Minsizerel", "*"),
@@ -1241,6 +1279,7 @@ _builtin_configs = {
                     "an519": config_AN519,
                     "musca_a": config_MUSCA_A,
                     "musca_b1": config_MUSCA_B1,
+                    "musca_s1": config_MUSCA_S1,
                     "psoc64": config_PSOC64,
                     "ipc": config_IPC,
                     "doxygen": config_doxygen,
