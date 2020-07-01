@@ -363,6 +363,14 @@ class TFM_Build_Manager(structuredTask):
                                                [i.target_platform])
             except Exception as E:
                 pass
+
+        if os.cpu_count() >= 8:
+            #run in a serviver with scripts, parallel build will use CPU numbers
+            thread_no = " -j 2"
+        else:
+            #run in a docker, usually docker with CPUs less than 8
+            thread_no = " -j " + str(os.cpu_count())
+
         # Merge the two dictionaries since the template may contain
         # fixed and combinations seed parameters
         if i.proj_config.startswith("ConfigPsaApiTest"):
@@ -398,7 +406,7 @@ class TFM_Build_Manager(structuredTask):
 
             cmd2 += " -DCMAKE_BUILD_TYPE=" + i.cmake_build_type
 
-            cmd3 = "cmake --build ."
+            cmd3 = "cmake --build ." + thread_no
             build_cfg["build_psa_api"] = cmd2 + " ; " + cmd3
 
         else:
@@ -407,8 +415,9 @@ class TFM_Build_Manager(structuredTask):
         try:
             if i.__str__().find("with_OTP") > 0:
                 cmd0 += " -DCRYPTO_HW_ACCELERATOR_OTP_STATE=ENABLED"
-            else:
-                build_cfg["build_cmds"][0] += " -j 2"
+
+            build_cfg["build_cmds"][0] += thread_no
+
             if cmd0.find("SST_RAM_FS=ON") < 0 and i.target_platform == "MUSCA_B1":
                 cmd0 += " -DSST_RAM_FS=OFF -DITS_RAM_FS=OFF"
         except Exception as E:
