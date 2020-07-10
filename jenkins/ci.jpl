@@ -48,6 +48,7 @@ python3 ./configs.py -g ${filter_group.replace(" ", " -g ")} ${config}
   params += string(name: 'CMSIS_VERSION', value: env.CMSIS_VERSION)
   params += string(name: 'MBEDCRYPTO_VERSION', value: env.MBEDCRYPTO_VERSION)
   params += string(name: 'CODE_REPO', value: env.CODE_REPO)
+  params += string(name: 'CODE_COVERAGE_EN', value: env.CODE_COVERAGE_EN)
   return { -> results
     def build_res = build(job: 'tf-m-build-config', parameters: params, propagate: false)
     def build_info = [build_res, config, params_collection]
