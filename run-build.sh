@@ -48,6 +48,7 @@ fi
 cd mbedtls
 git apply ../trusted-firmware-m/lib/ext/mbedcrypto/*.patch
 
+rm -rf ../trusted-firmware-m/build
 mkdir ../trusted-firmware-m/build
 cd ../trusted-firmware-m/build
 
