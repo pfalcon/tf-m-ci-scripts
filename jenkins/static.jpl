@@ -28,6 +28,7 @@ stage("Static Checks") {
   def checks = [:]
   checks["cppcheck"] = trigger("tf-m-cppcheck")
   checks["checkpatch"] = trigger("tf-m-checkpatch")
+  checks["static-checks"] = trigger("tf-m-static-checks")
   try {
     parallel(checks)
   } catch (Exception e) {
