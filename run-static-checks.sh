@@ -11,7 +11,7 @@ echo '----------------------------------------------'
 
 # Find the absolute path of the scripts' top directory
 
-cd "$(dirname "$0")/../.."
+cd "$(dirname "$0")"
 export CI_ROOT=$(pwd)
 cd -
 
@@ -72,23 +72,6 @@ if [ "$?" != 0 ]; then
   ((ERROR_COUNT++))
 else
   echo "Line ending test: PASS"
-fi
-echo
-
-# Check coding style
-
-echo 'Checking coding style compliance...'
-echo
-if [ "$IS_CONTINUOUS_INTEGRATION" == 1 ]; then
-    "$CI_ROOT"/script/static-checks/static-checks-coding-style.sh
-else
-    "$CI_ROOT"/script/static-checks/static-checks-coding-style-entire-src-tree.sh
-fi
-if [ "$?" != 0 ]; then
-  echo "Coding style test: FAILURE"
-  ((ERROR_COUNT++))
-else
-  echo "Coding style test: PASS"
 fi
 echo
 
