@@ -24,7 +24,6 @@
 # Assumptions:
 # The following tools are loaded in the PATH:
 #  - the Coverity tools (cov-configure, cov-build, and so on);
-#  - the AArch64 cross-toolchain;
 #  - the AArch32 cross-toolchain.
 
 # Bail out as soon as an error is encountered
@@ -47,10 +46,7 @@ function do_check_tools()
 	cov-analyze --ident
     fi
 
-    # Check that the AArch64 cross-toolchain is available.
-    aarch64-none-elf-gcc --version
-
-    # Check that the AArch32 cross-toolchain is available.
+    # Check that the GNUARM cross-toolchain is available.
     arm-none-eabi-gcc --version
 
     echo
@@ -71,13 +67,7 @@ function do_configure()
     # Each invocation of the cov-configure command adds a compiler configuration in
     # its own subdirectory, and the top XML configuration file contains an include
     # directive for that compiler-specific configuration.
-    #   1) AArch64 compiler
-    cov-configure				\
-	--comptype gcc				\
-	--template				\
-	--compiler aarch64-none-elf-gcc	\
-	--config cov-config/config.xml
-    #   2) AArch32 compiler
+    #   1) AArch32 compiler
     cov-configure				\
 	--comptype gcc				\
 	--template				\

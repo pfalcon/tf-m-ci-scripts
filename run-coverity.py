@@ -17,6 +17,9 @@ import tarfile
 import os
 import subprocess
 import re
+
+# local libraries
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(sys.argv[0]), "script", "tf-coverity")))
 import utils
 import coverity_tf_conf
 
@@ -89,7 +92,7 @@ def print_coverage(coverity_dir, tf_dir, exclude_paths=[], log_filename=None):
     with open(coverity_build_log, encoding="utf-8") as build_log:
         for line in build_log:
             line = re.sub('//','/', line)
-            results = re.search("(?:COMPILING|EXECUTING):.*-c *(.*\.c).*-o.*\.o", line)
+            results = re.search("(?:COMPILING|EXECUTING):.*-o.*\.o .*-c (.*\.c)", line)
             if results is not None:
                 filename = results.group(1)
                 if filename not in analyzed:
@@ -108,6 +111,9 @@ def print_coverage(coverity_dir, tf_dir, exclude_paths=[], log_filename=None):
     for filename in git_process.stdout:
         # Remove final \n in filename
         filename = filename.strip()
+
+        # Expand to absolute path
+        filename = os.path.abspath(filename)
 
         def is_excluded(filename, excludes):
             for pattern in excludes:
@@ -141,6 +147,11 @@ def print_coverage(coverity_dir, tf_dir, exclude_paths=[], log_filename=None):
         log_file.write("\n%d files were ignored on purpose:\n" % len(excluded))
         for exc in excluded:
             log_file.write(" - {0:50}   (Reason: {1})\n".format(exc[0], exc[1]))
+
+    if len(analyzed) > 0:
+        log_file.write("\n%d files analyzed:\n" % len(analyzed))
+        for f in analyzed:
+            log_file.write(" - %s\n" % f)
 
     if len(not_analyzed) > 0:
         log_file.write("\n%d files were not analyzed:\n" % len(not_analyzed))
@@ -223,15 +234,12 @@ if __name__ == "__main__":
         sys.exit(1)
 
     # Get some important paths in the platform-ci scripts
-    tf_scripts_dir = os.path.abspath(os.path.dirname(prog_name))
-    tf_coverity_dir = os.path.join(os.path.normpath(
-        os.path.join(tf_scripts_dir, os.pardir, os.pardir)),"coverity")
+    tf_root_dir = os.path.abspath(os.path.dirname(prog_name))
 
     if not args.build_cmd:
-        tf_build_script = os.path.join(tf_scripts_dir, "tf-cov-make")
-        args.build_cmd = tf_build_script + " " + args.tf
+        args.build_cmd = os.path.join(tf_root_dir, "script", "tf-coverity", "tf-cov-make")
 
-    run_coverity_script = os.path.join(tf_coverity_dir, "run_coverity.sh")
+    run_coverity_script = os.path.join(tf_root_dir, "coverity", "run_coverity.sh")
 
     ret = subprocess.call([run_coverity_script, "check_tools", args.mode])
     if ret != 0:

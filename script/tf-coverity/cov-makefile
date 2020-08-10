@@ -1,0 +1,38 @@
+#
+# Copyright (c) 2019-2020, Arm Limited. All rights reserved.
+#
+# SPDX-License-Identifier: BSD-3-Clause
+#
+
+# $(call build-platform,platform,toolchain)
+define build-platform
+	mkdir $(BASE_DIR)/$(tf_m)/cmake_build
+	cd $(BASE_DIR)/$(tf_m)/cmake_build && \
+        cmake .. -DTFM_PLATFORM=$1 -DTFM_TOOLCHAIN_FILE=../$2
+
+	cd $(BASE_DIR)/$(tf_m)/cmake_build && \
+	make install
+endef
+
+BASE_DIR ?= .
+
+# TODO: include other platforms to increase coverity coverage
+gnuarm_target_platforms 	:= mps2/an521
+tf_m := trusted-firmware-m
+
+all: $(gnuarm_target_platforms)
+
+$(gnuarm_target_platforms): check msg
+	$(call build-platform,$@,toolchain_GNUARM.cmake)
+
+.phony: check
+check:
+ifndef BASE_DIR
+	echo "please provide a environment  BASE_DIR"
+	exit 1
+endif
+	echo "base directory $(BASE_DIR)"
+
+.phony: msg
+msg:
+	echo "building platform"
