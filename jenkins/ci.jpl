@@ -64,6 +64,8 @@ python3 ./configs.py -g ${filter_group.replace(" ", " -g ")} ${config}
       params += string(name: 'BUILD_NUMBER', value: "${build_res.number}")
       params += string(name: 'BUILD_URL', value: build_url)
       params += string(name: 'LAVA_URL', value: env.LAVA_URL)
+      params += string(name: 'CI_SCRIPTS_BRANCH', value: env.CI_SCRIPTS_BRANCH)
+      params += string(name: 'LAVA_CREDENTIALS', value: env.LAVA_CREDENTIALS)
       def lava_res = build(job: 'tf-m-lava-submit', parameters: params, propagate: false)
       if (lava_res.result in failure_states) {
         error("LAVA Create and Submit failed at ${lava_res.getAbsoluteUrl()}")
@@ -202,7 +204,7 @@ node("docker-amd64-bionic") {
       all_jobs = submitJobsToList(results['lava_jobs'])
       if (all_jobs.size() > 0) {
         dir("tf-m-ci-scripts") {
-          withCredentials([usernamePassword(credentialsId: 'LAVA_CREDENTIALS', passwordVariable: 'LAVA_TOKEN', usernameVariable: 'LAVA_USER')]) {
+          withCredentials([usernamePassword(credentialsId: env.LAVA_CREDENTIALS, passwordVariable: 'LAVA_TOKEN', usernameVariable: 'LAVA_USER')]) {
             output = sh(script: """./lava_helper/lava_wait_jobs.py --job-ids ${all_jobs.join(",")} \
   --lava-url ${env.LAVA_URL} --lava-user ${LAVA_USER} --lava-token ${LAVA_TOKEN} \
   --artifacts-path lava_artifacts --lava-timeout 7200 \
