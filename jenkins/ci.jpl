@@ -97,6 +97,110 @@ def buildDocs(results) {
   }
 }
 
+@NonCPS
+def generateCsvContent(results) {
+  def resultsParam = []
+  results.each { result ->
+    resultsParam.add([result.value[1], \
+                      result.value[0].getResult(), \
+                      result.value[2]['TARGET_PLATFORM'], \
+                      result.value[2]['COMPILER'], \
+                      result.value[2]['PROJ_CONFIG'], \
+                      result.value[2]['CMAKE_BUILD_TYPE'], \
+                      result.value[2]['BL2'], \
+                      result.value[2]['PSA_API_SUITE']])
+  }
+  def configs = [] as Set
+  resultsParam.each { result ->
+    if (result[2] == 'MUSCA_B1') {
+      if (result[0].contains('_OTP_')) {
+        result[2] += '_OTP'
+      }
+    }
+    if (result[6] == 'True') {
+      result[6] = 'BL2'
+    }
+    else {
+      result[6] = 'NOBL2'
+    }
+    config = result[4]
+    if (result[7] != "''") {
+      config += ' (' + result[7] + ') '
+    }
+    configs.add(config)
+    result.add(config)
+  }
+  configs.sort()
+  def csvContent = []
+  resultsParam.each { result ->
+    def configExists = false
+    for (csvLine in csvContent) {
+      if (csvLine[0] == result[2] && \
+          csvLine[1] == result[3] && \
+          csvLine[2] == result[5] && \
+          csvLine[3] == result[6]) {
+            csvLine[4][result[8]] = result[1]
+            configExists = true
+            break
+          }
+    }
+    if (!configExists) {
+      csvContent.add([result[2], result[3], result[5], result[6], [:]])
+      csvContent.last()[4][result[8]] = result[1]
+    }
+  }
+  csvContent.sort{a,b -> a[0] <=> b[0] ?: a[1] <=> b[1] ?: a[2] <=> b[2] ?: a[3] <=> b[3]}
+  def csvTable = [['Platform', 'Compiler', 'Cmake Build Type', 'BL2']]
+  csvTable[0] += configs
+  def currentPlatform = ''
+  def currentCompiler = ''
+  def currentBuild = ''
+  csvContent.each { csvLine ->
+    // Modify CSV output format for a better layout
+    if (currentPlatform == csvLine[0]) {
+      csvTable.add([''])
+    }
+    else {
+      csvTable.add([csvLine[0]])
+      currentPlatform = csvLine[0]
+      currentCompiler = ''
+      currentBuild = ''
+    }
+    if (currentCompiler == csvLine[1]) {
+      csvTable.last().add('')
+    }
+    else {
+      csvTable.last().add(csvLine[1])
+      currentCompiler = csvLine[1]
+      currentBuild = ''
+    }
+    if (currentBuild == csvLine[2]) {
+      csvTable.last().add('')
+    }
+    else {
+      csvTable.last().add(csvLine[2])
+      currentBuild = csvLine[2]
+    }
+    csvTable.last().add(csvLine[3])
+    configs.each { config ->
+      if (csvLine[4].containsKey(config)) {
+        csvTable.last().add(csvLine[4][config])
+      }
+      else {
+        csvTable.last().add('N/A')
+      }
+    }
+  }
+  return csvTable
+}
+
+def generateBuildCsv(results) {
+  def csvContent = generateCsvContent(results)
+  node("master") {
+    writeCSV file: 'build_results.csv', records: csvContent, format: CSVFormat.EXCEL
+    archiveArtifacts 'build_results.csv'
+  }
+}
 
 def buildCsv(results) {
   def summary = new Summary();
@@ -181,7 +285,7 @@ stage("Builds") {
     g = new Gerrit()
     g.verifyStatus(verify, 'tf-m-build', 'build')
     print("Building CSV")
-    buildCsv(results['builds'])
+    generateBuildCsv(results['builds'])
     writeSummary(results['builds'])
   }
 }
