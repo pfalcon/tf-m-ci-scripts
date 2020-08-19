@@ -56,6 +56,8 @@ class LAVA_RPC_connector(xmlrpc.client.ServerProxy, object):
 
         self.server_job_prefix = "%s/scheduler/job/%%s" % self.server_url
         self.server_results_prefix = "%s/results/%%s" % self.server_url
+        self.token = token
+        self.username = username
         super(LAVA_RPC_connector, self).__init__(server_addr)
 
     def _rpc_cmd_raw(self, cmd, params=None):
@@ -71,8 +73,12 @@ class LAVA_RPC_connector(xmlrpc.client.ServerProxy, object):
         print("\n".join(self.system.listMethods()))
 
     def fetch_file(self, url, out_file):
+        auth_params = {
+            'user': self.username,
+            'token': self.token
+        }
         try:
-            with requests.get(url, stream=True) as r:
+            with requests.get(url, stream=True, params=auth_params) as r:
                 with open(out_file, 'wb') as f:
                     shutil.copyfileobj(r.raw, f)
             return(out_file)
