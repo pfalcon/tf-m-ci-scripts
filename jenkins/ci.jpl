@@ -47,6 +47,7 @@ python3 ./configs.py -g ${filter_group.replace(" ", " -g ")} ${config}
   params += string(name: 'GERRIT_REFSPEC', value: env.GERRIT_REFSPEC)
   params += string(name: 'CMSIS_VERSION', value: env.CMSIS_VERSION)
   params += string(name: 'MBEDCRYPTO_VERSION', value: env.MBEDCRYPTO_VERSION)
+  params += string(name: 'MBEDTLS_VERSION', value: env.MBEDTLS_VERSION)
   params += string(name: 'CODE_REPO', value: env.CODE_REPO)
   params += string(name: 'CODE_COVERAGE_EN', value: env.CODE_COVERAGE_EN)
   return { -> results
@@ -86,6 +87,7 @@ def buildDocs(results) {
   params += string(name: 'GERRIT_REFSPEC', value: env.GERRIT_REFSPEC)
   params += string(name: 'CMSIS_VERSION', value: env.CMSIS_VERSION)
   params += string(name: 'MBEDCRYPTO_VERSION', value: env.MBEDCRYPTO_VERSION)
+  params += string(name: 'MBEDTLS_VERSION', value: env.MBEDTLS_VERSION)
   params += string(name: 'CODE_REPO', value: env.CODE_REPO)
   return { -> results
     def res = build(job: 'tf-m-build-docs', parameters: params, propagate:false)

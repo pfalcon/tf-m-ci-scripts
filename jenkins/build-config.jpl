@@ -47,6 +47,20 @@ node(nodeLabel) {
         ]
       )
     }
+    dir("mbedtls") {
+      checkout(
+        changelog: false,
+        poll: false,
+        scm: [
+          $class: 'GitSCM',
+          branches: [[name: 'FETCH_HEAD']],
+          userRemoteConfigs: [[
+            refspec: 'refs/tags/$MBEDTLS_VERSION',
+            url: params.MBEDTLS_URL
+          ]]
+        ]
+      )
+    }
     dir("mcuboot") {
       checkout(
         changelog: false,
