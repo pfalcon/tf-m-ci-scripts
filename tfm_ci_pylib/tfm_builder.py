@@ -219,20 +219,6 @@ class TFM_Builder(structuredTask):
             raise Exception("Build Failed please check log: %s" %
                             self._tfb_log_f)
 
-
-        cp_cmd = "mkdir -p " + self._tfb_build_dir + "/CMSIS_5/CMSIS ; "
-        cp_cmd += "cp -r " + self._tfb_cfg["codebase_root_dir"] + "/../CMSIS_5/CMSIS/RTOS2 " + \
-                self._tfb_build_dir + "/CMSIS_5/CMSIS"
-
-        if subprocess_log(cp_cmd,
-                          self._tfb_log_f,
-                          append=True,
-                          prefix=cp_cmd,
-                          silent=self._tfb_silent):
-
-            raise Exception("Build Failed please check log: %s" %
-                            self._tfb_log_f)
-
         self._tfb_cfg["build_cmds"][0] = \
             self._tfb_cfg["build_cmds"][0].replace(self._tfb_cfg["codebase_root_dir"],
             self._tfb_build_dir + "/tf-m")

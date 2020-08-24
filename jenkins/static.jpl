@@ -15,7 +15,6 @@ def trigger(job_name) {
     params += string(name: 'GERRIT_REFSPEC', value: env.GERRIT_REFSPEC ?: '')
     params += string(name: 'GERRIT_CHANGE_NUMBER', value: env.GERRIT_CHANGE_NUMBER ?: '')
     params += string(name: 'GERRIT_PATCHSET_REVISION', value: env.GERRIT_PATCHSET_REVISION ?: '')
-    params += string(name: 'CMSIS_VERSION', value: env.CMSIS_VERSION)
     params += string(name: 'MBEDCRYPTO_VERSION', value: env.MBEDCRYPTO_VERSION)
     params += string(name: 'MBEDTLS_VERSION', value: env.MBEDTLS_VERSION)
     params += string(name: 'CODE_REPO', value: env.CODE_REPO)
