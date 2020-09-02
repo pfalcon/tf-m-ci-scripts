@@ -183,45 +183,6 @@ class TFM_Builder(structuredTask):
 
                 raise Exception("Build Failed please check log: %s" %
                                 self._tfb_log_f)
-    def copy_tfm(self):
-        """ Copy a new TFM for crypto compile """
-
-        cp_cmd = "cp -r " + self._tfb_cfg["codebase_root_dir"] + " " + \
-            self._tfb_build_dir
-        if subprocess_log(cp_cmd,
-                          self._tfb_log_f,
-                          append=True,
-                          prefix=cp_cmd,
-                          silent=self._tfb_silent):
-
-            raise Exception("Build Failed please check log: %s" %
-                            self._tfb_log_f)
-
-        cp_cmd = "cp -r " + self._tfb_cfg["codebase_root_dir"] + "/../mbed-crypto " + \
-            self._tfb_build_dir
-        if subprocess_log(cp_cmd,
-                          self._tfb_log_f,
-                          append=True,
-                          prefix=cp_cmd,
-                          silent=self._tfb_silent):
-
-            raise Exception("Build Failed please check log: %s" %
-                            self._tfb_log_f)
-
-        cp_cmd = "cp -r " + self._tfb_cfg["codebase_root_dir"] + "/../psa-arch-tests " + \
-            self._tfb_build_dir
-        if subprocess_log(cp_cmd,
-                          self._tfb_log_f,
-                          append=True,
-                          prefix=cp_cmd,
-                          silent=self._tfb_silent):
-
-            raise Exception("Build Failed please check log: %s" %
-                            self._tfb_log_f)
-
-        self._tfb_cfg["build_cmds"][0] = \
-            self._tfb_cfg["build_cmds"][0].replace(self._tfb_cfg["codebase_root_dir"],
-            self._tfb_build_dir + "/tf-m")
 
     def task_exec(self):
         """ Main tasks """
@@ -242,13 +203,6 @@ class TFM_Builder(structuredTask):
                               silent=self._tfb_silent):
                 raise Exception("Build Failed please check log: %s" %
                                 self._tfb_log_f)
-
-        if self._tfb_cfg["build_cmds"].__str__().find( \
-                "CRYPTO_HW_ACCELERATOR_OTP_STATE=ENABLED") > 0:
-            self.copy_tfm()
-            time.sleep(15)
-            os.sync()
-            print("new build cmd ", self._tfb_cfg["build_cmds"][0])
 
         print("Go to build directory")
         # Go to build directory

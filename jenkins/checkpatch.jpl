@@ -28,20 +28,6 @@ node("docker-amd64-bionic") {
     dir("tf-m-ci-scripts") {
       git url: '$CI_SCRIPTS_REPO', branch: '$CI_SCRIPTS_BRANCH', credentialsId: 'GIT_SSH_KEY'
     }
-    dir("mbed-crypto") {
-      checkout(
-        changelog: false,
-        poll: false,
-        scm: [
-          $class: 'GitSCM',
-          branches: [[name: 'FETCH_HEAD']],
-          userRemoteConfigs: [[
-            refspec: 'refs/tags/$MBEDCRYPTO_VERSION',
-            url: params.MBEDCRYPTO_URL
-          ]]
-        ]
-      )
-    }
   }
   stage("Check") {
     def verify = 1

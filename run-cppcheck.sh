@@ -159,13 +159,6 @@ else
 fi
 CPPCHECK_ARGS="$EXTRA_ARGS --enable="$additional_checklist" --library="$library_file" --project=$cmake_commands --suppressions-list="$suppress_file" --inline-suppr"
 
-#Build the external projects to get all headers installed to places from where
-#tf-m code uses them
-echo
-echo '******* Install external projects to their final place ***************'
-echo
-make -j mbedcrypto_mcuboot_lib_install
-
 #Now run cppcheck.
 echo
 echo '******* checking cppcheck configuration ***************'
