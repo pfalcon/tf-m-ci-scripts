@@ -168,7 +168,7 @@ def parse_cmd_line():
                         help="""
                         Base commit in patch mode (default: %(default)s)
                         """,
-                        default="master")
+                        default="origin/master")
     parser.add_argument("--to-ref",
                         help="""
                         Final commit in patch mode (default: %(default)s)

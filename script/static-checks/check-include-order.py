@@ -223,7 +223,7 @@ only files that are modified by the latest patch(es).""",
     parser.add_argument(
         "--from-ref",
         help="Base commit in patch mode (default: %(default)s)",
-        default="master",
+        default="origin/master",
     )
     parser.add_argument(
         "--to-ref",
