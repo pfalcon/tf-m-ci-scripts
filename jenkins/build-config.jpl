@@ -95,10 +95,10 @@ node(nodeLabel) {
   try {
     verify = 1
     stage("Build") {
-      sh "tf-m-ci-scripts/run-build.sh 2>&1 | tee build.log"
+      sh "tf-m-ci-scripts/run-build.sh"
     }
     stage("Post") {
-      archiveArtifacts 'trusted-firmware-m/build/install/**,build.log'
+      archiveArtifacts 'trusted-firmware-m/build/install/**'
     }
   } catch (Exception e) {
     manager.buildFailure()

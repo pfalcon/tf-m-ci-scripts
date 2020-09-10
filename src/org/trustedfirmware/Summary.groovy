@@ -66,7 +66,7 @@ def getLinks(results) {
     res = result.value[0]
     config = result.value[1]
     url = res.getAbsoluteUrl()
-    linksContent.add("${config}: <a href=\"${url}\">Job</a>/<a href=\"${url}/artifact/build.log/*view*/\">Logs</a>/<a href=\"${url}/artifact/\">Artifacts</a><br/>")
+    linksContent.add("${config}: <a href=\"${url}\">Job</a>/<a href=\"${url}/consoleText\">Logs</a>/<a href=\"${url}/artifact/\">Artifacts</a><br/>")
   }
   linksContent.sort()
   return linksContent.join("\n")
