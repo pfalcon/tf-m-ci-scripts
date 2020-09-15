@@ -12,8 +12,17 @@
 #
 
 set -ex
-mkdir trusted-firmware-m/build
-cd trusted-firmware-m/build
-cmake ../ -G"Unix Makefiles" -DTARGET_PLATFORM=AN521 -DCOMPILER=GNUARM
-cmake --build ./ -- install_doc
-cmake --build ./ -- install_userguide
+
+cd mbedtls
+git apply ../trusted-firmware-m/lib/ext/mbedcrypto/*.patch
+
+mkdir ../trusted-firmware-m/build
+cd ../trusted-firmware-m/build
+
+cmake -S .. -B . -DTFM_PLATFORM=mps2/an521 \
+                 -DCMAKE_TOOLCHAIN_FILE=toolchain_GNUARM.cmake \
+                 -DMBEDCRYPTO_PATH=../../mbedtls \
+                 -DTFM_TEST_REPO_PATH=../../tf-m-tests \
+                 -DMCUBOOT_PATH=../../mcuboot
+cmake --build ./ -- tfm_docs_refman_html
+cmake --build ./ -- tfm_docs_userguide_html

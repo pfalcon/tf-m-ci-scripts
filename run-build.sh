@@ -45,7 +45,21 @@ if [ -z "$build_commands" ] ; then
 	exit 1
 fi
 
-mkdir trusted-firmware-m/build
-cd trusted-firmware-m/build
+cd mbedtls
+git apply ../trusted-firmware-m/lib/ext/mbedcrypto/*.patch
+cd ../psa-arch-tests
+git apply ../trusted-firmware-m/lib/ext/psa_arch_tests/0001-Alter-asm-to-__asm-to-comply-with-C99.patch
+
+mkdir ../trusted-firmware-m/build
+cd ../trusted-firmware-m/build
 
 eval "set -ex ; $build_commands"
+
+mkdir install/outputs/fvp
+cp bin/* install/outputs/fvp/
+cd install/outputs/fvp
+for file in `ls | grep bl2`
+do
+	newfile=`echo $file | sed "s/bl2/mcuboot/g"`
+	mv $file $newfile
+done

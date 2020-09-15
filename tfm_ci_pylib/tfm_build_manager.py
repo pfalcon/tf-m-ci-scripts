@@ -90,23 +90,33 @@ class TFM_Build_Manager(structuredTask):
         config_details = self._tbm_build_cfg[config]
         argument_list = [
             "CONFIG_NAME={}",
-            "TARGET_PLATFORM={}",
-            "COMPILER={}",
-            "PROJ_CONFIG={}",
+            "TFM_PLATFORM={}",
+            "TOOLCHAIN_FILE={}",
+            "PSA_API={}",
+            "ISOLATION_LEVEL={}",
+            "TEST_REGRESSION={}",
+            "TEST_PSA_API={}",
             "CMAKE_BUILD_TYPE={}",
+            "OTP={}",
             "BL2={}",
-            "PSA_API_SUITE={}"
+            "NS={}",
+            "PROFILE={}"
         ]
         print(
             "\n".join(argument_list)
             .format(
                 config,
-                config_details.target_platform,
-                config_details.compiler,
-                config_details.proj_config,
+                config_details.tfm_platform,
+                config_details.toolchain_file,
+                config_details.psa_api,
+                config_details.isolation_level,
+                config_details.test_regression,
+                config_details.test_psa_api,
                 config_details.cmake_build_type,
-                config_details.with_mcuboot,
-                getattr(config_details, 'psa_api_suit', "''")
+                config_details.with_otp,
+                config_details.with_bl2,
+                config_details.with_ns,
+                config_details.profile
             )
             .strip()
         )
@@ -114,31 +124,10 @@ class TFM_Build_Manager(structuredTask):
     def print_build_commands(self, config, silence_stderr=False):
         config_details = self._tbm_build_cfg[config]
         codebase_dir = os.path.join(os.getcwd(),"trusted-firmware-m")
-        build_dir=os.path.join(os.getcwd(),'trusted-firmware-m/build')
+        build_dir=os.path.join(os.getcwd(),"trusted-firmware-m/build")
         build_config = self.get_build_config(config_details, config, silence=silence_stderr, build_dir=build_dir, codebase_dir=codebase_dir)
-        build_commands = build_config['build_cmds']
-        psa_commands = build_config.get('build_psa_api', None)
-        if psa_commands:
-            manifest_command_list = []
-            # Also need manifest commands
-            if 'build_ff_ipc' in build_config:
-                manifest_command_list += [
-                    "pushd ../../psa-arch-tests/api-tests",
-                    "python3 tools/scripts/manifest_update.py",
-                    "popd",
-                    "pushd ../",
-                    "python3 tools/tfm_parse_manifest_list.py -m tools/tfm_psa_ff_test_manifest_list.yaml append",
-                    "popd",
-                ]
-            else:
-                manifest_command_list += [
-                    "pushd ..",
-                    "python3 tools/tfm_parse_manifest_list.py",
-                    "popd"
-                ]
-            psa_command_list = psa_commands.split(" ; ")
-            build_commands = manifest_command_list + ["mkdir ../../psa-arch-tests/api-tests/build","pushd ../../psa-arch-tests/api-tests/build"] + psa_command_list + ["popd"] + build_commands
-        print(" ;\n".join(build_commands)) 
+        build_commands = [build_config["config_template"], build_config["build_cmds"][0]]
+        print(" ;\n".join(build_commands))
 
     def pre_eval(self):
         """ Tests that need to be run in set-up state """
@@ -358,9 +347,9 @@ class TFM_Build_Manager(structuredTask):
         # Extract the platform specific elements of config
         for key in ["build_cmds", "required_artefacts"]:
             try:
-                if i.target_platform in self.tbm_common_cfg[key].keys():
+                if i.tfm_platform in self.tbm_common_cfg[key].keys():
                     build_cfg[key] += deepcopy(self.tbm_common_cfg[key]
-                                               [i.target_platform])
+                                               [i.tfm_platform])
             except Exception as E:
                 pass
 
@@ -370,75 +359,20 @@ class TFM_Build_Manager(structuredTask):
         else:
             #run in a docker, usually docker with CPUs less than 8
             thread_no = " -j " + str(os.cpu_count())
-
-        # Merge the two dictionaries since the template may contain
-        # fixed and combinations seed parameters
-        if i.proj_config.startswith("ConfigPsaApiTest"):
-            # PSA API tests only
-            # TODO i._asdict()["tfm_build_dir"] = self._tbm_work_dir
-            cmd0 = build_cfg["config_template_psa_api"] % \
-                   dict(dict(i._asdict()), **build_cfg)
-            cmd0 += " -DPSA_API_TEST_BUILD_PATH=" + psa_build_dir
-
-            if i.psa_api_suit == "FF":
-                cmd0 += " -DPSA_API_TEST_IPC=ON"
-                cmd2 = "cmake " + codebase_dir + "/../psa-arch-tests/api-tests/ " + \
-                       "-G\"Unix Makefiles\" -DTARGET=tgt_ff_tfm_" + \
-                       i.target_platform.lower() + " -DCPU_ARCH=armv8m_ml -DTOOLCHAIN=" + \
-                       i.compiler + " -DSUITE=IPC -DPSA_INCLUDE_PATHS=\"" + \
-                       codebase_dir + "/interface/include/"
-
-                cmd2 += ";" + codebase_dir + \
-                        "/../psa-arch-tests/api-tests/platform/manifests\"" + \
-                        " -DINCLUDE_PANIC_TESTS=1 -DPLATFORM_PSA_ISOLATION_LEVEL=" + \
-                        (("2") if i.proj_config.find("TfmLevel2") > 0 else "1") + \
-                        " -DSP_HEAP_MEM_SUPP=0"
-                if i.target_platform == "MUSCA_B1":
-                    cmd0 += " -DSST_RAM_FS=ON"
-                build_cfg["build_ff_ipc"] = "IPC"
-            else:
-                cmd0 += " -DPSA_API_TEST_" + i.psa_api_suit + "=ON"
-                cmd2 = "cmake " + codebase_dir + "/../psa-arch-tests/api-tests/ " + \
-                       "-G\"Unix Makefiles\" -DTARGET=tgt_dev_apis_tfm_" + \
-                       i.target_platform.lower() + " -DCPU_ARCH=armv8m_ml -DTOOLCHAIN=" + \
-                       i.compiler + " -DSUITE=" + i.psa_api_suit + " -DPSA_INCLUDE_PATHS=\"" + \
-                       codebase_dir + "/interface/include/\""
-
-            cmd2 += " -DCMAKE_BUILD_TYPE=" + i.cmake_build_type
-
-            cmd3 = "cmake --build ." + thread_no
-            build_cfg["build_psa_api"] = cmd2 + " ; " + cmd3
-
-        else:
-            cmd0 = build_cfg["config_template"] % \
-                   dict(dict(i._asdict()), **build_cfg)
-        try:
-            if i.__str__().find("with_OTP") > 0:
-                cmd0 += " -DCRYPTO_HW_ACCELERATOR_OTP_STATE=ENABLED"
-
-            build_cfg["build_cmds"][0] += thread_no
-
-            if cmd0.find("SST_RAM_FS=ON") < 0 and i.target_platform == "MUSCA_B1":
-                cmd0 += " -DSST_RAM_FS=OFF -DITS_RAM_FS=OFF"
-        except Exception as E:
-            pass
-        # Prepend configuration commoand as the first cmd [cmd1] + [cmd2] + [cmd3] +
-        build_cfg["build_cmds"] = [cmd0] + build_cfg["build_cmds"]
-        if not silence:
-            print("cmd0 %s\r\n" % (build_cfg["build_cmds"]))
-        if "build_psa_api" in build_cfg:
-            if not silence:
-                print("cmd build_psa_api %s\r\n" % build_cfg["build_psa_api"])
-        # Set the overrid params
-        over_dict = {"_tbm_build_dir_": build_dir,
-            "_tbm_code_dir_": codebase_dir,
-            "_tbm_target_platform_": i.target_platform}
-        over_params = ["build_cmds",
-                       "required_artefacts",
-                       "artifact_capture_rex"]
-        build_cfg = self.override_tbm_cfg_params(build_cfg,
-                                                 over_params,
-                                                 **over_dict)
+        build_cfg["build_cmds"][0] += thread_no
+        overwrite_params = {"codebase_root_dir": build_cfg["codebase_root_dir"],
+                            "tfm_platform": i.tfm_platform,
+                            "toolchain_file": i.toolchain_file,
+                            "psa_api": i.psa_api,
+                            "isolation_level": i.isolation_level,
+                            "test_regression": i.test_regression,
+                            "test_psa_api": i.test_psa_api,
+                            "cmake_build_type": i.cmake_build_type,
+                            "with_otp": i.with_otp,
+                            "with_bl2": i.with_bl2,
+                            "with_ns": i.with_ns,
+                            "profile": i.profile}
+        build_cfg["config_template"] %= overwrite_params
         return build_cfg
 
     def post_eval(self):
@@ -586,16 +520,7 @@ class TFM_Build_Manager(structuredTask):
             # Convert named tuples to string with boolean support
             i_str = "_".join(map(lambda x: repr(x)
                              if isinstance(x, bool) else x, list(i)))
-
-            # Replace bollean vaiables with more BL2/NOBL2 and use it as"
-            # configuration name.
-            i_str = i_str.replace("True", "BL2").replace("False", "NOBL2")
-            i_str = i_str.replace("CRYPTO", "Crypto")
-            i_str = i_str.replace("PROTECTED_STORAGE", "PS")
-            i_str = i_str.replace("INITIAL_ATTESTATION", "Attest")
-            i_str = i_str.replace("INTERNAL_TRUSTED_STORAGE", "ITS")
             ret_cfg[i_str] = i
-
         return ret_cfg
 
     @staticmethod
