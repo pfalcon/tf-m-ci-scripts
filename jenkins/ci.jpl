@@ -95,6 +95,21 @@ def buildDocs(results) {
   }
 }
 
+def emailNotification(results) {
+  script {
+   if (env.JOB_NAME.equals("tf-m-nightly") && !env.EMAIL_NOTIFICATION.equals('')) {
+      def result = "Fail."
+      if (results)
+        result = "Success."
+      emailext (
+          subject: ("Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} ${result}"),
+          body: "Check console output at ${env.BUILD_URL}",
+          to: "${EMAIL_NOTIFICATION}"
+      )
+    }
+  } /* script */
+}
+
 @NonCPS
 def generateCsvContent(results) {
   def resultsParam = []
@@ -337,6 +352,7 @@ node("docker-amd64-bionic") {
       success = false
     } finally {
       archiveArtifacts artifacts: 'tf-m-ci-scripts/lava_artifacts/**', allowEmptyArchive: true
+      emailNotification(success);
       cleanWs()
       if (!success) {
         error("There was an Error waiting for LAVA jobs")
