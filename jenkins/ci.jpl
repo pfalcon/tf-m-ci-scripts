@@ -305,10 +305,15 @@ stage("Builds") {
 
 node("docker-amd64-bionic") {
   stage("Copy Docs") {
-    step([$class: 'CopyArtifact', projectName: 'tf-m-build-docs',
-    selector: specific("${results['docs'][0]}"), target: './docs/',
-    optional: true])
-    archiveArtifacts artifacts: 'docs/**', allowEmptyArchive: true
+    if (env.JOB_NAME.equals("tf-m-build-and-test")) {
+      step([$class: 'CopyArtifact', projectName: 'tf-m-build-docs',
+      selector: specific("${results['docs'][0]}"), target: './docs/',
+      optional: true])
+      archiveArtifacts artifacts: 'docs/**', allowEmptyArchive: true
+    }
+    else {
+      print("No doc copy for job: ${env.JOB_NAME}")
+    }
   }
   stage("Tests") {
     dir("tf-m-ci-scripts") {
