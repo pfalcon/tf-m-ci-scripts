@@ -22,7 +22,7 @@ node("docker-amd64-bionic") {
         bl2_string = "--bl2"
       }
       // work around this string containing quotes?
-      if (!env.PSA_API_SUITE.replace('\'', '').isEmpty()) {
+      if (env.PSA_API_SUITE != "") {
         psa_string = "--psa-api-suite ${env.PSA_API_SUITE}"
       }
       dir("tf-m-ci-scripts") {

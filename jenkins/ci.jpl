@@ -10,6 +10,161 @@
 import org.trustedfirmware.Gerrit
 import org.trustedfirmware.Summary
 
+mapPlatform = ["cypress/psoc64":   "psoc64",
+               "mps2/an519":       "AN519",
+               "mps2/an521":       "AN521",
+               "mps2/an539":       "AN539",
+               "mps2/sse-200_aws": "SSE-200_AWS",
+               "mps3/an524":       "AN524",
+               "musca_a":          "MUSCA_A",
+               "musca_b1":         "MUSCA_B1",
+               "musca_s1":         "MUSCA_S1"]
+
+mapCompiler = ["toolchain_GNUARM.cmake":   "GNUARM",
+               "toolchain_ARMCLANG.cmake": "ARMCLANG"]
+
+mapBL2 = ["True":  "--bl2",
+          "False": ""]
+
+mapTestPsaApi = ["OFF":                      "",
+                 "INTERNAL_TRUSTED_STORAGE": "ITS",
+                 "PROTECTED_STORAGE":        "PS",
+                 "CRYPTO":                   "Crypto",
+                 "INITIAL_ATTESTATION":      "Attest",
+                 "IPC":                      "FF"]
+
+def generateLavaParam(build_params) {
+  def params = []
+  params += string(name: "TARGET_PLATFORM", \
+                   value: mapPlatform[build_params["TFM_PLATFORM"]])
+  params += string(name: "COMPILER", \
+                   value: mapCompiler[build_params["TOOLCHAIN_FILE"]])
+  params += string(name: "PSA_API_SUITE", \
+                   value: mapTestPsaApi[build_params["TEST_PSA_API"]])
+
+  if (build_params["BL2"]             == "True"  && \
+      build_params["NS"]              == "True"  && \
+      build_params["PSA_API"]         == "False" && \
+      build_params["ISOLATION_LEVEL"] == "1"     && \
+      build_params["TEST_REGRESSION"] == "False" && \
+      build_params["TEST_PSA_API"]    == "OFF"   && \
+      !build_params["TFM_PROFILE"]) {
+        params += string(name: "PROJ_CONFIG", value: "ConfigDefault")
+      }
+  if (build_params["BL2"]             == "True"  && \
+      build_params["NS"]              == "True"  && \
+      build_params["PSA_API"]         == "True"  && \
+      build_params["ISOLATION_LEVEL"] == "1"     && \
+      build_params["TEST_REGRESSION"] == "False" && \
+      build_params["TEST_PSA_API"]    == "OFF"   && \
+      !build_params["TFM_PROFILE"]) {
+        params += string(name: "PROJ_CONFIG", value: "ConfigCoreIPC")
+      }
+  if (build_params["BL2"]             == "True"  && \
+      build_params["NS"]              == "True"  && \
+      build_params["PSA_API"]         == "True"  && \
+      build_params["ISOLATION_LEVEL"] == "2"     && \
+      build_params["TEST_REGRESSION"] == "False" && \
+      build_params["TEST_PSA_API"]    == "OFF"   && \
+      !build_params["TFM_PROFILE"]) {
+        params += string(name: "PROJ_CONFIG", value: "ConfigCoreIPCTfmLevel2")
+      }
+  if (build_params["BL2"]             == "True"          && \
+      build_params["NS"]              == "True"          && \
+      build_params["PSA_API"]         == "False"         && \
+      build_params["ISOLATION_LEVEL"] == "1"             && \
+      build_params["TFM_PROFILE"]     == "profile_small" && \
+      build_params["TEST_REGRESSION"] == "False"         && \
+      build_params["TEST_PSA_API"]    == "OFF") {
+        params += string(name: "PROJ_CONFIG", value: "ConfigDefaultProfileS")
+      }
+  if (build_params["BL2"]             == "True"          && \
+      build_params["NS"]              == "True"          && \
+      build_params["PSA_API"]         == "False"         && \
+      build_params["ISOLATION_LEVEL"] == "1"             && \
+      build_params["TFM_PROFILE"]     == "profile_medium"&& \
+      build_params["TEST_REGRESSION"] == "False"         && \
+      build_params["TEST_PSA_API"]    == "OFF") {
+        params += string(name: "PROJ_CONFIG", value: "ConfigDefaultProfileM")
+      }
+  if (build_params["BL2"]             == "True"  && \
+      build_params["NS"]              == "True"  && \
+      build_params["PSA_API"]         == "False" && \
+      build_params["ISOLATION_LEVEL"] == "1"     && \
+      build_params["TEST_REGRESSION"] == "True"  && \
+      build_params["TEST_PSA_API"]    == "OFF"   && \
+      !build_params["TFM_PROFILE"]) {
+        params += string(name: "PROJ_CONFIG", value: "ConfigRegression")
+      }
+  if (build_params["BL2"]             == "True"  && \
+      build_params["NS"]              == "True"  && \
+      build_params["PSA_API"]         == "True"  && \
+      build_params["ISOLATION_LEVEL"] == "1"     && \
+      build_params["TEST_REGRESSION"] == "True"  && \
+      build_params["TEST_PSA_API"]    == "OFF"   && \
+      !build_params["TFM_PROFILE"]) {
+        params += string(name: "PROJ_CONFIG", value: "ConfigRegressionIPC")
+      }
+  if (build_params["BL2"]             == "True"  && \
+      build_params["NS"]              == "True"  && \
+      build_params["PSA_API"]         == "True"  && \
+      build_params["ISOLATION_LEVEL"] == "2"     && \
+      build_params["TEST_REGRESSION"] == "True"  && \
+      build_params["TEST_PSA_API"]    == "OFF"   && \
+      !build_params["TFM_PROFILE"]) {
+        params += string(name: "PROJ_CONFIG", value: "ConfigRegressionIPCTfmLevel2")
+      }
+  if (build_params["BL2"]             == "True"          && \
+      build_params["NS"]              == "True"          && \
+      build_params["PSA_API"]         == "False"         && \
+      build_params["ISOLATION_LEVEL"] == "1"             && \
+      build_params["TFM_PROFILE"]     == "profile_small" && \
+      build_params["TEST_REGRESSION"] == "True"          && \
+      build_params["TEST_PSA_API"]    == "OFF") {
+        params += string(name: "PROJ_CONFIG", value: "ConfigRegressionProfileS")
+      }
+  if (build_params["BL2"]             == "True"          && \
+      build_params["NS"]              == "True"          && \
+      build_params["PSA_API"]         == "False"         && \
+      build_params["ISOLATION_LEVEL"] == "1"             && \
+      build_params["TFM_PROFILE"]     == "profile_medium"&& \
+      build_params["TEST_REGRESSION"] == "True"          && \
+      build_params["TEST_PSA_API"]    == "OFF") {
+        params += string(name: "PROJ_CONFIG", value: "ConfigRegressionProfileM")
+      }
+  if (build_params["BL2"]             == "True"  && \
+      build_params["NS"]              == "True"  && \
+      build_params["PSA_API"]         == "False" && \
+      build_params["ISOLATION_LEVEL"] == "1"     && \
+      build_params["TEST_REGRESSION"] == "False" && \
+      build_params["TEST_PSA_API"]    != "OFF"   && \
+      !build_params["TFM_PROFILE"]) {
+        params += string(name: "PROJ_CONFIG", value: "ConfigPsaApiTest")
+      }
+  if (build_params["BL2"]             == "True"  && \
+      build_params["NS"]              == "True"  && \
+      build_params["PSA_API"]         == "True"  && \
+      build_params["ISOLATION_LEVEL"] == "1"     && \
+      build_params["TEST_REGRESSION"] == "False" && \
+      build_params["TEST_PSA_API"]    != "OFF"   && \
+      !build_params["TFM_PROFILE"]) {
+        params += string(name: "PROJ_CONFIG", value: "ConfigPsaApiTestIPC")
+      }
+  if (build_params["BL2"]             == "True"  && \
+      build_params["NS"]              == "True"  && \
+      build_params["PSA_API"]         == "True"  && \
+      build_params["ISOLATION_LEVEL"] == "2"     && \
+      build_params["TEST_REGRESSION"] == "False" && \
+      build_params["TEST_PSA_API"]    != "OFF"   && \
+      !build_params["TFM_PROFILE"]) {
+        params += string(name: "PROJ_CONFIG", value: "ConfigPsaApiTestIPCTfmLevel2")
+      }
+  else {
+    params += string(name: "PROJ_CONFIG", value: "ConfigDefault")
+  }
+  return params
+}
+
 def listConfigs(ci_scripts_dir, config_list, filter_group) {
   dir(ci_scripts_dir) {
     echo "Obtaining list of configs."
@@ -58,8 +213,12 @@ python3 ./configs.py -g ${filter_group.replace(" ", " -g ")} ${config}
     if (build_res.result in failure_states) {
       error("Build failed at ${build_url}")
     }
+    else if (params_collection["NS"] == "False") {
+      print("LAVA is not needed for ${build_url}")
+    }
     else {
       print("Doing LAVA stuff for ${build_url}")
+      params += generateLavaParam(params_collection)
       params += string(name: 'BUILD_NUMBER', value: "${build_res.number}")
       params += string(name: 'BUILD_URL', value: build_url)
       params += string(name: 'LAVA_URL', value: env.LAVA_URL)
