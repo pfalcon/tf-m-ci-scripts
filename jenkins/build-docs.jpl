@@ -77,6 +77,7 @@ node("docker-amd64-bionic") {
       sh "tf-m-ci-scripts/build-docs.sh"
     }
     stage("Post") {
+      archiveArtifacts 'trusted-firmware-m/build/install/**'
       archiveArtifacts 'trusted-firmware-m/build/docs/**'
     }
   } catch (Exception e) {
