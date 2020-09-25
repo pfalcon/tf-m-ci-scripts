@@ -50,7 +50,7 @@ node("docker-amd64-bionic") {
           $class: 'GitSCM',
           branches: [[name: 'FETCH_HEAD']],
           userRemoteConfigs: [[
-            refspec: 'refs/tags/$MCUBOOT_VERSION',
+            refspec: '$MCUBOOT_REFSPEC',
             url: params.MCUBOOT_URL
           ]]
         ]
