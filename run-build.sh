@@ -55,11 +55,20 @@ cd ../trusted-firmware-m/build
 
 eval "set -ex ; $build_commands"
 
+set +e
+
 mkdir install/outputs/fvp
-cp bin/* install/outputs/fvp/
-cd install/outputs/fvp
-for file in `ls | grep bl2`
+mv bin/* install/outputs/fvp/
+
+cd install/outputs
+mv CYPRESS/* .
+mv MPS2/* .
+mv MPS3/* .
+
+for file in `find | grep bl2`
 do
 	newfile=`echo $file | sed "s/bl2/mcuboot/g"`
 	mv $file $newfile
 done
+
+set -e
