@@ -1182,8 +1182,7 @@ config_nightly_OTP_gnu = {"seed_params": {
 config_pp_test_gnu = {"seed_params": {
                 "tfm_platform":     ["mps2/an521", "mps2/an519",
                                      "musca_b1"],
-                "toolchain_file":   ["toolchain_GNUARM.cmake",
-                                     "toolchain_ARMCLANG.cmake"],
+                "toolchain_file":   ["toolchain_GNUARM.cmake"],
                 "psa_api":          [True, False],
                 "isolation_level":  ["1", "2"],
                 "test_regression":  [True],
