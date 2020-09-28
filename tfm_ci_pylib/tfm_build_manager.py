@@ -100,7 +100,7 @@ class TFM_Build_Manager(structuredTask):
             "OTP={}",
             "BL2={}",
             "NS={}",
-            "PROFILE={}"
+            "PROFILE={} "
         ]
         print(
             "\n".join(argument_list)
