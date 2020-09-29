@@ -100,7 +100,7 @@ class TFM_Build_Manager(structuredTask):
             "OTP={}",
             "BL2={}",
             "NS={}",
-            "PROFILE={} "
+            "PROFILE={}"
         ]
         print(
             "\n".join(argument_list)
@@ -116,7 +116,7 @@ class TFM_Build_Manager(structuredTask):
                 config_details.with_otp,
                 config_details.with_bl2,
                 config_details.with_ns,
-                config_details.profile
+                "N.A" if not config_details.profile else config_details.profile
             )
             .strip()
         )
@@ -371,7 +371,7 @@ class TFM_Build_Manager(structuredTask):
                             "with_otp": i.with_otp,
                             "with_bl2": i.with_bl2,
                             "with_ns": i.with_ns,
-                            "profile": i.profile}
+                            "profile": "" if i.profile=="N.A" else i.profile}
         build_cfg["config_template"] %= overwrite_params
         return build_cfg
 
