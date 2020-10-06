@@ -47,8 +47,6 @@ fi
 
 cd mbedtls
 git apply ../trusted-firmware-m/lib/ext/mbedcrypto/*.patch
-cd ../psa-arch-tests
-git apply ../trusted-firmware-m/lib/ext/psa_arch_tests/0001-Alter-asm-to-__asm-to-comply-with-C99.patch
 
 mkdir ../trusted-firmware-m/build
 cd ../trusted-firmware-m/build
