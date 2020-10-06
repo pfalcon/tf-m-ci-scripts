@@ -80,7 +80,7 @@ additional_checklist="all"
 echo
 echo '******* Generating compile_commands.json ***************'
 echo
-generate_project $(fix_win_path $(get_full_path ./)) "./" "cppcheck" "-DCMAKE_EXPORT_COMPILE_COMMANDS=1  -DTARGET_PLATFORM=AN521 -DCOMPILER=GNUARM"
+generate_project $(fix_win_path $(get_full_path ./)) "./" "cppcheck" "-DCMAKE_EXPORT_COMPILE_COMMANDS=1 -DTFM_PLATFORM=an521 -DCMAKE_TOOLCHAIN_FILE=toolchain_GNUARM.cmake"
 
 #Enter the build directory
 bdir=$(make_build_dir_name "./" "cppcheck")
@@ -183,4 +183,3 @@ else
   echo
 fi
 popd
-
