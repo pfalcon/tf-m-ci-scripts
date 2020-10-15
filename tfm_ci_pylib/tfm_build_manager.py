@@ -32,6 +32,28 @@ from .structured_task import structuredTask
 from .tfm_builder import TFM_Builder
 
 
+mapPlatform = {"cypress/psoc64":   "psoc64",
+               "mps2/an519":       "AN519",
+               "mps2/an521":       "AN521",
+               "mps2/an539":       "AN539",
+               "mps2/sse-200_aws": "SSE-200_AWS",
+               "mps3/an524":       "AN524",
+               "musca_a":          "MUSCA_A",
+               "musca_b1":         "MUSCA_B1",
+               "musca_s1":         "MUSCA_S1"}
+
+mapCompiler = {"toolchain_GNUARM.cmake":   "GNUARM",
+               "toolchain_ARMCLANG.cmake": "ARMCLANG"}
+
+mapTestPsaApi = {"IPC":                      "IPC",
+                 "CRYPTO":                   "CRYPTO",
+                 "PROTECTED_STORAGE":        "PS",
+                 "INITIAL_ATTESTATION":      "ATTEST",
+                 "INTERNAL_TRUSTED_STORAGE": "ITS"}
+
+mapProfile = {"profile_small": "SMALL"}
+
+
 class TFM_Build_Manager(structuredTask):
     """ Class that will load a configuration out of a json file, schedule
     the builds, and produce a report """
@@ -517,9 +539,27 @@ class TFM_Build_Manager(structuredTask):
         ret_cfg = {}
         # Notify the user for the rejected configuations
         for i in config_list:
-            # Convert named tuples to string with boolean support
-            i_str = "_".join(map(lambda x: repr(x)
-                             if isinstance(x, bool) else x, list(i)))
+            # Convert named tuples to string in a brief format
+            config_param = []
+            config_param.append(mapPlatform[list(i)[0]])
+            config_param.append(mapCompiler[list(i)[1]])
+            if list(i)[2]:  # PSA_API
+                config_param.append("PSA")
+            config_param.append(list(i)[3]) # ISOLATION_LEVEL
+            if list(i)[4]:  # TEST_REGRESSION
+                config_param.append("REG")
+            if list(i)[5] != "OFF":    #TEST_PSA_API
+                config_param.append(mapTestPsaApi[list(i)[5]])
+            config_param.append(list(i)[6]) # BUILD_TYPE
+            if list(i)[7]:  # OTP
+                config_param.append("OTP")
+            if list(i)[8]:  # BL2
+                config_param.append("BL2")
+            if list(i)[9]:  # NS
+                config_param.append("NS")
+            if list(i)[10]: # PROFILE
+                config_param.append(mapProfile[list(i)[10]])
+            i_str = "_".join(config_param)
             ret_cfg[i_str] = i
         return ret_cfg
 
