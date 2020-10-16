@@ -1,6 +1,6 @@
 #!/bin/bash
 #-------------------------------------------------------------------------------
-# Copyright (c) 2018-2019, Arm Limited and Contributors. All rights reserved.
+# Copyright (c) 2018-2020, Arm Limited and Contributors. All rights reserved.
 #
 # SPDX-License-Identifier: BSD-3-Clause
 #
@@ -80,7 +80,7 @@ additional_checklist="all"
 echo
 echo '******* Generating compile_commands.json ***************'
 echo
-generate_project $(fix_win_path $(get_full_path ./)) "./" "cppcheck" "-DCMAKE_EXPORT_COMPILE_COMMANDS=1 -DTFM_PLATFORM=an521 -DCMAKE_TOOLCHAIN_FILE=toolchain_GNUARM.cmake"
+generate_project $(fix_win_path $(get_full_path ./)) "./" "cppcheck" "-DCMAKE_EXPORT_COMPILE_COMMANDS=1 -DTFM_PLATFORM=mps2/an521 -DCMAKE_TOOLCHAIN_FILE=toolchain_GNUARM.cmake"
 
 #Enter the build directory
 bdir=$(make_build_dir_name "./" "cppcheck")
