@@ -104,7 +104,7 @@ download_checkpatch_file() {
 		REDIRECT=" >/dev/null"
 	fi
 
-	curl "https://raw.githubusercontent.com/torvalds/linux/master/scripts/$1" --output "$1.new" &>/dev/null
+	curl "https://raw.githubusercontent.com/torvalds/linux/v5.9/scripts/$1" --output "$1.new" &>/dev/null
 
 	if [ $? != 0 ]; then
 		app_err "curl reported error while downloading $1"
