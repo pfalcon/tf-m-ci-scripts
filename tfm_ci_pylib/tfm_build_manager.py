@@ -45,7 +45,7 @@ mapPlatform = {"cypress/psoc64":   "psoc64",
 mapCompiler = {"toolchain_GNUARM.cmake":   "GNUARM",
                "toolchain_ARMCLANG.cmake": "ARMCLANG"}
 
-mapTestPsaApi = {"IPC":                      "IPC",
+mapTestPsaApi = {"IPC":                      "FF",
                  "CRYPTO":                   "CRYPTO",
                  "PROTECTED_STORAGE":        "PS",
                  "INITIAL_ATTESTATION":      "ATTEST",
