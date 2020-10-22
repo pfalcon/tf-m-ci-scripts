@@ -51,7 +51,8 @@ mapTestPsaApi = {"IPC":                      "FF",
                  "INITIAL_ATTESTATION":      "ATTEST",
                  "INTERNAL_TRUSTED_STORAGE": "ITS"}
 
-mapProfile = {"profile_small": "SMALL"}
+mapProfile = {"profile_small":  "SMALL",
+              "profile_medium": "MEDIUM"}
 
 
 class TFM_Build_Manager(structuredTask):
@@ -122,7 +123,8 @@ class TFM_Build_Manager(structuredTask):
             "OTP={}",
             "BL2={}",
             "NS={}",
-            "PROFILE={}"
+            "PROFILE={}",
+            "PARTITION_PS={}"
         ]
         print(
             "\n".join(argument_list)
@@ -138,7 +140,8 @@ class TFM_Build_Manager(structuredTask):
                 config_details.with_otp,
                 config_details.with_bl2,
                 config_details.with_ns,
-                "N.A" if not config_details.profile else config_details.profile
+                "N.A" if not config_details.profile else config_details.profile,
+                config_details.partition_ps
             )
             .strip()
         )
@@ -393,7 +396,8 @@ class TFM_Build_Manager(structuredTask):
                             "with_otp": i.with_otp,
                             "with_bl2": i.with_bl2,
                             "with_ns": i.with_ns,
-                            "profile": "" if i.profile=="N.A" else i.profile}
+                            "profile": "" if i.profile=="N.A" else i.profile,
+                            "partition_ps": i.partition_ps}
         build_cfg["config_template"] %= overwrite_params
         return build_cfg
 
@@ -559,6 +563,8 @@ class TFM_Build_Manager(structuredTask):
                 config_param.append("NS")
             if list(i)[10]: # PROFILE
                 config_param.append(mapProfile[list(i)[10]])
+            if list(i)[11] == "OFF":    #PARTITION_PS
+                config_param.append("PSOFF")
             i_str = "_".join(config_param)
             ret_cfg[i_str] = i
         return ret_cfg

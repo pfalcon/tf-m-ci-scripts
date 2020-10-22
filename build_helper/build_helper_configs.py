@@ -40,7 +40,8 @@ _common_tfm_builder_cfg = {
                    "with_otp",
                    "with_bl2",
                    "with_ns",
-                   "profile"],
+                   "profile",
+                   "partition_ps"],
 
     # Keys for the templace will come from the combinations of parameters
     # provided in the seed dictionary.
@@ -61,6 +62,7 @@ _common_tfm_builder_cfg = {
         "-DPSA_ARCH_TESTS_PATH=%(codebase_root_dir)s/../psa-arch-tests " + \
         "-DMCUBOOT_PATH=%(codebase_root_dir)s/../mcuboot " + \
         "-DTFM_PROFILE=%(profile)s " + \
+        "-DTFM_PARTITION_PS=%(partition_ps)s " + \
         "%(codebase_root_dir)s",
 
     # A small subset of  string substitution params is allowed in commands.
@@ -134,22 +136,43 @@ _common_tfm_builder_cfg = {
 
 # List of all build configs that are impossible under all circumstances
 _common_tfm_invalid_configs = [
-    ("*", "*", False, "2", "*", "*", "*", "*", "*", "*", "*"), # LVL2 requires PSA api
-    ("*", "*", "*", "*", True, "*", "*", "*", "*", False, "*"), # Regression requires NS
-    ("*", "*", "*", "*", True, "IPC", "*", "*", "*", "*", "*"), # No PSA_ACK with regression
-    ("*", "*", "*", "*", True, "CRYPTO", "*", "*", "*", "*", "*"), # No PSA_ACK with regression
-    ("*", "*", "*", "*", True, "PROTECTED_STORAGE", "*", "*", "*", "*", "*"), # No PSA_ACK with regression
-    ("*", "*", "*", "*", True, "INITIAL_ATTESTATION", "*", "*", "*", "*", "*"), # No PSA_ACK with regression
-    ("*", "*", "*", "*", True, "INTERNAL_TRUSTED_STORAGE", "*", "*", "*", "*", "*"), # No PSA_ACK with regression
-    ("*", "*", "*", "*", "*", "IPC", "*", "*", "*", False, "*"), # PSA_ACK requires NS
-    ("*", "*", "*", "*", "*", "CRYPTO", "*", "*", "*", False, "*"), # PSA_ACK requires NS
-    ("*", "*", "*", "*", "*", "PROTECTED_STORAGE", "*", "*", "*", False, "*"), # PSA_ACK requires NS
-    ("*", "*", "*", "*", "*", "INITIAL_ATTESTATION", "*", "*", "*", False, "*"), # PSA_ACK requires NS
-    ("*", "*", "*", "*", "*", "INTERNAL_TRUSTED_STORAGE", "*", "*", "*", False, "*"), # PSA_ACK requires NS
-    ("musca_a", "*", "*", "*", "*", "*", "*",  "*", False, "*", "*"), # Musca a requires BL2
-    ("musca_b1", "*", "*", "*", "*", "*", "*",  "*", False, "*", "*"), # Musca b1 requires BL2
-    ("musca_s1", "*", "*", "*", "*", "*", "*",  "*", False, "*", "*"), # Musca s1 requires BL2
-    ("cypress/psoc64", "*", "*", "*", "*", "*", "*",  "*", True, "*", "*"), # psoc64 cannot use BL2
+    # LVL2 requires PSA api
+    ("*", "*", False, "2", "*", "*", "*", "*", "*", "*", "*", "*"),
+    # Regression requires NS
+    ("*", "*", "*", "*", True, "*", "*", "*", "*", False, "*", "*"),
+    # No PSA_ACK with regression
+    ("*", "*", "*", "*", True, "IPC", "*", "*", "*", "*", "*", "*"),
+    ("*", "*", "*", "*", True, "CRYPTO", "*", "*", "*", "*", "*", "*"),
+    ("*", "*", "*", "*", True, "PROTECTED_STORAGE", "*", "*", "*", "*", "*", "*"),
+    ("*", "*", "*", "*", True, "INITIAL_ATTESTATION", "*", "*", "*", "*", "*", "*"),
+    ("*", "*", "*", "*", True, "INTERNAL_TRUSTED_STORAGE", "*", "*", "*", "*", "*", "*"),
+    # PSA_ACK requires NS
+    ("*", "*", "*", "*", "*", "IPC", "*", "*", "*", False, "*", "*"),
+    ("*", "*", "*", "*", "*", "CRYPTO", "*", "*", "*", False, "*", "*"),
+    ("*", "*", "*", "*", "*", "PROTECTED_STORAGE", "*", "*", "*", False, "*", "*"),
+    ("*", "*", "*", "*", "*", "INITIAL_ATTESTATION", "*", "*", "*", False, "*", "*"),
+    ("*", "*", "*", "*", "*", "INTERNAL_TRUSTED_STORAGE", "*", "*", "*", False, "*", "*"),
+    # Musca requires BL2
+    ("musca_a", "*", "*", "*", "*", "*", "*",  "*", False, "*", "*", "*"),
+    ("musca_b1", "*", "*", "*", "*", "*", "*",  "*", False, "*", "*", "*"),
+    ("musca_s1", "*", "*", "*", "*", "*", "*",  "*", False, "*", "*", "*"),
+    # psoc64 cannot use BL2
+    ("cypress/psoc64", "*", "*", "*", "*", "*", "*",  "*", True, "*", "*", "*"),
+    # Musca b1 does not support Profile S
+    ("musca_b1", "*", "*", "*", "*", "*", "*",  "*", "*", "*", "profile_small", "*"),
+    # PARTITION_PS could only be OFF for Profile M
+    ("*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "", "OFF"),
+    ("*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "profile_small", "OFF"),
+    # Proile M only support for PSA_API
+    ("*", "*", False, "*", "*", "*", "*", "*", "*", "*", "profile_medium", "*"),
+    # Profile M only support for Isolation Level 2
+    ("*", "*", "*", "1", "*", "*", "*",  "*", "*", "*", "profile_medium", "*"),
+    # Profile S does not support MUSCA_B1
+    ("musca_b1", "*", "*", "*", "*", "*", "*",  "*", "*", "*", "profile_small", "*"),
+    # Profile S does not support PSA_API
+    ("*", "*", True, "*", "*", "*", "*",  "*", "*", "*", "profile_small", "*"),
+    # Profile S only supports Isolation Level 2
+    ("*", "*", "*", "2", "*", "*", "*",  "*", "*", "*", "profile_small", "*"),
     ]
 
 # Configure build manager to build several combinations
@@ -166,6 +189,7 @@ config_AN539 = {"seed_params": {
                 "with_bl2":         [True, False],
                 "with_ns":          [True, False],
                 "profile":          [""],
+                "partition_ps":     ["ON"],
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + []
@@ -184,6 +208,7 @@ config_AN524 = {"seed_params": {
                 "with_bl2":         [True, False],
                 "with_ns":          [True, False],
                 "profile":          [""],
+                "partition_ps":     ["ON"],
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + []
@@ -202,6 +227,7 @@ config_AN521 = {"seed_params": {
                 "with_bl2":         [True, False],
                 "with_ns":          [True, False],
                 "profile":          [""],
+                "partition_ps":     ["ON"],
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + []
@@ -223,6 +249,7 @@ config_PSA_API = {"seed_params": {
                 "with_bl2":         [True],
                 "with_ns":          [True, False],
                 "profile":          [""],
+                "partition_ps":     ["ON"],
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + []
@@ -241,6 +268,7 @@ config_PSA_FF = {"seed_params": {
                 "with_bl2":         [True],
                 "with_ns":          [True, False],
                 "profile":          [""],
+                "partition_ps":     ["ON"],
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + []
@@ -262,6 +290,7 @@ config_PSA_API_OTP = {"seed_params": {
                 "with_bl2":         [True],
                 "with_ns":          [True, False],
                 "profile":          [""],
+                "partition_ps":     ["ON"],
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + []
@@ -280,6 +309,7 @@ config_PSA_FF_OTP = {"seed_params": {
                 "with_bl2":         [True],
                 "with_ns":          [True, False],
                 "profile":          [""],
+                "partition_ps":     ["ON"],
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + []
@@ -298,6 +328,7 @@ config_PSOC64 = {"seed_params": {
                 "with_bl2":         [False],
                 "with_ns":          [True, False],
                 "profile":          [""],
+                "partition_ps":     ["ON"],
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + []
@@ -316,6 +347,7 @@ config_AN519 = {"seed_params": {
                 "with_bl2":         [True, False],
                 "with_ns":          [True, False],
                 "profile":          [""],
+                "partition_ps":     ["ON"],
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + []
@@ -334,6 +366,7 @@ config_IPC =  {"seed_params": {
                "with_bl2":         [True, False],
                "with_ns":          [True, False],
                "profile":          [""],
+               "partition_ps":     ["ON"],
                },
               "common_params": _common_tfm_builder_cfg,
               "invalid": _common_tfm_invalid_configs + []
@@ -355,13 +388,14 @@ config_full = {"seed_params": {
                "with_bl2":         [True, False],
                "with_ns":          [True, False],
                "profile":          [""],
+               "partition_ps":     ["ON"],
                },
                "common_params": _common_tfm_builder_cfg,
                "invalid": _common_tfm_invalid_configs + [
                    ("cypress/psoc64", "*", "*", "*",
-                    "*", "*", "Debug",  "*", "*", "*", "*"),
+                    "*", "*", "Debug",  "*", "*", "*", "*", "*"),
                    ("cypress/psoc64", "*", "*", "*",
-                    "*", "*", "*",  "*", True, True, "*"),
+                    "*", "*", "*",  "*", True, True, "*", "*"),
                ]
                }
 
@@ -380,13 +414,14 @@ config_full_gnuarm = {"seed_params": {
                "with_bl2":         [True, False],
                "with_ns":          [True, False],
                "profile":          [""],
+               "partition_ps":     ["ON"],
                },
                "common_params": _common_tfm_builder_cfg,
                "invalid": _common_tfm_invalid_configs + [
                    ("cypress/psoc64", "*", "*", "*",
-                    "*", "*", "Debug",  "*", "*", "*", "*"),
+                    "*", "*", "Debug",  "*", "*", "*", "*", "*"),
                    ("cypress/psoc64", "*", "*", "*",
-                    "*", "*", "*",  "*", True, True, "*"),
+                    "*", "*", "*",  "*", True, True, "*", "*"),
                ]
                }
 
@@ -404,6 +439,7 @@ config_tfm_test = {"seed_params": {
                 "with_bl2":         [True, False],
                 "with_ns":          [True, False],
                 "profile":          [""],
+                "partition_ps":     ["ON"],
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + []
@@ -423,32 +459,35 @@ config_tfm_test2 = {"seed_params": {
                 "with_bl2":         [True, False],
                 "with_ns":          [True, False],
                 "profile":          [""],
+                "partition_ps":     ["ON"],
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + [
                     ("mps2/an519", "toolchain_GNUARM.cmake", "*",
-                     "*", "*", "*", "Minsizerel", "*", "*", "*", "*"),
+                     "*", "*", "*", "Minsizerel", "*", "*", "*", "*", "*"),
                 ]
                 }
 
 config_tfm_profile = {"seed_params": {
-                "tfm_platform":     ["mps2/an519", "mps2/an521"],
+                "tfm_platform":     ["mps2/an519", "mps2/an521",
+                                     "musca_b1"],
                 "toolchain_file":   ["toolchain_ARMCLANG.cmake",
                                      "toolchain_GNUARM.cmake"],
-                "psa_api":          [False],
-                "isolation_level":  ["1"],
+                "psa_api":          [True, False],
+                "isolation_level":  ["1", "2"],
                 "test_regression":  [True, False],
                 "test_psa_api":     ["OFF"],
                 "cmake_build_type": ["Debug", "Release", "Minsizerel"],
                 "with_otp":         [False],
                 "with_bl2":         [True, False],
                 "with_ns":          [True, False],
-                "profile":          ["profile_small"],
+                "profile":          ["profile_small", "profile_medium"],
+                "partition_ps":     ["ON", "OFF"],
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + [
                     ("mps2/an519", "toolchain_GNUARM.cmake", "*",
-                     "*", "*", "*", "Minsizerel", "*", "*", "*", "*"),
+                     "*", "*", "*", "Minsizerel", "*", "*", "*", "*", "*"),
                 ]
                 }
 
@@ -465,6 +504,7 @@ config_tfm_test_OTP = {"seed_params": {
                 "with_bl2":         [True],
                 "with_ns":          [True, False],
                 "profile":          [""],
+                "partition_ps":     ["ON"],
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + []
@@ -483,6 +523,7 @@ config_MUSCA_A = {"seed_params": {
                 "with_bl2":         [True],
                 "with_ns":          [True, False],
                 "profile":          [""],
+                "partition_ps":     ["ON"],
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + []
@@ -501,6 +542,7 @@ config_MUSCA_B1 = {"seed_params": {
                 "with_bl2":         [True],
                 "with_ns":          [True, False],
                 "profile":          [""],
+                "partition_ps":     ["ON"],
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + []
@@ -519,6 +561,7 @@ config_MUSCA_S1 = {"seed_params": {
                 "with_bl2":         [True],
                 "with_ns":          [True, False],
                 "profile":          [""],
+                "partition_ps":     ["ON"],
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + []
@@ -539,11 +582,12 @@ config_release = {"seed_params": {
                 "with_bl2":         [True, False],
                 "with_ns":          [True, False],
                 "profile":          [""],
+                "partition_ps":     ["ON"],
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + [
                     ("mps2/an519", "toolchain_GNUARM.cmake", "*",
-                     "*", "*", "*", "Minsizerel", "*", "*", "*", "*"),
+                     "*", "*", "*", "Minsizerel", "*", "*", "*", "*", "*"),
                 ]
                 }
 
@@ -566,11 +610,12 @@ config_AN521_PSA_API = {"seed_params": {
                 "with_bl2":         [True],
                 "with_ns":          [True, False],
                 "profile":          [""],
+                "partition_ps":     ["ON"],
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + [
                     ("mps2/an519", "toolchain_GNUARM.cmake", "*",
-                     "*", "*", "*", "Minsizerel", "*", "*", "*", "*"),
+                     "*", "*", "*", "Minsizerel", "*", "*", "*", "*", "*"),
                 ]
                 }
 
@@ -588,11 +633,12 @@ config_AN521_PSA_IPC = {"seed_params": {
                 "with_bl2":         [True],
                 "with_ns":          [True, False],
                 "profile":          [""],
+                "partition_ps":     ["ON"],
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + [
                     ("mps2/an519", "toolchain_GNUARM.cmake", "*",
-                     "*", "*", "*", "Minsizerel", "*", "*", "*", "*"),
+                     "*", "*", "*", "Minsizerel", "*", "*", "*", "*", "*"),
                 ]
                 }
 
@@ -612,36 +658,39 @@ config_nightly = {"seed_params": {
                 "with_bl2":         [True, False],
                 "with_ns":          [True, False],
                 "profile":          [""],
+                "partition_ps":     ["ON"],
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + [
                     ("mps2/an519", "toolchain_GNUARM.cmake", "*",
-                     "*", "*", "*", "Minsizerel", "*", "*", "*", "*"),
+                     "*", "*", "*", "Minsizerel", "*", "*", "*", "*", "*"),
                     ("cypress/psoc64", "*", "*", "*",
-                     "*", "*", "Debug",  "*", "*", "*", "*"),
+                     "*", "*", "Debug",  "*", "*", "*", "*", "*"),
                     ("cypress/psoc64", "*", "*", "*",
-                     "*", "*", "*",  "*", True, True, "*"),
+                     "*", "*", "*",  "*", True, True, "*", "*"),
                 ]
                 }
 
 config_nightly_profile = {"seed_params": {
-                "tfm_platform":     ["mps2/an519", "mps2/an521"],
+                "tfm_platform":     ["mps2/an519", "mps2/an521",
+                                     "musca_b1"],
                 "toolchain_file":   ["toolchain_ARMCLANG.cmake",
                                      "toolchain_GNUARM.cmake"],
-                "psa_api":          [False],
-                "isolation_level":  ["1"],
+                "psa_api":          [True, False],
+                "isolation_level":  ["1", "2"],
                 "test_regression":  [True, False],
                 "test_psa_api":     ["OFF"],
                 "cmake_build_type": ["Debug", "Release", "Minsizerel"],
                 "with_otp":         [False],
                 "with_bl2":         [True, False],
                 "with_ns":          [True, False],
-                "profile":          ["profile_small"],
+                "profile":          ["profile_small", "profile_medium"],
+                "partition_ps":     ["ON", "OFF"],
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + [
                     ("mps2/an519", "toolchain_GNUARM.cmake", "*",
-                     "*", "*", "*", "Minsizerel", "*", "*", "*", "*"),
+                     "*", "*", "*", "Minsizerel", "*", "*", "*", "*", "*"),
                 ]
                 }
 
@@ -661,6 +710,7 @@ config_nightly_PSA_API = {"seed_params": {
                 "with_bl2":         [True],
                 "with_ns":          [True, False],
                 "profile":          [""],
+                "partition_ps":     ["ON"],
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + []
@@ -679,6 +729,7 @@ config_nightly_PSA_FF = {"seed_params": {
                 "with_bl2":         [True],
                 "with_ns":          [True, False],
                 "profile":          [""],
+                "partition_ps":     ["ON"],
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + []
@@ -697,6 +748,7 @@ config_nightly_OTP = {"seed_params": {
                 "with_bl2":         [True],
                 "with_ns":          [True, False],
                 "profile":          [""],
+                "partition_ps":     ["ON"],
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + []
@@ -716,15 +768,16 @@ config_pp_test = {"seed_params": {
                 "with_bl2":         [True],
                 "with_ns":          [True, False],
                 "profile":          ["", "profile_small"],
+                "partition_ps":     ["ON"],
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + [
                     ("musca_b1", "*", "*", "*", "*", "*",
-                     "*",  "*", "*", "*", "profile_small"),
+                     "*",  "*", "*", "*", "profile_small", "*"),
                     ("*", "*", True, "*", "*", "*",
-                     "*",  "*", "*", "*", "profile_small"),
+                     "*",  "*", "*", "*", "profile_small", "*"),
                     ("*", "*", "*", "2", "*", "*",
-                     "*",  "*", "*", "*", "profile_small"),
+                     "*",  "*", "*", "*", "profile_small", "*"),
                 ]
                 }
 
@@ -740,6 +793,7 @@ config_pp_OTP = {"seed_params": {
                 "with_bl2":         [True],
                 "with_ns":          [True, False],
                 "profile":          [""],
+                "partition_ps":     ["ON"],
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + []
@@ -762,6 +816,7 @@ config_pp_PSA_API = {"seed_params": {
                 "with_bl2":         [True],
                 "with_ns":          [True, False],
                 "profile":          [""],
+                "partition_ps":     ["ON"],
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + []
@@ -779,6 +834,7 @@ config_pp_PSoC64 = {"seed_params": {
                 "with_bl2":         [False],
                 "with_ns":          [True, False],
                 "profile":          [""],
+                "partition_ps":     ["ON"],
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + []
@@ -813,6 +869,7 @@ config_debug = {"seed_params": {
                 "with_bl2":         [True],
                 "with_ns":          [True],
                 "profile":          [""],
+                "partition_ps":     ["ON"],
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + []
@@ -832,13 +889,14 @@ config_ci = {"seed_params": {
                 "with_bl2":         [True, False],
                 "with_ns":          [True],
                 "profile":          [""],
+                "partition_ps":     ["ON"],
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + [
                     ("*", "toolchain_ARMCLANG.cmake", True, "*", "*", "*",
-                     "*",  "*", "*", "*", "*"),
+                     "*",  "*", "*", "*", "*", "*"),
                     ("*", "toolchain_ARMCLANG.cmake", False, "1", "*", "*",
-                     "*",  "*", False, "*", "*"),
+                     "*",  "*", False, "*", "*", "*"),
                 ]
                 }
 
@@ -856,15 +914,16 @@ config_ci_gnuarm = {"seed_params": {
                 "with_bl2":         [True, False],
                 "with_ns":          [True],
                 "profile":          [""],
+                "partition_ps":     ["ON"],
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + [
                     ("*", "toolchain_ARMCLANG.cmake", True, "*", "*", "*",
-                     "*",  "*", "*", "*", "*"),
+                     "*",  "*", "*", "*", "*", "*"),
                     ("*", "toolchain_ARMCLANG.cmake", False, "1", "*", "*",
-                     "*",  "*", "False", "*", "*"),
+                     "*",  "*", "False", "*", "*", "*"),
                     ("*", "toolchain_ARMCLANG.cmake", "*", "*", "*", "*",
-                     "*",  "*", "*", "*", "*") # Disable ARMCLANG for now
+                     "*",  "*", "*", "*", "*", "*") # Disable ARMCLANG for now
                 ]
                 }
 
@@ -880,11 +939,12 @@ config_lava_debug = {"seed_params": {
                 "with_bl2":         [True, False],
                 "with_ns":          [True, False],
                 "profile":          [""],
+                "partition_ps":     ["ON"],
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + [
                     ("mps2/an521", "toolchain_GNUARM.cmake", True, "2", "*", "*",
-                     "*",  "*", True, "*", "*")
+                     "*",  "*", True, "*", "*", "*")
                 ]
                 }
 
@@ -903,15 +963,16 @@ config_tfm_test_gnu = {"seed_params": {
                 "with_bl2":         [True, False],
                 "with_ns":          [True, False],
                 "profile":          [""],
+                "partition_ps":     ["ON"],
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + [
                     ("musca_a", "*", "*",
-                     "*", "*", "*", "*", "*", False, "*", "*"),
+                     "*", "*", "*", "*", "*", False, "*", "*", "*"),
                     ("musca_b1", "*", "*",
-                     "*", "*", "*", "*", "*", False, "*", "*"),
+                     "*", "*", "*", "*", "*", False, "*", "*", "*"),
                     ("musca_s1", "*", "*",
-                     "*", "*", "*", "*", "*", False, "*", "*"),
+                     "*", "*", "*", "*", "*", False, "*", "*", "*"),
                 ]
                 }
 
@@ -929,32 +990,35 @@ config_tfm_test2_gnu = {"seed_params": {
                 "with_bl2":         [True, False],
                 "with_ns":          [True, False],
                 "profile":          [""],
+                "partition_ps":     ["ON"],
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + [
                     ("mps2/an519", "toolchain_GNUARM.cmake", "*",
-                     "*", "*", "*", "Minsizerel", "*", "*", "*", "*"),
+                     "*", "*", "*", "Minsizerel", "*", "*", "*", "*", "*"),
                 ]
                 }
 
 # Configure build manager to build the maximum number of configurations
 config_tfm_profile_gnu = {"seed_params": {
-                "tfm_platform":     ["mps2/an519", "mps2/an521"],
+                "tfm_platform":     ["mps2/an519", "mps2/an521",
+                                     "musca_b1"],
                 "toolchain_file":   ["toolchain_GNUARM.cmake"],
-                "psa_api":          [False],
-                "isolation_level":  ["1"],
+                "psa_api":          [True, False],
+                "isolation_level":  ["1", "2"],
                 "test_regression":  [True, False],
                 "test_psa_api":     ["OFF"],
                 "cmake_build_type": ["Debug", "Release", "Minsizerel"],
                 "with_otp":         [False],
                 "with_bl2":         [True, False],
                 "with_ns":          [True, False],
-                "profile":          ["profile_small"],
+                "profile":          ["profile_small", "profile_medium"],
+                "partition_ps":     ["ON", "OFF"],
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + [
                     ("mps2/an519", "toolchain_GNUARM.cmake", "*",
-                     "*", "*", "*", "Minsizerel", "*", "*", "*", "*"),
+                     "*", "*", "*", "Minsizerel", "*", "*", "*", "*", "*"),
                 ]
                 }
 
@@ -971,6 +1035,7 @@ config_tfm_test_OTP_gnu = {"seed_params": {
                 "with_bl2":         [True],
                 "with_ns":          [True, False],
                 "profile":          [""],
+                "partition_ps":     ["ON"],
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + []
@@ -992,6 +1057,7 @@ config_PSA_API_gnu = {"seed_params": {
                 "with_bl2":         [True],
                 "with_ns":          [True, False],
                 "profile":          [""],
+                "partition_ps":     ["ON"],
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + []
@@ -1010,6 +1076,7 @@ config_PSA_FF_gnu = {"seed_params": {
                 "with_bl2":         [True],
                 "with_ns":          [True, False],
                 "profile":          [""],
+                "partition_ps":     ["ON"],
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + []
@@ -1031,6 +1098,7 @@ config_PSA_API_OTP_gnu = {"seed_params": {
                 "with_bl2":         [True],
                 "with_ns":          [True, False],
                 "profile":          [""],
+                "partition_ps":     ["ON"],
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + []
@@ -1049,6 +1117,7 @@ config_PSA_FF_OTP_gnu = {"seed_params": {
                 "with_bl2":         [True],
                 "with_ns":          [True, False],
                 "profile":          [""],
+                "partition_ps":     ["ON"],
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + []
@@ -1067,6 +1136,7 @@ config_PSOC64_gnu = {"seed_params": {
                 "with_bl2":         [False],
                 "with_ns":          [True, False],
                 "profile":          [""],
+                "partition_ps":     ["ON"],
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + []
@@ -1088,36 +1158,39 @@ config_nightly_gnu = {"seed_params": {
                 "with_bl2":         [True, False],
                 "with_ns":          [True, False],
                 "profile":          [""],
+                "partition_ps":     ["ON"],
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + [
                     ("mps2/an519", "toolchain_GNUARM.cmake", "*",
-                     "*", "*", "*", "Minsizerel", "*", "*", "*", "*"),
+                     "*", "*", "*", "Minsizerel", "*", "*", "*", "*", "*"),
                     ("cypress/psoc64", "*", "*", "*",
-                     "*", "*", "Debug",  "*", "*", "*", "*"),
+                     "*", "*", "Debug",  "*", "*", "*", "*", "*"),
                     ("cypress/psoc64", "*", "*", "*",
-                     "*", "*", "*",  "*", True, True, "*"),
+                     "*", "*", "*",  "*", True, True, "*", "*"),
                 ]
                 }
 
 # Configure build manager to build the maximum number of configurations
 config_nightly_profile_gnu = {"seed_params": {
-                "tfm_platform":     ["mps2/an519", "mps2/an521"],
+                "tfm_platform":     ["mps2/an519", "mps2/an521",
+                                     "musca_b1"],
                 "toolchain_file":   ["toolchain_GNUARM.cmake"],
-                "psa_api":          [False],
-                "isolation_level":  ["1"],
+                "psa_api":          [True, False],
+                "isolation_level":  ["1", "2"],
                 "test_regression":  [True, False],
                 "test_psa_api":     ["OFF"],
                 "cmake_build_type": ["Debug", "Release", "Minsizerel"],
                 "with_otp":         [False],
                 "with_bl2":         [True, False],
                 "with_ns":          [True, False],
-                "profile":          ["profile_small"],
+                "profile":          ["profile_small", "profile_medium"],
+                "partition_ps":     ["ON", "OFF"],
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + [
                     ("mps2/an519", "toolchain_GNUARM.cmake", "*",
-                     "*", "*", "*", "Minsizerel", "*", "*", "*", "*"),
+                     "*", "*", "*", "Minsizerel", "*", "*", "*", "*", "*"),
                 ]
                 }
 
@@ -1137,6 +1210,7 @@ config_nightly_PSA_API_gnu = {"seed_params": {
                 "with_bl2":         [True],
                 "with_ns":          [True, False],
                 "profile":          [""],
+                "partition_ps":     ["ON"],
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + []
@@ -1155,6 +1229,7 @@ config_nightly_PSA_FF_gnu = {"seed_params": {
                 "with_bl2":         [True],
                 "with_ns":          [True, False],
                 "profile":          [""],
+                "partition_ps":     ["ON"],
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + []
@@ -1173,6 +1248,7 @@ config_nightly_OTP_gnu = {"seed_params": {
                 "with_bl2":         [True],
                 "with_ns":          [True, False],
                 "profile":          [""],
+                "partition_ps":     ["ON"],
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + []
@@ -1192,15 +1268,16 @@ config_pp_test_gnu = {"seed_params": {
                 "with_bl2":         [True],
                 "with_ns":          [True, False],
                 "profile":          ["", "profile_small"],
+                "partition_ps":     ["ON"],
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + [
                     ("musca_b1", "*", "*", "*", "*", "*",
-                     "*",  "*", "*", "*", "profile_small"),
+                     "*",  "*", "*", "*", "profile_small", "*"),
                     ("*", "*", True, "*", "*", "*",
-                     "*",  "*", "*", "*", "profile_small"),
+                     "*",  "*", "*", "*", "profile_small", "*"),
                     ("*", "*", "*", "2", "*", "*",
-                     "*",  "*", "*", "*", "profile_small"),
+                     "*",  "*", "*", "*", "profile_small", "*"),
                 ]
                 }
 
@@ -1217,6 +1294,7 @@ config_pp_OTP_gnu = {"seed_params": {
                 "with_bl2":         [True],
                 "with_ns":          [True, False],
                 "profile":          [""],
+                "partition_ps":     ["ON"],
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + []
@@ -1239,6 +1317,7 @@ config_pp_PSA_API_gnu = {"seed_params": {
                 "with_bl2":         [True],
                 "with_ns":          [True, False],
                 "profile":          [""],
+                "partition_ps":     ["ON"],
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + []
@@ -1257,6 +1336,7 @@ config_pp_PSoC64_gnu = {"seed_params": {
                 "with_bl2":         [False],
                 "with_ns":          [True, False],
                 "profile":          [""],
+                "partition_ps":     ["ON"],
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + []

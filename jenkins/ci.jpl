@@ -80,8 +80,8 @@ def generateLavaParam(build_params) {
       }
   else if (build_params["BL2"]        == "True"          && \
       build_params["NS"]              == "True"          && \
-      build_params["PSA_API"]         == "False"         && \
-      build_params["ISOLATION_LEVEL"] == "1"             && \
+      build_params["PSA_API"]         == "True"          && \
+      build_params["ISOLATION_LEVEL"] == "2"             && \
       build_params["PROFILE"]         == "profile_medium"&& \
       build_params["TEST_REGRESSION"] == "False"         && \
       build_params["TEST_PSA_API"]    == "OFF") {
@@ -125,8 +125,8 @@ def generateLavaParam(build_params) {
       }
   else if (build_params["BL2"]        == "True"          && \
       build_params["NS"]              == "True"          && \
-      build_params["PSA_API"]         == "False"         && \
-      build_params["ISOLATION_LEVEL"] == "1"             && \
+      build_params["PSA_API"]         == "True"         && \
+      build_params["ISOLATION_LEVEL"] == "2"             && \
       build_params["PROFILE"]         == "profile_medium"&& \
       build_params["TEST_REGRESSION"] == "True"          && \
       build_params["TEST_PSA_API"]    == "OFF") {
@@ -213,7 +213,8 @@ python3 ./configs.py -g ${filter_group.replace(" ", " -g ")} ${config}
     if (build_res.result in failure_states) {
       error("Build failed at ${build_url}")
     }
-    else if (params_collection["NS"] == "False") {
+    else if (params_collection["NS"] == "False" ||
+             params_collection["PARTITION_PS"] == "OFF") {
       print("LAVA is not needed for ${build_url}")
     }
     else {
