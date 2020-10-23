@@ -555,7 +555,7 @@ class TFM_Build_Manager(structuredTask):
             if list(i)[5] != "OFF":    #TEST_PSA_API
                 config_param.append(mapTestPsaApi[list(i)[5]])
             config_param.append(list(i)[6]) # BUILD_TYPE
-            if list(i)[7]:  # OTP
+            if list(i)[7] == "ENABLED":  # OTP
                 config_param.append("OTP")
             if list(i)[8]:  # BL2
                 config_param.append("BL2")
