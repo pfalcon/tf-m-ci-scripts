@@ -62,7 +62,7 @@ _common_tfm_builder_cfg = {
         "-DPSA_ARCH_TESTS_PATH=%(codebase_root_dir)s/../psa-arch-tests " + \
         "-DMCUBOOT_PATH=%(codebase_root_dir)s/../mcuboot " + \
         "-DTFM_PROFILE=%(profile)s " + \
-        "-DTFM_PARTITION_PS=%(partition_ps)s " + \
+        "-DTFM_PARTITION_PROTECTED_STORAGE=%(partition_ps)s " + \
         "%(codebase_root_dir)s",
 
     # A small subset of  string substitution params is allowed in commands.
