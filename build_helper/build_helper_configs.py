@@ -136,8 +136,9 @@ _common_tfm_builder_cfg = {
 
 # List of all build configs that are impossible under all circumstances
 _common_tfm_invalid_configs = [
-    # LVL2 requires PSA api
+    # LVL2 and LVL3 requires PSA api
     ("*", "*", False, "2", "*", "*", "*", "*", "*", "*", "*", "*"),
+    ("*", "*", False, "3", "*", "*", "*", "*", "*", "*", "*", "*"),
     # Regression requires NS
     ("*", "*", "*", "*", True, "*", "*", "*", "*", False, "*", "*"),
     # psoc64 requires PSA api
@@ -176,6 +177,14 @@ _common_tfm_invalid_configs = [
     ("*", "*", True, "*", "*", "*", "*",  "*", "*", "*", "profile_small", "*"),
     # Profile S only supports Isolation Level 2
     ("*", "*", "*", "2", "*", "*", "*",  "*", "*", "*", "profile_small", "*"),
+    # Only AN521 and MUSCA_B1 support Isolation Level 3
+    ("mps2/an519", "*", "*", "3", "*", "*", "*",  "*", "*", "*", "*", "*"),
+    ("mps2/an539", "*", "*", "3", "*", "*", "*",  "*", "*", "*", "*", "*"),
+    ("mps3/an524", "*", "*", "3", "*", "*", "*",  "*", "*", "*", "*", "*"),
+    ("mps2/sse-200_aws", "*", "*", "3", "*", "*", "*",  "*", "*", "*", "*", "*"),
+    ("musca_a", "*", "*", "3", "*", "*", "*",  "*", "*", "*", "*", "*"),
+    ("musca_s1", "*", "*", "3", "*", "*", "*",  "*", "*", "*", "*", "*"),
+    ("cypress/psoc64", "*", "*", "3", "*", "*", "*",  "*", "*", "*", "*", "*"),
     ]
 
 # Configure build manager to build several combinations
@@ -577,7 +586,7 @@ config_release = {"seed_params": {
                 "toolchain_file":   ["toolchain_ARMCLANG.cmake",
                                      "toolchain_GNUARM.cmake"],
                 "psa_api":          [True, False],
-                "isolation_level":  ["1", "2"],
+                "isolation_level":  ["1", "2", "3"],
                 "test_regression":  [True, False],
                 "test_psa_api":     ["OFF"],
                 "cmake_build_type": ["Debug", "Release", "Minsizerel"],
@@ -653,7 +662,7 @@ config_nightly = {"seed_params": {
                 "toolchain_file":   ["toolchain_GNUARM.cmake",
                                      "toolchain_ARMCLANG.cmake"],
                 "psa_api":          [True, False],
-                "isolation_level":  ["1", "2"],
+                "isolation_level":  ["1", "2", "3"],
                 "test_regression":  [True, False],
                 "test_psa_api":     ["OFF"],
                 "cmake_build_type": ["Debug", "Release", "Minsizerel"],
@@ -680,7 +689,7 @@ config_nightly_profile = {"seed_params": {
                 "toolchain_file":   ["toolchain_ARMCLANG.cmake",
                                      "toolchain_GNUARM.cmake"],
                 "psa_api":          [True, False],
-                "isolation_level":  ["1", "2"],
+                "isolation_level":  ["1", "2", "3"],
                 "test_regression":  [True, False],
                 "test_psa_api":     ["OFF"],
                 "cmake_build_type": ["Debug", "Release", "Minsizerel"],
@@ -702,7 +711,7 @@ config_nightly_PSA_API = {"seed_params": {
                 "toolchain_file":   ["toolchain_GNUARM.cmake",
                                      "toolchain_ARMCLANG.cmake"],
                 "psa_api":          [True, False],
-                "isolation_level":  ["1", "2"],
+                "isolation_level":  ["1", "2", "3"],
                 "test_regression":  [False],
                 "test_psa_api":     ["CRYPTO",
                                      "PROTECTED_STORAGE",
@@ -724,7 +733,7 @@ config_nightly_PSA_FF = {"seed_params": {
                 "toolchain_file":   ["toolchain_GNUARM.cmake",
                                      "toolchain_ARMCLANG.cmake"],
                 "psa_api":          [True],
-                "isolation_level":  ["1", "2"],
+                "isolation_level":  ["1", "2", "3"],
                 "test_regression":  [False],
                 "test_psa_api":     ["IPC"],
                 "cmake_build_type": ["Debug", "Release"],
@@ -743,7 +752,7 @@ config_nightly_OTP = {"seed_params": {
                 "toolchain_file":   ["toolchain_GNUARM.cmake",
                                      "toolchain_ARMCLANG.cmake"],
                 "psa_api":          [True, False],
-                "isolation_level":  ["1", "2"],
+                "isolation_level":  ["1", "2", "3"],
                 "test_regression":  [True],
                 "test_psa_api":     ["OFF"],
                 "cmake_build_type": ["Debug", "Release"],
@@ -1153,7 +1162,7 @@ config_nightly_gnu = {"seed_params": {
                                      "mps2/sse-200_aws", "cypress/psoc64"],
                 "toolchain_file":   ["toolchain_GNUARM.cmake"],
                 "psa_api":          [True, False],
-                "isolation_level":  ["1", "2"],
+                "isolation_level":  ["1", "2", "3"],
                 "test_regression":  [True, False],
                 "test_psa_api":     ["OFF"],
                 "cmake_build_type": ["Debug", "Release", "Minsizerel"],
@@ -1180,7 +1189,7 @@ config_nightly_profile_gnu = {"seed_params": {
                                      "musca_b1"],
                 "toolchain_file":   ["toolchain_GNUARM.cmake"],
                 "psa_api":          [True, False],
-                "isolation_level":  ["1", "2"],
+                "isolation_level":  ["1", "2", "3"],
                 "test_regression":  [True, False],
                 "test_psa_api":     ["OFF"],
                 "cmake_build_type": ["Debug", "Release", "Minsizerel"],
@@ -1202,7 +1211,7 @@ config_nightly_PSA_API_gnu = {"seed_params": {
                 "tfm_platform":     ["mps2/an521"],
                 "toolchain_file":   ["toolchain_GNUARM.cmake"],
                 "psa_api":          [True, False],
-                "isolation_level":  ["1", "2"],
+                "isolation_level":  ["1", "2", "3"],
                 "test_regression":  [False],
                 "test_psa_api":     ["CRYPTO",
                                      "PROTECTED_STORAGE",
@@ -1224,7 +1233,7 @@ config_nightly_PSA_FF_gnu = {"seed_params": {
                 "tfm_platform":     ["mps2/an521"],
                 "toolchain_file":   ["toolchain_GNUARM.cmake"],
                 "psa_api":          [True],
-                "isolation_level":  ["1", "2"],
+                "isolation_level":  ["1", "2", "3"],
                 "test_regression":  [False],
                 "test_psa_api":     ["IPC"],
                 "cmake_build_type": ["Debug", "Release"],
@@ -1243,7 +1252,7 @@ config_nightly_OTP_gnu = {"seed_params": {
                 "tfm_platform":     ["musca_b1"],
                 "toolchain_file":   ["toolchain_GNUARM.cmake"],
                 "psa_api":          [True, False],
-                "isolation_level":  ["1", "2"],
+                "isolation_level":  ["1", "2", "3"],
                 "test_regression":  [True],
                 "test_psa_api":     ["OFF"],
                 "cmake_build_type": ["Debug", "Release"],
