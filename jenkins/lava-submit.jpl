@@ -6,7 +6,7 @@
 //
 //-------------------------------------------------------------------------------
 
-node("docker-amd64-bionic") {
+node("docker-amd64-tf-m-bionic") {
   stage("Init") {
     cleanWs()
     dir("tf-m-ci-scripts") {

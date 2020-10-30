@@ -8,7 +8,7 @@
 package org.trustedfirmware
 
 def verifyStatus(value, verify_name, category) {
-  node("docker-amd64-bionic") {
+  node("docker-amd64-tf-m-bionic") {
     cleanWs()
     dir("tf-m-ci-scripts") {
       git url: '$CI_SCRIPTS_REPO', branch: '$CI_SCRIPTS_BRANCH', credentialsId: 'GIT_SSH_KEY'
@@ -36,7 +36,7 @@ def verifyStatusInWorkspace(value, verify_name, category) {
 }
 
 def comment(comment) {
-  node("docker-amd64-bionic") {
+  node("docker-amd64-tf-m-bionic") {
     cleanWs()
     dir("tf-m-ci-scripts") {
       git url: '$CI_SCRIPTS_REPO', branch: '$CI_SCRIPTS_BRANCH', credentialsId: 'GIT_SSH_KEY'
