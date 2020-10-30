@@ -14,17 +14,16 @@ import sys
 
 __copyright__ = """
 /*
- * Copyright (c) 2018-2019, Arm Limited. All rights reserved.
+ * Copyright (c) 2018-2020, Arm Limited. All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  *
  */
  """
-__author__ = "Minos Galanakis"
-__email__ = "minos.galanakis@linaro.org"
+
+__author__ = "tf-m@lists.trustedfirmware.org"
 __project__ = "Trusted Firmware-M Open CI"
-__status__ = "stable"
-__version__ = "1.1"
+__version__ = "1.2.0"
 
 try:
     from tfm_ci_pylib.fastmodel_wrapper import FastmodelConfigMap
