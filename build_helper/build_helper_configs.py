@@ -160,9 +160,10 @@ _common_tfm_invalid_configs = [
     ("cypress/psoc64", "*", "*", "*", "*", "*", "*",  "*", True, "*", "*", "*"),
     # Musca b1 does not support Profile S
     ("musca_b1", "*", "*", "*", "*", "*", "*",  "*", "*", "*", "profile_small", "*"),
-    # PARTITION_PS could only be OFF for Profile M
+    # PARTITION_PS could be OFF only for Profile S and M
     ("*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "", "OFF"),
-    ("*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "profile_small", "OFF"),
+    # PARTITION_PS should be OFF for Profile S
+    ("*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "profile_small", "ON"),
     # Proile M only support for PSA_API
     ("*", "*", False, "*", "*", "*", "*", "*", "*", "*", "profile_medium", "*"),
     # Profile M only support for Isolation Level 2
