@@ -161,6 +161,8 @@ _common_tfm_invalid_configs = [
     ("musca_s1", "*", "*", "*", "*", "*", "*",  "*", False, "*", "*", "*"),
     # psoc64 cannot use BL2
     ("cypress/psoc64", "*", "*", "*", "*", "*", "*",  "*", True, "*", "*", "*"),
+    # psoc64 does not support Debug build type
+    ("cypress/psoc64", "*", "*", "*", "*", "*", "Debug",  "*", "*", "*", "*", "*"),
     # Musca b1 does not support Profile S
     ("musca_b1", "*", "*", "*", "*", "*", "*",  "*", "*", "*", "profile_small", "*"),
     # PARTITION_PS could be OFF only for Profile S and M
@@ -395,7 +397,7 @@ config_full = {"seed_params": {
                "isolation_level":  ["1", "2"],
                "test_regression":  [True, False],
                "test_psa_api":     ["OFF"],
-               "cmake_build_type": ["Debug", "Release"],
+               "cmake_build_type": ["Debug", "Release", "RelWithDebInfo"],
                "with_otp":         ["off"],
                "with_bl2":         [True, False],
                "with_ns":          [True, False],
@@ -408,6 +410,18 @@ config_full = {"seed_params": {
                     "*", "*", "Debug",  "*", "*", "*", "*", "*"),
                    ("cypress/psoc64", "*", "*", "*",
                     "*", "*", "*",  "*", True, True, "*", "*"),
+                   ("mps2/an521", "*", "*", "*",
+                    "*", "*", "RelWithDebInfo",  "*", "*", "*", "*", "*"),
+                   ("mps2/an519", "*", "*", "*",
+                    "*", "*", "RelWithDebInfo",  "*", "*", "*", "*", "*"),
+                   ("musca_a", "*", "*", "*",
+                    "*", "*", "RelWithDebInfo",  "*", "*", "*", "*", "*"),
+                   ("musca_b1", "*", "*", "*",
+                    "*", "*", "RelWithDebInfo",  "*", "*", "*", "*", "*"),
+                   ("mps2/an539", "*", "*", "*",
+                    "*", "*", "RelWithDebInfo",  "*", "*", "*", "*", "*"),
+                   ("mps3/an524", "*", "*", "*",
+                    "*", "*", "RelWithDebInfo",  "*", "*", "*", "*", "*"),
                ]
                }
 
@@ -421,7 +435,7 @@ config_full_gnuarm = {"seed_params": {
                "isolation_level":  ["1", "2"],
                "test_regression":  [True, False],
                "test_psa_api":     ["OFF"],
-               "cmake_build_type": ["Debug", "Release"],
+               "cmake_build_type": ["Debug", "Release", "RelWithDebInfo"],
                "with_otp":         ["off"],
                "with_bl2":         [True, False],
                "with_ns":          [True, False],
@@ -434,6 +448,18 @@ config_full_gnuarm = {"seed_params": {
                     "*", "*", "Debug",  "*", "*", "*", "*", "*"),
                    ("cypress/psoc64", "*", "*", "*",
                     "*", "*", "*",  "*", True, True, "*", "*"),
+                   ("mps2/an521", "*", "*", "*",
+                    "*", "*", "RelWithDebInfo",  "*", "*", "*", "*", "*"),
+                   ("mps2/an519", "*", "*", "*",
+                    "*", "*", "RelWithDebInfo",  "*", "*", "*", "*", "*"),
+                   ("musca_a", "*", "*", "*",
+                    "*", "*", "RelWithDebInfo",  "*", "*", "*", "*", "*"),
+                   ("musca_b1", "*", "*", "*",
+                    "*", "*", "RelWithDebInfo",  "*", "*", "*", "*", "*"),
+                   ("mps2/an539", "*", "*", "*",
+                    "*", "*", "RelWithDebInfo",  "*", "*", "*", "*", "*"),
+                   ("mps3/an524", "*", "*", "*",
+                    "*", "*", "RelWithDebInfo",  "*", "*", "*", "*", "*"),
                ]
                }
 
@@ -665,7 +691,7 @@ config_nightly = {"seed_params": {
                 "isolation_level":  ["1", "2", "3"],
                 "test_regression":  [True, False],
                 "test_psa_api":     ["OFF"],
-                "cmake_build_type": ["Debug", "Release", "Minsizerel"],
+                "cmake_build_type": ["Debug", "Release", "Minsizerel", "RelWithDebInfo"],
                 "with_otp":         ["off"],
                 "with_bl2":         [True, False],
                 "with_ns":          [True, False],
@@ -680,6 +706,22 @@ config_nightly = {"seed_params": {
                      "*", "*", "Debug",  "*", "*", "*", "*", "*"),
                     ("cypress/psoc64", "*", "*", "*",
                      "*", "*", "*",  "*", True, True, "*", "*"),
+                    ("mps2/an521", "*", "*", "*",
+                     "*", "*", "RelWithDebInfo",  "*", "*", "*", "*", "*"),
+                    ("mps2/an519", "*", "*", "*",
+                     "*", "*", "RelWithDebInfo",  "*", "*", "*", "*", "*"),
+                    ("musca_a", "*", "*", "*",
+                     "*", "*", "RelWithDebInfo",  "*", "*", "*", "*", "*"),
+                    ("musca_b1", "*", "*", "*",
+                     "*", "*", "RelWithDebInfo",  "*", "*", "*", "*", "*"),
+                    ("musca_s1", "*", "*", "*",
+                     "*", "*", "RelWithDebInfo",  "*", "*", "*", "*", "*"),
+                    ("mps2/an539", "*", "*", "*",
+                     "*", "*", "RelWithDebInfo",  "*", "*", "*", "*", "*"),
+                    ("mps3/an524", "*", "*", "*",
+                     "*", "*", "RelWithDebInfo",  "*", "*", "*", "*", "*"),
+                    ("mps2/sse-200_aws", "*", "*", "*",
+                     "*", "*", "RelWithDebInfo",  "*", "*", "*", "*", "*"),
                 ]
                 }
 
@@ -1165,7 +1207,7 @@ config_nightly_gnu = {"seed_params": {
                 "isolation_level":  ["1", "2", "3"],
                 "test_regression":  [True, False],
                 "test_psa_api":     ["OFF"],
-                "cmake_build_type": ["Debug", "Release", "Minsizerel"],
+                "cmake_build_type": ["Debug", "Release", "Minsizerel", "RelWithDebInfo"],
                 "with_otp":         ["off"],
                 "with_bl2":         [True, False],
                 "with_ns":          [True, False],
@@ -1180,6 +1222,22 @@ config_nightly_gnu = {"seed_params": {
                      "*", "*", "Debug",  "*", "*", "*", "*", "*"),
                     ("cypress/psoc64", "*", "*", "*",
                      "*", "*", "*",  "*", True, True, "*", "*"),
+                    ("mps2/an521", "*", "*", "*",
+                    "*", "*", "RelWithDebInfo",  "*", "*", "*", "*", "*"),
+                    ("mps2/an519", "*", "*", "*",
+                     "*", "*", "RelWithDebInfo",  "*", "*", "*", "*", "*"),
+                    ("musca_a", "*", "*", "*",
+                     "*", "*", "RelWithDebInfo",  "*", "*", "*", "*", "*"),
+                    ("musca_b1", "*", "*", "*",
+                     "*", "*", "RelWithDebInfo",  "*", "*", "*", "*", "*"),
+                    ("musca_s1", "*", "*", "*",
+                     "*", "*", "RelWithDebInfo",  "*", "*", "*", "*", "*"),
+                    ("mps2/an539", "*", "*", "*",
+                     "*", "*", "RelWithDebInfo",  "*", "*", "*", "*", "*"),
+                    ("mps3/an524", "*", "*", "*",
+                     "*", "*", "RelWithDebInfo",  "*", "*", "*", "*", "*"),
+                    ("mps2/sse-200_aws", "*", "*", "*",
+                     "*", "*", "RelWithDebInfo",  "*", "*", "*", "*", "*"),
                 ]
                 }
 
