@@ -151,7 +151,9 @@ class TFM_Build_Manager(structuredTask):
         codebase_dir = os.path.join(os.getcwd(),"trusted-firmware-m")
         build_dir=os.path.join(os.getcwd(),"trusted-firmware-m/build")
         build_config = self.get_build_config(config_details, config, silence=silence_stderr, build_dir=build_dir, codebase_dir=codebase_dir)
-        build_commands = [build_config["config_template"], build_config["build_cmds"][0]]
+        build_commands = [build_config["config_template"]]
+        for command in build_config["build_cmds"]:
+            build_commands.append(command)
         print(" ;\n".join(build_commands))
 
     def pre_eval(self):
@@ -372,7 +374,7 @@ class TFM_Build_Manager(structuredTask):
         # Extract the platform specific elements of config
         for key in ["build_cmds", "required_artefacts"]:
             try:
-                if i.tfm_platform in self.tbm_common_cfg[key].keys():
+                if i.tfm_platform in self.tbm_common_cfg[key].keys() and i.with_ns:
                     build_cfg[key] += deepcopy(self.tbm_common_cfg[key]
                                                [i.tfm_platform])
             except Exception as E:
@@ -399,6 +401,9 @@ class TFM_Build_Manager(structuredTask):
                             "profile": "" if i.profile=="N.A" else i.profile,
                             "partition_ps": i.partition_ps}
         build_cfg["config_template"] %= overwrite_params
+        if len(build_cfg["build_cmds"]) > 1:
+            overwrite_build_dir = {"_tbm_build_dir_": build_dir}
+            build_cfg["build_cmds"][1] %= overwrite_build_dir
         return build_cfg
 
     def post_eval(self):

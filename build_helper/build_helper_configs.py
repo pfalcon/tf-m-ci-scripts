@@ -75,33 +75,33 @@ _common_tfm_builder_cfg = {
     # ALL commands will be executed for every build.
     # Other keys will append extra commands when matching target_platform
     "build_cmds": {"all": ["cmake --build ./ -- install"],
-                   "MUSCA_A": [("srec_cat "
+                   "musca_a": [("srec_cat "
                                 "%(_tbm_build_dir_)s/bin/"
                                 "bl2.bin "
                                 "-Binary -offset 0x200000 "
                                 "%(_tbm_build_dir_)s/bin/"
-                                "%tfm_s_ns_signed.bin "
+                                "tfm_s_ns_signed.bin "
                                 "-Binary -offset 0x220000 -o "
                                 "%(_tbm_build_dir_)s/bin/"
-                                "/tfm.hex -Intel")],
-                   "MUSCA_B1": [("srec_cat "
+                                "tfm.hex -Intel")],
+                   "musca_b1": [("srec_cat "
                                  "%(_tbm_build_dir_)s/bin/"
                                  "bl2.bin "
                                  "-Binary -offset 0xA000000 "
                                  "%(_tbm_build_dir_)s/bin/"
-                                 "%tfm_s_ns_signed.bin "
+                                 "tfm_s_ns_signed.bin "
                                  "-Binary -offset 0xA020000 -o "
                                  "%(_tbm_build_dir_)s/bin/"
-                                 "/tfm.hex -Intel")],
-                   "MUSCA_S1": [("srec_cat "
+                                 "tfm.hex -Intel")],
+                   "musca_s1": [("srec_cat "
                                  "%(_tbm_build_dir_)s/bin/"
                                  "bl2.bin "
                                  "-Binary -offset 0xA000000 "
                                  "%(_tbm_build_dir_)s/bin/"
-                                 "%tfm_s_ns_signed.bin "
+                                 "tfm_s_ns_signed.bin "
                                  "-Binary -offset 0xA020000 -o "
                                  "%(_tbm_build_dir_)s/bin/"
-                                 "/tfm.hex -Intel")]
+                                 "tfm.hex -Intel")]
                    },
 
     # (Optional) If set will fail if those artefacts are missing post build
@@ -110,25 +110,25 @@ _common_tfm_builder_cfg = {
                            "tfm_s.bin",
                            "%(_tbm_build_dir_)s/bin/"
                            "tfm_ns.bin"],
-                           "MUSCA_A": [
+                           "musca_a": [
                            "%(_tbm_build_dir_)s/bin/"
                            "tfm.hex",
                            "%(_tbm_build_dir_)s/bin/"
-                           "mcuboot.bin",
+                           "bl2.bin",
                            "%(_tbm_build_dir_)s/bin/"
                            "tfm_sign.bin"],
-                           "MUSCA_B1": [
+                           "musca_b1": [
                            "%(_tbm_build_dir_)s/bin/"
                            "tfm.hex",
                            "%(_tbm_build_dir_)s/bin/"
-                           "mcuboot.bin",
+                           "bl2.bin",
                            "%(_tbm_build_dir_)s/bin/"
                            "tfm_sign.bin"],
-                           "MUSCA_S1": [
+                           "musca_s1": [
                            "%(_tbm_build_dir_)s/bin/"
                            "tfm.hex",
                            "%(_tbm_build_dir_)s/bin/"
-                           "mcuboot.bin",
+                           "bl2.bin",
                            "%(_tbm_build_dir_)s/bin/"
                            "tfm_sign.bin"]
                            }
