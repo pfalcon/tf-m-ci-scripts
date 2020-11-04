@@ -140,6 +140,8 @@ _common_tfm_invalid_configs = [
     ("*", "*", False, "2", "*", "*", "*", "*", "*", "*", "*", "*"),
     # Regression requires NS
     ("*", "*", "*", "*", True, "*", "*", "*", "*", False, "*", "*"),
+    # psoc64 requires PSA api
+    ("cypress/psoc64", "*", False, "*", "*", "*", "*",  "*", "*", "*", "*", "*"),
     # No PSA_ACK with regression
     ("*", "*", "*", "*", True, "IPC", "*", "*", "*", "*", "*", "*"),
     ("*", "*", "*", "*", True, "CRYPTO", "*", "*", "*", "*", "*", "*"),
