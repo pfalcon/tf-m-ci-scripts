@@ -20,7 +20,7 @@ mkdir ../trusted-firmware-m/build
 cd ../trusted-firmware-m/build
 
 cmake -S .. -B . -DTFM_PLATFORM=mps2/an521 \
-                 -DCMAKE_TOOLCHAIN_FILE=toolchain_GNUARM.cmake \
+                 -DTFM_TOOLCHAIN_FILE=../toolchain_GNUARM.cmake \
                  -DMBEDCRYPTO_PATH=../../mbedtls \
                  -DTFM_TEST_REPO_PATH=../../tf-m-tests \
                  -DMCUBOOT_PATH=../../mcuboot
