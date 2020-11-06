@@ -69,6 +69,15 @@ def generateLavaParam(build_params) {
       build_params["PROFILE"]         == "N.A") {
         params += string(name: "PROJ_CONFIG", value: "ConfigCoreIPCTfmLevel2")
       }
+  else if (build_params["BL2"]        == "True"  && \
+      build_params["NS"]              == "True"  && \
+      build_params["PSA_API"]         == "True"  && \
+      build_params["ISOLATION_LEVEL"] == "3"     && \
+      build_params["TEST_REGRESSION"] == "False" && \
+      build_params["TEST_PSA_API"]    == "OFF"   && \
+      build_params["PROFILE"]         == "N.A") {
+        params += string(name: "PROJ_CONFIG", value: "ConfigCoreIPCTfmLevel3")
+      }
   else if (build_params["BL2"]        == "True"          && \
       build_params["NS"]              == "True"          && \
       build_params["PSA_API"]         == "False"         && \
@@ -114,6 +123,15 @@ def generateLavaParam(build_params) {
       build_params["PROFILE"]         == "N.A") {
         params += string(name: "PROJ_CONFIG", value: "ConfigRegressionIPCTfmLevel2")
       }
+  else if (build_params["BL2"]        == "True"  && \
+      build_params["NS"]              == "True"  && \
+      build_params["PSA_API"]         == "True"  && \
+      build_params["ISOLATION_LEVEL"] == "3"     && \
+      build_params["TEST_REGRESSION"] == "True"  && \
+      build_params["TEST_PSA_API"]    == "OFF"   && \
+      build_params["PROFILE"]         == "N.A") {
+        params += string(name: "PROJ_CONFIG", value: "ConfigRegressionIPCTfmLevel3")
+      }
   else if (build_params["BL2"]        == "True"          && \
       build_params["NS"]              == "True"          && \
       build_params["PSA_API"]         == "False"         && \
@@ -158,6 +176,15 @@ def generateLavaParam(build_params) {
       build_params["TEST_PSA_API"]    != "OFF"   && \
       build_params["PROFILE"]         == "N.A") {
         params += string(name: "PROJ_CONFIG", value: "ConfigPsaApiTestIPCTfmLevel2")
+      }
+  else if (build_params["BL2"]        == "True"  && \
+      build_params["NS"]              == "True"  && \
+      build_params["PSA_API"]         == "True"  && \
+      build_params["ISOLATION_LEVEL"] == "3"     && \
+      build_params["TEST_REGRESSION"] == "False" && \
+      build_params["TEST_PSA_API"]    != "OFF"   && \
+      build_params["PROFILE"]         == "N.A") {
+        params += string(name: "PROJ_CONFIG", value: "ConfigPsaApiTestIPCTfmLevel3")
       }
   else {
     params += string(name: "PROJ_CONFIG", value: "ConfigDefault")
