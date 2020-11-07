@@ -30,10 +30,10 @@ actions:
     namespace: docker
     method: fvp
     docker:
-      name: {{ docker_prefix }}/lava-fvp-mps2
+      name: {{ docker_prefix }}/fvp:fvp_mps2_aemv8m_11.12_38
     prompts:
     - 'root@lava '
-    image: /opt/model/FVP_MPS2_AEMv8M
+    image: /opt/model/FVP_MPS2_AEMv8M/models/Linux64_GCC-6.4/FVP_MPS2_AEMv8M
     timeout:
       minutes: 5
     console_string: 'telnetterminal0: Listening for serial connection on port (?P<PORT>\d+)'
