@@ -33,6 +33,61 @@ mapTestPsaApi = ["OFF":                      "",
                  "INITIAL_ATTESTATION":      "Attest",
                  "IPC":                      "FF"]
 
+// BL2, NS, PSA_API, ISOLATION_LEVEL, TEST_REG, TEST_PSA_API, PROFILE, PARTITION_PS, OTP
+mapConfigs = [
+  ["True", "True", "False", "1", "False", "OFF",                      "N.A",            "Default"],
+  ["True", "True", "True",  "1", "False", "OFF",                      "N.A",            "CoreIPC"],
+  ["True", "True", "True",  "2", "False", "OFF",                      "N.A",            "CoreIPCTfmLevel2"],
+  ["True", "True", "True",  "3", "False", "OFF",                      "N.A",            "CoreIPCTfmLevel3"],
+  ["True", "True", "False", "1", "False", "OFF",                      "profile_small",  "DefaultProfileS"],
+  ["True", "True", "True",  "2", "False", "OFF",                      "profile_medium", "DefaultProfileM"],
+  ["True", "True", "False", "1", "True",  "OFF",                      "N.A",            "Regression"],
+  ["True", "True", "True",  "1", "True",  "OFF",                      "N.A",            "RegressionIPC"],
+  ["True", "True", "True",  "2", "True",  "OFF",                      "N.A",            "RegressionIPCTfmLevel2"],
+  ["True", "True", "True",  "3", "True",  "OFF",                      "N.A",            "RegressionIPCTfmLevel3"],
+  ["True", "True", "False", "1", "True",  "OFF",                      "profile_small",  "RegressionProfileS"],
+  ["True", "True", "True",  "2", "True",  "OFF",                      "profile_medium", "RegressionProfileM"],
+  ["True", "True", "False", "1", "False", "INTERNAL_TRUSTED_STORAGE", "N.A",            "PsaApiTest (ITS)"],
+  ["True", "True", "False", "1", "False", "PROTECTED_STORAGE",        "N.A",            "PsaApiTest (PS)"],
+  ["True", "True", "False", "1", "False", "CRYPTO",                   "N.A",            "PsaApiTest (Crypto)"],
+  ["True", "True", "False", "1", "False", "INITIAL_ATTESTATION",      "N.A",            "PsaApiTest (Attest)"],
+  ["True", "True", "False", "1", "False", "IPC",                      "N.A",            "PsaApiTest (FF)"],
+  ["True", "True", "True",  "1", "False", "INTERNAL_TRUSTED_STORAGE", "N.A",            "PsaApiTestIPC (ITS)"],
+  ["True", "True", "True",  "1", "False", "PROTECTED_STORAGE",        "N.A",            "PsaApiTestIPC (PS)"],
+  ["True", "True", "True",  "1", "False", "CRYPTO",                   "N.A",            "PsaApiTestIPC (Crypto)"],
+  ["True", "True", "True",  "1", "False", "INITIAL_ATTESTATION",      "N.A",            "PsaApiTestIPC (Attest)"],
+  ["True", "True", "True",  "1", "False", "IPC",                      "N.A",            "PsaApiTestIPC (FF)"],
+  ["True", "True", "True",  "2", "False", "INTERNAL_TRUSTED_STORAGE", "N.A",            "PsaApiTestIPCTfmLevel2 (ITS)"],
+  ["True", "True", "True",  "2", "False", "PROTECTED_STORAGE",        "N.A",            "PsaApiTestIPCTfmLevel2 (PS)"],
+  ["True", "True", "True",  "2", "False", "CRYPTO",                   "N.A",            "PsaApiTestIPCTfmLevel2 (Crypto)"],
+  ["True", "True", "True",  "2", "False", "INITIAL_ATTESTATION",      "N.A",            "PsaApiTestIPCTfmLevel2 (Attest)"],
+  ["True", "True", "True",  "2", "False", "IPC",                      "N.A",            "PsaApiTestIPCTfmLevel2 (FF)"],
+  ["True", "True", "True",  "3", "False", "INTERNAL_TRUSTED_STORAGE", "N.A",            "PsaApiTestIPCTfmLevel3 (ITS)"],
+  ["True", "True", "True",  "3", "False", "PROTECTED_STORAGE",        "N.A",            "PsaApiTestIPCTfmLevel3 (PS)"],
+  ["True", "True", "True",  "3", "False", "CRYPTO",                   "N.A",            "PsaApiTestIPCTfmLevel3 (Crypto)"],
+  ["True", "True", "True",  "3", "False", "INITIAL_ATTESTATION",      "N.A",            "PsaApiTestIPCTfmLevel3 (Attest)"],
+  ["True", "True", "True",  "3", "False", "IPC",                      "N.A",            "PsaApiTestIPCTfmLevel3 (FF)"],
+]
+
+cfgs = ["Default", "CoreIPC", "CoreIPCTfmLevel2", "CoreIPCTfmLevel3",
+        "Regression", "RegressionIPC",
+        "RegressionIPCTfmLevel2", "RegressionIPCTfmLevel3",
+        "DefaultProfileS", "RegressionProfileS",
+        "DefaultProfileM", "RegressionProfileM", "RegressionProfileM PSOFF",
+        "PsaApiTest (Attest)", "PsaApiTestIPC (Attest)",
+        "PsaApiTestIPCTfmLevel2 (Attest)",
+        "PsaApiTest (Crypto)", "PsaApiTestIPC (Crypto)",
+        "PsaApiTestIPCTfmLevel2 (Crypto)",
+        "PsaApiTest (PS)", "PsaApiTestIPC (PS)",
+        "PsaApiTestIPCTfmLevel2 (PS)",
+        "PsaApiTest (ITS)", "PsaApiTestIPC (ITS)",
+        "PsaApiTestIPCTfmLevel2 (ITS)",
+        "PsaApiTestIPC (FF)",
+        "PsaApiTestIPCTfmLevel2 (FF)",
+        "PsaApiTestIPCTfmLevel3 (ITS)", "PsaApiTestIPCTfmLevel3 (PS)",
+        "PsaApiTestIPCTfmLevel3 (Crypto)", "PsaApiTestIPCTfmLevel3 (Attest)",
+        "PsaApiTestIPCTfmLevel3 (FF)"]
+
 def generateLavaParam(build_params) {
   def params = []
   params += string(name: "TARGET_PLATFORM", \
@@ -306,97 +361,88 @@ def emailNotification(results, stage) {
 def generateCsvContent(results) {
   def resultsParam = []
   results.each { result ->
-    resultsParam.add([result.value[1], \
-                      result.value[0].getResult(), \
-                      result.value[2]['TARGET_PLATFORM'], \
-                      result.value[2]['COMPILER'], \
-                      result.value[2]['PROJ_CONFIG'], \
-                      result.value[2]['CMAKE_BUILD_TYPE'], \
-                      result.value[2]['BL2'], \
-                      result.value[2]['PSA_API_SUITE']])
+    if (result.value[2]['BL2'] == "True") {
+      resultsParam.add([result.value[1], \
+                        result.value[0].getResult(), \
+                        result.value[2]['TFM_PLATFORM'], \
+                        result.value[2]['TOOLCHAIN_FILE'], \
+                        result.value[2]['CMAKE_BUILD_TYPE'], \
+                        result.value[2]['BL2'], \
+                        result.value[2]['NS'], \
+                        result.value[2]['PSA_API'], \
+                        result.value[2]['ISOLATION_LEVEL'], \
+                        result.value[2]['TEST_REGRESSION'], \
+                        result.value[2]['TEST_PSA_API'], \
+                        result.value[2]['PROFILE'], \
+                        result.value[2]['PARTITION_PS'], \
+                        result.value[2]['OTP']])
+    }
   }
-  def configs = [] as Set
   resultsParam.each { result ->
-    if (result[2] == 'MUSCA_B1') {
-      if (result[0].contains('_OTP_')) {
-        result[2] += '_OTP'
+    if (result[2] == 'musca_b1') {
+      if (result[13] != 'off') {
+        result[2] = 'musca_b1_OTP'
       }
     }
-    if (result[6] == 'True') {
-      result[6] = 'BL2'
+    result[3] = mapCompiler[result[3]]
+    build_params = result[5..12]
+    configName = ""
+    for (map_cfg in mapConfigs) {
+      if (build_params[0..6] == map_cfg[0..6]) {
+        configName = map_cfg[7]
+        break
+      }
     }
-    else {
-      result[6] = 'NOBL2'
+    if (configName == "") {
+      configName = "Default"
     }
-    config = result[4]
-    if (result[7] != "''") {
-      config += ' (' + result[7] + ') '
+    else if (configName == "RegressionProfileM") {
+      if (build_params[7] == "OFF") {
+        configName = "RegressionProfileM PSOFF"
+      }
     }
-    configs.add(config)
-    result.add(config)
+    result.add(configName)
   }
-  configs.sort()
   def csvContent = []
   resultsParam.each { result ->
-    def configExists = false
-    for (csvLine in csvContent) {
-      if (csvLine[0] == result[2] && \
-          csvLine[1] == result[3] && \
-          csvLine[2] == result[5] && \
-          csvLine[3] == result[6]) {
-            csvLine[4][result[8]] = result[1]
-            configExists = true
-            break
+    current_row = result[2..4]
+    cfgs.each {cfg ->
+      if (cfg == result[14]) {
+        current_row.add(cfg)
+        current_row.add(result[1])
+      }
+    }
+    csvContent.add(current_row)
+  }
+  csvContent.sort{a,b -> a[0] <=> b[0] ?: a[1] <=> b[1] ?: a[2] <=> b[2]}
+  build_summary = []
+  current_platform = ""
+  current_compiler = ""
+  current_build_type = ""
+  csvContent.each { build_cfg ->
+    if (current_platform != build_cfg[0] || \
+        current_compiler != build_cfg[1] || \
+        current_build_type != build_cfg[2]) {
+          current_platform = build_cfg[0]
+          current_compiler = build_cfg[1]
+          current_build_type = build_cfg[2]
+          csv_line = [current_platform, current_compiler, current_build_type]
+          cfgs.each {
+            csv_line.add("N.A.")
           }
-    }
-    if (!configExists) {
-      csvContent.add([result[2], result[3], result[5], result[6], [:]])
-      csvContent.last()[4][result[8]] = result[1]
+          build_summary.add(csv_line)
+        }
+    i = 0
+    cfgs.each { cfg ->
+      if (cfg == build_cfg[3]) {
+        build_summary[-1][3+i] = build_cfg[4]
+      }
+      i += 1
     }
   }
-  csvContent.sort{a,b -> a[0] <=> b[0] ?: a[1] <=> b[1] ?: a[2] <=> b[2] ?: a[3] <=> b[3]}
-  def csvTable = [['Platform', 'Compiler', 'Cmake Build Type', 'BL2']]
-  csvTable[0] += configs
-  def currentPlatform = ''
-  def currentCompiler = ''
-  def currentBuild = ''
-  csvContent.each { csvLine ->
-    // Modify CSV output format for a better layout
-    if (currentPlatform == csvLine[0]) {
-      csvTable.add([''])
-    }
-    else {
-      csvTable.add([csvLine[0]])
-      currentPlatform = csvLine[0]
-      currentCompiler = ''
-      currentBuild = ''
-    }
-    if (currentCompiler == csvLine[1]) {
-      csvTable.last().add('')
-    }
-    else {
-      csvTable.last().add(csvLine[1])
-      currentCompiler = csvLine[1]
-      currentBuild = ''
-    }
-    if (currentBuild == csvLine[2]) {
-      csvTable.last().add('')
-    }
-    else {
-      csvTable.last().add(csvLine[2])
-      currentBuild = csvLine[2]
-    }
-    csvTable.last().add(csvLine[3])
-    configs.each { config ->
-      if (csvLine[4].containsKey(config)) {
-        csvTable.last().add(csvLine[4][config])
-      }
-      else {
-        csvTable.last().add('N/A')
-      }
-    }
-  }
-  return csvTable
+  build_summary.add(0, ['Platform', 'Compiler', 'Cmake Build Type'])
+  build_summary[0] += cfgs
+  return build_summary
 }
 
 def generateBuildCsv(results) {
