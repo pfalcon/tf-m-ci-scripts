@@ -400,6 +400,8 @@ class TFM_Build_Manager(structuredTask):
                             "with_ns": i.with_ns,
                             "profile": "" if i.profile=="N.A" else i.profile,
                             "partition_ps": i.partition_ps}
+        if i.test_psa_api == "IPC":
+            overwrite_params["test_psa_api"] = i.test_psa_api + " -DINCLUDE_PANIC_TESTS=1 "
         build_cfg["config_template"] %= overwrite_params
         if len(build_cfg["build_cmds"]) > 1:
             overwrite_build_dir = {"_tbm_build_dir_": build_dir}
