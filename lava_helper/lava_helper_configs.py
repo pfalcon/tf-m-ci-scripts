@@ -38,6 +38,7 @@ def lava_gen_get_config_subset(config,
     if not core:
         tests.pop("CoreIPC")
         tests.pop("CoreIPCTfmLevel2")
+        tests.pop("CoreIPCTfmLevel3")
     if not regression:
         tests.pop("Regression")
 
@@ -308,6 +309,43 @@ fvp_mps2_an521_bl2 = {
                 } # Monitors
             ]
         },  # Default
+        'DefaultProfileS': {
+            "binaries": {
+                "firmware": "mcuboot.axf",
+                "bootloader": "tfm_s_ns_signed.bin"
+            },
+            "monitors": [
+                {
+                    'name': 'Secure_Test_Suites_Summary',
+                    'start': r'[Sec Thread]',
+                    'end': r'system starting',
+                    'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
+                               r'(?P<test_case_id>Secure image '
+                               r'initializing)(?P<result>!)',
+                    'fixup': {"pass": "!", "fail": ""},
+                    'required': ["secure_image_initializing"]
+                } # Monitors
+            ]
+        },  # DefaultProfileS
+        'DefaultProfileM': {
+            "binaries": {
+                "firmware": "mcuboot.axf",
+                "bootloader": "tfm_s_ns_signed.bin"
+            },
+            "monitors": [
+                {
+                    'name': 'Secure_Test_Suites_Summary',
+                    'start': r'[Sec Thread]',
+                    'end': r'system starting',
+                    'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
+                               r'(?P<test_case_id>Secure image '
+                               r'initializing)(?P<result>!)',
+                    'fixup': {"pass": "!", "fail": ""},
+                    'required': ["secure_image_initializing"]
+                } # Monitors
+            ]
+        },  # DefaultProfileM
+
         'Regression': {
             "binaries": {
                 "firmware": "mcuboot.axf",
@@ -664,6 +702,24 @@ fvp_mps2_an521_bl2 = {
                 }  # Monitors
             ]
         },  # CoreIPCTfmLevel2
+        'CoreIPCTfmLevel3': {
+            "binaries": {
+                "firmware": "mcuboot.axf",
+                "bootloader": "tfm_s_ns_signed.bin"
+            },
+            "monitors": [
+                {
+                    'name': 'Secure_Test_Suites_Summary',
+                    'start': r'[Sec Thread]',
+                    'end': r'system starting',
+                    'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
+                               r'(?P<test_case_id>Secure image '
+                               r'initializing)(?P<result>!)',
+                    'fixup': {"pass": "!", "fail": ""},
+                    'required': ["secure_image_initializing"]
+                }  # Monitors
+            ]
+        },  # CoreIPCTfmLevel3
     }  # Tests
 }
 
@@ -701,6 +757,43 @@ fvp_mps2_an521_nobl2 = {
                 }
             ]
         },  # Default
+        'DefaultProfileS': {
+            "binaries": {
+                "firmware": "tfm_s.axf",
+                "bootloader": "tfm_ns.bin"
+            },
+            "monitors": [
+                {
+                    'name': 'Secure_Test_Suites_Summary',
+                    'start': r'[Sec Thread]',
+                    'end': r'system starting',
+                    'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
+                               r'(?P<test_case_id>Secure image '
+                               r'initializing)(?P<result>!)',
+                    'fixup': {"pass": "!", "fail": ""},
+                    'required': ["secure_image_initializing"]
+                } # Monitors
+            ]
+        },  # DefaultProfileS
+        'DefaultProfileM': {
+            "binaries": {
+                "firmware": "tfm_s.axf",
+                "bootloader": "tfm_ns.bin"
+            },
+            "monitors": [
+                {
+                    'name': 'Secure_Test_Suites_Summary',
+                    'start': r'[Sec Thread]',
+                    'end': r'system starting',
+                    'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
+                               r'(?P<test_case_id>Secure image '
+                               r'initializing)(?P<result>!)',
+                    'fixup': {"pass": "!", "fail": ""},
+                    'required': ["secure_image_initializing"]
+                } # Monitors
+            ]
+        },  # DefaultProfileM
+
         'Regression': {
             "binaries": {
                 "firmware": "tfm_s.axf",
@@ -756,8 +849,8 @@ fvp_mps2_an521_nobl2 = {
         },  # Regression
         'RegressionProfileM': {
             "binaries": {
-                "firmware": "mcuboot.axf",
-                "bootloader": "tfm_s_ns_signed.bin"
+                "firmware": "tfm_s.axf",
+                "bootloader": "tfm_ns.bin"
             },
             "monitors": [
                 {
@@ -809,8 +902,8 @@ fvp_mps2_an521_nobl2 = {
         },  # RegressionProfileM
         'RegressionProfileS': {
             "binaries": {
-                "firmware": "mcuboot.axf",
-                "bootloader": "tfm_s_ns_signed.bin"
+                "firmware": "tfm_s.axf",
+                "bootloader": "tfm_ns.bin"
             },
             "monitors": [
                 {
@@ -1056,6 +1149,24 @@ fvp_mps2_an521_nobl2 = {
                 }  # Monitors
             ]
         },  # CoreIPCTfmLevel2
+        'CoreIPCTfmLevel3': {
+            "binaries": {
+                "firmware": "tfm_s.axf",
+                "bootloader": "tfm_ns.bin"
+            },
+            "monitors": [
+                {
+                    'name': 'Secure_Test_Suites_Summary',
+                    'start': r'[Sec Thread]',
+                    'end': r'system starting',
+                    'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
+                               r'(?P<test_case_id>Secure image '
+                               r'initializing)(?P<result>!)',
+                    'fixup': {"pass": "!", "fail": ""},
+                    'required': ["secure_image_initializing"]
+                }  # Monitors
+            ]
+        },  # CoreIPCTfmLevel3
     }  # Tests
 }
 
@@ -1093,6 +1204,43 @@ fvp_mps2_an519_bl2 = {
                 } # Monitors
             ]
         },  # Default
+        'DefaultProfileS': {
+            "binaries": {
+                "firmware": "mcuboot.axf",
+                "bootloader": "tfm_s_ns_signed.bin"
+            },
+            "monitors": [
+                {
+                    'name': 'Secure_Test_Suites_Summary',
+                    'start': r'[Sec Thread]',
+                    'end': r'system starting',
+                    'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
+                               r'(?P<test_case_id>Secure image '
+                               r'initializing)(?P<result>!)',
+                    'fixup': {"pass": "!", "fail": ""},
+                    'required': ["secure_image_initializing"]
+                } # Monitors
+            ]
+        },  # DefaultProfileS
+        'DefaultProfileM': {
+            "binaries": {
+                "firmware": "mcuboot.axf",
+                "bootloader": "tfm_s_ns_signed.bin"
+            },
+            "monitors": [
+                {
+                    'name': 'Secure_Test_Suites_Summary',
+                    'start': r'[Sec Thread]',
+                    'end': r'system starting',
+                    'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
+                               r'(?P<test_case_id>Secure image '
+                               r'initializing)(?P<result>!)',
+                    'fixup': {"pass": "!", "fail": ""},
+                    'required': ["secure_image_initializing"]
+                } # Monitors
+            ]
+        },  # DefaultProfileM
+
         'Regression': {
             "binaries": {
                 "firmware": "mcuboot.axf",
@@ -1433,6 +1581,43 @@ fvp_mps2_an519_nobl2 = {
                 }
             ]
         },  # Default
+        'DefaultProfileS': {
+            "binaries": {
+                "firmware": "tfm_s.axf",
+                "bootloader": "tfm_ns.bin"
+            },
+            "monitors": [
+                {
+                    'name': 'Secure_Test_Suites_Summary',
+                    'start': r'[Sec Thread]',
+                    'end': r'system starting',
+                    'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
+                               r'(?P<test_case_id>Secure image '
+                               r'initializing)(?P<result>!)',
+                    'fixup': {"pass": "!", "fail": ""},
+                    'required': ["secure_image_initializing"]
+                } # Monitors
+            ]
+        },  # DefaultProfileS
+        'DefaultProfileM': {
+            "binaries": {
+                "firmware": "tfm_s.axf",
+                "bootloader": "tfm_ns.bin"
+            },
+            "monitors": [
+                {
+                    'name': 'Secure_Test_Suites_Summary',
+                    'start': r'[Sec Thread]',
+                    'end': r'system starting',
+                    'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
+                               r'(?P<test_case_id>Secure image '
+                               r'initializing)(?P<result>!)',
+                    'fixup': {"pass": "!", "fail": ""},
+                    'required': ["secure_image_initializing"]
+                } # Monitors
+            ]
+        },  # DefaultProfileM
+
         'Regression': {
             "binaries": {
                 "firmware": "tfm_s.axf",
@@ -1488,8 +1673,8 @@ fvp_mps2_an519_nobl2 = {
         },  # Regression
         'RegressionProfileM': {
             "binaries": {
-                "firmware": "mcuboot.axf",
-                "bootloader": "tfm_s_ns_signed.bin"
+                "firmware": "tfm_s.axf",
+                "bootloader": "tfm_ns.bin"
             },
             "monitors": [
                 {
@@ -1541,8 +1726,8 @@ fvp_mps2_an519_nobl2 = {
         },  # RegressionProfileM
         'RegressionProfileS': {
             "binaries": {
-                "firmware": "mcuboot.axf",
-                "bootloader": "tfm_s_ns_signed.bin"
+                "firmware": "tfm_s.axf",
+                "bootloader": "tfm_ns.bin"
             },
             "monitors": [
                 {
