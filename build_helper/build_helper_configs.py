@@ -173,6 +173,7 @@ _common_tfm_invalid_configs = [
     ("*", "*", False, "*", "*", "*", "*", "*", "*", "*", "profile_medium", "*"),
     # Profile M only support for Isolation Level 2
     ("*", "*", "*", "1", "*", "*", "*",  "*", "*", "*", "profile_medium", "*"),
+    ("*", "*", "*", "3", "*", "*", "*",  "*", "*", "*", "profile_medium", "*"),
     # Profile S does not support MUSCA_B1
     ("musca_b1", "*", "*", "*", "*", "*", "*",  "*", "*", "*", "profile_small", "*"),
     # Profile S does not support PSA_API
