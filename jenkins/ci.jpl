@@ -573,6 +573,7 @@ node("docker-amd64-tf-m-bionic") {
   --artifacts-path lava_artifacts --lava-timeout 7200 \
   """, returnStdout: true).trim()
             archiveArtifacts artifacts: 'test_summary.*', allowEmptyArchive: true
+            archiveArtifacts artifacts: 'test_results.csv', allowEmptyArchive: true
             print(output)
             g = new Gerrit()
             def (boot_result, boot_output) = getResult(output, 'BOOT_RESULT: ')

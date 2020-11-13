@@ -22,6 +22,7 @@ import time
 import yaml
 import argparse
 import threading
+import csv
 from copy import deepcopy
 from collections import OrderedDict
 from jinja2 import Environment, FileSystemLoader
@@ -38,6 +39,25 @@ except ImportError:
     from tfm_ci_pylib.utils import save_json, load_json, sort_dict,\
         load_yaml, test, print_test
     from tfm_ci_pylib.lava_rpc_connector import LAVA_RPC_connector
+
+cfgs = ["Default", "CoreIPC", "CoreIPCTfmLevel2", "CoreIPCTfmLevel3",
+        "Regression", "RegressionIPC",
+        "RegressionIPCTfmLevel2", "RegressionIPCTfmLevel3",
+        "DefaultProfileS", "RegressionProfileS",
+        "DefaultProfileM", "RegressionProfileM", "RegressionProfileM PSOFF",
+        "PsaApiTest (Attest)", "PsaApiTestIPC (Attest)",
+        "PsaApiTestIPCTfmLevel2 (Attest)",
+        "PsaApiTest (Crypto)", "PsaApiTestIPC (Crypto)",
+        "PsaApiTestIPCTfmLevel2 (Crypto)",
+        "PsaApiTest (PS)", "PsaApiTestIPC (PS)",
+        "PsaApiTestIPCTfmLevel2 (PS)",
+        "PsaApiTest (ITS)", "PsaApiTestIPC (ITS)",
+        "PsaApiTestIPCTfmLevel2 (ITS)",
+        "PsaApiTestIPC (FF)",
+        "PsaApiTestIPCTfmLevel2 (FF)",
+        "PsaApiTestIPCTfmLevel3 (ITS)", "PsaApiTestIPCTfmLevel3 (PS)",
+        "PsaApiTestIPCTfmLevel3 (Crypto)", "PsaApiTestIPCTfmLevel3 (Attest)",
+        "PsaApiTestIPCTfmLevel3 (FF)"]
 
 def wait_for_jobs(user_args):
     job_list = user_args.job_ids.split(",")
@@ -56,6 +76,7 @@ def wait_for_jobs(user_args):
     print_lava_urls(finished_jobs, user_args)
     boot_report(finished_jobs, user_args)
     test_report(finished_jobs, user_args, lava)
+    csv_report(finished_jobs)
 
 def fetch_artifacts(jobs, user_args, lava):
     if not user_args.artifacts_path:
@@ -81,6 +102,42 @@ def fetch_artifacts(jobs, user_args, lava):
 
 def lava_id_to_url(id, user_args):
     return "{}/scheduler/job/{}".format(user_args.lava_url, id)
+
+def generateTestResult(info):
+    if info['health'] == "Complete" and info['state'] == "Finished":
+        return "PASS"
+    else:
+        return "FAIL"
+
+def csv_report(jobs):
+    lava_jobs = []
+    for job, info in jobs.items():
+        exist = False
+        for record in lava_jobs:
+            if info['metadata']['platform']   == record["Platform"] and \
+               info['metadata']['compiler']   == record["Compiler"] and \
+               info['metadata']['build_type'] == record["Build Type"]:
+                if record[info['metadata']['name']] != "FAIL":
+                    record[info['metadata']['name']] = generateTestResult(info)
+                exist = True
+                break
+        if not exist:
+            record = {}
+            record["Platform"] = info['metadata']['platform']
+            record["Compiler"] = info['metadata']['compiler']
+            record["Build Type"] = info['metadata']['build_type']
+            record["Config Name"] = info['metadata']['name']
+            for cfg in cfgs:
+                record[cfg] = "N.A."
+            record[info['metadata']['name']] = generateTestResult(info)
+            lava_jobs.append(record)
+    lava_jobs.sort(key=lambda x: x["Platform"] + x["Compiler"] + x["Build Type"])
+    with open("test_results.csv", "w", newline="") as csvfile:
+        fieldnames = ["Platform", "Compiler", "Build Type"] + cfgs
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames, extrasaction='ignore')
+
+        writer.writeheader()
+        writer.writerows(lava_jobs)
 
 def boot_report(jobs, user_args):
     incomplete_jobs = []
