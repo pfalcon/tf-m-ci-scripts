@@ -432,7 +432,7 @@ def configs = []
 def builds = [:]
 def results = [:]
 
-node("docker-amd64-bionic") {
+node("docker-amd64-m-bionic") {
   stage("Init") {
     cleanWs()
     dir("tf-m-ci-scripts") {
@@ -472,7 +472,7 @@ stage("Builds") {
   }
 }
 
-node("docker-amd64-bionic") {
+node("docker-amd64-m-bionic") {
   stage("Copy Docs") {
     if (env.JOB_NAME.equals("tf-m-build-and-test")) {
       step([$class: 'CopyArtifact', projectName: 'tf-m-build-docs',
