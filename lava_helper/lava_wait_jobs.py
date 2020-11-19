@@ -17,14 +17,10 @@ Script for waiting for LAVA jobs and parsing the results
 
 import os
 import sys
-import shutil
 import time
 import yaml
 import argparse
-import threading
 import csv
-from copy import deepcopy
-from collections import OrderedDict
 from jinja2 import Environment, FileSystemLoader
 from lava_helper_configs import *
 from lava_helper import test_lava_dispatch_credentials

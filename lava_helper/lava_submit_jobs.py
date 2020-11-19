@@ -18,11 +18,7 @@ __copyright__ = """
 import os
 import glob
 import sys
-import shutil
 import argparse
-from copy import deepcopy
-from collections import OrderedDict
-from jinja2 import Environment, FileSystemLoader
 from lava_helper_configs import *
 
 try:

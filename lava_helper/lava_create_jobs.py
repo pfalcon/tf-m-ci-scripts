@@ -18,10 +18,7 @@ jenkins Job.
 
 import os
 import sys
-import shutil
 import argparse
-from copy import deepcopy
-from collections import OrderedDict
 from jinja2 import Environment, FileSystemLoader
 from lava_helper_configs import *
 
