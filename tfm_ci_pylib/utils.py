@@ -312,7 +312,7 @@ def export_config_map(config_m, dir=None):
         _cname = _cname.lower()
         _fname = os.path.join(_dir, _cname + ".json")
         print("Exporting config %s" % _fname)
-    save_json(_fname, _cfg)
+        save_json(_fname, _cfg)
 
 
 def gen_cfg_combinations(name, categories, *args):
