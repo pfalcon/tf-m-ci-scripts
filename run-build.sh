@@ -20,10 +20,6 @@ if [ -z "$CONFIG_NAME" ] ; then
 	exit 1
 fi
 
-# FIXME: workaround for Arm Clang license server on ci.trustedfirmware.org
-[[ ${JENKINS_URL} == *trustedfirmware.org* ]] && \
-    export ARMLMD_LICENSE_FILE=${ARMLMD_LICENSE_FILE:-27000@ci.trustedfirmware.org}
-
 set +e
 echo "output current build environment"
 cat /etc/issue
