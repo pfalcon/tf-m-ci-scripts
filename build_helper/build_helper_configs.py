@@ -47,7 +47,7 @@ _common_tfm_builder_cfg = {
 
     "config_template": "cmake " + \
         "-DTFM_PLATFORM=%(tfm_platform)s " + \
-        "-DCMAKE_TOOLCHAIN_FILE=%(codebase_root_dir)s/%(toolchain_file)s " + \
+        "-DTFM_TOOLCHAIN_FILE=%(codebase_root_dir)s/%(toolchain_file)s " + \
         "-DTFM_PSA_API=%(psa_api)s " + \
         "-DTFM_ISOLATION_LEVEL=%(isolation_level)s " + \
         "-DTEST_NS=%(test_regression)s -DTEST_S=%(test_regression)s " + \
@@ -899,7 +899,7 @@ config_doxygen = {"common_params": {
                   "config_type": "tf-m_documents",
                   "codebase_root_dir": "tf-m",
                   "build_cmds": {"all": ["-DTFM_PLATFORM=mps2/an521 "
-                                         "-DCMAKE_TOOLCHAIN_FILE=%(_tfm_code_dir_)s/toolchain_GNUARM.cmake"
+                                         "-DTFM_TOOLCHAIN_FILE=%(_tfm_code_dir_)s/toolchain_GNUARM.cmake"
                                          "-DCMAKE_BUILD_TYPE=Debug "
                                          "%(_tbm_code_dir_)s/",
                                          "cmake --build ./ -- docs"]},
