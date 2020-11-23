@@ -72,6 +72,7 @@ def wait_for_jobs(user_args):
     print_lava_urls(finished_jobs, user_args)
     boot_report(finished_jobs, user_args)
     test_report(finished_jobs, user_args, lava)
+    failure_report(finished_jobs, user_args)
     csv_report(finished_jobs)
 
 def fetch_artifacts(jobs, user_args, lava):
@@ -147,6 +148,14 @@ def boot_report(jobs, user_args):
         print("BOOT_RESULT: -1 Failed: {}".format(incomplete_output))
     else:
         print("BOOT_RESULT: +1")
+
+def failure_report(jobs, user_args):
+    failed_report = "FAILURE_TESTS:"
+    for job, info in jobs.items():
+        if info['health'] != "Complete" or info['state'] != "Finished":
+            failed_report += " {}:{}".format(info['metadata']['build_name'],
+                                             lava_id_to_url(job, user_args))
+    print(failed_report)
 
 def remove_lava_dupes(results):
     for result in results:

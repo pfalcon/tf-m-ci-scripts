@@ -338,7 +338,20 @@ def buildDocs(results) {
   }
 }
 
-def emailNotification(results, stage) {
+def generateEmailBody(stage, failed_jobs) {
+  body = "Check console output at ${env.BUILD_URL} \n\n"
+
+  body += "Failed Jobs:\n"
+  failed_jobs.each { job ->
+    body += "${job.key}  ${job.value}\n"
+  }
+
+  body += "\nFor detailed ${stage} results please refer to \
+           ${env.BUILD_URL}artifact/${stage}_results.csv \n"
+  return body
+}
+
+def emailNotification(results, stage, failed_jobs) {
   script {
    if (env.JOB_NAME.equals("tf-m-nightly") && !env.EMAIL_NOTIFICATION.equals('')) {
       def result = "Fail."
@@ -349,12 +362,36 @@ def emailNotification(results, stage) {
       else {
         emailext (
             subject: ("Job ${env.JOB_NAME} ${stage} ${env.BUILD_NUMBER} ${result}"),
-            body: "Check console output at ${env.BUILD_URL}",
+            body: generateEmailBody(stage, failed_jobs),
             to: "${EMAIL_NOTIFICATION}"
         )
       }
     }
   } /* script */
+}
+
+def filterFailedBuild(results) {
+  def failed_builds = [:]
+  results.each { result ->
+    if (result.value[0].getResult() == "FAILURE") {
+      failed_builds[result.value[1]] = result.value[0].getAbsoluteUrl()
+    }
+  }
+  return failed_builds
+}
+
+def filterFailedTest(string) {
+  def failed_tests = [:]
+  line = lineInString(string, "FAILURE_TESTS:")
+  a = line.split(' ')
+  if (a.size() > 1) {
+    a = line.split(' ')[1..-1]
+    a.each { fail_test ->
+      config_link = fail_test.split(':')
+      failed_tests[config_link[0]] = config_link[1..-1].join(':')
+  }
+  }
+  return failed_tests
 }
 
 @NonCPS
@@ -535,7 +572,8 @@ stage("Builds") {
     success = false
   } finally {
     print("Verifying status")
-    emailNotification(success, 'Build')
+    def failed_builds = filterFailedBuild(results['builds'])
+    emailNotification(success, 'build', failed_builds)
     g = new Gerrit()
     g.verifyStatus(verify, 'tf-m-build', 'build')
     print("Building CSV")
@@ -574,7 +612,6 @@ node("docker-amd64-tf-m-bionic") {
   """, returnStdout: true).trim()
             archiveArtifacts artifacts: 'test_summary.*', allowEmptyArchive: true
             archiveArtifacts artifacts: 'test_results.csv', allowEmptyArchive: true
-            print(output)
             g = new Gerrit()
             def (boot_result, boot_output) = getResult(output, 'BOOT_RESULT: ')
             if (boot_result) {
@@ -599,7 +636,7 @@ node("docker-amd64-tf-m-bionic") {
       success = false
     } finally {
       archiveArtifacts artifacts: 'tf-m-ci-scripts/lava_artifacts/**', allowEmptyArchive: true
-      emailNotification(success, 'Test')
+      emailNotification(success, 'test', filterFailedTest(output))
       cleanWs()
       if (!success) {
         error("There was an Error waiting for LAVA jobs")
