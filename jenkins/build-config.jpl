@@ -31,7 +31,7 @@ node(nodeLabel) {
         ])
     }
     dir("tf-m-ci-scripts") {
-      git url: '$CI_SCRIPTS_REPO', branch: '$CI_SCRIPTS_BRANCH', credentialsId: 'GIT_SSH_KEY'
+      checkout([$class: 'GitSCM', branches: [[name: '$CI_SCRIPTS_BRANCH']], userRemoteConfigs: [[credentialsId: 'GIT_SSH_KEY', url: '$CI_SCRIPTS_REPO']]])
     }
     dir("mbedtls") {
       checkout(

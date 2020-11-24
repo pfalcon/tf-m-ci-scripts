@@ -205,6 +205,7 @@ python3 ./configs.py -g ${filter_group.replace(" ", " -g ")} ${config}
   params += string(name: 'CODE_COVERAGE_EN', value: env.CODE_COVERAGE_EN)
   params += string(name: 'TFM_TESTS_REFSPEC', value: env.TFM_TESTS_REFSPEC)
   params += string(name: 'CI_SCRIPTS_REFSPEC', value: env.CI_SCRIPTS_REFSPEC)
+  params += string(name: 'CI_SCRIPTS_BRANCH', value: env.CI_SCRIPTS_BRANCH)
   return { -> results
     def build_res = build(job: 'tf-m-build-config-infra-health', parameters: params, propagate: false)
     def build_info = [build_res, config, params_collection]
@@ -247,6 +248,7 @@ def buildDocs(results) {
   params += string(name: 'GERRIT_REFSPEC', value: env.GERRIT_REFSPEC)
   params += string(name: 'MBEDTLS_VERSION', value: env.MBEDTLS_VERSION)
   params += string(name: 'CODE_REPO', value: env.CODE_REPO)
+  params += string(name: 'CI_SCRIPTS_BRANCH', value: env.CI_SCRIPTS_BRANCH)
   return { -> results
     def res = build(job: 'tf-m-build-docs-infra-health', parameters: params, propagate:false)
     print("${res.number}: Docs ${res.result} ${res.getAbsoluteUrl()}")
@@ -436,7 +438,7 @@ node("docker-amd64-tf-m-bionic") {
   stage("Init") {
     cleanWs()
     dir("tf-m-ci-scripts") {
-      git url: '$CI_SCRIPTS_REPO', branch: '$CI_SCRIPTS_BRANCH', credentialsId: 'GIT_SSH_KEY'
+      checkout([$class: 'GitSCM', branches: [[name: '$CI_SCRIPTS_BRANCH']], userRemoteConfigs: [[credentialsId: 'GIT_SSH_KEY', url: '$CI_SCRIPTS_REPO']]])
     }
   }
   stage("Configs") {
@@ -486,7 +488,7 @@ node("docker-amd64-tf-m-bionic") {
   }
   stage("Tests") {
     dir("tf-m-ci-scripts") {
-      git url: '$CI_SCRIPTS_REPO', branch: '$CI_SCRIPTS_BRANCH', credentialsId: 'GIT_SSH_KEY'
+      checkout([$class: 'GitSCM', branches: [[name: '$CI_SCRIPTS_BRANCH']], userRemoteConfigs: [[credentialsId: 'GIT_SSH_KEY', url: '$CI_SCRIPTS_REPO']]])
     }
     def all_jobs = []
     def success = true
