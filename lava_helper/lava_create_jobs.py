@@ -124,9 +124,9 @@ def generate_test_definitions(config, work_dir, user_args):
                         params = {
                             "device_type": config["device_type"],
                             "job_timeout": config["job_timeout"],
-                            "action_timeout": config["action_timeout"],
-                            "monitor_timeout": config["monitor_timeout"],
-                            "poweroff_timeout": config["poweroff_timeout"],
+                            "action_timeout": config.get("action_timeout", ''),
+                            "monitor_timeout": config.get("monitor_timeout", ''),
+                            "poweroff_timeout": config.get("poweroff_timeout", ''),
                             "compiler": compiler,
                             "build_type": build_type,
                             "build_no": build_no,
@@ -147,12 +147,16 @@ def generate_test_definitions(config, work_dir, user_args):
                                 "firmware_url": get_artifact_url(
                                     artifact_store_url,
                                     params,
-                                    test_dict["binaries"]["firmware"],
+                                    test_dict.get("binaries").get("firmware"),
                                 ),
+                            }
+                        )
+                        params.update(
+                            {
                                 "bootloader_url": get_artifact_url(
                                     artifact_store_url,
                                     params,
-                                    test_dict["binaries"]["bootloader"],
+                                    test_dict.get("binaries").get("bootloader"),
                                 ),
                             }
                         )
