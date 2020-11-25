@@ -1923,12 +1923,91 @@ fvp_mps2_an519_nobl2 = {
 }
 
 
+musca_b1_bl2 = {
+    "templ": "musca_b1.jinja2",
+    "job_name": "musca_b1_bl2",
+    "device_type": "musca-b",
+    "job_timeout": 12,
+    "action_timeout": 6,
+    "poweroff_timeout": 20,
+    "platforms": {"MUSCA_B1": ""},
+    "compilers": ["GNUARM", "ARMCLANG"],
+    "build_types": ["Debug", "Release"],
+    "boot_types": ["BL2"],
+    "tests": {
+        "Default": {
+            "binaries": {
+                "firmware": "tfm.hex",
+            }
+        },
+        "CoreIPC": {
+            "binaries": {
+                "firmware": "tfm.hex",
+            }
+        },
+        "CoreIPCTfmLevel2": {
+            "binaries": {
+                "firmware": "tfm.hex",
+            }
+        },
+        "CoreIPCTfmLevel3": {
+            "binaries": {
+                "firmware": "tfm.hex",
+            }
+        },
+        "DefaultProfileM": {
+            "binaries": {
+                "firmware": "tfm.hex",
+            }
+        },
+        "DefaultProfileS": {
+            "binaries": {
+                "firmware": "tfm.hex",
+            }
+        },
+        "Regression": {
+            "binaries": {
+                "firmware": "tfm.hex",
+            }
+        },
+        "RegressionIPC": {
+            "binaries": {
+                "firmware": "tfm.hex",
+            }
+        },
+        "RegressionIPCTfmLevel2": {
+            "binaries": {
+                "firmware": "tfm.hex",
+            }
+        },
+        "RegressionIPCTfmLevel3": {
+            "binaries": {
+                "firmware": "tfm.hex",
+            }
+        },
+        "RegressionProfileM": {
+            "binaries": {
+                "firmware": "tfm.hex",
+            }
+        },
+        "RegressionProfileS": {
+            "binaries": {
+                "firmware": "tfm.hex",
+            }
+        },
+    },
+}
+
+
 # All configurations should be mapped here
-lava_gen_config_map = {"mps2_an521_bl2": tfm_mps2_sse_200,
-                       "fvp_mps2_an521_bl2": fvp_mps2_an521_bl2,
-                       "fvp_mps2_an521_nobl2": fvp_mps2_an521_nobl2,
-                       "fvp_mps2_an519_bl2": fvp_mps2_an519_bl2,
-                       "fvp_mps2_an519_nobl2": fvp_mps2_an519_nobl2}
+lava_gen_config_map = {
+    "mps2_an521_bl2": tfm_mps2_sse_200,
+    "fvp_mps2_an521_bl2": fvp_mps2_an521_bl2,
+    "fvp_mps2_an521_nobl2": fvp_mps2_an521_nobl2,
+    "fvp_mps2_an519_bl2": fvp_mps2_an519_bl2,
+    "fvp_mps2_an519_nobl2": fvp_mps2_an519_nobl2,
+    "musca_b1": musca_b1_bl2,
+}
 
 lavagen_config_sort_order = [
     "templ",

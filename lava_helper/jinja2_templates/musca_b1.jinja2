@@ -1,0 +1,55 @@
+{#------------------------------------------------------------------------------
+# Copyright (c) 2020, Arm Limited and Contributors. All rights reserved.
+#
+# SPDX-License-Identifier: BSD-3-Clause
+#
+#-----------------------------------------------------------------------------#}
+device_type: {{ device_type }}
+job_name: {{ job_name }}
+
+timeouts:
+  action:
+    minutes: {{ action_timeout }}
+  actions:
+    power-off:
+      seconds: {{ poweroff_timeout }}
+  job:
+    minutes: {{ job_timeout }}
+
+priority: medium
+visibility: public
+
+actions:
+    - deploy:
+        timeout:
+          minutes: 6
+        to: musca
+        images:
+          test_binary:
+            url: {{ firmware_url }}
+
+    - boot:
+        method: musca
+
+    # Monitors example
+#     - test:
+#         namespace: target
+#         monitors:
+#         - name: "Secure_Test_Suites_Summary_AN521_ARMCLANG_Regression_Debug_BL2"
+#           start: "Secure test suites summary"
+#           end: "End of Secure test suites"
+#           pattern: "[\x1b]\\[37mTest suite '(?P<test_case_id>.*)' has [\x1b]\\[32m (?P<result>PASSED|FAILED)"
+#           fixupdict:
+#              'PASSED': pass
+#              'FAILED': fail
+
+metadata:
+  build_no: {{ build_no }}
+  compiler: {{ compiler }}
+  build_type: {{ build_type }}
+  boot_type: {{ boot_type }}
+  name: {{ name }}
+  platform: {{ platform }}
+  build_name: {{ build_name }}
+  build_job_url: {{ build_job_url }}
+
