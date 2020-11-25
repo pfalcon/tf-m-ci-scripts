@@ -50,12 +50,18 @@ def load_config_overrides(user_args, config_key):
 
 
 def get_artifact_url(artifact_store_url, params, filename):
-    platform = params['platform']
-    if params['device_type'] == 'fvp':
-        platform = 'fvp'
-    return "{}/artifact/trusted-firmware-m/build/install/outputs/{}/{}".format(
-        artifact_store_url.rstrip('/'), platform, filename,
-    )
+    platform = params["platform"]
+    if params["device_type"] == "fvp":
+        platform = "fvp"
+
+    # FIXME: temporary workaround until we switch all platforms artifacts
+    #        to use the same location (new build system)
+    url = "{}/artifact/trusted-firmware-m/build".format(artifact_store_url.rstrip("/"))
+    if platform.lower().startswith("musca"):
+        url = "{}/bin/{}".format(url, filename)
+    else:
+        url = "{}/install/outputs/{}/{}".format(url, platform, filename)
+    return url
 
 
 def get_recovery_url(recovery_store_url, recovery):
