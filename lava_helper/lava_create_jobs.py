@@ -12,8 +12,7 @@ __copyright__ = """
  """
 
 """
-Script for create LAVA definitions from a single tf-m-build-config
-jenkins Job.
+Script to create LAVA definitions from a single tf-m-build-config Jenkins Job
 """
 
 import os
@@ -31,8 +30,8 @@ except ImportError:
 
 
 def load_config_overrides(user_args, config_key):
-    """ Load a configuration from multiple locations and override it with
-    user provided arguements """
+    """Load a configuration from multiple locations and override it with user provided
+    arguments"""
 
     print("Using built-in config: %s" % config_key)
     try:
@@ -44,7 +43,7 @@ def load_config_overrides(user_args, config_key):
     config["build_no"] = user_args.build_no
     config["artifact_store_url"] = user_args.jenkins_build_url
 
-    #  Add the template folder
+    # Add the template folder
     config["templ"] = os.path.join(user_args.template_dir, config["templ"])
     return config
 
@@ -92,8 +91,8 @@ def get_build_name(params):
 
 
 def generate_test_definitions(config, work_dir, user_args):
-    """ Get a dictionary configuration, and an existing jinja2 template
-    and generate a LAVA compatbile yaml definition """
+    """Get a dictionary configuration and an existing jinja2 template to generate
+    a LAVA compatible yaml definition"""
 
     template_loader = FileSystemLoader(searchpath=work_dir)
     template_env = Environment(loader=template_loader)
@@ -177,7 +176,7 @@ def generate_test_definitions(config, work_dir, user_args):
 
 
 def generate_lava_job_defs(user_args, config):
-    """ Create a LAVA test job definition file """
+    """Create a LAVA test job definition file"""
 
     # Evaluate current directory
     work_dir = os.path.abspath(os.path.dirname(__file__))
@@ -187,7 +186,7 @@ def generate_lava_job_defs(user_args, config):
         # Only test this platform
         platform = user_args.platform
         config["platforms"] = {platform: config["platforms"][platform]}
-    # Generate the ouptut definition
+    # Generate the output definition
     definitions = generate_test_definitions(config, work_dir, user_args)
 
     # Write it into a file
@@ -211,7 +210,7 @@ def main(user_args):
 
 
 def get_cmd_args():
-    """ Parse command line arguments """
+    """Parse command line arguments"""
 
     # Parse command line arguments to override config
     parser = argparse.ArgumentParser(description="Lava Create Jobs")
