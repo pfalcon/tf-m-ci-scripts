@@ -1998,6 +1998,38 @@ musca_b1_bl2 = {
     },
 }
 
+qemu_mps2 = {
+    "templ": "qemu_mps2.jinja2",
+    "job_name": "qemu_mps2",
+    "device_type": "qemu",
+    "job_timeout": 300,
+    "action_timeout": 300,
+    "poweroff_timeout": 20,
+    "platforms": {"AN521": ""},
+    "compilers": ["GNUARM", "ARMCLANG"],
+    "build_types": ["Debug", "Release"],
+    "boot_types": ["NOBL2"],
+    "tests": {
+        'Default': {
+            "binaries": {
+                "firmware": "tfm_sign.bin",
+                "bootloader": "mcuboot.bin"
+            },
+            "monitors": [
+                {
+                    'name': 'Secure_Test_Suites_Summary',
+                    'start': '[Sec Thread]',
+                    'end': 'system starting',
+                    'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
+                               r'(?P<test_case_id>Secure image '
+                               r'initializing)(?P<result>!)',
+                    'fixup': {"PASSED": "pass", "FAILED": "fail"},
+                    'required': ["secure_image_initializing"]
+                }  # Monitors
+            ]
+        },  # Default
+    }
+}
 
 # All configurations should be mapped here
 lava_gen_config_map = {
@@ -2007,6 +2039,7 @@ lava_gen_config_map = {
     "fvp_mps2_an519_bl2": fvp_mps2_an519_bl2,
     "fvp_mps2_an519_nobl2": fvp_mps2_an519_nobl2,
     "musca_b1": musca_b1_bl2,
+    "qemu_mps2": qemu_mps2,
 }
 
 lavagen_config_sort_order = [
