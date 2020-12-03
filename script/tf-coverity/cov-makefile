@@ -6,23 +6,23 @@
 
 # $(call build-platform,platform,toolchain)
 define build-platform
-	mkdir $(BASE_DIR)/$(tf_m)/cmake_build
-	cd $(BASE_DIR)/$(tf_m)/cmake_build && \
-        cmake .. -DTFM_PLATFORM=$1 -DTFM_TOOLCHAIN_FILE=../$2
-
-	cd $(BASE_DIR)/$(tf_m)/cmake_build && \
-	make install
+	cd $(BASE_DIR)/$(tf_m) && \
+	cmake -S . -B cmake_build_$1 -DTFM_PLATFORM=$1 -DTFM_TOOLCHAIN_FILE=$2 && \
+	cmake --build cmake_build_$1 -- install
 endef
 
 BASE_DIR ?= .
 
-# TODO: include other platforms to increase coverity coverage
-gnuarm_target_platforms 	:= mps2/an521
+target_platforms := cypress/psoc64 \
+                    mps2/an519 mps2/an521 \
+                    mps3/an524 \
+                    musca_a musca_b1/sse_200 musca_s1
+
 tf_m := trusted-firmware-m
 
-all: $(gnuarm_target_platforms)
+all: $(target_platforms)
 
-$(gnuarm_target_platforms): check msg
+$(target_platforms): check msg
 	$(call build-platform,$@,toolchain_GNUARM.cmake)
 
 .phony: check

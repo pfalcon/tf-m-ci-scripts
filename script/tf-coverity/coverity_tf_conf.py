@@ -14,4 +14,7 @@
 #   describing the file(s) to exclude.
 # - description aims at providing the reason why the files are expected
 #   to be excluded.
-exclude_paths = []
+exclude_paths = [
+    ("platform/ext/.*", "3rd party libraries will not be fixed")
+    ("lib/ext/.*", "3rd party libraries will not be fixed"),
+]
