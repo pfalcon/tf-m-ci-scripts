@@ -98,7 +98,6 @@ node(nodeLabel) {
       sh "tf-m-ci-scripts/run-build.sh"
     }
     stage("Post") {
-      archiveArtifacts 'trusted-firmware-m/build/install/**'
       archiveArtifacts 'trusted-firmware-m/build/bin/**'
     }
   } catch (Exception e) {

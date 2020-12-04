@@ -178,7 +178,7 @@ def config_variant(**override_params):
                 # Adjust the binaries based on bootloader presense
                 if _vdict["bootloader"] == "BL2":
                     _vdict["app_bin"] = override_params["app_bin"] if \
-                        "app_bin" in override_params else "mcuboot.axf"
+                        "app_bin" in override_params else "bl2.axf"
                     _vdict["data_bin"] = override_params["data_bin"] if \
                         "data_bin" in override_params \
                         else "tfm_s_ns_signed.bin"

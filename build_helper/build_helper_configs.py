@@ -73,7 +73,7 @@ _common_tfm_builder_cfg = {
 
     # ALL commands will be executed for every build.
     # Other keys will append extra commands when matching target_platform
-    "build_cmds": {"all": ["cmake --build ./ -- install"],
+    "build_cmds": {"all": ["cmake --build ."],
                    "musca_a": [("srec_cat "
                                 "%(_tbm_build_dir_)s/bin/"
                                 "bl2.bin "
