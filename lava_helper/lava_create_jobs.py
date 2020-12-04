@@ -53,13 +53,7 @@ def get_artifact_url(artifact_store_url, params, filename):
     if params["device_type"] == "fvp":
         platform = "fvp"
 
-    # FIXME: temporary workaround until we switch all platforms artifacts
-    #        to use the same location (new build system)
-    url = "{}/artifact/trusted-firmware-m/build".format(artifact_store_url.rstrip("/"))
-    if platform.lower().startswith("musca"):
-        url = "{}/bin/{}".format(url, filename)
-    else:
-        url = "{}/install/outputs/{}/{}".format(url, platform, filename)
+    url = "{}/artifact/trusted-firmware-m/build/bin/{}".format(artifact_store_url.rstrip("/"), filename)
     return url
 
 
