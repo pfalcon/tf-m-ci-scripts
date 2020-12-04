@@ -89,8 +89,8 @@ class template_default_config(template_cfg):
 
     # Set defaults across all variants
     _vdict["build_path"] = "build-ci-all"
-    _vdict["app_bin_path"] = "bin/fvp"
-    _vdict["data_bin_path"] = "bin/fvp"
+    _vdict["app_bin_path"] = "install/outputs/fvp"
+    _vdict["data_bin_path"] = "install/outputs/fvp"
     _vdict["variant_name_tpl"] = "%(platform)s_%(compiler)s_%(config)s_" + \
         "%(build_type)s_%(bootloader)s"
 
@@ -122,8 +122,8 @@ class template_regression_config(template_cfg):
 
     # Set defaults across all variants
     _vdict["build_path"] = "build-ci-all"
-    _vdict["app_bin_path"] = "bin/fvp"
-    _vdict["data_bin_path"] = "bin/fvp"
+    _vdict["app_bin_path"] = "install/outputs/fvp"
+    _vdict["data_bin_path"] = "install/outputs/fvp"
     _vdict["variant_name_tpl"] = "%(platform)s_%(compiler)s_%(config)s_" + \
         "%(build_type)s_%(bootloader)s"
 
@@ -169,8 +169,8 @@ class template_coreipc_config(template_cfg):
     # Set defaults across all variants
     _vdict["build_path"] = "build-ci-all"
 
-    _vdict["app_bin_path"] = "bin/fvp"
-    _vdict["data_bin_path"] = "bin/fvp"
+    _vdict["app_bin_path"] = "install/outputs/fvp"
+    _vdict["data_bin_path"] = "install/outputs/fvp"
 
     _vdict["variant_name_tpl"] = "%(platform)s_%(compiler)s_%(config)s_" + \
         "%(build_type)s_%(bootloader)s"
@@ -205,8 +205,8 @@ class template_coreipctfmlevel2_config(template_cfg):
     # Set defaults across all variants
     _vdict["build_path"] = "build-ci-all"
 
-    _vdict["app_bin_path"] = "bin/fvp"
-    _vdict["data_bin_path"] = "bin/fvp"
+    _vdict["app_bin_path"] = "install/outputs/fvp"
+    _vdict["data_bin_path"] = "install/outputs/fvp"
 
     _vdict["variant_name_tpl"] = "%(platform)s_%(compiler)s_%(config)s_" + \
         "%(build_type)s_%(bootloader)s"
@@ -241,8 +241,8 @@ class template_psaapitestipctfmlevel2_config(template_cfg):
     # Set defaults across all variants
     _vdict["build_path"] = "build-ci-all"
 
-    _vdict["app_bin_path"] = "bin/fvp"
-    _vdict["data_bin_path"] = "bin/fvp"
+    _vdict["app_bin_path"] = "install/outputs/fvp"
+    _vdict["data_bin_path"] = "install/outputs/fvp"
 
     _vdict["variant_name_tpl"] = "%(platform)s_%(compiler)s_%(config)s_" + \
         "%(psa_suite)s_%(build_type)s_%(bootloader)s"
@@ -276,8 +276,8 @@ class template_psaapitestipc_config(template_cfg):
     # Set defaults across all variants
     _vdict["build_path"] = "build-ci-all"
 
-    _vdict["app_bin_path"] = "bin/fvp"
-    _vdict["data_bin_path"] = "bin/fvp"
+    _vdict["app_bin_path"] = "install/outputs/fvp"
+    _vdict["data_bin_path"] = "install/outputs/fvp"
 
     _vdict["variant_name_tpl"] = "%(platform)s_%(compiler)s_%(config)s_" + \
         "%(psa_suite)s_%(build_type)s_%(bootloader)s"
@@ -311,8 +311,8 @@ class template_psaapitest_config(template_cfg):
     # Set defaults across all variants
     _vdict["build_path"] = "build-ci-all"
 
-    _vdict["app_bin_path"] = "bin/fvp"
-    _vdict["data_bin_path"] = "bin/fvp"
+    _vdict["app_bin_path"] = "install/outputs/fvp"
+    _vdict["data_bin_path"] = "install/outputs/fvp"
 
     _vdict["variant_name_tpl"] = "%(platform)s_%(compiler)s_%(config)s_" + \
         "%(psa_suite)s_%(build_type)s_%(bootloader)s"

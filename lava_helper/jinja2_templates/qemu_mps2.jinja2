@@ -1,0 +1,55 @@
+{#------------------------------------------------------------------------------
+# Copyright (c) 2019-2020, Arm Limited and Contributors. All rights reserved.
+#
+# SPDX-License-Identifier: BSD-3-Clause
+#
+#-----------------------------------------------------------------------------#}
+actions:
+- deploy:
+    images:
+      mcuboot: {image_arg: '-device loader,file={mcuboot},addr=0x10000000', url: '{{ bootloader_url }}'}
+      tfm: {image_arg: '-device loader,file={tfm},addr=0x10080000', url: '{{ firmware_url }}'}
+    timeout: {seconds: 100}
+    to: tmpfs
+- boot:
+    docker: {binary: /usr/bin/qemu-system-arm, image: 'kevintownsend/lite-qemu5:v1'}
+    method: qemu
+    timeout: {seconds: 300}
+- test:
+    monitors:
+    - name: wait-finish
+      start: "Non-Secure system starting"
+      end: "End of Non-secure test suites"
+      pattern: "[\x1b]\\[37mTest suite '(?P<test_case_id>.*?)' has [\x1b]\\[32m (?P<result>PASSED|FAILED)"
+      fixupdict:
+        PASSED: pass
+        FAILED: fail
+    timeout: {seconds: 300}
+
+context:
+  arch: arm
+  cpu: 'cortex-m33'
+  machine: mps2-an521
+  serial: '-serial mon:stdio'
+  vga: '-vga none'
+  memory: 16M
+  model: model=lan9118
+
+device_type: {{ device_type }}
+job_name: {{ job_name }}
+priority: medium
+timeouts:
+  action: {seconds: 300}
+  job: {seconds: 300}
+visibility: public
+
+metadata:
+  build_no: {{ build_no }}
+  compiler: {{ compiler }}
+  build_type: {{ build_type }}
+  boot_type: {{ boot_type }}
+  name: {{ name }}
+  platform: {{ platform }}
+  build_name: {{ build_name }}
+  build_job_url: {{ build_job_url }}
+

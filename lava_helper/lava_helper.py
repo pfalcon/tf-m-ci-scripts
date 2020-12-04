@@ -76,7 +76,7 @@ def print_configs():
 
 
 def get_artifact_url(artifact_store_url, params, filename):
-    url = "{}/{}/artifact/build-ci-all/{}_{}_Config{}_{}_{}/bin/{}/{}".format(
+    return "{}/{}/artifact/build-ci-all/{}_{}_Config{}_{}_{}/install/outputs/{}/{}".format(
         artifact_store_url,
         params['build_no'],
         params['platform'],
@@ -87,7 +87,6 @@ def get_artifact_url(artifact_store_url, params, filename):
         params['platform'],
         filename,
     )
-    return url
 
 def get_recovery_url(recovery_store_url, build_no, recovery):
     return("{}/{}/artifact/{}".format(

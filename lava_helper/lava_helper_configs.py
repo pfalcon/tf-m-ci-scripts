@@ -45,11 +45,6 @@ def lava_gen_get_config_subset(config,
     return cfg
 
 
-# MPS2 with BL2 bootloader
-# IMAGE0ADDRESS: 0x10000000
-# IMAGE0FILE: \Software\bl2.bin  ; BL2 bootloader
-# IMAGE1ADDRESS: 0x10080000
-# IMAGE1FILE: \Software\tfm_s_ns_signed.bin ; TF-M example application binary blob
 tfm_mps2_sse_200 = {
     "templ": "mps2.jinja2",
     "job_name": "mps2_an521_bl2",
@@ -59,15 +54,15 @@ tfm_mps2_sse_200 = {
     "monitor_timeout": 10,
     "poweroff_timeout": 1,
     "recovery_store_url": "https://ci.trustedfirmware.org/userContent/",
-    "platforms": {"AN521": "mps2_sse200_an512_new.tar.gz"},
+    "platforms": {"AN521": "mps2_sse200_an512.tar.gz"},
     "compilers": ["GNUARM", "ARMCLANG"],
     "build_types": ["Debug", "Release", "Minsizerel"],
     "boot_types": ["BL2"],
     "tests": {
         'Default': {
             "binaries": {
-                "firmware": "tfm_s_ns_signed.bin",
-                "bootloader": "bl2.bin"
+                "firmware": "tfm_sign.bin",
+                "bootloader": "mcuboot.bin"
             },
             "monitors": [
                 {
@@ -84,8 +79,8 @@ tfm_mps2_sse_200 = {
         },  # Default
         'Regression': {
             "binaries": {
-                "firmware": "tfm_s_ns_signed.bin",
-                "bootloader": "bl2.bin"
+                "firmware": "tfm_sign.bin",
+                "bootloader": "mcuboot.bin"
             },
             "monitors": [
                 {
@@ -137,8 +132,8 @@ tfm_mps2_sse_200 = {
         },  # Regression
         'RegressionIPC': {
             "binaries": {
-                "firmware": "tfm_s_ns_signed.bin",
-                "bootloader": "bl2.bin"
+                "firmware": "tfm_sign.bin",
+                "bootloader": "mcuboot.bin"
             },
             "monitors": [
                 {
@@ -190,8 +185,8 @@ tfm_mps2_sse_200 = {
         },  # Regression
         'RegressionIPCTfmLevel2': {
             "binaries": {
-                "firmware": "tfm_s_ns_signed.bin",
-                "bootloader": "bl2.bin"
+                "firmware": "tfm_sign.bin",
+                "bootloader": "mcuboot.bin"
             },
             "monitors": [
                 {
@@ -243,8 +238,8 @@ tfm_mps2_sse_200 = {
         },  # Regression
         'CoreIPC': {
             "binaries": {
-                "firmware": "tfm_s_ns_signed.bin",
-                "bootloader": "bl2.bin"
+                "firmware": "tfm_sign.bin",
+                "bootloader": "mcuboot.bin"
             },
             "monitors": [
                 {
@@ -261,8 +256,8 @@ tfm_mps2_sse_200 = {
         },  # CoreIPC
         'CoreIPCTfmLevel2': {
             "binaries": {
-                "firmware": "tfm_s_ns_signed.bin",
-                "bootloader": "bl2.bin"
+                "firmware": "tfm_sign.bin",
+                "bootloader": "mcuboot.bin"
             },
             "monitors": [
                 {
@@ -281,9 +276,6 @@ tfm_mps2_sse_200 = {
 }
 
 
-# FVP with BL2 bootloader
-# firmware <-> ns <-> application: --application cpu0=bl2.axf
-# bootloader <-> s <-> data: --data cpu0=tfm_s_ns_signed.bin@0x10080000
 fvp_mps2_an521_bl2 = {
     "templ": "fvp_mps2.jinja2",
     "job_name": "fvp_mps2_an521_bl2",
@@ -300,7 +292,7 @@ fvp_mps2_an521_bl2 = {
     "tests": {
         'Default': {
             "binaries": {
-                "firmware": "bl2.axf",
+                "firmware": "mcuboot.axf",
                 "bootloader": "tfm_s_ns_signed.bin"
             },
             "monitors": [
@@ -318,7 +310,7 @@ fvp_mps2_an521_bl2 = {
         },  # Default
         'DefaultProfileS': {
             "binaries": {
-                "firmware": "bl2.axf",
+                "firmware": "mcuboot.axf",
                 "bootloader": "tfm_s_ns_signed.bin"
             },
             "monitors": [
@@ -336,7 +328,7 @@ fvp_mps2_an521_bl2 = {
         },  # DefaultProfileS
         'DefaultProfileM': {
             "binaries": {
-                "firmware": "bl2.axf",
+                "firmware": "mcuboot.axf",
                 "bootloader": "tfm_s_ns_signed.bin"
             },
             "monitors": [
@@ -355,7 +347,7 @@ fvp_mps2_an521_bl2 = {
 
         'Regression': {
             "binaries": {
-                "firmware": "bl2.axf",
+                "firmware": "mcuboot.axf",
                 "bootloader": "tfm_s_ns_signed.bin"
             },
             "monitors": [
@@ -409,7 +401,7 @@ fvp_mps2_an521_bl2 = {
 
         'RegressionProfileM': {
             "binaries": {
-                "firmware": "bl2.axf",
+                "firmware": "mcuboot.axf",
                 "bootloader": "tfm_s_ns_signed.bin"
             },
             "monitors": [
@@ -462,7 +454,7 @@ fvp_mps2_an521_bl2 = {
         },  # RegressionProfileM
         'RegressionProfileS': {
             "binaries": {
-                "firmware": "bl2.axf",
+                "firmware": "mcuboot.axf",
                 "bootloader": "tfm_s_ns_signed.bin"
             },
             "monitors": [
@@ -516,7 +508,7 @@ fvp_mps2_an521_bl2 = {
 
         'RegressionIPC': {
             "binaries": {
-                "firmware": "bl2.axf",
+                "firmware": "mcuboot.axf",
                 "bootloader": "tfm_s_ns_signed.bin"
             },
             "monitors": [
@@ -569,7 +561,7 @@ fvp_mps2_an521_bl2 = {
         },  # Regression
         'RegressionIPCTfmLevel2': {
             "binaries": {
-                "firmware": "bl2.axf",
+                "firmware": "mcuboot.axf",
                 "bootloader": "tfm_s_ns_signed.bin"
             },
             "monitors": [
@@ -622,7 +614,7 @@ fvp_mps2_an521_bl2 = {
         },  # Regression
         'RegressionIPCTfmLevel3': {
             "binaries": {
-                "firmware": "bl2.axf",
+                "firmware": "mcuboot.axf",
                 "bootloader": "tfm_s_ns_signed.bin"
             },
             "monitors": [
@@ -675,7 +667,7 @@ fvp_mps2_an521_bl2 = {
         },  # Regression
         'CoreIPC': {
             "binaries": {
-                "firmware": "bl2.axf",
+                "firmware": "mcuboot.axf",
                 "bootloader": "tfm_s_ns_signed.bin"
             },
             "monitors": [
@@ -693,7 +685,7 @@ fvp_mps2_an521_bl2 = {
         },  # CoreIPC
         'CoreIPCTfmLevel2': {
             "binaries": {
-                "firmware": "bl2.axf",
+                "firmware": "mcuboot.axf",
                 "bootloader": "tfm_s_ns_signed.bin"
             },
             "monitors": [
@@ -711,7 +703,7 @@ fvp_mps2_an521_bl2 = {
         },  # CoreIPCTfmLevel2
         'CoreIPCTfmLevel3': {
             "binaries": {
-                "firmware": "bl2.axf",
+                "firmware": "mcuboot.axf",
                 "bootloader": "tfm_s_ns_signed.bin"
             },
             "monitors": [
@@ -731,9 +723,6 @@ fvp_mps2_an521_bl2 = {
 }
 
 
-# FVP without BL2 bootloader
-# firmware <-> ns <-> application: --application cpu0=tfm_s.axf
-# bootloader <-> s <-> data: --data cpu0=tfm_ns.bin@0x00100000
 fvp_mps2_an521_nobl2 = {
     "templ": "fvp_mps2.jinja2",
     "job_name": "fvp_mps2_an521_nobl2",
@@ -1181,9 +1170,6 @@ fvp_mps2_an521_nobl2 = {
 }
 
 
-# FVP with BL2 bootloader
-# firmware <-> ns <-> application: --application cpu0=bl2.axf
-# bootloader <-> s <-> data: --data cpu0=tfm_s_ns_signed.bin@0x10080000
 fvp_mps2_an519_bl2 = {
     "templ": "fvp_mps2.jinja2",
     "job_name": "fvp_mps2_an519_bl2",
@@ -1201,7 +1187,7 @@ fvp_mps2_an519_bl2 = {
     "tests": {
         'Default': {
             "binaries": {
-                "firmware": "bl2.axf",
+                "firmware": "mcuboot.axf",
                 "bootloader": "tfm_s_ns_signed.bin"
             },
             "monitors": [
@@ -1219,7 +1205,7 @@ fvp_mps2_an519_bl2 = {
         },  # Default
         'DefaultProfileS': {
             "binaries": {
-                "firmware": "bl2.axf",
+                "firmware": "mcuboot.axf",
                 "bootloader": "tfm_s_ns_signed.bin"
             },
             "monitors": [
@@ -1237,7 +1223,7 @@ fvp_mps2_an519_bl2 = {
         },  # DefaultProfileS
         'DefaultProfileM': {
             "binaries": {
-                "firmware": "bl2.axf",
+                "firmware": "mcuboot.axf",
                 "bootloader": "tfm_s_ns_signed.bin"
             },
             "monitors": [
@@ -1256,7 +1242,7 @@ fvp_mps2_an519_bl2 = {
 
         'Regression': {
             "binaries": {
-                "firmware": "bl2.axf",
+                "firmware": "mcuboot.axf",
                 "bootloader": "tfm_s_ns_signed.bin"
             },
             "monitors": [
@@ -1310,7 +1296,7 @@ fvp_mps2_an519_bl2 = {
 
         'RegressionProfileM': {
             "binaries": {
-                "firmware": "bl2.axf",
+                "firmware": "mcuboot.axf",
                 "bootloader": "tfm_s_ns_signed.bin"
             },
             "monitors": [
@@ -1363,7 +1349,7 @@ fvp_mps2_an519_bl2 = {
         },  # RegressionProfileM
         'RegressionProfileS': {
             "binaries": {
-                "firmware": "bl2.axf",
+                "firmware": "mcuboot.axf",
                 "bootloader": "tfm_s_ns_signed.bin"
             },
             "monitors": [
@@ -1417,7 +1403,7 @@ fvp_mps2_an519_bl2 = {
 
         'RegressionIPC': {
             "binaries": {
-                "firmware": "bl2.axf",
+                "firmware": "mcuboot.axf",
                 "bootloader": "tfm_s_ns_signed.bin"
             },
             "monitors": [
@@ -1470,7 +1456,7 @@ fvp_mps2_an519_bl2 = {
         },  # Regression
         'RegressionIPCTfmLevel2': {
             "binaries": {
-                "firmware": "bl2.axf",
+                "firmware": "mcuboot.axf",
                 "bootloader": "tfm_s_ns_signed.bin"
             },
             "monitors": [
@@ -1523,7 +1509,7 @@ fvp_mps2_an519_bl2 = {
         },  # Regression
         'CoreIPC': {
             "binaries": {
-                "firmware": "bl2.axf",
+                "firmware": "mcuboot.axf",
                 "bootloader": "tfm_s_ns_signed.bin"
             },
             "monitors": [
@@ -1541,7 +1527,7 @@ fvp_mps2_an519_bl2 = {
         },  # CoreIPC
         'CoreIPCTfmLevel2': {
             "binaries": {
-                "firmware": "bl2.axf",
+                "firmware": "mcuboot.axf",
                 "bootloader": "tfm_s_ns_signed.bin"
             },
             "monitors": [
@@ -1561,9 +1547,6 @@ fvp_mps2_an519_bl2 = {
 }
 
 
-# FVP without BL2 bootloader
-# firmware <-> ns <-> application: --application cpu0=tfm_s.axf
-# bootloader <-> s <-> data: --data cpu0=tfm_ns.bin@0x00100000
 fvp_mps2_an519_nobl2 = {
     "templ": "fvp_mps2.jinja2",
     "job_name": "fvp_mps2_an519_nobl2",
@@ -1940,48 +1923,6 @@ fvp_mps2_an519_nobl2 = {
 }
 
 
-# MPS2 with BL2 bootloader
-# IMAGE0ADDRESS: 0x10000000
-# IMAGE0FILE: \Software\bl2.bin  ; BL2 bootloader
-# IMAGE1ADDRESS: 0x10080000
-# IMAGE1FILE: \Software\tfm_s_ns_signed.bin ; TF-M example application binary blob
-qemu_mps2_bl2 = {
-    "templ": "qemu_mps2.jinja2",
-    "job_name": "qemu_mps2",
-    "device_type": "qemu",
-    "job_timeout": 300,
-    "action_timeout": 300,
-    "poweroff_timeout": 20,
-    "platforms": {"AN521": ""},
-    "compilers": ["GNUARM", "ARMCLANG"],
-    "build_types": ["Debug", "Release"],
-    "boot_types": ["BL2"],
-    "tests": {
-        'Default': {
-            "binaries": {
-                "firmware": "tfm_s_ns_signed.bin",
-                "bootloader": "bl2.bin"
-            },
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': '[Sec Thread]',
-                    'end': 'system starting',
-                    'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
-                               r'(?P<test_case_id>Secure image '
-                               r'initializing)(?P<result>!)',
-                    'fixup': {"PASSED": "pass", "FAILED": "fail"},
-                    'required': ["secure_image_initializing"]
-                }  # Monitors
-            ]
-        },  # Default
-    }
-}
-
-
-# Musca-B1 with BL2 bootloader
-# unified hex file comprising of both bl2.bin and tfm_s_ns_signed.bin
-# srec_cat bin/bl2.bin -Binary -offset 0xA000000 bin/tfm_s_ns_signed.bin -Binary -offset 0xA020000 -o tfm.hex -Intel
 musca_b1_bl2 = {
     "templ": "musca_b1.jinja2",
     "job_name": "musca_b1_bl2",
@@ -2057,6 +1998,39 @@ musca_b1_bl2 = {
     },
 }
 
+qemu_mps2 = {
+    "templ": "qemu_mps2.jinja2",
+    "job_name": "qemu_mps2",
+    "device_type": "qemu",
+    "job_timeout": 300,
+    "action_timeout": 300,
+    "poweroff_timeout": 20,
+    "platforms": {"AN521": ""},
+    "compilers": ["GNUARM", "ARMCLANG"],
+    "build_types": ["Debug", "Release"],
+    "boot_types": ["NOBL2"],
+    "tests": {
+        'Default': {
+            "binaries": {
+                "firmware": "tfm_sign.bin",
+                "bootloader": "mcuboot.bin"
+            },
+            "monitors": [
+                {
+                    'name': 'Secure_Test_Suites_Summary',
+                    'start': '[Sec Thread]',
+                    'end': 'system starting',
+                    'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
+                               r'(?P<test_case_id>Secure image '
+                               r'initializing)(?P<result>!)',
+                    'fixup': {"PASSED": "pass", "FAILED": "fail"},
+                    'required': ["secure_image_initializing"]
+                }  # Monitors
+            ]
+        },  # Default
+    }
+}
+
 # All configurations should be mapped here
 lava_gen_config_map = {
     "mps2_an521_bl2": tfm_mps2_sse_200,
@@ -2064,8 +2038,8 @@ lava_gen_config_map = {
     "fvp_mps2_an521_nobl2": fvp_mps2_an521_nobl2,
     "fvp_mps2_an519_bl2": fvp_mps2_an519_bl2,
     "fvp_mps2_an519_nobl2": fvp_mps2_an519_nobl2,
-    "qemu_mps2": qemu_mps2_bl2,
     "musca_b1": musca_b1_bl2,
+    "qemu_mps2": qemu_mps2,
 }
 
 lavagen_config_sort_order = [
