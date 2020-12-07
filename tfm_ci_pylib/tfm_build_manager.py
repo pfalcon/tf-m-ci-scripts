@@ -31,15 +31,16 @@ from .structured_task import structuredTask
 from .tfm_builder import TFM_Builder
 
 
-mapPlatform = {"cypress/psoc64":   "psoc64",
-               "mps2/an519":       "AN519",
-               "mps2/an521":       "AN521",
-               "mps2/an539":       "AN539",
-               "mps2/sse-200_aws": "SSE-200_AWS",
-               "mps3/an524":       "AN524",
-               "musca_a":          "MUSCA_A",
-               "musca_b1":         "MUSCA_B1",
-               "musca_s1":         "MUSCA_S1"}
+mapPlatform = {"cypress/psoc64":            "psoc64",
+               "mps2/an519":                "AN519",
+               "mps2/an521":                "AN521",
+               "mps2/an539":                "AN539",
+               "mps2/sse-200_aws":          "SSE-200_AWS",
+               "mps3/an524":                "AN524",
+               "musca_a":                   "MUSCA_A",
+               "musca_b1/sse_200":          "MUSCA_B1",
+               "musca_b1/secure_enclave":   "MUSCA_B1_SE",
+               "musca_s1":                  "MUSCA_S1"}
 
 mapCompiler = {"toolchain_GNUARM.cmake":   "GNUARM",
                "toolchain_ARMCLANG.cmake": "ARMCLANG"}
@@ -401,7 +402,7 @@ class TFM_Build_Manager(structuredTask):
                             "partition_ps": i.partition_ps}
         if i.test_psa_api == "IPC":
             overwrite_params["test_psa_api"] += " -DINCLUDE_PANIC_TESTS=1"
-            if i.tfm_platform == "musca_b1":
+            if i.tfm_platform == "musca_b1/sse_200":
                 overwrite_params["test_psa_api"] += " -DITS_RAM_FS=ON -DPS_RAM_FS=ON"
         build_cfg["config_template"] %= overwrite_params
         if len(build_cfg["build_cmds"]) > 1:
