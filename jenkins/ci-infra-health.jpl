@@ -33,6 +33,42 @@ mapTestPsaApi = ["OFF":                      "",
                  "INITIAL_ATTESTATION":      "Attest",
                  "IPC":                      "FF"]
 
+// BL2, NS, PSA_API, ISOLATION_LEVEL, TEST_REG, TEST_PSA_API, PROFILE, CONFIG_NAME
+mapConfigs = [
+  ["True", "True", "False", "1", "False", "OFF",                      "N.A",            "Default"],
+  ["True", "True", "True",  "1", "False", "OFF",                      "N.A",            "CoreIPC"],
+  ["True", "True", "True",  "2", "False", "OFF",                      "N.A",            "CoreIPCTfmLevel2"],
+  ["True", "True", "True",  "3", "False", "OFF",                      "N.A",            "CoreIPCTfmLevel3"],
+  ["True", "True", "False", "1", "False", "OFF",                      "profile_small",  "DefaultProfileS"],
+  ["True", "True", "True",  "2", "False", "OFF",                      "profile_medium", "DefaultProfileM"],
+  ["True", "True", "False", "1", "True",  "OFF",                      "N.A",            "Regression"],
+  ["True", "True", "True",  "1", "True",  "OFF",                      "N.A",            "RegressionIPC"],
+  ["True", "True", "True",  "2", "True",  "OFF",                      "N.A",            "RegressionIPCTfmLevel2"],
+  ["True", "True", "True",  "3", "True",  "OFF",                      "N.A",            "RegressionIPCTfmLevel3"],
+  ["True", "True", "False", "1", "True",  "OFF",                      "profile_small",  "RegressionProfileS"],
+  ["True", "True", "True",  "2", "True",  "OFF",                      "profile_medium", "RegressionProfileM"],
+  ["True", "True", "False", "1", "False", "INTERNAL_TRUSTED_STORAGE", "N.A",            "PsaApiTest (ITS)"],
+  ["True", "True", "False", "1", "False", "PROTECTED_STORAGE",        "N.A",            "PsaApiTest (PS)"],
+  ["True", "True", "False", "1", "False", "CRYPTO",                   "N.A",            "PsaApiTest (Crypto)"],
+  ["True", "True", "False", "1", "False", "INITIAL_ATTESTATION",      "N.A",            "PsaApiTest (Attest)"],
+  ["True", "True", "False", "1", "False", "IPC",                      "N.A",            "PsaApiTest (FF)"],
+  ["True", "True", "True",  "1", "False", "INTERNAL_TRUSTED_STORAGE", "N.A",            "PsaApiTestIPC (ITS)"],
+  ["True", "True", "True",  "1", "False", "PROTECTED_STORAGE",        "N.A",            "PsaApiTestIPC (PS)"],
+  ["True", "True", "True",  "1", "False", "CRYPTO",                   "N.A",            "PsaApiTestIPC (Crypto)"],
+  ["True", "True", "True",  "1", "False", "INITIAL_ATTESTATION",      "N.A",            "PsaApiTestIPC (Attest)"],
+  ["True", "True", "True",  "1", "False", "IPC",                      "N.A",            "PsaApiTestIPC (FF)"],
+  ["True", "True", "True",  "2", "False", "INTERNAL_TRUSTED_STORAGE", "N.A",            "PsaApiTestIPCTfmLevel2 (ITS)"],
+  ["True", "True", "True",  "2", "False", "PROTECTED_STORAGE",        "N.A",            "PsaApiTestIPCTfmLevel2 (PS)"],
+  ["True", "True", "True",  "2", "False", "CRYPTO",                   "N.A",            "PsaApiTestIPCTfmLevel2 (Crypto)"],
+  ["True", "True", "True",  "2", "False", "INITIAL_ATTESTATION",      "N.A",            "PsaApiTestIPCTfmLevel2 (Attest)"],
+  ["True", "True", "True",  "2", "False", "IPC",                      "N.A",            "PsaApiTestIPCTfmLevel2 (FF)"],
+  ["True", "True", "True",  "3", "False", "INTERNAL_TRUSTED_STORAGE", "N.A",            "PsaApiTestIPCTfmLevel3 (ITS)"],
+  ["True", "True", "True",  "3", "False", "PROTECTED_STORAGE",        "N.A",            "PsaApiTestIPCTfmLevel3 (PS)"],
+  ["True", "True", "True",  "3", "False", "CRYPTO",                   "N.A",            "PsaApiTestIPCTfmLevel3 (Crypto)"],
+  ["True", "True", "True",  "3", "False", "INITIAL_ATTESTATION",      "N.A",            "PsaApiTestIPCTfmLevel3 (Attest)"],
+  ["True", "True", "True",  "3", "False", "IPC",                      "N.A",            "PsaApiTestIPCTfmLevel3 (FF)"],
+]
+
 def generateLavaParam(build_params) {
   def params = []
   params += string(name: "TARGET_PLATFORM", \
@@ -42,126 +78,22 @@ def generateLavaParam(build_params) {
   params += string(name: "PSA_API_SUITE", \
                    value: mapTestPsaApi[build_params["TEST_PSA_API"]])
 
-  if (build_params["BL2"]             == "True"  && \
-      build_params["NS"]              == "True"  && \
-      build_params["PSA_API"]         == "False" && \
-      build_params["ISOLATION_LEVEL"] == "1"     && \
-      build_params["TEST_REGRESSION"] == "False" && \
-      build_params["TEST_PSA_API"]    == "OFF"   && \
-      build_params["PROFILE"]         == "N.A") {
-        params += string(name: "PROJ_CONFIG", value: "ConfigDefault")
-      }
-  else if (build_params["BL2"]        == "True"  && \
-      build_params["NS"]              == "True"  && \
-      build_params["PSA_API"]         == "True"  && \
-      build_params["ISOLATION_LEVEL"] == "1"     && \
-      build_params["TEST_REGRESSION"] == "False" && \
-      build_params["TEST_PSA_API"]    == "OFF"   && \
-      build_params["PROFILE"]         == "N.A") {
-        params += string(name: "PROJ_CONFIG", value: "ConfigCoreIPC")
-      }
-  else if (build_params["BL2"]        == "True"  && \
-      build_params["NS"]              == "True"  && \
-      build_params["PSA_API"]         == "True"  && \
-      build_params["ISOLATION_LEVEL"] == "2"     && \
-      build_params["TEST_REGRESSION"] == "False" && \
-      build_params["TEST_PSA_API"]    == "OFF"   && \
-      build_params["PROFILE"]         == "N.A") {
-        params += string(name: "PROJ_CONFIG", value: "ConfigCoreIPCTfmLevel2")
-      }
-  else if (build_params["BL2"]        == "True"          && \
-      build_params["NS"]              == "True"          && \
-      build_params["PSA_API"]         == "False"         && \
-      build_params["ISOLATION_LEVEL"] == "1"             && \
-      build_params["PROFILE"]         == "profile_small" && \
-      build_params["TEST_REGRESSION"] == "False"         && \
-      build_params["TEST_PSA_API"]    == "OFF") {
-        params += string(name: "PROJ_CONFIG", value: "ConfigDefaultProfileS")
-      }
-  else if (build_params["BL2"]        == "True"          && \
-      build_params["NS"]              == "True"          && \
-      build_params["PSA_API"]         == "True"          && \
-      build_params["ISOLATION_LEVEL"] == "2"             && \
-      build_params["PROFILE"]         == "profile_medium"&& \
-      build_params["TEST_REGRESSION"] == "False"         && \
-      build_params["TEST_PSA_API"]    == "OFF") {
-        params += string(name: "PROJ_CONFIG", value: "ConfigDefaultProfileM")
-      }
-  else if (build_params["BL2"]        == "True"  && \
-      build_params["NS"]              == "True"  && \
-      build_params["PSA_API"]         == "False" && \
-      build_params["ISOLATION_LEVEL"] == "1"     && \
-      build_params["TEST_REGRESSION"] == "True"  && \
-      build_params["TEST_PSA_API"]    == "OFF"   && \
-      build_params["PROFILE"]         == "N.A") {
-        params += string(name: "PROJ_CONFIG", value: "ConfigRegression")
-      }
-  else if (build_params["BL2"]        == "True"  && \
-      build_params["NS"]              == "True"  && \
-      build_params["PSA_API"]         == "True"  && \
-      build_params["ISOLATION_LEVEL"] == "1"     && \
-      build_params["TEST_REGRESSION"] == "True"  && \
-      build_params["TEST_PSA_API"]    == "OFF"   && \
-      build_params["PROFILE"]         == "N.A") {
-        params += string(name: "PROJ_CONFIG", value: "ConfigRegressionIPC")
-      }
-  else if (build_params["BL2"]        == "True"  && \
-      build_params["NS"]              == "True"  && \
-      build_params["PSA_API"]         == "True"  && \
-      build_params["ISOLATION_LEVEL"] == "2"     && \
-      build_params["TEST_REGRESSION"] == "True"  && \
-      build_params["TEST_PSA_API"]    == "OFF"   && \
-      build_params["PROFILE"]         == "N.A") {
-        params += string(name: "PROJ_CONFIG", value: "ConfigRegressionIPCTfmLevel2")
-      }
-  else if (build_params["BL2"]        == "True"          && \
-      build_params["NS"]              == "True"          && \
-      build_params["PSA_API"]         == "False"         && \
-      build_params["ISOLATION_LEVEL"] == "1"             && \
-      build_params["PROFILE"]         == "profile_small" && \
-      build_params["TEST_REGRESSION"] == "True"          && \
-      build_params["TEST_PSA_API"]    == "OFF") {
-        params += string(name: "PROJ_CONFIG", value: "ConfigRegressionProfileS")
-      }
-  else if (build_params["BL2"]        == "True"          && \
-      build_params["NS"]              == "True"          && \
-      build_params["PSA_API"]         == "True"         && \
-      build_params["ISOLATION_LEVEL"] == "2"             && \
-      build_params["PROFILE"]         == "profile_medium"&& \
-      build_params["TEST_REGRESSION"] == "True"          && \
-      build_params["TEST_PSA_API"]    == "OFF") {
-        params += string(name: "PROJ_CONFIG", value: "ConfigRegressionProfileM")
-      }
-  else if (build_params["BL2"]        == "True"  && \
-      build_params["NS"]              == "True"  && \
-      build_params["PSA_API"]         == "False" && \
-      build_params["ISOLATION_LEVEL"] == "1"     && \
-      build_params["TEST_REGRESSION"] == "False" && \
-      build_params["TEST_PSA_API"]    != "OFF"   && \
-      build_params["PROFILE"]         == "N.A") {
-        params += string(name: "PROJ_CONFIG", value: "ConfigPsaApiTest")
-      }
-  else if (build_params["BL2"]        == "True"  && \
-      build_params["NS"]              == "True"  && \
-      build_params["PSA_API"]         == "True"  && \
-      build_params["ISOLATION_LEVEL"] == "1"     && \
-      build_params["TEST_REGRESSION"] == "False" && \
-      build_params["TEST_PSA_API"]    != "OFF"   && \
-      build_params["PROFILE"]         == "N.A") {
-        params += string(name: "PROJ_CONFIG", value: "ConfigPsaApiTestIPC")
-      }
-  else if (build_params["BL2"]        == "True"  && \
-      build_params["NS"]              == "True"  && \
-      build_params["PSA_API"]         == "True"  && \
-      build_params["ISOLATION_LEVEL"] == "2"     && \
-      build_params["TEST_REGRESSION"] == "False" && \
-      build_params["TEST_PSA_API"]    != "OFF"   && \
-      build_params["PROFILE"]         == "N.A") {
-        params += string(name: "PROJ_CONFIG", value: "ConfigPsaApiTestIPCTfmLevel2")
-      }
-  else {
-    params += string(name: "PROJ_CONFIG", value: "ConfigDefault")
+  configName = "Config"
+  config_params = [build_params["BL2"], build_params["NS"], \
+                   build_params["PSA_API"], build_params["ISOLATION_LEVEL"], \
+                   build_params["TEST_REGRESSION"], build_params["TEST_PSA_API"], \
+                   build_params["PROFILE"]]
+  for (config in mapConfigs) {
+    if (config_params == config[0..6]) {
+      configName += config[7].split(' ')[0]
+      break
+    }
   }
+  if (configName == "Config") {
+    configName = "ConfigDefault"
+  }
+  params += string(name: "PROJ_CONFIG", value: configName)
+
   return params
 }
 
