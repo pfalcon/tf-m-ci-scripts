@@ -78,7 +78,6 @@ node("docker-amd64-tf-m-bionic") {
     }
     stage("Post") {
       archiveArtifacts 'trusted-firmware-m/build/docs/**'
-      archiveArtifacts 'trusted-firmware-m/build/install/export/**'
     }
   } catch (Exception e) {
     manager.buildFailure()
