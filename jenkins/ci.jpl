@@ -507,7 +507,9 @@ node("docker-amd64-tf-m-bionic") {
       success = false
     } finally {
       archiveArtifacts artifacts: 'tf-m-ci-scripts/lava_artifacts/**', allowEmptyArchive: true
-      emailNotification(success, 'test', filterFailedTest(output))
+      if (all_jobs.size() > 0) {
+        emailNotification(success, 'test', filterFailedTest(output))
+      }
       cleanWs()
       if (!success) {
         error("There was an Error waiting for LAVA jobs")
