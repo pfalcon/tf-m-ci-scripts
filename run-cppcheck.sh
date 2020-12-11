@@ -72,6 +72,7 @@ cmake_commands=compile_commands.json
 #Library file for cppcheck
 library_file="$(fix_win_path $(get_full_path $mypath))/cppcheck/arm-cortex-m.cfg"
 suppress_file="$(fix_win_path $(get_full_path $mypath))/cppcheck/tfm-suppress-list.txt"
+toolchain_file="$(fix_win_path $(get_full_path ./))/toolchain_GNUARM.cmake"
 
 #Enable all additional checks by default
 additional_checklist="all"
@@ -80,8 +81,7 @@ additional_checklist="all"
 echo
 echo '******* Generating compile_commands.json ***************'
 echo
-generate_project $(fix_win_path $(get_full_path ./)) "./" "cppcheck" "-DCMAKE_EXPORT_COMPILE_COMMANDS=1 -DTFM_PLATFORM=mps2/an521 -DTFM_TOOLCHAIN_FILE=toolchain_GNUARM.cmake"
-
+generate_project $(fix_win_path $(get_full_path ./)) "./" "cppcheck" "-DCMAKE_EXPORT_COMPILE_COMMANDS=1 -DTFM_PLATFORM=mps2/an521 -DTFM_TOOLCHAIN_FILE=$toolchain_file"
 #Enter the build directory
 bdir=$(make_build_dir_name "./" "cppcheck")
 pushd "$bdir" >/dev/null
