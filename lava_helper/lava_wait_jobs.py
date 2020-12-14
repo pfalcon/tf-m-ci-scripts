@@ -70,6 +70,7 @@ def wait_for_jobs(user_args):
             finished_jobs[job] = info
     finished_jobs = fetch_artifacts(finished_jobs, user_args, lava)
     print_lava_urls(finished_jobs, user_args)
+    job_links(finished_jobs, user_args)
     boot_report(finished_jobs, user_args)
     test_report(finished_jobs, user_args, lava)
     failure_report(finished_jobs, user_args)
@@ -105,6 +106,14 @@ def generateTestResult(info):
         return "PASS"
     else:
         return "FAIL"
+
+def job_links(jobs, user_args):
+    job_links = ""
+    for job, info in jobs.items():
+        job_links += "Build Config: {}  ".format(info['metadata']['build_name'])
+        job_links += "LAVA link: {}  ".format(lava_id_to_url(job, user_args))
+        job_links += "Build link: {}\n".format(info['metadata']['build_job_url'])
+    print(job_links)
 
 def csv_report(jobs):
     lava_jobs = []

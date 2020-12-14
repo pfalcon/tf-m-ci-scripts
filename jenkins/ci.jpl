@@ -186,6 +186,10 @@ python3 ./configs.py -g ${filter_group.replace(" ", " -g ")} ${config}
       else {
         results['lava_jobs'] += lava_res.getDescription()
       }
+      links = "Build Config: ${config}\n"
+      links += "Build URL: ${build_url}\n"
+      links += "LAVA Submit: ${lava_res.getAbsoluteUrl()}"
+      print(links)
     }
   }
 }
@@ -386,6 +390,13 @@ def lineInString(string, match) {
   return result[0]
 }
 
+def showLinks(string) {
+  def lines = string.split("\n")
+  def result = lines.findAll { it.contains("Build Config: ")}
+  links = result.join("\n")
+  print(links)
+}
+
 def getResult(string, match) {
   line = lineInString(string, match)
   a = line.split(match)[1].split(' ')
@@ -482,6 +493,7 @@ node("docker-amd64-tf-m-bionic") {
   --lava-url ${env.LAVA_URL} --lava-user ${LAVA_USER} --lava-token ${LAVA_TOKEN} \
   --artifacts-path lava_artifacts --lava-timeout 7200 \
   """, returnStdout: true).trim()
+            showLinks(output)
             archiveArtifacts artifacts: 'test_summary.*', allowEmptyArchive: true
             archiveArtifacts artifacts: 'test_results.csv', allowEmptyArchive: true
             g = new Gerrit()
