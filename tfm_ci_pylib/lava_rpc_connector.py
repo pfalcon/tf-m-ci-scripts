@@ -54,6 +54,7 @@ class LAVA_RPC_connector(xmlrpc.client.ServerProxy, object):
                                            hostname)
 
         self.server_job_prefix = "%s/scheduler/job/%%s" % self.server_url
+        self.server_api = "%s/api/v0.2/" % self.server_url
         self.server_results_prefix = "%s/results/%%s" % self.server_url
         self.token = token
         self.username = username
@@ -97,9 +98,13 @@ class LAVA_RPC_connector(xmlrpc.client.ServerProxy, object):
         return job_def, def_o.get('metadata', [])
 
     def get_job_log(self, job_id, target_out_file):
-        log_url = "{}/log_file/plain".format(self.server_job_prefix % job_id)
-        r = requests.get(log_url, stream=True)
-        if not r:
+        auth_headers = {"Authorization": "Token %s" % self.token}
+        log_url = "{server_url}/jobs/{job_id}/logs/".format(
+            server_url=self.server_api, job_id=job_id
+        )
+        r = requests.get(log_url, stream=True, headers=auth_headers)
+        if r.status_code != 200:
+            print("{} - {}".format(log_url, r.status_code))
             return
         with open(target_out_file, "w") as target_out:
             try:
