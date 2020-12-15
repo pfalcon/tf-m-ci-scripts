@@ -1957,24 +1957,24 @@ qemu_mps2_bl2 = {
     "build_types": ["Debug", "Release"],
     "boot_types": ["BL2"],
     "tests": {
-        'Default': {
-            "binaries": {
-                "firmware": "tfm_s_ns_signed.bin",
-                "bootloader": "bl2.bin"
-            },
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': r'[Sec Thread]',
-                    'end': r'system starting',
-                    'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
-                               r'(?P<test_case_id>Secure image '
-                               r'initializing)(?P<result>!)',
-                    'fixup': {"pass": "!", "fail": ""},
-                    'required': ["secure_image_initializing"]
-                }  # Monitors
-            ]
-        },  # Default
+        # 'Default': {
+        #     "binaries": {
+        #         "firmware": "tfm_s_ns_signed.bin",
+        #         "bootloader": "bl2.bin"
+        #     },
+        #     "monitors": [
+        #         {
+        #             'name': 'Secure_Test_Suites_Summary',
+        #             'start': r'[Sec Thread]',
+        #             'end': r'system starting',
+        #             'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
+        #                        r'(?P<test_case_id>Secure image '
+        #                        r'initializing)(?P<result>!)',
+        #             'fixup': {"pass": "!", "fail": ""},
+        #             'required': ["secure_image_initializing"]
+        #         }  # Monitors
+        #     ]
+        # },  # Default
         'DefaultProfileS': {
             "binaries": {
                 "firmware": "tfm_s_ns_signed.bin",
