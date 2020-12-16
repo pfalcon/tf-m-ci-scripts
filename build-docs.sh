@@ -26,6 +26,3 @@ cmake -S .. -B . -DTFM_PLATFORM=mps2/an521 \
                  -DMCUBOOT_PATH=../../mcuboot
 cmake --build ./ -- tfm_docs_refman_html
 cmake --build ./ -- tfm_docs_userguide_html
-
-mkdir -p install/doc
-cp -r docs/* install/doc/
