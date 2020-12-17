@@ -31,17 +31,17 @@ actions:
     - boot:
         method: musca
 
-    # Monitors example
-#     - test:
-#         namespace: target
-#         monitors:
-#         - name: "Secure_Test_Suites_Summary_AN521_ARMCLANG_Regression_Debug_BL2"
-#           start: "Secure test suites summary"
-#           end: "End of Secure test suites"
-#           pattern: "[\x1b]\\[37mTest suite '(?P<test_case_id>.*)' has [\x1b]\\[32m (?P<result>PASSED|FAILED)"
-#           fixupdict:
-#              'PASSED': pass
-#              'FAILED': fail
+    - test:
+        monitors:
+        {%- for monitor in test.monitors %}
+        - name: "{{monitor.name}}"
+          start: "{{monitor.start}}"
+          end: "{{monitor.end}}"
+          pattern: "{{monitor.pattern}}"
+          fixupdict:
+              '{{monitor.fixup.pass}}': pass
+              '{{monitor.fixup.fail}}': fail
+        {% endfor %}
 
 metadata:
   build_no: {{ build_no }}
