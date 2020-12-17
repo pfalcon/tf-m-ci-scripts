@@ -12,7 +12,7 @@ actions:
     timeout: {seconds: 100}
     to: tmpfs
 - boot:
-    docker: {binary: /usr/bin/qemu-system-arm, image: 'kevintownsend/lite-qemu5:v1'}
+    docker: {binary: /usr/bin/qemu-system-arm, image: 'trustedfirmware/ci-amd64-tf-m-qemu-debian:bullseye'}
     method: qemu
     timeout: {seconds: 300}
 - test:
