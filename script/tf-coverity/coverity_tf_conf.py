@@ -15,6 +15,6 @@
 # - description aims at providing the reason why the files are expected
 #   to be excluded.
 exclude_paths = [
-    ("platform/ext/.*", "3rd party libraries will not be fixed")
+    ("platform/ext/.*", "3rd party libraries will not be fixed"),
     ("lib/ext/.*", "3rd party libraries will not be fixed"),
 ]
