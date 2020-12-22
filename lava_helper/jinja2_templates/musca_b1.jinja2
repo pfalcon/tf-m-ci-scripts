@@ -4,21 +4,8 @@
 # SPDX-License-Identifier: BSD-3-Clause
 #
 #-----------------------------------------------------------------------------#}
-device_type: {{ device_type }}
-job_name: {{ job_name }}
-
-timeouts:
-  action:
-    minutes: {{ action_timeout }}
-  actions:
-    power-off:
-      seconds: {{ poweroff_timeout }}
-  job:
-    minutes: {{ job_timeout }}
-
-priority: medium
-visibility: public
-
+{% extends 'jinja2_templates/base.jinja2' %}
+{% block actions %}
 actions:
     - deploy:
         timeout:
@@ -42,7 +29,9 @@ actions:
               '{{monitor.fixup.pass}}': pass
               '{{monitor.fixup.fail}}': fail
         {% endfor %}
+{% endblock %}
 
+{% block metadata %}
 metadata:
   build_no: {{ build_no }}
   compiler: {{ compiler }}
@@ -52,4 +41,4 @@ metadata:
   platform: {{ platform }}
   build_name: {{ build_name }}
   build_job_url: {{ build_job_url }}
-
+{% endblock %}

@@ -2396,6 +2396,7 @@ musca_b1_bl2 = {
     "device_type": "musca-b",
     "job_timeout": 24,
     "action_timeout": 12,
+    "monitor_timeout": 10,
     "poweroff_timeout": 40,
     "platforms": {"MUSCA_B1": ""},
     "compilers": ["GNUARM", "ARMCLANG"],
