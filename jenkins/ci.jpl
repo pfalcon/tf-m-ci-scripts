@@ -106,7 +106,7 @@ def generateLavaParam(build_params) {
                    build_params["PROFILE"]]
   for (config in mapConfigs) {
     if (config_params == config[0..6]) {
-      configName += config[7].split(' ')[0]
+      configName += config[7].replace(' (', '_').replace(')', '')
       break
     }
   }
