@@ -294,9 +294,9 @@ def generateCsvContent(results) {
     }
   }
   resultsParam.each { result ->
-    if (result[2] == 'musca_b1') {
+    if (result[2] == 'musca_b1/sse_200') {
       if (result[13] != 'off') {
-        result[2] = 'musca_b1_OTP'
+        result[2] = 'musca_b1/sse_200_OTP'
       }
     }
     result[3] = mapCompiler[result[3]]
