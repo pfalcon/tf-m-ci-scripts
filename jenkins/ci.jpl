@@ -89,6 +89,7 @@ cfgs = ["Default", "CoreIPC", "CoreIPCTfmLevel2", "CoreIPCTfmLevel3",
         "PsaApiTestIPCTfmLevel3 (Crypto)", "PsaApiTestIPCTfmLevel3 (Attest)",
         "PsaApiTestIPCTfmLevel3 (FF)"]
 
+@NonCPS
 def generateLavaParam(build_params) {
   def params = []
   params += string(name: "TARGET_PLATFORM", \
@@ -113,7 +114,8 @@ def generateLavaParam(build_params) {
     configName = "ConfigDefault"
   }
   params += string(name: "PROJ_CONFIG", value: configName)
-
+  print("Params of ${configName} :")
+  print(config_params)
   return params
 }
 
@@ -173,9 +175,7 @@ python3 ./configs.py -g ${filter_group.replace(" ", " -g ")} ${config}
     }
     else {
       print("Doing LAVA stuff for ${build_url}")
-      lava_params = generateLavaParam(params_collection)
-      print(lava_params)
-      params += lava_params
+      params += generateLavaParam(params_collection)
       params += string(name: 'BUILD_NUMBER', value: "${build_res.number}")
       params += string(name: 'BUILD_URL', value: build_url)
       params += string(name: 'LAVA_URL', value: env.LAVA_URL)
