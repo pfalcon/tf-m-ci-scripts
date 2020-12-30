@@ -99,7 +99,7 @@ node(nodeLabel) {
     }
     stage("Post") {
       archiveArtifacts 'trusted-firmware-m/build/bin/**'
-      archiveArtifacts 'trusted-firmware-m/build/install/export/**'
+      archiveArtifacts 'trusted-firmware-m/build/install/interface/**'
     }
   } catch (Exception e) {
     manager.buildFailure()
