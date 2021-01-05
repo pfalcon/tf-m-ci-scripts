@@ -803,7 +803,7 @@ config_nightly_OTP = {"seed_params": {
 
 config_pp_test = {"seed_params": {
                 "tfm_platform":     ["mps2/an521", "mps2/an519",
-                                     "musca_b1/sse_200"],
+                                     "musca_b1/sse_200", "musca_s1"],
                 "toolchain_file":   ["toolchain_GNUARM.cmake",
                                      "toolchain_ARMCLANG.cmake"],
                 "psa_api":          [True, False],
