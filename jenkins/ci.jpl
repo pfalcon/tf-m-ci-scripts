@@ -169,8 +169,9 @@ python3 ./configs.py -g ${filter_group.replace(" ", " -g ")} ${config}
       error("Build failed at ${build_url}")
     }
     else if (params_collection["NS"] == "False" || \
-               (params_collection["PROFILE"] == "profile_medium" && \
-               params_collection["PARTITION_PS"] == "OFF")) {
+             params_collection["OTP"] == "ENABLED" || \
+             (params_collection["PROFILE"] == "profile_medium" && \
+              params_collection["PARTITION_PS"] == "OFF")) {
       print("LAVA is not needed for ${build_url}")
     }
     else {
