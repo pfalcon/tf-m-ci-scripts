@@ -199,9 +199,7 @@ _common_tfm_invalid_configs = [
     ("*", "*", "*", "2", "*", "*", "*",  "*", "*", "*", "profile_small", "*"),
     # Only AN521 and MUSCA_B1 support Isolation Level 3
     ("mps2/an519", "*", "*", "3", "*", "*", "*",  "*", "*", "*", "*", "*"),
-    ("mps2/an539", "*", "*", "3", "*", "*", "*",  "*", "*", "*", "*", "*"),
     ("mps3/an524", "*", "*", "3", "*", "*", "*",  "*", "*", "*", "*", "*"),
-    ("mps2/sse-200_aws", "*", "*", "3", "*", "*", "*",  "*", "*", "*", "*", "*"),
     ("musca_a", "*", "*", "3", "*", "*", "*",  "*", "*", "*", "*", "*"),
     ("musca_s1", "*", "*", "3", "*", "*", "*",  "*", "*", "*", "*", "*"),
     ("cypress/psoc64", "*", "*", "3", "*", "*", "*",  "*", "*", "*", "*", "*"),
@@ -409,8 +407,7 @@ config_IPC =  {"seed_params": {
 config_full = {"seed_params": {
                "tfm_platform":     ["mps2/an521", "mps2/an519",
                                     "musca_a", "musca_b1/sse_200",
-                                    "mps2/an539", "mps3/an524",
-                                    "cypress/psoc64",
+                                    "mps3/an524", "cypress/psoc64",
                                     "musca_b1/secure_enclave"],
                "toolchain_file":   ["toolchain_GNUARM.cmake",
                                     "toolchain_ARMCLANG.cmake"],
@@ -439,8 +436,6 @@ config_full = {"seed_params": {
                     "*", "*", "RelWithDebInfo",  "*", "*", "*", "*", "*"),
                    ("musca_b1/sse_200", "*", "*", "*",
                     "*", "*", "RelWithDebInfo",  "*", "*", "*", "*", "*"),
-                   ("mps2/an539", "*", "*", "*",
-                    "*", "*", "RelWithDebInfo",  "*", "*", "*", "*", "*"),
                    ("mps3/an524", "*", "*", "*",
                     "*", "*", "RelWithDebInfo",  "*", "*", "*", "*", "*"),
                ]
@@ -467,8 +462,7 @@ config_tfm_test = {"seed_params": {
                 }
 
 config_tfm_test2 = {"seed_params": {
-                "tfm_platform":     ["mps2/an519", "mps3/an524",
-                                     "mps2/an539", "mps2/sse-200_aws"],
+                "tfm_platform":     ["mps2/an519", "mps3/an524"],
                 "toolchain_file":   ["toolchain_ARMCLANG.cmake",
                                      "toolchain_GNUARM.cmake"],
                 "psa_api":          [True, False],
@@ -610,7 +604,7 @@ config_MUSCA_S1 = {"seed_params": {
 config_release = {"seed_params": {
                 "tfm_platform":     ["mps2/an521", "mps2/an519",
                                      "musca_a", "musca_b1/sse_200", "musca_s1",
-                                     "mps3/an524", "mps2/an539"],
+                                     "mps3/an524"],
                 "toolchain_file":   ["toolchain_ARMCLANG.cmake",
                                      "toolchain_GNUARM.cmake"],
                 "psa_api":          [True, False],
@@ -685,8 +679,7 @@ config_AN521_PSA_IPC = {"seed_params": {
 config_nightly = {"seed_params": {
                "tfm_platform":      ["mps2/an521", "mps2/an519",
                                      "musca_a", "musca_b1/sse_200", "musca_s1",
-                                     "mps3/an524", "mps2/an539",
-                                     "mps2/sse-200_aws", "cypress/psoc64",
+                                     "mps3/an524", "cypress/psoc64",
                                      "musca_b1/secure_enclave"],
                 "toolchain_file":   ["toolchain_GNUARM.cmake",
                                      "toolchain_ARMCLANG.cmake"],
@@ -719,11 +712,7 @@ config_nightly = {"seed_params": {
                      "*", "*", "RelWithDebInfo",  "*", "*", "*", "*", "*"),
                     ("musca_s1", "*", "*", "*",
                      "*", "*", "RelWithDebInfo",  "*", "*", "*", "*", "*"),
-                    ("mps2/an539", "*", "*", "*",
-                     "*", "*", "RelWithDebInfo",  "*", "*", "*", "*", "*"),
                     ("mps3/an524", "*", "*", "*",
-                     "*", "*", "RelWithDebInfo",  "*", "*", "*", "*", "*"),
-                    ("mps2/sse-200_aws", "*", "*", "*",
                      "*", "*", "RelWithDebInfo",  "*", "*", "*", "*", "*"),
                 ]
                 }
