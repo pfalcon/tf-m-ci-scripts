@@ -35,7 +35,7 @@ set -ex
 build_commands=$(python3 tf-m-ci-scripts/configs.py -b -g all $CONFIG_NAME)
 
 if [ $CODE_COVERAGE_EN = "TRUE" ] && [[ $CONFIG_NAME =~ "GNUARM" ]] ; then
-    build_commands=${build_commands/-DCOMPILER=GNUARM/-DCOMPILER=GNUARM -DCODE_COVERAGE_EN=TRUE}
+    build_commands=${build_commands/toolchain_GNUARM.cmake/toolchain_GNUARM.cmake -DTFM_CODE_COVERAGE=True}
     echo "Flag: Add compiler flag for build with code coverage supported."
     echo $build_commands
 fi
