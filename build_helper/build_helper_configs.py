@@ -817,7 +817,7 @@ config_pp_test = {"seed_params": {
                 "toolchain_file":   ["toolchain_GNUARM.cmake",
                                      "toolchain_ARMCLANG.cmake"],
                 "psa_api":          [True, False],
-                "isolation_level":  ["1", "2"],
+                "isolation_level":  ["1", "2", "3"],
                 "test_regression":  [True],
                 "test_psa_api":     ["OFF"],
                 "cmake_build_type": ["Release"],
