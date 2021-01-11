@@ -1,5 +1,5 @@
 //-------------------------------------------------------------------------------
-// Copyright (c) 2018-2019, Arm Limited and Contributors. All rights reserved.
+// Copyright (c) 2018-2021, Arm Limited and Contributors. All rights reserved.
 //
 // SPDX-License-Identifier: BSD-3-Clause
 //
@@ -56,3 +56,11 @@ missingInclude:*/tfm_secure_api.h:11
 *:*/lib/ext/*
 *:*/bl2/ext/*
 *:*/platform/ext/*
+
+//cppcheck shouldn't complain about unused function.
+unusedFunction
+
+//Variables in the following file are initialised to a specific value before being
+//modified. This is good practice and complies with TF-M guidelines. It should not
+//trigger an error.
+redundantInitialization:*/security_cnt.c
