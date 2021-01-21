@@ -1,6 +1,6 @@
 #!/usr/bin/env groovy
 //-------------------------------------------------------------------------------
-// Copyright (c) 2020, Arm Limited and Contributors. All rights reserved.
+// Copyright (c) 2020-2021, Arm Limited and Contributors. All rights reserved.
 //
 // SPDX-License-Identifier: BSD-3-Clause
 //
@@ -92,8 +92,14 @@ cfgs = ["Default", "CoreIPC", "CoreIPCTfmLevel2", "CoreIPCTfmLevel3",
 @NonCPS
 def generateLavaParam(build_params) {
   def params = []
-  params += string(name: "TARGET_PLATFORM", \
-                   value: mapPlatform[build_params["TFM_PLATFORM"]])
+  if (build_params["TFM_PLATFORM"] == "musca_b1/sse_200" && \
+      build_params["OTP"] == "ENABLED") {
+    params += string(name: "TARGET_PLATFORM", value: "MUSCA_B1_OTP")
+  }
+  else {
+    params += string(name: "TARGET_PLATFORM", \
+                     value: mapPlatform[build_params["TFM_PLATFORM"]])
+  }
   params += string(name: "COMPILER", \
                    value: mapCompiler[build_params["TOOLCHAIN_FILE"]])
   params += string(name: "PSA_API_SUITE", \
@@ -169,11 +175,19 @@ python3 ./configs.py -g ${filter_group.replace(" ", " -g ")} ${config}
       error("Build failed at ${build_url}")
     }
     else if (params_collection["NS"] == "False" || \
-             params_collection["OTP"] == "ENABLED" || \
              (params_collection["TFM_PLATFORM"].contains("musca_b1") && \
              env.JOB_NAME.equals("tf-m-build-and-test")) || \
              (params_collection["PROFILE"] == "profile_medium" && \
               params_collection["PARTITION_PS"] == "OFF")) {
+      print("LAVA is not needed for ${build_url}")
+    }
+    // Only submit LAVA test for a specified OTP enabled config in nightly or release job
+    else if (params_collection["OTP"] == "ENABLED" && \
+             params_collection["CONFIG_NAME"] != "MUSCA_B1_ARMCLANG_PSA_3_REG_Debug_OTP_BL2_NS") {
+      print("LAVA is not needed for ${build_url}")
+    }
+    else if (params_collection["CONFIG_NAME"] == "MUSCA_B1_ARMCLANG_PSA_3_REG_Debug_OTP_BL2_NS" && \
+             !(env.JOB_NAME.equals("tf-m-nightly") || env.JOB_NAME.equals("tf-m-release"))) {
       print("LAVA is not needed for ${build_url}")
     }
     else {
