@@ -9,7 +9,7 @@ from __future__ import print_function
 
 __copyright__ = """
 /*
- * Copyright (c) 2018-2020, Arm Limited. All rights reserved.
+ * Copyright (c) 2018-2021, Arm Limited. All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  *
@@ -102,25 +102,24 @@ class LAVA_RPC_connector(xmlrpc.client.ServerProxy, object):
         log_url = "{server_url}/jobs/{job_id}/logs/".format(
             server_url=self.server_api, job_id=job_id
         )
-        r = requests.get(log_url, stream=True, headers=auth_headers)
-        if r.status_code != 200:
-            print("{} - {}".format(log_url, r.status_code))
-            return
-        with open(target_out_file, "w") as target_out:
-            try:
-                for line in r.iter_lines():
-                    line = line.decode('utf-8')
-                    try:
-                        if ('target' in line) or ('feedback' in line):
-                            line_yaml = yaml.load(line)[0]
-                            if line_yaml['lvl'] in ['target', 'feedback']:
-                                target_out.write("{}\n".format(line_yaml['msg']))
-                    except yaml.parser.ParserError as e:
-                        continue
-                    except yaml.scanner.ScannerError as e:
-                        continue
-            except Exception as e:
-                pass
+        with requests.get(log_url, stream=True, headers=auth_headers) as r:
+            if r.status_code != 200:
+                print("{} - {}".format(log_url, r.status_code))
+                return
+            log_list = yaml.load(r.content, Loader=yaml.SafeLoader)
+            with open(target_out_file, "w") as target_out:
+                for line in log_list:
+                    level = line["lvl"]
+                    if (level == "target") or (level == "feedback"):
+                        try:
+                            target_out.write("{}\n".format(line["msg"]))
+                        except UnicodeEncodeError:
+                            msg = (
+                                line["msg"]
+                                .encode("ascii", errors="replace")
+                                .decode("ascii")
+                            )
+                            target_out.write("{}\n".format(msg))
 
     def get_job_config(self, job_id, config_out_file):
         config_url = "{}/configuration".format(self.server_job_prefix % job_id)
