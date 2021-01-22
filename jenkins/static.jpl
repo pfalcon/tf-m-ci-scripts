@@ -1,6 +1,6 @@
 #!/usr/bin/env groovy
 //-------------------------------------------------------------------------------
-// Copyright (c) 2020, Arm Limited and Contributors. All rights reserved.
+// Copyright (c) 2020-2021, Arm Limited and Contributors. All rights reserved.
 //
 // SPDX-License-Identifier: BSD-3-Clause
 //
@@ -37,10 +37,8 @@ stage("Static Checks") {
 }
 stage("Trigger Build") {
   parallel(["build":trigger("tf-m-build-and-test")])
-  // If previously failed at static checks, ignore the failure at this moment
-  // The cpp check and check patch may fail for current checking policy, or
-  // fail by the TF-M coding not align with Linux style completely.
+  // If previously failed at static checks, mark this as a failure
   if (status < 0 ) {
-    echo "Ignore the static checks failure."
+    error("Failing due to failed static checks.")
   }
 }
