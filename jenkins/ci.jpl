@@ -1,6 +1,6 @@
 #!/usr/bin/env groovy
 //-------------------------------------------------------------------------------
-// Copyright (c) 2020-2021, Arm Limited and Contributors. All rights reserved.
+// Copyright (c) 2020, Arm Limited and Contributors. All rights reserved.
 //
 // SPDX-License-Identifier: BSD-3-Clause
 //
@@ -158,9 +158,6 @@ python3 ./configs.py -g ${filter_group.replace(" ", " -g ")} ${config}
   params += string(name: 'CODE_REPO', value: env.CODE_REPO)
   params += string(name: 'CODE_COVERAGE_EN', value: env.CODE_COVERAGE_EN)
   params += string(name: 'CI_SCRIPTS_BRANCH', value: env.CI_SCRIPTS_BRANCH)
-  if (env.JOB_NAME.equals("tf-m-nightly")) { //Setting the Memory footprint gathering.
-     params += string(name: 'SQUAD_CONFIGURATIONS', value: env.SQUAD_CONFIGURATIONS)
-  }
   return { -> results
     def build_res = build(job: 'tf-m-build-config', parameters: params, propagate: false)
     def build_info = [build_res, config, params_collection]
