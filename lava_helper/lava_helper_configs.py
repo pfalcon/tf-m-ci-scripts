@@ -72,11 +72,9 @@ tfm_mps2_sse_200 = {
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
-                    'start': '[Sec Thread]',
-                    'end': 'system starting',
-                    'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
-                               r'(?P<test_case_id>Secure image '
-                               r'initializing)(?P<result>!)',
+                    'start': 'Non-Secure system',
+                    'end': r'starting\\.{3}',
+                    'pattern': r'Non-Secure system starting\\.{3}',
                     'fixup': {"pass": "!", "fail": ""},
                     'required': ["secure_image_initializing"]
                 }  # Monitors
@@ -249,11 +247,9 @@ tfm_mps2_sse_200 = {
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
-                    'start': '[Sec Thread]',
-                    'end': 'system starting',
-                    'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
-                               r'(?P<test_case_id>Secure image '
-                               r'initializing)(?P<result>!)',
+                    'start': 'Non-Secure system',
+                    'end': r'starting\\.{3}',
+                    'pattern': r'Non-Secure system starting\\.{3}',
                     'fixup': {"pass": "!", "fail": ""},
                     'required': ["secure_image_initializing"]
                 }  # Monitors
@@ -267,11 +263,9 @@ tfm_mps2_sse_200 = {
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
-                    'start': '[Sec Thread]',
-                    'end': '\\x1b\\\[0m',
-                    'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
-                               r'(?P<test_case_id>Secure image '
-                               r'initializing)(?P<result>!)',
+                    'start': 'Non-Secure system',
+                    'end': r'starting\\.{3}',
+                    'pattern': r'Non-Secure system starting\\.{3}',
                     'fixup': {"pass": "!", "fail": ""},
                     'required': ["secure_image_initializing"]
                 }  # Monitors
@@ -306,11 +300,9 @@ fvp_mps2_an521_bl2 = {
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
-                    'start': r'[Sec Thread]',
-                    'end': r'system starting',
-                    'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
-                               r'(?P<test_case_id>Secure image '
-                               r'initializing)(?P<result>!)',
+                    'start': 'Non-Secure system',
+                    'end': r'starting\\.{3}',
+                    'pattern': r'Non-Secure system starting\\.{3}',
                     'fixup': {"pass": "!", "fail": ""},
                     'required': ["secure_image_initializing"]
                 } # Monitors
@@ -324,11 +316,9 @@ fvp_mps2_an521_bl2 = {
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
-                    'start': r'[Sec Thread]',
-                    'end': r'system starting',
-                    'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
-                               r'(?P<test_case_id>Secure image '
-                               r'initializing)(?P<result>!)',
+                    'start': 'Non-Secure system',
+                    'end': r'starting\\.{3}',
+                    'pattern': r'Non-Secure system starting\\.{3}',
                     'fixup': {"pass": "!", "fail": ""},
                     'required': ["secure_image_initializing"]
                 } # Monitors
@@ -342,11 +332,9 @@ fvp_mps2_an521_bl2 = {
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
-                    'start': r'[Sec Thread]',
-                    'end': r'system starting',
-                    'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
-                               r'(?P<test_case_id>Secure image '
-                               r'initializing)(?P<result>!)',
+                    'start': 'Non-Secure system',
+                    'end': r'starting\\.{3}',
+                    'pattern': r'Non-Secure system starting\\.{3}',
                     'fixup': {"pass": "!", "fail": ""},
                     'required': ["secure_image_initializing"]
                 } # Monitors
@@ -681,11 +669,9 @@ fvp_mps2_an521_bl2 = {
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
-                    'start': r'[Sec Thread]',
-                    'end': r'system starting',
-                    'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
-                               r'(?P<test_case_id>Secure image '
-                               r'initializing)(?P<result>!)',
+                    'start': 'Non-Secure system',
+                    'end': r'starting\\.{3}',
+                    'pattern': r'Non-Secure system starting\\.{3}',
                     'fixup': {"pass": "!", "fail": ""},
                     'required': ["secure_image_initializing"]
                 }  # Monitors
@@ -699,11 +685,9 @@ fvp_mps2_an521_bl2 = {
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
-                    'start': r'[Sec Thread]',
-                    'end': r'system starting',
-                    'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
-                               r'(?P<test_case_id>Secure image '
-                               r'initializing)(?P<result>!)',
+                    'start': 'Non-Secure system',
+                    'end': r'starting\\.{3}',
+                    'pattern': r'Non-Secure system starting\\.{3}',
                     'fixup': {"pass": "!", "fail": ""},
                     'required': ["secure_image_initializing"]
                 }  # Monitors
@@ -717,11 +701,9 @@ fvp_mps2_an521_bl2 = {
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
-                    'start': r'[Sec Thread]',
-                    'end': r'system starting',
-                    'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
-                               r'(?P<test_case_id>Secure image '
-                               r'initializing)(?P<result>!)',
+                    'start': 'Non-Secure system',
+                    'end': r'starting\\.{3}',
+                    'pattern': r'Non-Secure system starting\\.{3}',
                     'fixup': {"pass": "!", "fail": ""},
                     'required': ["secure_image_initializing"]
                 }  # Monitors
@@ -757,11 +739,9 @@ fvp_mps2_an521_nobl2 = {
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
-                    'start': r'[Sec Thread]',
-                    'end': r'system starting',
-                    'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
-                               r'(?P<test_case_id>Secure image '
-                               r'initializing)(?P<result>!)',
+                    'start': 'Non-Secure system',
+                    'end': r'starting\\.{3}',
+                    'pattern': r'Non-Secure system starting\\.{3}',
                     'fixup': {"pass": "!", "fail": ""},
                     'required': ["secure_image_initializing"]
                 }
@@ -775,11 +755,9 @@ fvp_mps2_an521_nobl2 = {
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
-                    'start': r'[Sec Thread]',
-                    'end': r'system starting',
-                    'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
-                               r'(?P<test_case_id>Secure image '
-                               r'initializing)(?P<result>!)',
+                    'start': 'Non-Secure system',
+                    'end': r'starting\\.{3}',
+                    'pattern': r'Non-Secure system starting\\.{3}',
                     'fixup': {"pass": "!", "fail": ""},
                     'required': ["secure_image_initializing"]
                 } # Monitors
@@ -793,11 +771,9 @@ fvp_mps2_an521_nobl2 = {
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
-                    'start': r'[Sec Thread]',
-                    'end': r'system starting',
-                    'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
-                               r'(?P<test_case_id>Secure image '
-                               r'initializing)(?P<result>!)',
+                    'start': 'Non-Secure system',
+                    'end': r'starting\\.{3}',
+                    'pattern': r'Non-Secure system starting\\.{3}',
                     'fixup': {"pass": "!", "fail": ""},
                     'required': ["secure_image_initializing"]
                 } # Monitors
@@ -1131,11 +1107,9 @@ fvp_mps2_an521_nobl2 = {
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
-                    'start': r'[Sec Thread]',
-                    'end': r'system starting',
-                    'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
-                               r'(?P<test_case_id>Secure image '
-                               r'initializing)(?P<result>!)',
+                    'start': 'Non-Secure system',
+                    'end': r'starting\\.{3}',
+                    'pattern': r'Non-Secure system starting\\.{3}',
                     'fixup': {"pass": "!", "fail": ""},
                     'required': ["secure_image_initializing"]
                 }  # Monitors
@@ -1149,11 +1123,9 @@ fvp_mps2_an521_nobl2 = {
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
-                    'start': r'[Sec Thread]',
-                    'end': r'system starting',
-                    'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
-                               r'(?P<test_case_id>Secure image '
-                               r'initializing)(?P<result>!)',
+                    'start': 'Non-Secure system',
+                    'end': r'starting\\.{3}',
+                    'pattern': r'Non-Secure system starting\\.{3}',
                     'fixup': {"pass": "!", "fail": ""},
                     'required': ["secure_image_initializing"]
                 }  # Monitors
@@ -1167,11 +1139,9 @@ fvp_mps2_an521_nobl2 = {
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
-                    'start': r'[Sec Thread]',
-                    'end': r'system starting',
-                    'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
-                               r'(?P<test_case_id>Secure image '
-                               r'initializing)(?P<result>!)',
+                    'start': 'Non-Secure system',
+                    'end': r'starting\\.{3}',
+                    'pattern': r'Non-Secure system starting\\.{3}',
                     'fixup': {"pass": "!", "fail": ""},
                     'required': ["secure_image_initializing"]
                 }  # Monitors
@@ -1207,11 +1177,9 @@ fvp_mps2_an519_bl2 = {
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
-                    'start': r'[Sec Thread]',
-                    'end': r'system starting',
-                    'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
-                               r'(?P<test_case_id>Secure image '
-                               r'initializing)(?P<result>!)',
+                    'start': 'Non-Secure system',
+                    'end': r'starting\\.{3}',
+                    'pattern': r'Non-Secure system starting\\.{3}',
                     'fixup': {"pass": "!", "fail": ""},
                     'required': ["secure_image_initializing"]
                 } # Monitors
@@ -1225,11 +1193,9 @@ fvp_mps2_an519_bl2 = {
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
-                    'start': r'[Sec Thread]',
-                    'end': r'system starting',
-                    'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
-                               r'(?P<test_case_id>Secure image '
-                               r'initializing)(?P<result>!)',
+                    'start': 'Non-Secure system',
+                    'end': r'starting\\.{3}',
+                    'pattern': r'Non-Secure system starting\\.{3}',
                     'fixup': {"pass": "!", "fail": ""},
                     'required': ["secure_image_initializing"]
                 } # Monitors
@@ -1243,11 +1209,9 @@ fvp_mps2_an519_bl2 = {
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
-                    'start': r'[Sec Thread]',
-                    'end': r'system starting',
-                    'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
-                               r'(?P<test_case_id>Secure image '
-                               r'initializing)(?P<result>!)',
+                    'start': 'Non-Secure system',
+                    'end': r'starting\\.{3}',
+                    'pattern': r'Non-Secure system starting\\.{3}',
                     'fixup': {"pass": "!", "fail": ""},
                     'required': ["secure_image_initializing"]
                 } # Monitors
@@ -1529,11 +1493,9 @@ fvp_mps2_an519_bl2 = {
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
-                    'start': r'[Sec Thread]',
-                    'end': r'system starting',
-                    'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
-                               r'(?P<test_case_id>Secure image '
-                               r'initializing)(?P<result>!)',
+                    'start': 'Non-Secure system',
+                    'end': r'starting\\.{3}',
+                    'pattern': r'Non-Secure system starting\\.{3}',
                     'fixup': {"pass": "!", "fail": ""},
                     'required': ["secure_image_initializing"]
                 }  # Monitors
@@ -1547,11 +1509,9 @@ fvp_mps2_an519_bl2 = {
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
-                    'start': r'[Sec Thread]',
-                    'end': r'system starting',
-                    'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
-                               r'(?P<test_case_id>Secure image '
-                               r'initializing)(?P<result>!)',
+                    'start': 'Non-Secure system',
+                    'end': r'starting\\.{3}',
+                    'pattern': r'Non-Secure system starting\\.{3}',
                     'fixup': {"pass": "!", "fail": ""},
                     'required': ["secure_image_initializing"]
                 }  # Monitors
@@ -1587,11 +1547,9 @@ fvp_mps2_an519_nobl2 = {
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
-                    'start': r'[Sec Thread]',
-                    'end': r'system starting',
-                    'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
-                               r'(?P<test_case_id>Secure image '
-                               r'initializing)(?P<result>!)',
+                    'start': 'Non-Secure system',
+                    'end': r'starting\\.{3}',
+                    'pattern': r'Non-Secure system starting\\.{3}',
                     'fixup': {"pass": "!", "fail": ""},
                     'required': ["secure_image_initializing"]
                 }
@@ -1605,11 +1563,9 @@ fvp_mps2_an519_nobl2 = {
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
-                    'start': r'[Sec Thread]',
-                    'end': r'system starting',
-                    'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
-                               r'(?P<test_case_id>Secure image '
-                               r'initializing)(?P<result>!)',
+                    'start': 'Non-Secure system',
+                    'end': r'starting\\.{3}',
+                    'pattern': r'Non-Secure system starting\\.{3}',
                     'fixup': {"pass": "!", "fail": ""},
                     'required': ["secure_image_initializing"]
                 } # Monitors
@@ -1623,11 +1579,9 @@ fvp_mps2_an519_nobl2 = {
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
-                    'start': r'[Sec Thread]',
-                    'end': r'system starting',
-                    'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
-                               r'(?P<test_case_id>Secure image '
-                               r'initializing)(?P<result>!)',
+                    'start': 'Non-Secure system',
+                    'end': r'starting\\.{3}',
+                    'pattern': r'Non-Secure system starting\\.{3}',
                     'fixup': {"pass": "!", "fail": ""},
                     'required': ["secure_image_initializing"]
                 } # Monitors
@@ -1908,11 +1862,9 @@ fvp_mps2_an519_nobl2 = {
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
-                    'start': r'[Sec Thread]',
-                    'end': r'system starting',
-                    'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
-                               r'(?P<test_case_id>Secure image '
-                               r'initializing)(?P<result>!)',
+                    'start': 'Non-Secure system',
+                    'end': r'starting\\.{3}',
+                    'pattern': r'Non-Secure system starting\\.{3}',
                     'fixup': {"pass": "!", "fail": ""},
                     'required': ["secure_image_initializing"]
                 }  # Monitors
@@ -1926,11 +1878,9 @@ fvp_mps2_an519_nobl2 = {
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
-                    'start': r'[Sec Thread]',
-                    'end': r'system starting',
-                    'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
-                               r'(?P<test_case_id>Secure image '
-                               r'initializing)(?P<result>!)',
+                    'start': 'Non-Secure system',
+                    'end': r'starting\\.{3}',
+                    'pattern': r'Non-Secure system starting\\.{3}',
                     'fixup': {"pass": "!", "fail": ""},
                     'required': ["secure_image_initializing"]
                 }  # Monitors
@@ -2410,11 +2360,9 @@ musca_b1_bl2 = {
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
-                    'start': '[Sec Thread]',
-                    'end': 'system starting',
-                    'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
-                               r'(?P<test_case_id>Secure image '
-                               r'initializing)(?P<result>!)',
+                    'start': 'Non-Secure system',
+                    'end': r'starting\\.{3}',
+                    'pattern': r'Non-Secure system starting\\.{3}',
                     'fixup': {"pass": "!", "fail": ""},
                     'required': ["secure_image_initializing"]
                 }
@@ -2427,11 +2375,9 @@ musca_b1_bl2 = {
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
-                    'start': '[Sec Thread]',
-                    'end': 'system starting',
-                    'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
-                               r'(?P<test_case_id>Secure image '
-                               r'initializing)(?P<result>!)',
+                    'start': 'Non-Secure system',
+                    'end': r'starting\\.{3}',
+                    'pattern': r'Non-Secure system starting\\.{3}',
                     'fixup': {"pass": "!", "fail": ""},
                     'required': ["secure_image_initializing"]
                 }
@@ -2444,11 +2390,9 @@ musca_b1_bl2 = {
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
-                    'start': '[Sec Thread]',
-                    'end': '\\x1b\\\[0m',
-                    'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
-                               r'(?P<test_case_id>Secure image '
-                               r'initializing)(?P<result>!)',
+                    'start': 'Non-Secure system',
+                    'end': r'starting\\.{3}',
+                    'pattern': r'Non-Secure system starting\\.{3}',
                     'fixup': {"pass": "!", "fail": ""},
                     'required': ["secure_image_initializing"]
                 }
@@ -2461,11 +2405,9 @@ musca_b1_bl2 = {
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
-                    'start': r'[Sec Thread]',
-                    'end': r'system starting',
-                    'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
-                               r'(?P<test_case_id>Secure image '
-                               r'initializing)(?P<result>!)',
+                    'start': 'Non-Secure system',
+                    'end': r'starting\\.{3}',
+                    'pattern': r'Non-Secure system starting\\.{3}',
                     'fixup': {"pass": "!", "fail": ""},
                     'required': ["secure_image_initializing"]
                 }
@@ -2478,11 +2420,9 @@ musca_b1_bl2 = {
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
-                    'start': r'[Sec Thread]',
-                    'end': r'system starting',
-                    'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
-                               r'(?P<test_case_id>Secure image '
-                               r'initializing)(?P<result>!)',
+                    'start': 'Non-Secure system',
+                    'end': r'starting\\.{3}',
+                    'pattern': r'Non-Secure system starting\\.{3}',
                     'fixup': {"pass": "!", "fail": ""},
                     'required': ["secure_image_initializing"]
                 }
@@ -2495,11 +2435,9 @@ musca_b1_bl2 = {
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
-                    'start': r'[Sec Thread]',
-                    'end': r'system starting',
-                    'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
-                               r'(?P<test_case_id>Secure image '
-                               r'initializing)(?P<result>!)',
+                    'start': 'Non-Secure system',
+                    'end': r'starting\\.{3}',
+                    'pattern': r'Non-Secure system starting\\.{3}',
                     'fixup': {"pass": "!", "fail": ""},
                     'required': ["secure_image_initializing"]
                 }
