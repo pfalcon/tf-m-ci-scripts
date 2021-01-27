@@ -62,7 +62,6 @@ _common_tfm_builder_cfg = {
         "-DMCUBOOT_PATH=%(codebase_root_dir)s/../mcuboot " + \
         "-DTFM_PROFILE=%(profile)s " + \
         "-DTFM_PARTITION_PROTECTED_STORAGE=%(partition_ps)s " + \
-        "-DTFM_SPM_LOG_LEVEL=TFM_SPM_LOG_LEVEL_DEBUG "
         "%(codebase_root_dir)s",
 
     # A small subset of  string substitution params is allowed in commands.
