@@ -8,7 +8,7 @@ from __future__ import print_function
 
 __copyright__ = """
 /*
- * Copyright (c) 2018-2020, Arm Limited. All rights reserved.
+ * Copyright (c) 2018-2021, Arm Limited. All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  *
@@ -790,21 +790,45 @@ config_pp_test = {"seed_params": {
                 "isolation_level":  ["1", "2", "3"],
                 "test_regression":  [True],
                 "test_psa_api":     ["OFF"],
-                "cmake_build_type": ["Release"],
+                "cmake_build_type": ["Debug", "Release", "Minsizerel"],
                 "with_otp":         ["off"],
                 "with_bl2":         [True],
                 "with_ns":          [True, False],
-                "profile":          ["", "profile_small"],
-                "partition_ps":     ["ON"],
+                "profile":          ["", "profile_small", "profile_medium"],
+                "partition_ps":     ["ON", "OFF"],
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + [
-                    ("musca_b1/sse_200", "*", "*", "*", "*", "*",
+                    # invalid configs that are not supported by TF-M
+                    ("musca_s1", "*", "*", "*", "*", "*",
+                     "*",  "*", "*", "*", "profile_medium", "*"),
+                    # valid configs supported by TF-M but not needed in per-patch
+                    ("*", "*", "*", "1", "*", "*", "Release",
+                     "*", "*", "*", "*", "*"),
+                    ("*", "*", "*", "1", "*", "*", "Minsizerel",
+                     "*", "*", "*", "*", "*"),
+                    ("*", "*", "*", "2", "*", "*", "Debug",
+                     "*", "*", "*", "*", "*"),
+                    ("*", "*", "*", "2", "*", "*", "Minsizerel",
+                     "*", "*", "*", "*", "*"),
+                    ("*", "*", "*", "3", "*", "*", "Debug",
+                     "*", "*", "*", "*", "*"),
+                    ("*", "*", "*", "3", "*", "*", "Release",
+                     "*", "*", "*", "*", "*"),
+                    ("mps2/an519", "*", "*", "*", "*", "*",
                      "*",  "*", "*", "*", "profile_small", "*"),
-                    ("*", "*", True, "*", "*", "*",
+                    ("musca_s1", "*", "*", "*", "*", "*",
                      "*",  "*", "*", "*", "profile_small", "*"),
-                    ("*", "*", "*", "2", "*", "*",
+                    ("mps2/an519", "*", "*", "*", "*", "*",
+                     "*",  "*", "*", "*", "profile_medium", "*"),
+                    ("mps2/an521", "*", "*", "*", "*", "*",
+                     "*",  "*", "*", "*", "profile_medium", "*"),
+                    ("*", "toolchain_GNUARM.cmake", "*", "*", "*", "*",
                      "*",  "*", "*", "*", "profile_small", "*"),
+                    ("*", "toolchain_ARMCLANG.cmake", "*", "*", "*", "*",
+                     "*",  "*", "*", "*", "profile_medium", "*"),
+                    ("*", "toolchain_ARMCLANG.cmake", "False", "*", "*", "*",
+                     "*",  "*", "*", "*", "*", "*"),
                 ]
                 }
 
