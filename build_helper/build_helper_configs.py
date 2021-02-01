@@ -207,25 +207,6 @@ _common_tfm_invalid_configs = [
     ]
 
 # Configure build manager to build several combinations
-config_AN539 = {"seed_params": {
-                "tfm_platform":     ["mps2/an539"],
-                "toolchain_file":   ["toolchain_GNUARM.cmake",
-                                     "toolchain_ARMCLANG.cmake"],
-                "psa_api":          [True, False],
-                "isolation_level":  ["1", "2"],
-                "test_regression":  [True, False],
-                "test_psa_api":     ["OFF"],
-                "cmake_build_type": ["Debug", "Release"],
-                "with_otp":         ["off"],
-                "with_bl2":         [True, False],
-                "with_ns":          [True, False],
-                "profile":          [""],
-                "partition_ps":     ["ON"],
-                },
-                "common_params": _common_tfm_builder_cfg,
-                "invalid": _common_tfm_invalid_configs + []
-                }
-
 config_AN524 = {"seed_params": {
                 "tfm_platform":     ["mps3/an524"],
                 "toolchain_file":   ["toolchain_GNUARM.cmake",
@@ -996,7 +977,6 @@ _builtin_configs = {
                     "full": config_full,
 
                     #specific test group
-                    "an539": config_AN539,
                     "an524": config_AN524,
                     "an521": config_AN521,
                     "an521_psa_api": config_AN521_PSA_API,
