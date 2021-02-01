@@ -488,17 +488,6 @@ stage("Builds") {
 }
 
 node("docker-amd64-tf-m-bionic") {
-  stage("Copy Docs") {
-    if (env.JOB_NAME.equals("tf-m-build-and-test")) {
-      step([$class: 'CopyArtifact', projectName: 'tf-m-build-docs',
-      selector: specific("${results['docs'][0]}"), target: './docs/',
-      optional: true])
-      archiveArtifacts artifacts: 'docs/**', allowEmptyArchive: true
-    }
-    else {
-      print("No doc copy for job: ${env.JOB_NAME}")
-    }
-  }
   stage("Tests") {
     dir("tf-m-ci-scripts") {
       checkout([$class: 'GitSCM', branches: [[name: '$CI_SCRIPTS_BRANCH']], userRemoteConfigs: [[credentialsId: 'GIT_SSH_KEY', url: '$CI_SCRIPTS_REPO']]])
