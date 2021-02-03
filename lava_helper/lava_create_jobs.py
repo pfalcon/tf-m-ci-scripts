@@ -4,7 +4,7 @@ from __future__ import print_function
 
 __copyright__ = """
 /*
- * Copyright (c) 2020, Arm Limited. All rights reserved.
+ * Copyright (c) 2020-2021, Arm Limited. All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  *
@@ -195,7 +195,11 @@ def generate_lava_job_defs(user_args, config):
 
 def main(user_args):
     user_args.template_dir = "jinja2_templates"
-    config_keys = lava_gen_config_map.keys()
+    config_keys = list(lava_gen_config_map.keys())
+    if user_args.fvp_only:
+        for key in config_keys:
+            if "fvp" not in key:
+                config_keys.remove(key)
     if user_args.config_key:
         config_keys = [user_args.config_key]
     for config_key in config_keys:
@@ -255,6 +259,12 @@ def get_cmd_args():
         action="store",
         default="tf-m-build-config",
         help="Set the jenkins job name",
+    )
+    cmdargs.add_argument(
+        "--fvp-only",
+        dest="fvp_only",
+        action="store_true",
+        help="Run test cases on FVP only",
     )
     cmdargs.add_argument(
         "--proj-config", dest="proj_config", action="store", help="Proj config"
