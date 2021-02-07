@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 #
-# Copyright (c) 2019-2020, Arm Limited. All rights reserved.
+# Copyright (c) 2019-2021, Arm Limited. All rights reserved.
 #
 # SPDX-License-Identifier: BSD-3-Clause
 #
@@ -17,8 +17,11 @@ VALID_FILE_EXTENSIONS = ('.c', '.S', '.h')
 # Paths inside the tree to ignore. Hidden folders and files are always ignored.
 # They mustn't end in '/'.
 IGNORED_FOLDERS = (
-    "tools",
-    "docs"
+    'platform/ext',
+    'bl2/ext',
+    'docs',
+    'lib',
+    'tools'
 )
 
 # List of ignored files in folders that aren't ignored

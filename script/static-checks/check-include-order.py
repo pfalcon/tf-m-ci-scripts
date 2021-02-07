@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 #
-# Copyright (c) 2019-2020, Arm Limited. All rights reserved.
+# Copyright (c) 2019-2021, Arm Limited. All rights reserved.
 #
 # SPDX-License-Identifier: BSD-3-Clause
 #
@@ -24,12 +24,11 @@ VALID_FILE_EXTENSIONS = (".c", ".S", ".h")
 # Paths inside the tree to ignore. Hidden folders and files are always ignored.
 # They mustn't end in '/'.
 IGNORED_FOLDERS = (
-    "include/lib/stdlib",
-    "include/lib/libc",
-    "include/lib/libfdt",
-    "lib/libfdt",
-    "lib/libc",
-    "lib/stdlib",
+    'platform/ext',
+    'bl2/ext',
+    'docs',
+    'lib',
+    'tools'
 )
 
 # List of ignored files in folders that aren't ignored
@@ -68,7 +67,8 @@ def inc_order_is_correct(inc_list, path, commit_hash=""):
         commit_hash = commit_hash + ":"
 
     # Get list of system includes from libc include directory.
-    libc_incs = [f for f in os.listdir("include/lib/libc") if f.endswith(".h")]
+    # No libc from TF-M secure_fw
+    libc_incs = []
 
     # First, check if all includes are in the appropriate group.
     inc_group = "System"
