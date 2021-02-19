@@ -722,7 +722,7 @@ config_nightly_profile = {"seed_params": {
                 }
 
 config_nightly_PSA_API = {"seed_params": {
-                "tfm_platform":     ["mps2/an521"],
+                "tfm_platform":     ["mps2/an521", "musca_b1/sse_200"],
                 "toolchain_file":   ["toolchain_GNUARM.cmake",
                                      "toolchain_ARMCLANG.cmake"],
                 "psa_api":          [True, False],
@@ -744,7 +744,7 @@ config_nightly_PSA_API = {"seed_params": {
                 }
 
 config_nightly_PSA_FF = {"seed_params": {
-                "tfm_platform":     ["mps2/an521"],
+                "tfm_platform":     ["mps2/an521", "musca_b1/sse_200"],
                 "toolchain_file":   ["toolchain_GNUARM.cmake",
                                      "toolchain_ARMCLANG.cmake"],
                 "psa_api":          [True],
