@@ -53,7 +53,9 @@ missingInclude:*/tfm_core.h:11
 missingInclude:*/tfm_secure_api.h:11
 
 //Exclude external qcbor code which does not comply with guidelines
-*:*/lib/ext/*
+*:*/lib/*
+*:*/docs/*
+*:*/tools/*
 *:*/bl2/ext/*
 *:*/platform/ext/*
 

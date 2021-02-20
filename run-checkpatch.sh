@@ -1,6 +1,6 @@
 #!/bin/bash
 #-------------------------------------------------------------------------------
-# Copyright (c) 2018-2019, Arm Limited and Contributors. All rights reserved.
+# Copyright (c) 2018-2021, Arm Limited and Contributors. All rights reserved.
 #
 # SPDX-License-Identifier: BSD-3-Clause
 #
@@ -24,7 +24,7 @@
 ##
 #This is needed for Doxygen for now.
 #!string SKIP_PATHS;
-SKIP_PATHS='./build-\*:./test/\*:./platform/\*:*/tz_\*:./lib/ext/\*:./platform/ext/\*:./bl2/ext/\*'
+SKIP_PATHS='./build-\*:./platform/\*:*/tz_\*:./lib/\*:./platform/ext/\*:./bl2/ext/\*:./docs/\*:./tools/\*'
 
 ##@var TFM_DIRECTORY_NAME
 ##@brief Default path to tf-m source code.
