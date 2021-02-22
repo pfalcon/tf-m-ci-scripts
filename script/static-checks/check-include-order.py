@@ -71,25 +71,16 @@ def inc_order_is_correct(inc_list, path, commit_hash=""):
     libc_incs = []
 
     # First, check if all includes are in the appropriate group.
-    inc_group = "System"
+    inc_group = "Public"
     incs = collections.defaultdict(list)
     error_msgs = []
 
     for inc in inc_list:
-        if inc[1:-1] in libc_incs:
-            if inc_group != "System":
-                error_msgs.append(inc[1:-1] + " should be in system group, at the top")
-        elif (
-            "plat/" in inc
-            or "platform" in inc
-            or (inc.startswith('"') and "plat" in path)
-        ):
-            inc_group = "Platform"
-        elif inc_group in ("Project", "System"):
-            inc_group = "Project"
-        else:
+        if inc.startswith('"'):
+            inc_group = "Private"
+        elif inc_group == "Private":
             error_msgs.append(
-                inc[1:-1] + " should be in project group, after system group"
+                inc[1:-1] + " should be in public group, before private group"
             )
         incs[inc_group].append(inc[1:-1])
 

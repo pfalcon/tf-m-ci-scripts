@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright (c) 2019, Arm Limited. All rights reserved.
+# Copyright (c) 2019-2021, Arm Limited. All rights reserved.
 #
 # SPDX-License-Identifier: BSD-3-Clause
 #
@@ -14,12 +14,12 @@ if [[ "$2" == "patch" ]]; then
   TEST_CASE="Order of includes on the last patch(es)"
   "$CI_ROOT/script/static-checks/check-include-order.py" --tree "$1" \
       --patch --from-ref origin/master \
-      &> "$LOG_FILE"
+      | tee "$LOG_FILE"
 else
   echo "# Check order of includes of the entire source tree"
   TEST_CASE="Order of includes of the entire source tree"
   "$CI_ROOT/script/static-checks/check-include-order.py" --tree "$1" \
-      &> "$LOG_FILE"
+      | tee "$LOG_FILE"
 fi
 
 EXIT_VALUE=$?
