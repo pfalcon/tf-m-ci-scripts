@@ -94,8 +94,8 @@ if [[ ! -z "$1" ]]
   then
     echo "Enabled git-diff mode against hash:  $1"
 
-    # Do not execute unused function check when running in diff-mode
-    additional_checklist="style,performance,portability,information,missingInclude"
+    # Do not execute unused function check and information check when running in diff-mode
+    additional_checklist="style,performance,portability,missingInclude"
     # Grep will set exit status to 1 if a commit does not contain c/cpp.. files
     set +e
     filtered_cmd_f=compile_commands_filtered.json
@@ -149,7 +149,7 @@ function cppcheck_failed {
   # echo "Check log for errors."
   echo "CppCheck needs to be updated. Current Version would fail with no error."
   echo "Skip voting for the time being."
-  exit 0
+  exit 1
 }
 
 EXTRA_ARGS="--error-exitcode=1"

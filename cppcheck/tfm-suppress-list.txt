@@ -37,6 +37,7 @@ variableScope
 //CppCheck ignores macros defined on the command line when using a project file
 //(e.g. compile_commands.json). As a result we ca not set compiler specific
 //macros and need to suppress the following error.
+preprocessorErrorDirective:*/tfm_spm_log.h:34
 preprocessorErrorDirective:*/cmsis_compiler.h:320
 
 //While cppcheck states to work fine with missing standard library files, it
@@ -66,3 +67,7 @@ unusedFunction
 //modified. This is good practice and complies with TF-M guidelines. It should not
 //trigger an error.
 redundantInitialization:*/security_cnt.c
+
+//Unread variables in the following files in TF-M should not be complained.
+unreadVariable:*/tfm_crypto_func_api.c
+unreadVariable:*/tfm_crypto_secure_api.c
