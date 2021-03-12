@@ -52,7 +52,8 @@ mapTestPsaApi = {"IPC":                      "FF",
                  "INTERNAL_TRUSTED_STORAGE": "ITS"}
 
 mapProfile = {"profile_small":  "SMALL",
-              "profile_medium": "MEDIUM"}
+              "profile_medium": "MEDIUM",
+              "profile_large":  "LARGE"}
 
 
 class TFM_Build_Manager(structuredTask):

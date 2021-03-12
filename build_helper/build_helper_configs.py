@@ -186,6 +186,7 @@ _common_tfm_invalid_configs = [
     ("musca_b1/secure_enclave", "*", "*", "*", "*", "*", "*", "*", "*", True, "*", "*"),
     # PARTITION_PS could be OFF only for Profile S and M
     ("*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "", "OFF"),
+    ("*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "profile_large", "OFF"),
     # PARTITION_PS should be OFF for Profile S
     ("*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "profile_small", "ON"),
     # Proile M only support for PSA_API
@@ -193,6 +194,9 @@ _common_tfm_invalid_configs = [
     # Profile M only support for Isolation Level 2
     ("*", "*", "*", "1", "*", "*", "*",  "*", "*", "*", "profile_medium", "*"),
     ("*", "*", "*", "3", "*", "*", "*",  "*", "*", "*", "profile_medium", "*"),
+    # Profile L only support for Isolation Level 3
+    ("*", "*", "*", "1", "*", "*", "*",  "*", "*", "*", "profile_large", "*"),
+    ("*", "*", "*", "2", "*", "*", "*",  "*", "*", "*", "profile_large", "*"),
     # Profile S does not support PSA_API
     ("*", "*", True, "*", "*", "*", "*",  "*", "*", "*", "profile_small", "*"),
     # Profile S only supports Isolation Level 2
@@ -479,13 +483,18 @@ config_tfm_profile = {"seed_params": {
                 "with_otp":         ["off"],
                 "with_bl2":         [True],
                 "with_ns":          [True],
-                "profile":          ["profile_small", "profile_medium"],
+                "profile":          ["profile_small", "profile_medium", "profile_large"],
                 "partition_ps":     ["ON", "OFF"],
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + [
                     ("mps2/an519", "toolchain_GNUARM.cmake", "*",
                      "*", "*", "*", "Minsizerel", "*", "*", "*", "*", "*"),
+                    # Profile Large is only supported by AN521
+                    ("mps2/an519", "*", "*",
+                     "*", "*", "*", "*", "*", "*", "*", "profile_large", "*"),
+                    ("musca_b1/sse_200", "*", "*",
+                     "*", "*", "*", "*", "*", "*", "*", "profile_large", "*"),
                 ]
                 }
 
@@ -713,13 +722,18 @@ config_nightly_profile = {"seed_params": {
                 "with_otp":         ["off"],
                 "with_bl2":         [True],
                 "with_ns":          [True],
-                "profile":          ["profile_small", "profile_medium"],
+                "profile":          ["profile_small", "profile_medium", "profile_large"],
                 "partition_ps":     ["ON", "OFF"],
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + [
                     ("mps2/an519", "toolchain_GNUARM.cmake", "*",
                      "*", "*", "*", "Minsizerel", "*", "*", "*", "*", "*"),
+                    # Profile Large is only supported by AN521
+                    ("mps2/an519", "*", "*",
+                     "*", "*", "*", "*", "*", "*", "*", "profile_large", "*"),
+                    ("musca_b1/sse_200", "*", "*",
+                     "*", "*", "*", "*", "*", "*", "*", "profile_large", "*"),
                 ]
                 }
 
