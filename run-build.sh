@@ -45,11 +45,22 @@ if [ -z "$build_commands" ] ; then
 	exit 1
 fi
 
-cd mbedtls
-git apply ../trusted-firmware-m/lib/ext/mbedcrypto/*.patch
+cnt=$(ls trusted-firmware-m/lib/ext/mbedcrypto/*.patch 2> /dev/null | wc -l)
+if [ "$cnt" != "0" ] ; then
+	cd mbedtls
+	git apply ../trusted-firmware-m/lib/ext/mbedcrypto/*.patch
+	cd -
+fi
 
-rm -rf ../trusted-firmware-m/build
-mkdir ../trusted-firmware-m/build
-cd ../trusted-firmware-m/build
+cnt=$(ls trusted-firmware-m/lib/ext/psa_arch_tests/*.patch 2> /dev/null | wc -l)
+if [ "$cnt" != "0" ] ; then
+	cd psa-arch-tests
+	git apply ../trusted-firmware-m/lib/ext/psa_arch_tests/*.patch
+	cd -
+fi
+
+rm -rf trusted-firmware-m/build
+mkdir trusted-firmware-m/build
+cd trusted-firmware-m/build
 
 eval "set -ex ; $build_commands"
