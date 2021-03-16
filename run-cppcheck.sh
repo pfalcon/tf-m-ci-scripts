@@ -145,10 +145,8 @@ if [[ ! -z "$1" ]]
 fi
 
 function cppcheck_failed {
-  # echo "cppcheck failed."
-  # echo "Check log for errors."
-  echo "CppCheck needs to be updated. Current Version would fail with no error."
-  echo "Skip voting for the time being."
+  echo "cppcheck failed."
+  echo "Check log for errors."
   exit 1
 }
 
