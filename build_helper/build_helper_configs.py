@@ -141,8 +141,9 @@ _common_tfm_builder_cfg = {
 
 # List of all build configs that are impossible under all circumstances
 _common_tfm_invalid_configs = [
-    # Load range overlap on Musca B1 for IPC Debug type: T895
+    # Load range overlap on Musca for IPC Debug type: T895
     ("musca_b1/sse_200", "toolchain_ARMCLANG.cmake", "*", "*", "*", "IPC", "Debug", "*", "*", "*", "*", "*"),
+    ("musca_s1", "toolchain_ARMCLANG.cmake", "*", "*", "*", "IPC", "Debug", "*", "*", "*", "*", "*"),
     # LVL2 and LVL3 requires PSA api
     ("*", "*", False, "2", "*", "*", "*", "*", "*", "*", "*", "*"),
     ("*", "*", False, "3", "*", "*", "*", "*", "*", "*", "*", "*"),
