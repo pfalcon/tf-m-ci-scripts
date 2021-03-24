@@ -2767,7 +2767,7 @@ musca_b1_bl2 = {
     "poweroff_timeout": 40,
     "platforms": {"MUSCA_B1": ""},
     "compilers": ["GNUARM", "ARMCLANG"],
-    "build_types": ["Debug", "Release"],
+    "build_types": ["Debug", "Release", "Minsizerel"],
     "boot_types": ["BL2"],
     "tests": {
         "Default": {
