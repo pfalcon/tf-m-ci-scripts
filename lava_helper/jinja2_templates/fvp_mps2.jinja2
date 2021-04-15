@@ -24,7 +24,10 @@ actions:
         url: {{ firmware_url }}
       s:
         url: {{ bootloader_url }}
-
+{%- if enable_code_coverage %}
+      cc:
+        url: {{ coverage_trace_plugin }}
+{%- endif %}
 - boot:
     failure_retry: 3
     namespace: docker
@@ -57,6 +60,10 @@ actions:
     -  "--parameter fvp_mps2.UART0.shutdown_on_eot=1"
     -  "--parameter 'fvp_mps2.UART0.out_file=-'"
     -  "--parameter fvp_mps2.mps2_visualisation.disable-visualisation=1"
+{%- if enable_code_coverage %}
+    -  "--plugin {CC}"
+{%- endif %}
+
     prompts:
     - '(.*)'
 

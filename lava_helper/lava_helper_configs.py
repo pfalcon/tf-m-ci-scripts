@@ -19,6 +19,8 @@ __author__ = "tf-m@lists.trustedfirmware.org"
 __project__ = "Trusted Firmware-M Open CI"
 __version__ = "1.2.0"
 
+tf_downloads="https://downloads.trustedfirmware.org"
+coverage_trace_plugin=tf_downloads + "/coverage-plugin/qa-tools/coverage-tool/coverage-plugin/coverage_trace.so"
 
 def lava_gen_get_config_subset(config,
                                default=True,

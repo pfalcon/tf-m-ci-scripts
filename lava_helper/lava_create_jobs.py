@@ -131,6 +131,8 @@ def generate_test_definitions(config, work_dir, user_args):
                             "data_bin_offset": config.get('data_bin_offset', ''),
                             "docker_prefix": vars(user_args).get('docker_prefix', ''),
                             "license_variable": vars(user_args).get('license_variable', ''),
+                            "enable_code_coverage": user_args.enable_code_coverage == "TRUE",
+                            "coverage_trace_plugin": coverage_trace_plugin,
                             "build_job_url": artifact_store_url,
                             "cpu0_baseline": config.get("cpu0_baseline", 0),
                             "cpu0_initvtor_s": config.get("cpu0_initvtor_s", "0x10000000")
@@ -277,6 +279,9 @@ def get_cmd_args():
     )
     cmdargs.add_argument(
         "--license-variable", dest="license_variable", action="store", help="License string for Fastmodels"
+    )
+    cmdargs.add_argument(
+        "--enable-code-coverage", dest="enable_code_coverage", action="store", default="FALSE", help="Enable trace-base code coverage"
     )
     cmdargs.add_argument("--bl2", dest="bl2", action="store_true", help="BL2")
     cmdargs.add_argument(
