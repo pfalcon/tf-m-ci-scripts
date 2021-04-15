@@ -19,7 +19,8 @@ def submitJobs(fvp_only_cmd, bl2_string, psa_string) {
       --compiler ${env.COMPILER} --platform ${env.TARGET_PLATFORM} \
       ${bl2_string} ${psa_string} --build-type ${env.CMAKE_BUILD_TYPE} \
       --jenkins-build-url ${env.BUILD_URL} --proj-config ${env.PROJ_CONFIG} \
-      --docker-prefix ${env.DOCKER_PREFIX} --license-variable "${env.LICENSE_VARIABLE}"
+      --docker-prefix ${env.DOCKER_PREFIX} --license-variable "${env.LICENSE_VARIABLE}" \
+      --enable-code-coverage "${env.CODE_COVERAGE_EN}"
       """, returnStdout: true).trim()
     print(res)
     job_ids = sh(script: """./lava_helper/lava_submit_jobs.py \

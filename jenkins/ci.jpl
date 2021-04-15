@@ -199,6 +199,7 @@ python3 ./configs.py -g ${filter_group.replace(" ", " -g ")} ${config}
       params += string(name: 'LAVA_URL', value: env.LAVA_URL)
       params += string(name: 'CI_SCRIPTS_BRANCH', value: env.CI_SCRIPTS_BRANCH)
       params += string(name: 'LAVA_CREDENTIALS', value: env.LAVA_CREDENTIALS)
+      params += string(name: 'CODE_COVERAGE_EN', value: env.CODE_COVERAGE_EN)
       def lava_res = build(job: 'tf-m-lava-submit', parameters: params, propagate: false)
       def lava_resubmitted = false
       if (lava_res.result in failure_states) {
