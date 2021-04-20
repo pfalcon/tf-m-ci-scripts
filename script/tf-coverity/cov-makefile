@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2019-2020, Arm Limited. All rights reserved.
+# Copyright (c) 2019-2021, Arm Limited. All rights reserved.
 #
 # SPDX-License-Identifier: BSD-3-Clause
 #
@@ -16,7 +16,7 @@ BASE_DIR ?= .
 target_platforms := cypress/psoc64 \
                     mps2/an519 mps2/an521 \
                     mps3/an524 \
-                    musca_a musca_b1/sse_200 musca_s1
+                    musca_b1/sse_200 musca_s1
 
 tf_m := trusted-firmware-m
 

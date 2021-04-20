@@ -8,7 +8,7 @@ from __future__ import print_function
 
 __copyright__ = """
 /*
- * Copyright (c) 2018-2020, Arm Limited. All rights reserved.
+ * Copyright (c) 2018-2021, Arm Limited. All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  *
@@ -37,7 +37,6 @@ mapPlatform = {"cypress/psoc64":            "psoc64",
                "mps2/an539":                "AN539",
                "mps2/sse-200_aws":          "SSE-200_AWS",
                "mps3/an524":                "AN524",
-               "musca_a":                   "MUSCA_A",
                "musca_b1/sse_200":          "MUSCA_B1",
                "musca_b1/secure_enclave":   "MUSCA_B1_SE",
                "musca_s1":                  "MUSCA_S1"}
