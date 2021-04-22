@@ -32,8 +32,8 @@ SQUAD_BASE_PROJECT_URL  = ("https://qa-reports.linaro.org/api/submit/tf/tf-m/")
 def get_file_size(filename):
     f_path = os.path.join(PATH_TO_TFM, "build", "bin", filename)
     if os.path.exists(f_path) :
-        bl2_sizes = utils.arm_non_eabi_size(f_path)[0]
-        return bl2_sizes
+        file_sizes = utils.arm_non_eabi_size(f_path)[0]
+        return file_sizes
     else :
         print(f_path + "Not found")
         return -1
@@ -47,9 +47,11 @@ def send_file_size(change_id, config_name, bl2_sizes, tfms_sizes):
         metrics = json.dumps({ "bl2_size"  : bl2_sizes["dec"],
                                "bl2_data"  : bl2_sizes["data"],
                                "bl2_bss"   : bl2_sizes["bss"],
+                               "bl2_text"  : bl2_sizes["text"],
                                "tfms_size" : tfms_sizes["dec"],
                                "tfms_data" : tfms_sizes["data"],
-                               "tfms_bss"  : tfms_sizes["bss"]})
+                               "tfms_bss"  : tfms_sizes["bss"],
+                               "tfms_text" : tfms_sizes["text"]})
     except:
         return -1
 
@@ -131,6 +133,12 @@ def identify_config():
             cfg.with_bl2 and cfg.with_ns and
             cfg.profile == "profile_medium" and cfg.partition_ps == "ON"):
                 name_config = "DefaultProfileM"
+        elif (cfg.psa_api and cfg.isolation_level == "3" and
+            not cfg.test_regression and cfg.test_psa_api == "OFF"     and
+            cfg.cmake_build_type == "Release" and cfg.with_otp == "off"  and
+            cfg.with_bl2 and cfg.with_ns and
+            cfg.profile == "profile_large" and cfg.partition_ps == "ON"):
+                name_config = "DefaultProfileL"
         ret = [cfg.tfm_platform,cfg.toolchain_file, name_config]
     except:
         ret = ["Unknown", "Unknown", "Unknown"]
