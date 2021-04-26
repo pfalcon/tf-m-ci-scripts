@@ -12,6 +12,24 @@ def getUpstreamJob() {
   return cause
 }
 
+def submitJobs(fvp_only_cmd, bl2_string, psa_string) {
+  dir("tf-m-ci-scripts") {
+    def res = sh(script: """./lava_helper/lava_create_jobs.py \
+      --build-number ${env.BUILD_NUMBER} --output-dir lava_jobs ${fvp_only_cmd}\
+      --compiler ${env.COMPILER} --platform ${env.TARGET_PLATFORM} \
+      ${bl2_string} ${psa_string} --build-type ${env.CMAKE_BUILD_TYPE} \
+      --jenkins-build-url ${env.BUILD_URL} --proj-config ${env.PROJ_CONFIG} \
+      --docker-prefix ${env.DOCKER_PREFIX} --license-variable "${env.LICENSE_VARIABLE}"
+      """, returnStdout: true).trim()
+    print(res)
+    job_ids = sh(script: """./lava_helper/lava_submit_jobs.py \
+      --lava-url ${env.LAVA_URL} --job-dir lava_jobs \
+      --lava-user ${LAVA_USER} --lava-token ${LAVA_TOKEN} | egrep "^JOBS"
+      """, returnStdout: true).trim()
+    currentBuild.setDescription(job_ids)
+  }
+}
+
 node("docker-amd64-tf-m-bionic") {
   stage("Init") {
     cleanWs()
@@ -20,7 +38,6 @@ node("docker-amd64-tf-m-bionic") {
     }
   }
   stage("LAVA") {
-
     def fvp_only_cmd = ""
     def upstreamProject = getUpstreamJob()[0].upstreamProject
     if (upstreamProject == "tf-m-build-and-test") {
@@ -39,20 +56,12 @@ node("docker-amd64-tf-m-bionic") {
       if (env.PSA_API_SUITE != "") {
         psa_string = "--psa-api-suite ${env.PSA_API_SUITE}"
       }
-      dir("tf-m-ci-scripts") {
-        def res = sh(script: """./lava_helper/lava_create_jobs.py \
---build-number ${env.BUILD_NUMBER} --output-dir lava_jobs ${fvp_only_cmd}\
---compiler ${env.COMPILER} --platform ${env.TARGET_PLATFORM} \
-${bl2_string} ${psa_string} --build-type ${env.CMAKE_BUILD_TYPE} \
---jenkins-build-url ${env.BUILD_URL} --proj-config ${env.PROJ_CONFIG} \
---docker-prefix ${env.DOCKER_PREFIX} --license-variable "${env.LICENSE_VARIABLE}"
-""", returnStdout: true).trim()
-        print(res)
-        job_ids = sh(script: """./lava_helper/lava_submit_jobs.py \
-  --lava-url ${env.LAVA_URL} --job-dir lava_jobs \
-  --lava-user ${LAVA_USER} --lava-token ${LAVA_TOKEN} | egrep "^JOBS"
-  """, returnStdout: true).trim()
-        currentBuild.setDescription(job_ids)
+      try {
+        submitJobs(fvp_only_cmd, bl2_string, psa_string)
+      } catch (Exception ex) {
+        print("LAVA-Submit failed! Exception: ${ex}")
+        print("Try to submit again...")
+        submitJobs(fvp_only_cmd, bl2_string, psa_string)
       }
     }
   }
