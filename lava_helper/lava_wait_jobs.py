@@ -228,7 +228,16 @@ def info_print(line):
 def main(user_args):
     """ Main logic """
     user_args.lava_rpc = "RPC2"
-    wait_for_jobs(user_args)
+    for try_time in range(3):
+        try:
+            wait_for_jobs(user_args)
+            break
+        except Exception as e:
+            print(e)
+            if try_time < 2:
+                print("Try to get LAVA jobs again...")
+            else:
+                raise e
 
 def get_cmd_args():
     """ Parse command line arguments """
