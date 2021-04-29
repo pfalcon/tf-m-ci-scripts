@@ -1,6 +1,6 @@
 #!/bin/bash
 #-------------------------------------------------------------------------------
-# Copyright (c) 2018-2020, Arm Limited and Contributors. All rights reserved.
+# Copyright (c) 2018-2021, Arm Limited and Contributors. All rights reserved.
 #
 # SPDX-License-Identifier: BSD-3-Clause
 #
@@ -73,6 +73,15 @@ cmake_commands=compile_commands.json
 library_file="$(fix_win_path $(get_full_path $mypath))/cppcheck/arm-cortex-m.cfg"
 suppress_file="$(fix_win_path $(get_full_path $mypath))/cppcheck/tfm-suppress-list.txt"
 toolchain_file="$(fix_win_path $(get_full_path ./))/toolchain_GNUARM.cmake"
+test_repo="$(fix_win_path $(get_full_path ./))/../tf-m-tests"
+mbedtls_repo="$(fix_win_path $(get_full_path ./))/../mbedtls"
+psa_arch_tests_repo="$(fix_win_path $(get_full_path ./))/../psa-arch-tests"
+mcuboot_repo="$(fix_win_path $(get_full_path ./))/../mcuboot"
+
+#Cmake compile params
+cmake_params="-DCMAKE_EXPORT_COMPILE_COMMANDS=1 -DTFM_PLATFORM=mps2/an521 -DTFM_TOOLCHAIN_FILE=$toolchain_file"
+cmake_params="$cmake_params -DTFM_TEST_REPO_PATH=$test_repo -DMBEDCRYPTO_PATH=$mbedtls_repo"
+cmake_params="$cmake_params -DPSA_ARCH_TESTS_PATH=$psa_arch_tests_repo -DMCUBOOT_PATH=$mcuboot_repo"
 
 #Enable all additional checks by default
 additional_checklist="all"
@@ -81,7 +90,7 @@ additional_checklist="all"
 echo
 echo '******* Generating compile_commands.json ***************'
 echo
-generate_project $(fix_win_path $(get_full_path ./)) "./" "cppcheck" "-DCMAKE_EXPORT_COMPILE_COMMANDS=1 -DTFM_PLATFORM=mps2/an521 -DTFM_TOOLCHAIN_FILE=$toolchain_file"
+generate_project $(fix_win_path $(get_full_path ./)) "./" "cppcheck" "$cmake_params"
 #Enter the build directory
 bdir=$(make_build_dir_name "./" "cppcheck")
 pushd "$bdir" >/dev/null
