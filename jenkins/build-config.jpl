@@ -14,6 +14,12 @@ if (env.COMPILER == "ARMCLANG") {
   nodeLabel = "docker-amd64-tf-m-bionic"
 }
 
+@NonCPS
+def getUpstreamJob() {
+  def cause = manager.build.getAction(hudson.model.CauseAction.class).getCauses()
+  return cause
+}
+
 node(nodeLabel) {
   stage("Init") {
     cleanWs()
@@ -100,6 +106,10 @@ node(nodeLabel) {
     stage("Post") {
       archiveArtifacts 'trusted-firmware-m/build/bin/**'
       archiveArtifacts 'trusted-firmware-m/build/install/interface/**'
+      def upstreamProject = getUpstreamJob()[0].upstreamProject
+      if (upstreamProject == "tf-m-build-and-test") {
+        archiveArtifacts 'trusted-firmware-m/build/generated/**'
+      }
       if (env.SQUAD_CONFIGURATIONS != ""){
         //Creating a folder to store memory footprint artifacts and launching the memory footprint script.
         sh "mkdir tf-m-ci-scripts/Memory_footprint/"
