@@ -62,6 +62,7 @@ node("docker-amd64-tf-m-bionic") {
         print("LAVA-Submit failed! Exception: ${ex}")
         print("Try to submit again...")
         submitJobs(fvp_only_cmd, bl2_string, psa_string)
+        currentBuild.setDescription(currentBuild.getDescription() + " Submitted twice!")
       }
     }
   }

@@ -204,15 +204,24 @@ python3 ./configs.py -g ${filter_group.replace(" ", " -g ")} ${config}
       params += string(name: 'CI_SCRIPTS_BRANCH', value: env.CI_SCRIPTS_BRANCH)
       params += string(name: 'LAVA_CREDENTIALS', value: env.LAVA_CREDENTIALS)
       def lava_res = build(job: 'tf-m-lava-submit', parameters: params, propagate: false)
+      def lava_resubmitted = false
       if (lava_res.result in failure_states) {
         error("LAVA Create and Submit failed at ${lava_res.getAbsoluteUrl()}")
       }
       else {
-        results['lava_jobs'] += lava_res.getDescription()
+        lava_des = lava_res.getDescription()
+        if (lava_des.contains(" Submitted twice!")) {
+          lava_resubmitted = true
+          lava_des = lava_des - " Submitted twice!"
+        }
+        results['lava_jobs'] += lava_des
       }
       links = "Build Config: ${config}\n"
       links += "Build URL: ${build_url}\n"
       links += "LAVA Submit: ${lava_res.getAbsoluteUrl()}"
+      if (lava_resubmitted) {
+        links += "\nLAVA Job Re-Submitted!"
+      }
       print(links)
     }
   }
