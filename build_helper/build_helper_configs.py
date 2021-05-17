@@ -782,6 +782,23 @@ config_pp_test = {"seed_params": {
                 "partition_ps":     ["ON", "OFF"],
                 },
                 "common_params": _common_tfm_builder_cfg,
+                "valid": [
+                    ("mps2/an521", "toolchain_GNUARM.cmake",
+                     False, "1", False, "OFF", "Debug",
+                     "off", True, True, "", "ON"),
+                    ("mps2/an521", "toolchain_ARMCLANG.cmake",
+                     True, "2", False, "OFF", "Debug",
+                     "off", True, True, "", "ON"),
+                    ("mps2/an521", "toolchain_ARMCLANG.cmake",
+                     True, "3", False, "OFF", "Release",
+                     "off", True, True, "", "ON"),
+                    ("mps2/an521", "toolchain_GNUARM.cmake",
+                     True, "2", False, "OFF", "Debug",
+                     "off", True, True, "profile_medium", "ON"),
+                    ("mps2/an521", "toolchain_GNUARM.cmake",
+                     True, "3", False, "OFF", "Debug",
+                     "off", True, True, "profile_large", "ON"),
+                ],
                 "invalid": _common_tfm_invalid_configs + [
                     # invalid configs that are not supported by TF-M
                     ("musca_s1", "*", "*", "*", "*", "*",
@@ -811,7 +828,7 @@ config_pp_test = {"seed_params": {
                      "*",  "*", "*", "*", "profile_small", "*"),
                     ("*", "toolchain_ARMCLANG.cmake", "*", "*", "*", "*",
                      "*",  "*", "*", "*", "profile_medium", "*"),
-                    ("*", "toolchain_ARMCLANG.cmake", "False", "*", "*", "*",
+                    ("*", "toolchain_ARMCLANG.cmake", False, "*", "*", "*",
                      "*",  "*", "*", "*", "*", "*"),
                 ]
                 }
