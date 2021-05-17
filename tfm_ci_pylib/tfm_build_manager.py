@@ -494,7 +494,7 @@ class TFM_Build_Manager(structuredTask):
                 # Invalid configurations(Do not build)
                 invalid_cfg = cfg["invalid"]
                 # Remove the rejected entries from the test list
-                rejection_cfg = TFM_Build_Manager.generate_rejection_list(
+                rejection_cfg = TFM_Build_Manager.generate_optional_list(
                     comb_cfg,
                     static_cfg,
                     invalid_cfg)
@@ -579,34 +579,34 @@ class TFM_Build_Manager(structuredTask):
         return ret_cfg
 
     @staticmethod
-    def generate_rejection_list(seed_config,
-                                static_config,
-                                rejection_list):
-        rejection_cfg = {}
+    def generate_optional_list(seed_config,
+                               static_config,
+                               optional_list):
+        optional_cfg = {}
 
         if static_config["config_type"] == "tf-m":
 
-            # If rejection list is empty do nothing
-            if not rejection_list:
-                return rejection_cfg
+            # If optional list is empty do nothing
+            if not optional_list:
+                return optional_cfg
 
             tags = [n for n in static_config["sort_order"]
                     if n in seed_config.keys()]
             sorted_default_lst = [seed_config[k] for k in tags]
 
-            # If tags are not alligned with rejection list entries quit
-            if len(tags) != len(rejection_list[0]):
-                print(len(tags), len(rejection_list[0]))
+            # If tags are not alligned with optional list entries quit
+            if len(tags) != len(optional_list[0]):
+                print(len(tags), len(optional_list[0]))
                 print("Error, tags should be assigned to each "
-                      "of the rejection inputs")
+                      "of the optional inputs")
                 return []
 
             # Replace wildcard ( "*") entries with every
             # inluded in cfg variant
-            for k in rejection_list:
+            for k in optional_list:
                 # Pad the omitted values with wildcard char *
                 res_list = list(k) + ["*"] * (5 - len(k))
-                print("Working on rejection input: %s" % (res_list))
+                print("Working on optional input: %s" % (res_list))
 
                 for n in range(len(res_list)):
 
@@ -614,17 +614,17 @@ class TFM_Build_Manager(structuredTask):
                         else sorted_default_lst[n]
 
                 # Generate a configuration and a name for the completed array
-                rj_cfg = TFM_Build_Manager.generate_config_list(
+                op_cfg = TFM_Build_Manager.generate_config_list(
                     dict(zip(tags, res_list)),
                     static_config)
 
                 # Append the configuration to the existing ones
-                rejection_cfg = dict(rejection_cfg, **rj_cfg)
+                optional_cfg = dict(optional_cfg, **op_cfg)
 
-            # Notfy the user for the rejected configuations
-            for i in rejection_cfg.keys():
-                print("Rejecting config %s" % i)
+            # Notify the user for the optional configuations
+            for i in optional_cfg.keys():
+                print("Generating optional config %s" % i)
         else:
             print("Not information for project type: %s."
                   " Please check config" % static_config["config_type"])
-        return rejection_cfg
+        return optional_cfg
