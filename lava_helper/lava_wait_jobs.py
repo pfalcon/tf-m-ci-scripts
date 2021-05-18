@@ -21,9 +21,11 @@ import time
 import yaml
 import argparse
 import csv
+import shutil
 from jinja2 import Environment, FileSystemLoader
 from lava_helper_configs import *
 from lava_helper import test_lava_dispatch_credentials
+from lava_submit_jobs import *
 
 try:
     from tfm_ci_pylib.utils import save_json, load_json, sort_dict,\
@@ -61,6 +63,9 @@ def wait_for_jobs(user_args):
     job_list = [int(x) for x in job_list if x != '']
     lava = test_lava_dispatch_credentials(user_args)
     finished_jobs = get_finished_jobs(job_list, user_args, lava)
+    resubmit_jobs = resubmit_failed_jobs(finished_jobs, user_args)
+    finished_resubmit_jobs = get_finished_jobs(resubmit_jobs, user_args, lava)
+    finished_jobs.update(finished_resubmit_jobs)
     print_lava_urls(finished_jobs, user_args)
     job_links(finished_jobs, user_args)
     boot_report(finished_jobs, user_args)
@@ -80,6 +85,24 @@ def get_finished_jobs(job_list, user_args, lava):
             finished_jobs[job] = info
     finished_jobs = fetch_artifacts(finished_jobs, user_args, lava)
     return finished_jobs
+
+def resubmit_failed_jobs(jobs, user_args):
+    if not jobs:
+        return []
+    failed_job = []
+    os.makedirs('failed_jobs', exist_ok=True)
+    for job_id, info in jobs.items():
+        if not (info['health'] == "Complete" and info['state'] == "Finished"):
+            job_dir = info['job_dir']
+            def_path = os.path.join(job_dir, 'definition.yaml')
+            os.rename(def_path, 'failed_jobs/{}_definition.yaml'.format(job_id))
+            shutil.rmtree(job_dir)
+            failed_job.append(job_id)
+    for failed_job_id in failed_job:
+        jobs.pop(failed_job_id)
+    resubmitted_jobs = lava_dispatch(user_args, job_dir='failed_jobs')
+    resubmitted_jobs = [int(x) for x in resubmitted_jobs if x != '']
+    return resubmitted_jobs
 
 def fetch_artifacts(jobs, user_args, lava):
     if not user_args.artifacts_path:
