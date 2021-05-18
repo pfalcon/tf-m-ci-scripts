@@ -4,7 +4,7 @@ from __future__ import print_function
 
 __copyright__ = """
 /*
- * Copyright (c) 2020, Arm Limited. All rights reserved.
+ * Copyright (c) 2020-2021, Arm Limited. All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  *
@@ -60,6 +60,15 @@ def wait_for_jobs(user_args):
     job_list = user_args.job_ids.split(",")
     job_list = [int(x) for x in job_list if x != '']
     lava = test_lava_dispatch_credentials(user_args)
+    finished_jobs = get_finished_jobs(job_list, user_args, lava)
+    print_lava_urls(finished_jobs, user_args)
+    job_links(finished_jobs, user_args)
+    boot_report(finished_jobs, user_args)
+    test_report(finished_jobs, user_args, lava)
+    failure_report(finished_jobs, user_args)
+    csv_report(finished_jobs)
+
+def get_finished_jobs(job_list, user_args, lava):
     finished_jobs = lava.block_wait_for_jobs(job_list, user_args.dispatch_timeout, 0.5)
     unfinished_jobs = [item for item in job_list if item not in finished_jobs]
     for job in unfinished_jobs:
@@ -70,12 +79,7 @@ def wait_for_jobs(user_args):
             info['job_dir'] = os.path.join(user_args.artifacts_path, "{}_{}".format(str(job), info['description']))
             finished_jobs[job] = info
     finished_jobs = fetch_artifacts(finished_jobs, user_args, lava)
-    print_lava_urls(finished_jobs, user_args)
-    job_links(finished_jobs, user_args)
-    boot_report(finished_jobs, user_args)
-    test_report(finished_jobs, user_args, lava)
-    failure_report(finished_jobs, user_args)
-    csv_report(finished_jobs)
+    return finished_jobs
 
 def fetch_artifacts(jobs, user_args, lava):
     if not user_args.artifacts_path:
@@ -254,10 +258,10 @@ def get_cmd_args():
         "--job-ids", dest="job_ids", action="store", required=True, help="Comma separated list of job IDS"
     )
     cmdargs.add_argument(
-        "--lava-token", dest="token_secret", action="store", help="LAVA auth token"
+        "--lava-token", dest="lava_token", action="store", help="LAVA auth token"
     )
     cmdargs.add_argument(
-        "--lava-user", dest="token_usr", action="store", help="LAVA username"
+        "--lava-user", dest="lava_user", action="store", help="LAVA username"
     )
     cmdargs.add_argument(
         "--use-env", dest="token_from_env", action="store_true", default=False, help="Use LAVA auth info from environment"

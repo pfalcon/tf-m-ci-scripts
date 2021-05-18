@@ -8,7 +8,7 @@ Script for submitting multiple LAVA definitions
 
 __copyright__ = """
 /*
- * Copyright (c) 2020, Arm Limited. All rights reserved.
+ * Copyright (c) 2020-2021, Arm Limited. All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  *
@@ -75,20 +75,25 @@ def test_lava_dispatch_credentials(user_args):
         sys.exit(1)
     return lava
 
-def list_files_from_dir(user_args):
+def list_files_from_dir(user_args, job_dir=""):
+    if job_dir == "":
+        job_dir = user_args.job_dir
     file_list = []
-    for filename in glob.iglob(user_args.job_dir + '**/*.yaml', recursive=True):
+    for filename in glob.iglob(job_dir + '**/*.yaml', recursive=True):
         file_list.append(filename)
         print("Found job {}".format(filename))
     return file_list
 
-def lava_dispatch(user_args):
+def lava_dispatch(user_args, job_dir=""):
     """ Submit a job to LAVA backend, block untill it is completed, and
     fetch the results files if successful. If not, calls sys exit with 1
     return code """
 
+    if job_dir == "":
+        job_dir = user_args.job_dir
+
     lava = test_lava_dispatch_credentials(user_args)
-    file_list = list_files_from_dir(user_args)
+    file_list = list_files_from_dir(user_args, job_dir)
     job_id_list = []
     for job_file in file_list:
         job_id, job_url = lava.submit_job(job_file)
@@ -100,10 +105,11 @@ def lava_dispatch(user_args):
             print("Job submitted at: " + job_url)
             job_id_list.append(job_id)
 
-    print("JOBS: {}".format(",".join(str(x) for x in job_id_list)))
+    return job_id_list
 
 def main(user_args):
-    lava_dispatch(user_args)
+    job_id_list = lava_dispatch(user_args)
+    print("JOBS: {}".format(",".join(str(x) for x in job_id_list)))
 
 
 def get_cmd_args():
