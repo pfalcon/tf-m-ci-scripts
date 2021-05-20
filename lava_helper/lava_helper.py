@@ -9,7 +9,7 @@ from __future__ import print_function
 
 __copyright__ = """
 /*
- * Copyright (c) 2018-2020, Arm Limited. All rights reserved.
+ * Copyright (c) 2018-2021, Arm Limited. All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  *
@@ -316,9 +316,9 @@ def test_lava_dispatch_credentials(user_args):
         if user_args.token_from_env:
             usr = os.environ['LAVA_USER']
             secret = os.environ['LAVA_TOKEN']
-        elif user_args.token_usr and user_args.token_secret:
-            usr = user_args.token_usr
-            secret = user_args.token_secret
+        elif user_args.lava_user and user_args.lava_token:
+            usr = user_args.lava_user
+            secret = user_args.lava_token
 
         # Do not submit job without complete credentials
         if not len(usr) or not len(secret):
@@ -334,7 +334,7 @@ def test_lava_dispatch_credentials(user_args):
             raise Exception("Server rejected user authentication")
     except Exception as e:
         print("Credential validation failed with : %s" % e)
-        print("Did you set set --lava_token_usr, --lava_token_secret?")
+        print("Did you set set --lava_user, --lava_token?")
         sys.exit(1)
     return lava
 
@@ -588,11 +588,11 @@ def get_cmd_args():
                              "(i.e www.domain.com/APP)\n"
                              "By default set to RPC2")
     disp_g.add_argument("-du", "--dispatch-lava_token_usr",
-                        dest="token_usr",
+                        dest="lava_user",
                         action="store",
                         help="Lava user submitting the job")
     disp_g.add_argument("-ds", "--dispatch-lava_token_secret",
-                        dest="token_secret",
+                        dest="lava_token",
                         action="store",
                         help="Hash token used to authenticate"
                              "user during job submission")
