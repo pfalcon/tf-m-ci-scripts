@@ -9,42 +9,44 @@
 @Library('trustedfirmware') _
 import org.trustedfirmware.Gerrit
 
-node("docker-amd64-tf-m-bionic") {
-  stage("Init") {
-    cleanWs()
-    dir("trusted-firmware-m") {
-      checkout(
-        poll: false,
-        scm: [
-          $class: 'GitSCM',
-          branches: [[name: '$GERRIT_BRANCH']],
-          extensions: [[$class: 'BuildChooserSetting', buildChooser: [$class: 'GerritTriggerBuildChooser']]],
-          userRemoteConfigs: [[
-            credentialsId: 'GIT_SSH_KEY',
-            refspec: '$GERRIT_REFSPEC', url: '$CODE_REPO'
-          ]]
-        ])
-    }
-    dir("tf-m-ci-scripts") {
-      checkout([$class: 'GitSCM', branches: [[name: '$CI_SCRIPTS_BRANCH']], userRemoteConfigs: [[credentialsId: 'GIT_SSH_KEY', url: '$CI_SCRIPTS_REPO']]])
-    }
-  }
-  stage("Check") {
-    def verify = 1
-    try {
-      sh """
-cd trusted-firmware-m
-IS_CONTINUOUS_INTEGRATION=1 ../tf-m-ci-scripts/run-static-checks.sh
-"""
-    } catch (Exception e) {
-      manager.buildFailure()
-      verify = -1
-    } finally {
-      g = new Gerrit()
-      g.verifyStatusInWorkspace(verify, 'static-checks', 'static')
-      def buildStatus = (verify == 1) ? 'Successful' : 'Failed'
-      //g.commentInWorkspace("Build checkpatch ${buildStatus}: ${env.RUN_DISPLAY_URL}")
+timestamps {
+  node("docker-amd64-tf-m-bionic") {
+    stage("Init") {
       cleanWs()
+      dir("trusted-firmware-m") {
+        checkout(
+          poll: false,
+          scm: [
+            $class: 'GitSCM',
+            branches: [[name: '$GERRIT_BRANCH']],
+            extensions: [[$class: 'BuildChooserSetting', buildChooser: [$class: 'GerritTriggerBuildChooser']]],
+            userRemoteConfigs: [[
+              credentialsId: 'GIT_SSH_KEY',
+              refspec: '$GERRIT_REFSPEC', url: '$CODE_REPO'
+            ]]
+          ])
+      }
+      dir("tf-m-ci-scripts") {
+        checkout([$class: 'GitSCM', branches: [[name: '$CI_SCRIPTS_BRANCH']], userRemoteConfigs: [[credentialsId: 'GIT_SSH_KEY', url: '$CI_SCRIPTS_REPO']]])
+      }
+    }
+    stage("Check") {
+      def verify = 1
+      try {
+        sh """
+           cd trusted-firmware-m
+           IS_CONTINUOUS_INTEGRATION=1 ../tf-m-ci-scripts/run-static-checks.sh
+           """
+      } catch (Exception e) {
+        manager.buildFailure()
+        verify = -1
+      } finally {
+        g = new Gerrit()
+        g.verifyStatusInWorkspace(verify, 'static-checks', 'static')
+        def buildStatus = (verify == 1) ? 'Successful' : 'Failed'
+        //g.commentInWorkspace("Build checkpatch ${buildStatus}: ${env.RUN_DISPLAY_URL}")
+        cleanWs()
+      }
     }
   }
 }

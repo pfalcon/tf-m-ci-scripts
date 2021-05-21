@@ -457,97 +457,99 @@ def configs = []
 def builds = [:]
 def results = [:]
 
-node("docker-amd64-tf-m-bionic") {
-  stage("Init") {
-    cleanWs()
-    dir("tf-m-ci-scripts") {
-      checkout([$class: 'GitSCM', branches: [[name: '$CI_SCRIPTS_BRANCH']], userRemoteConfigs: [[credentialsId: 'GIT_SSH_KEY', url: '$CI_SCRIPTS_REPO']]])
+timestamps {
+  node("docker-amd64-tf-m-bionic") {
+    stage("Init") {
+      cleanWs()
+      dir("tf-m-ci-scripts") {
+        checkout([$class: 'GitSCM', branches: [[name: '$CI_SCRIPTS_BRANCH']], userRemoteConfigs: [[credentialsId: 'GIT_SSH_KEY', url: '$CI_SCRIPTS_REPO']]])
+      }
+    }
+    stage("Configs") {
+      // Populate configs
+      listConfigs('tf-m-ci-scripts', configs, env.FILTER_GROUP)
+      results['builds'] = [:]
+      results['lava_jobs'] = []
+      for (config in configs) {
+        builds[config] = buildConfig("tf-m-ci-scripts", config, env.FILTER_GROUP, results)
+      }
+      builds["docs"] = buildDocs(results)
     }
   }
-  stage("Configs") {
-    // Populate configs
-    listConfigs('tf-m-ci-scripts', configs, env.FILTER_GROUP)
-    results['builds'] = [:]
-    results['lava_jobs'] = []
-    for (config in configs) {
-      builds[config] = buildConfig("tf-m-ci-scripts", config, env.FILTER_GROUP, results)
-    }
-    builds["docs"] = buildDocs(results)
-  }
-}
 
-stage("Builds") {
-  def verify = 1
-  def success = true
-  try {
-    parallel(builds)
-  } catch (Exception e) {
-    print(e)
-    manager.buildFailure()
-    verify = -1
-    success = false
-  } finally {
-    print("Verifying status")
-    def failed_builds = filterFailedBuild(results['builds'])
-    emailNotification(success, 'build', failed_builds)
-    g = new Gerrit()
-    g.verifyStatus(verify, 'tf-m-build', 'build')
-    print("Building CSV")
-    generateBuildCsv(results['builds'])
-    writeSummary(results['builds'])
-  }
-}
-
-node("docker-amd64-tf-m-bionic") {
-  stage("Tests") {
-    dir("tf-m-ci-scripts") {
-      checkout([$class: 'GitSCM', branches: [[name: '$CI_SCRIPTS_BRANCH']], userRemoteConfigs: [[credentialsId: 'GIT_SSH_KEY', url: '$CI_SCRIPTS_REPO']]])
-    }
-    def all_jobs = []
+  stage("Builds") {
+    def verify = 1
     def success = true
-    print("Wait for LAVA results here...")
     try {
-      all_jobs = submitJobsToList(results['lava_jobs'])
-      if (all_jobs.size() > 0) {
-        dir("tf-m-ci-scripts") {
-          withCredentials([usernamePassword(credentialsId: env.LAVA_CREDENTIALS, passwordVariable: 'LAVA_TOKEN', usernameVariable: 'LAVA_USER')]) {
-            output = sh(script: """./lava_helper/lava_wait_jobs.py --job-ids ${all_jobs.join(",")} \
-  --lava-url ${env.LAVA_URL} --lava-user ${LAVA_USER} --lava-token ${LAVA_TOKEN} \
-  --artifacts-path lava_artifacts --lava-timeout 7200 \
-  """, returnStdout: true).trim()
-            showLinks(output)
-            archiveArtifacts artifacts: 'test_summary.*', allowEmptyArchive: true
-            archiveArtifacts artifacts: 'test_results.csv', allowEmptyArchive: true
-            g = new Gerrit()
-            def (boot_result, boot_output) = getResult(output, 'BOOT_RESULT: ')
-            if (boot_result) {
-              g.verifyStatus(boot_result, "lava_boot", "test")
-            }
-            def (test_result, test_output) = getResult(output, 'TEST_RESULT: ')
-            if (test_result) {
-              g.verifyStatus(test_result, "lava_test", "test")
-            }
-            if (boot_result.toInteger() < 1 || test_result.toInteger() < 1) {
-              error("Marking job as failed due to failed boots: ${boot_output} or tests: ${test_output}")
+      parallel(builds)
+    } catch (Exception e) {
+      print(e)
+      manager.buildFailure()
+      verify = -1
+      success = false
+    } finally {
+      print("Verifying status")
+      def failed_builds = filterFailedBuild(results['builds'])
+      emailNotification(success, 'build', failed_builds)
+      g = new Gerrit()
+      g.verifyStatus(verify, 'tf-m-build', 'build')
+      print("Building CSV")
+      generateBuildCsv(results['builds'])
+      writeSummary(results['builds'])
+    }
+  }
+
+  node("docker-amd64-tf-m-bionic") {
+    stage("Tests") {
+      dir("tf-m-ci-scripts") {
+        checkout([$class: 'GitSCM', branches: [[name: '$CI_SCRIPTS_BRANCH']], userRemoteConfigs: [[credentialsId: 'GIT_SSH_KEY', url: '$CI_SCRIPTS_REPO']]])
+      }
+      def all_jobs = []
+      def success = true
+      print("Wait for LAVA results here...")
+      try {
+        all_jobs = submitJobsToList(results['lava_jobs'])
+        if (all_jobs.size() > 0) {
+          dir("tf-m-ci-scripts") {
+            withCredentials([usernamePassword(credentialsId: env.LAVA_CREDENTIALS, passwordVariable: 'LAVA_TOKEN', usernameVariable: 'LAVA_USER')]) {
+              output = sh(script: """./lava_helper/lava_wait_jobs.py --job-ids ${all_jobs.join(",")} \
+    --lava-url ${env.LAVA_URL} --lava-user ${LAVA_USER} --lava-token ${LAVA_TOKEN} \
+    --artifacts-path lava_artifacts --lava-timeout 7200 \
+    """, returnStdout: true).trim()
+              showLinks(output)
+              archiveArtifacts artifacts: 'test_summary.*', allowEmptyArchive: true
+              archiveArtifacts artifacts: 'test_results.csv', allowEmptyArchive: true
+              g = new Gerrit()
+              def (boot_result, boot_output) = getResult(output, 'BOOT_RESULT: ')
+              if (boot_result) {
+                g.verifyStatus(boot_result, "lava_boot", "test")
+              }
+              def (test_result, test_output) = getResult(output, 'TEST_RESULT: ')
+              if (test_result) {
+                g.verifyStatus(test_result, "lava_test", "test")
+              }
+              if (boot_result.toInteger() < 1 || test_result.toInteger() < 1) {
+                error("Marking job as failed due to failed boots: ${boot_output} or tests: ${test_output}")
+              }
             }
           }
         }
+        else {
+          print("There were no LAVA jobs to test.")
+        }
       }
-      else {
-        print("There were no LAVA jobs to test.")
-      }
-    }
-    catch (Exception e) {
-      print("ERROR: ${e}")
-      success = false
-    } finally {
-      archiveArtifacts artifacts: 'tf-m-ci-scripts/lava_artifacts/**', allowEmptyArchive: true
-      if (all_jobs.size() > 0) {
-        emailNotification(success, 'test', filterFailedTest(output))
-      }
-      cleanWs()
-      if (!success) {
-        error("There was an Error waiting for LAVA jobs")
+      catch (Exception e) {
+        print("ERROR: ${e}")
+        success = false
+      } finally {
+        archiveArtifacts artifacts: 'tf-m-ci-scripts/lava_artifacts/**', allowEmptyArchive: true
+        if (all_jobs.size() > 0) {
+          emailNotification(success, 'test', filterFailedTest(output))
+        }
+        cleanWs()
+        if (!success) {
+          error("There was an Error waiting for LAVA jobs")
+        }
       }
     }
   }

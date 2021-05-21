@@ -30,44 +30,46 @@ def submitJobs(fvp_only_cmd, bl2_string, psa_string) {
   }
 }
 
-node("docker-amd64-tf-m-bionic") {
-  stage("Init") {
-    cleanWs()
-    dir("tf-m-ci-scripts") {
-      checkout([$class: 'GitSCM', branches: [[name: '$CI_SCRIPTS_BRANCH']], userRemoteConfigs: [[credentialsId: 'GIT_SSH_KEY', url: '$CI_SCRIPTS_REPO']]])
+timestamps {
+  node("docker-amd64-tf-m-bionic") {
+    stage("Init") {
+      cleanWs()
+      dir("tf-m-ci-scripts") {
+        checkout([$class: 'GitSCM', branches: [[name: '$CI_SCRIPTS_BRANCH']], userRemoteConfigs: [[credentialsId: 'GIT_SSH_KEY', url: '$CI_SCRIPTS_REPO']]])
+      }
     }
-  }
-  stage("LAVA") {
-    def fvp_only_cmd = ""
-    def upstreamProject = getUpstreamJob()[0].upstreamProject
-    if (upstreamProject == "tf-m-build-and-test") {
-      fvp_only_cmd = "--fvp-only "
-      print("Run test cases only on FVP in per-patch.")
-    }
+    stage("LAVA") {
+      def fvp_only_cmd = ""
+      def upstreamProject = getUpstreamJob()[0].upstreamProject
+      if (upstreamProject == "tf-m-build-and-test") {
+        fvp_only_cmd = "--fvp-only "
+        print("Run test cases only on FVP in per-patch.")
+      }
 
-    withCredentials([usernamePassword(credentialsId: env.LAVA_CREDENTIALS, passwordVariable: 'LAVA_TOKEN', usernameVariable: 'LAVA_USER')]) {
-      print("Generating LAVA jobs...")
-      def bl2_string = ""
-      def psa_string = ""
-      if (env.BL2.equals("True")) {
-        bl2_string = "--bl2"
-      }
-      // work around this string containing quotes?
-      if (env.PSA_API_SUITE != "") {
-        psa_string = "--psa-api-suite ${env.PSA_API_SUITE}"
-      }
-      try {
-        submitJobs(fvp_only_cmd, bl2_string, psa_string)
-      } catch (Exception ex) {
-        print("LAVA-Submit failed! Exception: ${ex}")
-        print("Try to submit again...")
-        submitJobs(fvp_only_cmd, bl2_string, psa_string)
-        currentBuild.setDescription(currentBuild.getDescription() + " Submitted twice!")
+      withCredentials([usernamePassword(credentialsId: env.LAVA_CREDENTIALS, passwordVariable: 'LAVA_TOKEN', usernameVariable: 'LAVA_USER')]) {
+        print("Generating LAVA jobs...")
+        def bl2_string = ""
+        def psa_string = ""
+        if (env.BL2.equals("True")) {
+          bl2_string = "--bl2"
+        }
+        // work around this string containing quotes?
+        if (env.PSA_API_SUITE != "") {
+          psa_string = "--psa-api-suite ${env.PSA_API_SUITE}"
+        }
+        try {
+          submitJobs(fvp_only_cmd, bl2_string, psa_string)
+        } catch (Exception ex) {
+          print("LAVA-Submit failed! Exception: ${ex}")
+          print("Try to submit again...")
+          submitJobs(fvp_only_cmd, bl2_string, psa_string)
+          currentBuild.setDescription(currentBuild.getDescription() + " Submitted twice!")
+        }
       }
     }
-  }
-  stage("Post") {
-    archiveArtifacts artifacts: 'tf-m-ci-scripts/lava_jobs/**', allowEmptyArchive: true
-    cleanWs()
+    stage("Post") {
+      archiveArtifacts artifacts: 'tf-m-ci-scripts/lava_jobs/**', allowEmptyArchive: true
+      cleanWs()
+    }
   }
 }

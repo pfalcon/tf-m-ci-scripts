@@ -20,69 +20,27 @@ def getUpstreamJob() {
   return cause
 }
 
-node(nodeLabel) {
-  stage("Init") {
-    cleanWs()
-    dir("trusted-firmware-m") {
-      checkout(
-        poll: false,
-        scm: [
-          $class: 'GitSCM',
-          branches: [[name: '$GERRIT_BRANCH']],
-          extensions: [[$class: 'BuildChooserSetting', buildChooser: [$class: 'GerritTriggerBuildChooser']]],
-          userRemoteConfigs: [[
-            credentialsId: 'GIT_SSH_KEY',
-            refspec: '$GERRIT_REFSPEC', url: '$CODE_REPO'
-          ]]
-        ])
-    }
-    dir("tf-m-ci-scripts") {
-      checkout([$class: 'GitSCM', branches: [[name: '$CI_SCRIPTS_BRANCH']], userRemoteConfigs: [[credentialsId: 'GIT_SSH_KEY', url: '$CI_SCRIPTS_REPO']]])
-    }
-    dir("mbedtls") {
-      checkout(
-        changelog: false,
-        poll: false,
-        scm: [
-          $class: 'GitSCM',
-          branches: [[name: 'FETCH_HEAD']],
-          userRemoteConfigs: [[
-            refspec: 'refs/tags/$MBEDTLS_VERSION',
-            url: params.MBEDTLS_URL
-          ]]
-        ]
-      )
-    }
-    dir("mcuboot") {
-      checkout(
-        changelog: false,
-        poll: false,
-        scm: [
-          $class: 'GitSCM',
-          branches: [[name: 'FETCH_HEAD']],
-          userRemoteConfigs: [[
-            refspec: '$MCUBOOT_REFSPEC',
-            url: params.MCUBOOT_URL
-          ]]
-        ]
-      )
-    }
-    dir("tf-m-tests") {
-      checkout(
-        changelog: false,
-        poll: false,
-        scm: [
-          $class: 'GitSCM',
-          branches: [[name: 'FETCH_HEAD']],
-          userRemoteConfigs: [[
-            refspec: '$TFM_TESTS_REFSPEC',
-            url: params.TFM_TESTS_URL
-          ]]
-        ]
-      )
-    }
-    if (env.PSA_API_SUITE != "") {
-      dir("psa-arch-tests") {
+timestamps {
+  node(nodeLabel) {
+    stage("Init") {
+      cleanWs()
+      dir("trusted-firmware-m") {
+        checkout(
+          poll: false,
+          scm: [
+            $class: 'GitSCM',
+            branches: [[name: '$GERRIT_BRANCH']],
+            extensions: [[$class: 'BuildChooserSetting', buildChooser: [$class: 'GerritTriggerBuildChooser']]],
+            userRemoteConfigs: [[
+              credentialsId: 'GIT_SSH_KEY',
+              refspec: '$GERRIT_REFSPEC', url: '$CODE_REPO'
+            ]]
+          ])
+      }
+      dir("tf-m-ci-scripts") {
+        checkout([$class: 'GitSCM', branches: [[name: '$CI_SCRIPTS_BRANCH']], userRemoteConfigs: [[credentialsId: 'GIT_SSH_KEY', url: '$CI_SCRIPTS_REPO']]])
+      }
+      dir("mbedtls") {
         checkout(
           changelog: false,
           poll: false,
@@ -90,45 +48,89 @@ node(nodeLabel) {
             $class: 'GitSCM',
             branches: [[name: 'FETCH_HEAD']],
             userRemoteConfigs: [[
-              refspec: '$PSA_ARCH_TESTS_VERSION',
-              url: params.PSA_ARCH_TESTS_URL
+              refspec: 'refs/tags/$MBEDTLS_VERSION',
+              url: params.MBEDTLS_URL
             ]]
           ]
         )
       }
-    }
-  }
-  try {
-    verify = 1
-    stage("Build") {
-      sh "tf-m-ci-scripts/run-build.sh"
-    }
-    stage("Post") {
-      archiveArtifacts 'trusted-firmware-m/build/bin/**'
-      archiveArtifacts 'trusted-firmware-m/build/install/interface/**'
-      def upstreamProject = getUpstreamJob()[0].upstreamProject
-      if (upstreamProject == "tf-m-build-and-test") {
-        archiveArtifacts 'trusted-firmware-m/build/generated/**'
+      dir("mcuboot") {
+        checkout(
+          changelog: false,
+          poll: false,
+          scm: [
+            $class: 'GitSCM',
+            branches: [[name: 'FETCH_HEAD']],
+            userRemoteConfigs: [[
+              refspec: '$MCUBOOT_REFSPEC',
+              url: params.MCUBOOT_URL
+            ]]
+          ]
+        )
       }
-      if (env.SQUAD_CONFIGURATIONS != ""){
-        //Creating a folder to store memory footprint artifacts and launching the memory footprint script.
-        sh "mkdir tf-m-ci-scripts/Memory_footprint/"
-        withCredentials([string(credentialsId: 'QA_REPORTS_TOKEN', variable: 'TOKEN')]) {
-          sh(script: "python3 tf-m-ci-scripts/memory_footprint.py ${env.WORKSPACE}/trusted-firmware-m/ ${env.CONFIG_NAME} \'${env.SQUAD_CONFIGURATIONS}\' ${TOKEN}", returnStdout: true)
-        }
-        if (fileExists('tf-m-ci-scripts/Memory_footprint/filesize.json')) {
-          archiveArtifacts 'tf-m-ci-scripts/Memory_footprint/filesize.json'
+      dir("tf-m-tests") {
+        checkout(
+          changelog: false,
+          poll: false,
+          scm: [
+            $class: 'GitSCM',
+            branches: [[name: 'FETCH_HEAD']],
+            userRemoteConfigs: [[
+              refspec: '$TFM_TESTS_REFSPEC',
+              url: params.TFM_TESTS_URL
+            ]]
+          ]
+        )
+      }
+      if (env.PSA_API_SUITE != "") {
+        dir("psa-arch-tests") {
+          checkout(
+            changelog: false,
+            poll: false,
+            scm: [
+              $class: 'GitSCM',
+              branches: [[name: 'FETCH_HEAD']],
+              userRemoteConfigs: [[
+                refspec: '$PSA_ARCH_TESTS_VERSION',
+                url: params.PSA_ARCH_TESTS_URL
+              ]]
+            ]
+          )
         }
       }
     }
-  } catch (Exception e) {
-    manager.buildFailure()
-    verify = -1
-  } finally {
-    g = new Gerrit()
-    g.verifyStatusInWorkspace(verify, env.CONFIG_NAME, 'build')
-    def buildStatus = (verify == 1) ? 'Successful' : 'Failed'
-    //g.commentInWorkspace("Build configuration ${env.CONFIG_NAME} ${buildStatus}: ${env.RUN_DISPLAY_URL}")
-    cleanWs()
+    try {
+      verify = 1
+      stage("Build") {
+        sh "tf-m-ci-scripts/run-build.sh"
+      }
+      stage("Post") {
+        archiveArtifacts 'trusted-firmware-m/build/bin/**'
+        archiveArtifacts 'trusted-firmware-m/build/install/interface/**'
+        def upstreamProject = getUpstreamJob()[0].upstreamProject
+        if (upstreamProject == "tf-m-build-and-test") {
+          archiveArtifacts 'trusted-firmware-m/build/generated/**'
+        }
+        if (env.SQUAD_CONFIGURATIONS != ""){
+          //Creating a folder to store memory footprint artifacts and launching the memory footprint script.
+          sh "mkdir tf-m-ci-scripts/Memory_footprint/"
+          withCredentials([string(credentialsId: 'QA_REPORTS_TOKEN', variable: 'TOKEN')]) {
+            sh(script: "python3 tf-m-ci-scripts/memory_footprint.py ${env.WORKSPACE}/trusted-firmware-m/ ${env.CONFIG_NAME} \'${env.SQUAD_CONFIGURATIONS}\' ${TOKEN}", returnStdout: true)
+          }
+          if (fileExists('tf-m-ci-scripts/Memory_footprint/filesize.json')) {
+            archiveArtifacts 'tf-m-ci-scripts/Memory_footprint/filesize.json'
+          }
+        }
+      }
+    } catch (Exception e) {
+      manager.buildFailure()
+      verify = -1
+    } finally {
+      g = new Gerrit()
+      g.verifyStatusInWorkspace(verify, env.CONFIG_NAME, 'build')
+      def buildStatus = (verify == 1) ? 'Successful' : 'Failed'
+      //g.commentInWorkspace("Build configuration ${env.CONFIG_NAME} ${buildStatus}: ${env.RUN_DISPLAY_URL}")
+      cleanWs()
+    }
   }
 }
