@@ -14,9 +14,9 @@ endef
 BASE_DIR ?= .
 
 target_platforms := cypress/psoc64 \
-                    mps2/an519 mps2/an521 \
-                    mps3/an524 \
-                    musca_b1/sse_200 musca_s1
+                    arm/mps2/an519 arm/mps2/an521 \
+                    arm/mps3/an524 \
+                    arm/musca_b1/sse_200 arm/musca_s1
 
 tf_m := trusted-firmware-m
 

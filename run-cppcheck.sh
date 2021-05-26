@@ -79,7 +79,7 @@ psa_arch_tests_repo="$(fix_win_path $(get_full_path ./))/../psa-arch-tests"
 mcuboot_repo="$(fix_win_path $(get_full_path ./))/../mcuboot"
 
 #Cmake compile params
-cmake_params="-DCMAKE_EXPORT_COMPILE_COMMANDS=1 -DTFM_PLATFORM=mps2/an521 -DTFM_TOOLCHAIN_FILE=$toolchain_file"
+cmake_params="-DCMAKE_EXPORT_COMPILE_COMMANDS=1 -DTFM_PLATFORM=arm/mps2/an521 -DTFM_TOOLCHAIN_FILE=$toolchain_file"
 cmake_params="$cmake_params -DTFM_TEST_REPO_PATH=$test_repo -DMBEDCRYPTO_PATH=$mbedtls_repo"
 cmake_params="$cmake_params -DPSA_ARCH_TESTS_PATH=$psa_arch_tests_repo -DMCUBOOT_PATH=$mcuboot_repo"
 

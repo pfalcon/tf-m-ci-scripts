@@ -1,6 +1,6 @@
 #!/bin/bash
 #-------------------------------------------------------------------------------
-# Copyright (c) 2020, Arm Limited and Contributors. All rights reserved.
+# Copyright (c) 2020-2021, Arm Limited and Contributors. All rights reserved.
 #
 # SPDX-License-Identifier: BSD-3-Clause
 #
@@ -19,7 +19,7 @@ git apply ../trusted-firmware-m/lib/ext/mbedcrypto/*.patch
 mkdir ../trusted-firmware-m/build
 cd ../trusted-firmware-m/build
 
-cmake -S .. -B . -DTFM_PLATFORM=mps2/an521 \
+cmake -S .. -B . -DTFM_PLATFORM=arm/mps2/an521 \
                  -DTFM_TOOLCHAIN_FILE=../toolchain_GNUARM.cmake \
                  -DMBEDCRYPTO_PATH=../../mbedtls \
                  -DTFM_TEST_REPO_PATH=../../tf-m-tests \

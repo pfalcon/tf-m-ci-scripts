@@ -175,7 +175,7 @@ if __name__ == "__main__":
         REFERENCE_CONFIGS[i] = REFERENCE_CONFIGS[i].strip().lower()
     config = identify_config()
     if (config[2].lower() in REFERENCE_CONFIGS
-        and config[0] == "mps2/an521"
+        and config[0] == "arm/mps2/an521"
         and config[1] == "toolchain_GNUARM.cmake"):
         # Pushing data for AN521 and GNUARM
         print("Configuration " + config[2] + " is a reference")

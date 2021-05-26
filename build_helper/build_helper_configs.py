@@ -74,7 +74,7 @@ _common_tfm_builder_cfg = {
     # ALL commands will be executed for every build.
     # Other keys will append extra commands when matching target_platform
     "build_cmds": {"all": ["cmake --build ./ -- install"],
-                   "musca_b1/sse_200": [("srec_cat "
+                   "arm/musca_b1/sse_200": [("srec_cat "
                                          "%(_tbm_build_dir_)s/bin/"
                                          "bl2.bin "
                                          "-Binary -offset 0xA000000 "
@@ -85,7 +85,7 @@ _common_tfm_builder_cfg = {
                                          "-fill 0xFF 0xA020000 0xA200000 "
                                          "-o %(_tbm_build_dir_)s/bin/"
                                          "tfm.hex -Intel")],
-                   "musca_s1": [("srec_cat "
+                   "arm/musca_s1": [("srec_cat "
                                  "%(_tbm_build_dir_)s/bin/"
                                  "bl2.bin "
                                  "-Binary -offset 0xA000000 "
@@ -104,14 +104,14 @@ _common_tfm_builder_cfg = {
                            "tfm_s.bin",
                            "%(_tbm_build_dir_)s/bin/"
                            "tfm_ns.bin"],
-                           "musca_b1/sse_200": [
+                           "arm/musca_b1/sse_200": [
                            "%(_tbm_build_dir_)s/bin/"
                            "tfm.hex",
                            "%(_tbm_build_dir_)s/bin/"
                            "bl2.bin",
                            "%(_tbm_build_dir_)s/bin/"
                            "tfm_sign.bin"],
-                           "musca_s1": [
+                           "arm/musca_s1": [
                            "%(_tbm_build_dir_)s/bin/"
                            "tfm.hex",
                            "%(_tbm_build_dir_)s/bin/"
@@ -124,8 +124,8 @@ _common_tfm_builder_cfg = {
 # List of all build configs that are impossible under all circumstances
 _common_tfm_invalid_configs = [
     # Load range overlap on Musca for IPC Debug type: T895
-    ("musca_b1/sse_200", "toolchain_ARMCLANG.cmake", "*", "*", "*", "IPC", "Debug", "*", "*", "*", "*", "*"),
-    ("musca_s1", "toolchain_ARMCLANG.cmake", "*", "*", "*", "IPC", "Debug", "*", "*", "*", "*", "*"),
+    ("arm/musca_b1/sse_200", "toolchain_ARMCLANG.cmake", "*", "*", "*", "IPC", "Debug", "*", "*", "*", "*", "*"),
+    ("arm/musca_s1", "toolchain_ARMCLANG.cmake", "*", "*", "*", "IPC", "Debug", "*", "*", "*", "*", "*"),
     # LVL2 and LVL3 requires PSA api
     ("*", "*", False, "2", "*", "*", "*", "*", "*", "*", "*", "*"),
     ("*", "*", False, "3", "*", "*", "*", "*", "*", "*", "*", "*"),
@@ -152,28 +152,28 @@ _common_tfm_invalid_configs = [
     ("*", "*", "*", "3", "*", "INITIAL_ATTESTATION", "*", "*", "*", "*", "*", "*"),
     ("*", "*", "*", "3", "*", "INTERNAL_TRUSTED_STORAGE", "*", "*", "*", "*", "*", "*"),
     # Musca requires BL2
-    ("musca_b1/sse_200", "*", "*", "*", "*", "*", "*",  "*", False, "*", "*", "*"),
-    ("musca_s1", "*", "*", "*", "*", "*", "*",  "*", False, "*", "*", "*"),
+    ("arm/musca_b1/sse_200", "*", "*", "*", "*", "*", "*",  "*", False, "*", "*", "*"),
+    ("arm/musca_s1", "*", "*", "*", "*", "*", "*",  "*", False, "*", "*", "*"),
     # psoc64 cannot use BL2
     ("cypress/psoc64", "*", "*", "*", "*", "*", "*",  "*", True, "*", "*", "*"),
     # psoc64 does not support Debug build type
     ("cypress/psoc64", "*", "*", "*", "*", "*", "Debug",  "*", "*", "*", "*", "*"),
     # Musca b1 does not support Profile S
-    ("musca_b1/sse_200", "*", "*", "*", "*", "*", "*",  "*", "*", "*", "profile_small", "*"),
+    ("arm/musca_b1/sse_200", "*", "*", "*", "*", "*", "*",  "*", "*", "*", "profile_small", "*"),
     # Musca B1 Secure Enclave requires PSA api, BL2, and supports only Isolation Level 1
-    ("musca_b1/secure_enclave", "*", False, "*", "*", "*", "*", "*", "*", "*", "*", "*"),
-    ("musca_b1/secure_enclave", "*", "*", "*", "*", "*", "*",  "*", False, "*", "*", "*"),
-    ("musca_b1/secure_enclave", "*", "*", "2", "*", "*", "*", "*", "*", "*", "*", "*"),
+    ("arm/musca_b1/secure_enclave", "*", False, "*", "*", "*", "*", "*", "*", "*", "*", "*"),
+    ("arm/musca_b1/secure_enclave", "*", "*", "*", "*", "*", "*",  "*", False, "*", "*", "*"),
+    ("arm/musca_b1/secure_enclave", "*", "*", "2", "*", "*", "*", "*", "*", "*", "*", "*"),
     # Musca B1 Secure Enclave does not support tests, profiles, NS side building
-    ("musca_b1/secure_enclave", "*", "*", "*", True, "*", "*", "*", "*", "*", "*", "*"),
-    ("musca_b1/secure_enclave", "*", "*", "*", "*", "IPC", "*", "*", "*", "*", "*", "*"),
-    ("musca_b1/secure_enclave", "*", "*", "*", "*", "CRYPTO", "*", "*", "*", "*", "*", "*"),
-    ("musca_b1/secure_enclave", "*", "*", "*", "*", "PROTECTED_STORAGE", "*", "*", "*", "*", "*", "*"),
-    ("musca_b1/secure_enclave", "*", "*", "*", "*", "INITIAL_ATTESTATION", "*", "*", "*", "*", "*", "*"),
-    ("musca_b1/secure_enclave", "*", "*", "*", "*", "INTERNAL_TRUSTED_STORAGE", "*", "*", "*", "*", "*", "*"),
-    ("musca_b1/secure_enclave", "*", "*", "*", "*", "*", "*", "*", "*", "*", "profile_small", "*"),
-    ("musca_b1/secure_enclave", "*", "*", "*", "*", "*", "*", "*", "*", "*", "profile_medium", "*"),
-    ("musca_b1/secure_enclave", "*", "*", "*", "*", "*", "*", "*", "*", True, "*", "*"),
+    ("arm/musca_b1/secure_enclave", "*", "*", "*", True, "*", "*", "*", "*", "*", "*", "*"),
+    ("arm/musca_b1/secure_enclave", "*", "*", "*", "*", "IPC", "*", "*", "*", "*", "*", "*"),
+    ("arm/musca_b1/secure_enclave", "*", "*", "*", "*", "CRYPTO", "*", "*", "*", "*", "*", "*"),
+    ("arm/musca_b1/secure_enclave", "*", "*", "*", "*", "PROTECTED_STORAGE", "*", "*", "*", "*", "*", "*"),
+    ("arm/musca_b1/secure_enclave", "*", "*", "*", "*", "INITIAL_ATTESTATION", "*", "*", "*", "*", "*", "*"),
+    ("arm/musca_b1/secure_enclave", "*", "*", "*", "*", "INTERNAL_TRUSTED_STORAGE", "*", "*", "*", "*", "*", "*"),
+    ("arm/musca_b1/secure_enclave", "*", "*", "*", "*", "*", "*", "*", "*", "*", "profile_small", "*"),
+    ("arm/musca_b1/secure_enclave", "*", "*", "*", "*", "*", "*", "*", "*", "*", "profile_medium", "*"),
+    ("arm/musca_b1/secure_enclave", "*", "*", "*", "*", "*", "*", "*", "*", True, "*", "*"),
     # PARTITION_PS could be OFF only for Profile S and M
     ("*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "", "OFF"),
     ("*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "profile_large", "OFF"),
@@ -192,16 +192,16 @@ _common_tfm_invalid_configs = [
     # Profile S only supports Isolation Level 2
     ("*", "*", "*", "2", "*", "*", "*",  "*", "*", "*", "profile_small", "*"),
     # Only AN521 and MUSCA_B1 support Isolation Level 3
-    ("mps2/an519", "*", "*", "3", "*", "*", "*",  "*", "*", "*", "*", "*"),
-    ("mps3/an524", "*", "*", "3", "*", "*", "*",  "*", "*", "*", "*", "*"),
-    ("musca_s1", "*", "*", "3", "*", "*", "*",  "*", "*", "*", "*", "*"),
+    ("arm/mps2/an519", "*", "*", "3", "*", "*", "*",  "*", "*", "*", "*", "*"),
+    ("arm/mps3/an524", "*", "*", "3", "*", "*", "*",  "*", "*", "*", "*", "*"),
+    ("arm/musca_s1", "*", "*", "3", "*", "*", "*",  "*", "*", "*", "*", "*"),
     ("cypress/psoc64", "*", "*", "3", "*", "*", "*",  "*", "*", "*", "*", "*"),
-    ("musca_b1/secure_enclave", "*", "*", "3", "*", "*", "*",  "*", "*", "*", "*", "*"),
+    ("arm/musca_b1/secure_enclave", "*", "*", "3", "*", "*", "*",  "*", "*", "*", "*", "*"),
     ]
 
 # Configure build manager to build several combinations
 config_AN524 = {"seed_params": {
-                "tfm_platform":     ["mps3/an524"],
+                "tfm_platform":     ["arm/mps3/an524"],
                 "toolchain_file":   ["toolchain_GNUARM.cmake",
                                      "toolchain_ARMCLANG.cmake"],
                 "psa_api":          [True, False],
@@ -220,7 +220,7 @@ config_AN524 = {"seed_params": {
                 }
 
 config_AN521 = {"seed_params": {
-                "tfm_platform":     ["mps2/an521"],
+                "tfm_platform":     ["arm/mps2/an521"],
                 "toolchain_file":   ["toolchain_GNUARM.cmake",
                                      "toolchain_ARMCLANG.cmake"],
                 "psa_api":          [True, False],
@@ -239,8 +239,8 @@ config_AN521 = {"seed_params": {
                 }
 
 config_PSA_API = {"seed_params": {
-                "tfm_platform":     ["mps2/an521", "musca_b1/sse_200",
-                                     "musca_s1"],
+                "tfm_platform":     ["arm/mps2/an521", "arm/musca_b1/sse_200",
+                                     "arm/musca_s1"],
                 "toolchain_file":   ["toolchain_GNUARM.cmake",
                                      "toolchain_ARMCLANG.cmake"],
                 "psa_api":          [True, False],
@@ -262,8 +262,8 @@ config_PSA_API = {"seed_params": {
                 }
 
 config_PSA_FF = {"seed_params": {
-                "tfm_platform":     ["mps2/an521", "musca_b1/sse_200",
-                                     "musca_s1"],
+                "tfm_platform":     ["arm/mps2/an521", "arm/musca_b1/sse_200",
+                                     "arm/musca_s1"],
                 "toolchain_file":   ["toolchain_GNUARM.cmake",
                                      "toolchain_ARMCLANG.cmake"],
                 "psa_api":          [True],
@@ -282,7 +282,7 @@ config_PSA_FF = {"seed_params": {
                 }
 
 config_PSA_API_OTP = {"seed_params": {
-                "tfm_platform":     ["musca_b1/sse_200"],
+                "tfm_platform":     ["arm/musca_b1/sse_200"],
                 "toolchain_file":   ["toolchain_GNUARM.cmake",
                                      "toolchain_ARMCLANG.cmake"],
                 "psa_api":          [True, False],
@@ -304,7 +304,7 @@ config_PSA_API_OTP = {"seed_params": {
                 }
 
 config_PSA_FF_OTP = {"seed_params": {
-                "tfm_platform":     ["musca_b1/sse_200"],
+                "tfm_platform":     ["arm/musca_b1/sse_200"],
                 "toolchain_file":   ["toolchain_GNUARM.cmake",
                                      "toolchain_ARMCLANG.cmake"],
                 "psa_api":          [True],
@@ -342,7 +342,7 @@ config_PSOC64 = {"seed_params": {
                 }
 
 config_AN519 = {"seed_params": {
-                "tfm_platform":     ["mps2/an519"],
+                "tfm_platform":     ["arm/mps2/an519"],
                 "toolchain_file":   ["toolchain_GNUARM.cmake",
                                      "toolchain_ARMCLANG.cmake"],
                 "psa_api":          [True, False],
@@ -361,8 +361,8 @@ config_AN519 = {"seed_params": {
                 }
 
 config_IPC =  {"seed_params": {
-               "tfm_platform":     ["mps2/an521", "mps2/an519",
-                                    "musca_b1/sse_200"],
+               "tfm_platform":     ["arm/mps2/an521", "arm/mps2/an519",
+                                    "arm/musca_b1/sse_200"],
                "toolchain_file":   ["toolchain_GNUARM.cmake",
                                     "toolchain_ARMCLANG.cmake"],
                "psa_api":          [True],
@@ -381,10 +381,10 @@ config_IPC =  {"seed_params": {
               }
 
 config_full = {"seed_params": {
-               "tfm_platform":     ["mps2/an521", "mps2/an519",
-                                    "musca_b1/sse_200",
-                                    "mps3/an524", "cypress/psoc64",
-                                    "musca_b1/secure_enclave"],
+               "tfm_platform":     ["arm/mps2/an521", "arm/mps2/an519",
+                                    "arm/musca_b1/sse_200",
+                                    "arm/mps3/an524", "cypress/psoc64",
+                                    "arm/musca_b1/secure_enclave"],
                "toolchain_file":   ["toolchain_GNUARM.cmake",
                                     "toolchain_ARMCLANG.cmake"],
                "psa_api":          [True, False],
@@ -404,20 +404,20 @@ config_full = {"seed_params": {
                     "*", "*", "Debug",  "*", "*", "*", "*", "*"),
                    ("cypress/psoc64", "*", "*", "*",
                     "*", "*", "*",  "*", True, True, "*", "*"),
-                   ("mps2/an521", "*", "*", "*",
+                   ("arm/mps2/an521", "*", "*", "*",
                     "*", "*", "RelWithDebInfo",  "*", "*", "*", "*", "*"),
-                   ("mps2/an519", "*", "*", "*",
+                   ("arm/mps2/an519", "*", "*", "*",
                     "*", "*", "RelWithDebInfo",  "*", "*", "*", "*", "*"),
-                   ("musca_b1/sse_200", "*", "*", "*",
+                   ("arm/musca_b1/sse_200", "*", "*", "*",
                     "*", "*", "RelWithDebInfo",  "*", "*", "*", "*", "*"),
-                   ("mps3/an524", "*", "*", "*",
+                   ("arm/mps3/an524", "*", "*", "*",
                     "*", "*", "RelWithDebInfo",  "*", "*", "*", "*", "*"),
                ]
                }
 
 config_tfm_test = {"seed_params": {
-                "tfm_platform":     ["mps2/an521",
-                                     "musca_b1/sse_200", "musca_s1"],
+                "tfm_platform":     ["arm/mps2/an521",
+                                     "arm/musca_b1/sse_200", "arm/musca_s1"],
                 "toolchain_file":   ["toolchain_ARMCLANG.cmake",
                                      "toolchain_GNUARM.cmake"],
                 "psa_api":          [True, False],
@@ -436,7 +436,7 @@ config_tfm_test = {"seed_params": {
                 }
 
 config_tfm_test2 = {"seed_params": {
-                "tfm_platform":     ["mps2/an519", "mps3/an524"],
+                "tfm_platform":     ["arm/mps2/an519", "arm/mps3/an524"],
                 "toolchain_file":   ["toolchain_ARMCLANG.cmake",
                                      "toolchain_GNUARM.cmake"],
                 "psa_api":          [True, False],
@@ -452,14 +452,14 @@ config_tfm_test2 = {"seed_params": {
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + [
-                    ("mps2/an519", "toolchain_GNUARM.cmake", "*",
+                    ("arm/mps2/an519", "toolchain_GNUARM.cmake", "*",
                      "*", "*", "*", "Minsizerel", "*", "*", "*", "*", "*"),
                 ]
                 }
 
 config_tfm_profile = {"seed_params": {
-                "tfm_platform":     ["mps2/an519", "mps2/an521",
-                                     "musca_b1/sse_200"],
+                "tfm_platform":     ["arm/mps2/an519", "arm/mps2/an521",
+                                     "arm/musca_b1/sse_200"],
                 "toolchain_file":   ["toolchain_ARMCLANG.cmake",
                                      "toolchain_GNUARM.cmake"],
                 "psa_api":          [True, False],
@@ -475,18 +475,18 @@ config_tfm_profile = {"seed_params": {
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + [
-                    ("mps2/an519", "toolchain_GNUARM.cmake", "*",
+                    ("arm/mps2/an519", "toolchain_GNUARM.cmake", "*",
                      "*", "*", "*", "Minsizerel", "*", "*", "*", "*", "*"),
                     # Profile Large is only supported by AN521
-                    ("mps2/an519", "*", "*",
+                    ("arm/mps2/an519", "*", "*",
                      "*", "*", "*", "*", "*", "*", "*", "profile_large", "*"),
-                    ("musca_b1/sse_200", "*", "*",
+                    ("arm/musca_b1/sse_200", "*", "*",
                      "*", "*", "*", "*", "*", "*", "*", "profile_large", "*"),
                 ]
                 }
 
 config_tfm_test_OTP = {"seed_params": {
-                "tfm_platform":     ["musca_b1/sse_200"],
+                "tfm_platform":     ["arm/musca_b1/sse_200"],
                 "toolchain_file":   ["toolchain_ARMCLANG.cmake",
                                      "toolchain_GNUARM.cmake"],
                 "psa_api":          [True, False],
@@ -505,7 +505,7 @@ config_tfm_test_OTP = {"seed_params": {
                 }
 
 config_MUSCA_B1 = {"seed_params": {
-                "tfm_platform":     ["musca_b1/sse_200"],
+                "tfm_platform":     ["arm/musca_b1/sse_200"],
                 "toolchain_file":   ["toolchain_ARMCLANG.cmake",
                                      "toolchain_GNUARM.cmake"],
                 "psa_api":          [True, False],
@@ -524,7 +524,7 @@ config_MUSCA_B1 = {"seed_params": {
                 }
 
 config_MUSCA_B1_SE = {"seed_params": {
-                "tfm_platform":     ["musca_b1/secure_enclave"],
+                "tfm_platform":     ["arm/musca_b1/secure_enclave"],
                 "toolchain_file":   ["toolchain_ARMCLANG.cmake",
                                      "toolchain_GNUARM.cmake"],
                 "psa_api":          [True],
@@ -543,7 +543,7 @@ config_MUSCA_B1_SE = {"seed_params": {
                 }
 
 config_MUSCA_S1 = {"seed_params": {
-                "tfm_platform":     ["musca_s1"],
+                "tfm_platform":     ["arm/musca_s1"],
                 "toolchain_file":   ["toolchain_ARMCLANG.cmake",
                                      "toolchain_GNUARM.cmake"],
                 "psa_api":          [True, False],
@@ -562,9 +562,9 @@ config_MUSCA_S1 = {"seed_params": {
                 }
 
 config_release = {"seed_params": {
-                "tfm_platform":     ["mps2/an521", "mps2/an519",
-                                     "musca_b1/sse_200", "musca_s1",
-                                     "mps3/an524"],
+                "tfm_platform":     ["arm/mps2/an521", "arm/mps2/an519",
+                                     "arm/musca_b1/sse_200", "arm/musca_s1",
+                                     "arm/mps3/an524"],
                 "toolchain_file":   ["toolchain_ARMCLANG.cmake",
                                      "toolchain_GNUARM.cmake"],
                 "psa_api":          [True, False],
@@ -580,15 +580,15 @@ config_release = {"seed_params": {
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + [
-                    ("mps2/an519", "toolchain_GNUARM.cmake", "*",
+                    ("arm/mps2/an519", "toolchain_GNUARM.cmake", "*",
                      "*", "*", "*", "Minsizerel", "*", "*", "*", "*", "*"),
                 ]
                 }
 
 # Configure build manager to build several combinations
 config_AN521_PSA_API = {"seed_params": {
-                "tfm_platform":     ["mps2/an521", "mps2/an519",
-                                     "musca_b1/sse_200"],
+                "tfm_platform":     ["arm/mps2/an521", "arm/mps2/an519",
+                                     "arm/musca_b1/sse_200"],
                 "toolchain_file":   ["toolchain_GNUARM.cmake",
                                      "toolchain_ARMCLANG.cmake"],
                 "psa_api":          [True, False],
@@ -608,14 +608,14 @@ config_AN521_PSA_API = {"seed_params": {
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + [
-                    ("mps2/an519", "toolchain_GNUARM.cmake", "*",
+                    ("arm/mps2/an519", "toolchain_GNUARM.cmake", "*",
                      "*", "*", "*", "Minsizerel", "*", "*", "*", "*", "*"),
                 ]
                 }
 
 config_AN521_PSA_IPC = {"seed_params": {
-                "tfm_platform":     ["mps2/an521", "mps2/an519",
-                                     "musca_b1/sse_200"],
+                "tfm_platform":     ["arm/mps2/an521", "arm/mps2/an519",
+                                     "arm/musca_b1/sse_200"],
                 "toolchain_file":   ["toolchain_GNUARM.cmake",
                                      "toolchain_ARMCLANG.cmake"],
                 "psa_api":          [True],
@@ -631,16 +631,16 @@ config_AN521_PSA_IPC = {"seed_params": {
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + [
-                    ("mps2/an519", "toolchain_GNUARM.cmake", "*",
+                    ("arm/mps2/an519", "toolchain_GNUARM.cmake", "*",
                      "*", "*", "*", "Minsizerel", "*", "*", "*", "*", "*"),
                 ]
                 }
 
 config_nightly = {"seed_params": {
-               "tfm_platform":      ["mps2/an521", "mps2/an519",
-                                     "musca_b1/sse_200", "musca_s1",
-                                     "mps3/an524", "cypress/psoc64",
-                                     "musca_b1/secure_enclave"],
+               "tfm_platform":      ["arm/mps2/an521", "arm/mps2/an519",
+                                     "arm/musca_b1/sse_200", "arm/musca_s1",
+                                     "arm/mps3/an524", "cypress/psoc64",
+                                     "arm/musca_b1/secure_enclave"],
                 "toolchain_file":   ["toolchain_GNUARM.cmake",
                                      "toolchain_ARMCLANG.cmake"],
                 "psa_api":          [True, False],
@@ -656,28 +656,28 @@ config_nightly = {"seed_params": {
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + [
-                    ("mps2/an519", "toolchain_GNUARM.cmake", "*",
+                    ("arm/mps2/an519", "toolchain_GNUARM.cmake", "*",
                      "*", "*", "*", "Minsizerel", "*", "*", "*", "*", "*"),
                     ("cypress/psoc64", "*", "*", "*",
                      "*", "*", "Debug",  "*", "*", "*", "*", "*"),
                     ("cypress/psoc64", "*", "*", "*",
                      "*", "*", "*",  "*", True, True, "*", "*"),
-                    ("mps2/an521", "*", "*", "*",
+                    ("arm/mps2/an521", "*", "*", "*",
                      "*", "*", "RelWithDebInfo",  "*", "*", "*", "*", "*"),
-                    ("mps2/an519", "*", "*", "*",
+                    ("arm/mps2/an519", "*", "*", "*",
                      "*", "*", "RelWithDebInfo",  "*", "*", "*", "*", "*"),
-                    ("musca_b1/sse_200", "*", "*", "*",
+                    ("arm/musca_b1/sse_200", "*", "*", "*",
                      "*", "*", "RelWithDebInfo",  "*", "*", "*", "*", "*"),
-                    ("musca_s1", "*", "*", "*",
+                    ("arm/musca_s1", "*", "*", "*",
                      "*", "*", "RelWithDebInfo",  "*", "*", "*", "*", "*"),
-                    ("mps3/an524", "*", "*", "*",
+                    ("arm/mps3/an524", "*", "*", "*",
                      "*", "*", "RelWithDebInfo",  "*", "*", "*", "*", "*"),
                 ]
                 }
 
 config_nightly_profile = {"seed_params": {
-                "tfm_platform":     ["mps2/an519", "mps2/an521",
-                                     "musca_b1/sse_200"],
+                "tfm_platform":     ["arm/mps2/an519", "arm/mps2/an521",
+                                     "arm/musca_b1/sse_200"],
                 "toolchain_file":   ["toolchain_ARMCLANG.cmake",
                                      "toolchain_GNUARM.cmake"],
                 "psa_api":          [True, False],
@@ -693,19 +693,19 @@ config_nightly_profile = {"seed_params": {
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + [
-                    ("mps2/an519", "toolchain_GNUARM.cmake", "*",
+                    ("arm/mps2/an519", "toolchain_GNUARM.cmake", "*",
                      "*", "*", "*", "Minsizerel", "*", "*", "*", "*", "*"),
                     # Profile Large is only supported by AN521
-                    ("mps2/an519", "*", "*",
+                    ("arm/mps2/an519", "*", "*",
                      "*", "*", "*", "*", "*", "*", "*", "profile_large", "*"),
-                    ("musca_b1/sse_200", "*", "*",
+                    ("arm/musca_b1/sse_200", "*", "*",
                      "*", "*", "*", "*", "*", "*", "*", "profile_large", "*"),
                 ]
                 }
 
 config_nightly_PSA_API = {"seed_params": {
-                "tfm_platform":     ["mps2/an521", "musca_b1/sse_200",
-                                     "musca_s1"],
+                "tfm_platform":     ["arm/mps2/an521", "arm/musca_b1/sse_200",
+                                     "arm/musca_s1"],
                 "toolchain_file":   ["toolchain_GNUARM.cmake",
                                      "toolchain_ARMCLANG.cmake"],
                 "psa_api":          [True, False],
@@ -727,8 +727,8 @@ config_nightly_PSA_API = {"seed_params": {
                 }
 
 config_nightly_PSA_FF = {"seed_params": {
-                "tfm_platform":     ["mps2/an521", "musca_b1/sse_200",
-                                     "musca_s1"],
+                "tfm_platform":     ["arm/mps2/an521", "arm/musca_b1/sse_200",
+                                     "arm/musca_s1"],
                 "toolchain_file":   ["toolchain_GNUARM.cmake",
                                      "toolchain_ARMCLANG.cmake"],
                 "psa_api":          [True],
@@ -747,7 +747,7 @@ config_nightly_PSA_FF = {"seed_params": {
                 }
 
 config_nightly_OTP = {"seed_params": {
-                "tfm_platform":     ["musca_b1/sse_200"],
+                "tfm_platform":     ["arm/musca_b1/sse_200"],
                 "toolchain_file":   ["toolchain_GNUARM.cmake",
                                      "toolchain_ARMCLANG.cmake"],
                 "psa_api":          [True, False],
@@ -766,8 +766,8 @@ config_nightly_OTP = {"seed_params": {
                 }
 
 config_pp_test = {"seed_params": {
-                "tfm_platform":     ["mps2/an521", "mps2/an519",
-                                     "musca_b1/sse_200", "musca_s1"],
+                "tfm_platform":     ["arm/mps2/an521", "arm/mps2/an519",
+                                     "arm/musca_b1/sse_200", "arm/musca_s1"],
                 "toolchain_file":   ["toolchain_GNUARM.cmake",
                                      "toolchain_ARMCLANG.cmake"],
                 "psa_api":          [True, False],
@@ -783,25 +783,25 @@ config_pp_test = {"seed_params": {
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "valid": [
-                    ("mps2/an521", "toolchain_GNUARM.cmake",
+                    ("arm/mps2/an521", "toolchain_GNUARM.cmake",
                      False, "1", False, "OFF", "Debug",
                      "off", True, True, "", "ON"),
-                    ("mps2/an521", "toolchain_ARMCLANG.cmake",
+                    ("arm/mps2/an521", "toolchain_ARMCLANG.cmake",
                      True, "2", False, "OFF", "Debug",
                      "off", True, True, "", "ON"),
-                    ("mps2/an521", "toolchain_ARMCLANG.cmake",
+                    ("arm/mps2/an521", "toolchain_ARMCLANG.cmake",
                      True, "3", False, "OFF", "Release",
                      "off", True, True, "", "ON"),
-                    ("mps2/an521", "toolchain_GNUARM.cmake",
+                    ("arm/mps2/an521", "toolchain_GNUARM.cmake",
                      True, "2", False, "OFF", "Debug",
                      "off", True, True, "profile_medium", "ON"),
-                    ("mps2/an521", "toolchain_GNUARM.cmake",
+                    ("arm/mps2/an521", "toolchain_GNUARM.cmake",
                      True, "3", False, "OFF", "Debug",
                      "off", True, True, "profile_large", "ON"),
                 ],
                 "invalid": _common_tfm_invalid_configs + [
                     # invalid configs that are not supported by TF-M
-                    ("musca_s1", "*", "*", "*", "*", "*",
+                    ("arm/musca_s1", "*", "*", "*", "*", "*",
                      "*",  "*", "*", "*", "profile_medium", "*"),
                     # valid configs supported by TF-M but not needed in per-patch
                     ("*", "*", "*", "1", "*", "*", "Release",
@@ -816,13 +816,13 @@ config_pp_test = {"seed_params": {
                      "*", "*", "*", "*", "*"),
                     ("*", "*", "*", "3", "*", "*", "Release",
                      "*", "*", "*", "*", "*"),
-                    ("mps2/an519", "*", "*", "*", "*", "*",
+                    ("arm/mps2/an519", "*", "*", "*", "*", "*",
                      "*",  "*", "*", "*", "profile_small", "*"),
-                    ("musca_s1", "*", "*", "*", "*", "*",
+                    ("arm/musca_s1", "*", "*", "*", "*", "*",
                      "*",  "*", "*", "*", "profile_small", "*"),
-                    ("mps2/an519", "*", "*", "*", "*", "*",
+                    ("arm/mps2/an519", "*", "*", "*", "*", "*",
                      "*",  "*", "*", "*", "profile_medium", "*"),
-                    ("mps2/an521", "*", "*", "*", "*", "*",
+                    ("arm/mps2/an521", "*", "*", "*", "*", "*",
                      "*",  "*", "*", "*", "profile_medium", "*"),
                     ("*", "toolchain_GNUARM.cmake", "*", "*", "*", "*",
                      "*",  "*", "*", "*", "profile_small", "*"),
@@ -834,7 +834,7 @@ config_pp_test = {"seed_params": {
                 }
 
 config_pp_OTP = {"seed_params": {
-                "tfm_platform":     ["musca_b1/sse_200"],
+                "tfm_platform":     ["arm/musca_b1/sse_200"],
                 "toolchain_file":   ["toolchain_GNUARM.cmake"],
                 "psa_api":          [True, False],
                 "isolation_level":  ["1", "2"],
@@ -853,7 +853,7 @@ config_pp_OTP = {"seed_params": {
 
 # Configure build manager to build several combinations
 config_pp_PSA_API = {"seed_params": {
-                "tfm_platform":     ["mps2/an521"],
+                "tfm_platform":     ["arm/mps2/an521"],
                 "toolchain_file":   ["toolchain_GNUARM.cmake"],
                 "psa_api":          [True],
                 "isolation_level":  ["2"],
@@ -896,7 +896,7 @@ config_pp_PSoC64 = {"seed_params": {
 config_doxygen = {"common_params": {
                   "config_type": "tf-m_documents",
                   "codebase_root_dir": "tf-m",
-                  "build_cmds": {"all": ["-DTFM_PLATFORM=mps2/an521 "
+                  "build_cmds": {"all": ["-DTFM_PLATFORM=arm/mps2/an521 "
                                          "-DTFM_TOOLCHAIN_FILE=%(_tfm_code_dir_)s/toolchain_GNUARM.cmake"
                                          "-DCMAKE_BUILD_TYPE=Debug "
                                          "%(_tbm_code_dir_)s/",
@@ -910,7 +910,7 @@ config_doxygen = {"common_params": {
 
 # Configuration used in testing
 config_debug = {"seed_params": {
-                "tfm_platform":     ["mps2/an521"],
+                "tfm_platform":     ["arm/mps2/an521"],
                 "toolchain_file":   ["toolchain_ARMCLANG.cmake"],
                 "psa_api":          [False],
                 "isolation_level":  ["1"],
@@ -929,7 +929,7 @@ config_debug = {"seed_params": {
 
 # Configuration used in CI
 config_ci = {"seed_params": {
-                "tfm_platform":     ["mps2/an521"],
+                "tfm_platform":     ["arm/mps2/an521"],
                 "toolchain_file":   ["toolchain_ARMCLANG.cmake",
                                      "toolchain_GNUARM.cmake"],
                 "psa_api":          [True, False],
@@ -953,7 +953,7 @@ config_ci = {"seed_params": {
                 }
 
 config_lava_debug = {"seed_params": {
-                "tfm_platform":     ["mps2/an521", "mps2/an519"],
+                "tfm_platform":     ["arm/mps2/an521", "arm/mps2/an519"],
                 "toolchain_file":   ["toolchain_GNUARM.cmake"],
                 "psa_api":          [True, False],
                 "isolation_level":  ["1", "2"],
@@ -968,7 +968,7 @@ config_lava_debug = {"seed_params": {
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + [
-                    ("mps2/an521", "toolchain_GNUARM.cmake", True, "2", "*", "*",
+                    ("arm/mps2/an521", "toolchain_GNUARM.cmake", True, "2", "*", "*",
                      "*",  "*", True, "*", "*", "*")
                 ]
                 }
