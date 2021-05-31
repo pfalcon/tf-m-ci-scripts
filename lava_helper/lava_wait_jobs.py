@@ -89,6 +89,7 @@ def get_finished_jobs(job_list, user_args, lava):
 def resubmit_failed_jobs(jobs, user_args):
     if not jobs:
         return []
+    time.sleep(2) # be friendly to LAVA
     failed_job = []
     os.makedirs('failed_jobs', exist_ok=True)
     for job_id, info in jobs.items():
