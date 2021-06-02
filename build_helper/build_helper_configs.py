@@ -95,7 +95,14 @@ _common_tfm_builder_cfg = {
                                  "-Binary -offset 0xA020000 "
                                  "-fill 0xFF 0xA020000 0xA200000 "
                                  "-o %(_tbm_build_dir_)s/bin/"
-                                 "tfm.hex -Intel")]
+                                 "tfm.hex -Intel")],
+                   "stm/stm32l562e_dk": [("echo 'STM32L562E-DK board post process';"
+                                          "%(_tbm_build_dir_)s/postbuild.sh;"
+                                          "pushd %(_tbm_build_dir_)s;"
+                                          "sed 's/^echo/#echo/; s/.*\$BINPATH/echo $BINPATH/; s/ -v//' TFM_UPDATE.sh > fwlayout.sh;"
+                                          "chmod a+x fwlayout.sh;"
+                                          "./fwlayout.sh | sed s:%(_tbm_build_dir_)s/:: | tee ./bin/layout.txt;"
+                                          "awk '{print $1}' bin/layout.txt | xargs tar jcf ./bin/stm32l562e-dk-tfm.tar.bz2; popd")]
                    },
 
     # (Optional) If set will fail if those artefacts are missing post build
@@ -197,6 +204,10 @@ _common_tfm_invalid_configs = [
     ("arm/musca_s1", "*", "*", "3", "*", "*", "*",  "*", "*", "*", "*", "*"),
     ("cypress/psoc64", "*", "*", "3", "*", "*", "*",  "*", "*", "*", "*", "*"),
     ("arm/musca_b1/secure_enclave", "*", "*", "3", "*", "*", "*",  "*", "*", "*", "*", "*"),
+    # stm/stm32l562e_dk uses BL2
+    ("stm/stm32l562e_dk", "*", "*", "*", "*", "*", "*",  "*", False, "*", "*", "*"),
+    # stm/stm32l562e_dk does not support Debug build type
+    ("stm/stm32l562e_dk", "*", "*", "*", "*", "*", "Debug",  "*", "*", "*", "*", "*"),
     ]
 
 # Configure build manager to build several combinations
@@ -341,6 +352,25 @@ config_PSOC64 = {"seed_params": {
                 "invalid": _common_tfm_invalid_configs + []
                 }
 
+config_STM32L562E_DK = {"seed_params": {
+                "tfm_platform":     ["stm/stm32l562e_dk"],
+                "toolchain_file":   ["toolchain_GNUARM.cmake",
+                                     "toolchain_ARMCLANG.cmake"],
+                "psa_api":          [True, False],
+                "isolation_level":  ["1", "2", "3"],
+                "test_regression":  [True],
+                "test_psa_api":     ["OFF"],
+                "cmake_build_type": ["Release"],
+                "with_otp":         ["off"],
+                "with_bl2":         [True],
+                "with_ns":          [True],
+                "profile":          [""],
+                "partition_ps":     ["ON"],
+                },
+                "common_params": _common_tfm_builder_cfg,
+                "invalid": _common_tfm_invalid_configs + []
+                }
+
 config_AN519 = {"seed_params": {
                 "tfm_platform":     ["arm/mps2/an519"],
                 "toolchain_file":   ["toolchain_GNUARM.cmake",
@@ -384,7 +414,8 @@ config_full = {"seed_params": {
                "tfm_platform":     ["arm/mps2/an521", "arm/mps2/an519",
                                     "arm/musca_b1/sse_200",
                                     "arm/mps3/an524", "cypress/psoc64",
-                                    "arm/musca_b1/secure_enclave"],
+                                    "arm/musca_b1/secure_enclave",
+                                    "stm/stm32l562e_dk"],
                "toolchain_file":   ["toolchain_GNUARM.cmake",
                                     "toolchain_ARMCLANG.cmake"],
                "psa_api":          [True, False],
@@ -640,7 +671,8 @@ config_nightly = {"seed_params": {
                "tfm_platform":      ["arm/mps2/an521", "arm/mps2/an519",
                                      "arm/musca_b1/sse_200", "arm/musca_s1",
                                      "arm/mps3/an524", "cypress/psoc64",
-                                     "arm/musca_b1/secure_enclave"],
+                                     "arm/musca_b1/secure_enclave",
+                                     "stm/stm32l562e_dk"],
                 "toolchain_file":   ["toolchain_GNUARM.cmake",
                                      "toolchain_ARMCLANG.cmake"],
                 "psa_api":          [True, False],
@@ -928,6 +960,25 @@ config_cov_an521 = {"seed_params": {
                 "invalid": _common_tfm_invalid_configs + []
                 }
 
+config_pp_STM32L562E_DK = {"seed_params": {
+                "tfm_platform":     ["stm/stm32l562e_dk"],
+                "toolchain_file":   ["toolchain_GNUARM.cmake",
+                                     "toolchain_ARMCLANG.cmake"],
+                "psa_api":          [True],
+                "isolation_level":  ["1", "2", "3"],
+                "test_regression":  [True],
+                "test_psa_api":     ["OFF"],
+                "cmake_build_type": ["Release"],
+                "with_otp":         ["off"],
+                "with_bl2":         [True],
+                "with_ns":          [True],
+                "profile":          [""],
+                "partition_ps":     ["ON"],
+                },
+                "common_params": _common_tfm_builder_cfg,
+                "invalid": _common_tfm_invalid_configs + []
+                }
+
 # Configruation used for document building
 config_doxygen = {"common_params": {
                   "config_type": "tf-m_documents",
@@ -1020,6 +1071,7 @@ _builtin_configs = {
                     "psa_ff": config_PSA_FF,
                     "psa_ff_otp": config_PSA_FF_OTP,
                     "tfm_psoc64": config_PSOC64,
+                    "tfm_stm32l562e_dk": config_STM32L562E_DK,
 
                     #nightly test group
                     "nightly_test": config_nightly,
@@ -1033,6 +1085,7 @@ _builtin_configs = {
                     "pp_OTP": config_pp_OTP,
                     "pp_PSA_API": config_pp_PSA_API,
                     "pp_psoc64": config_pp_PSoC64,
+                    "pp_stm32l562e_dk": config_pp_STM32L562E_DK,
 
                     #code coverage test group
                     "coverage_an519": config_cov_an519,
