@@ -892,6 +892,42 @@ config_pp_PSoC64 = {"seed_params": {
                 "invalid": _common_tfm_invalid_configs + []
                 }
 
+config_cov_an519 = {"seed_params": {
+                "tfm_platform":     ["arm/mps2/an519"],
+                "toolchain_file":   ["toolchain_GNUARM.cmake"],
+                "psa_api":          [True, False],
+                "isolation_level":  ["1", "2", "3"],
+                "test_regression":  [True, False],
+                "test_psa_api":     ["OFF"],
+                "cmake_build_type": ["Debug", "Release"],
+                "with_otp":         ["off"],
+                "with_bl2":         [True],
+                "with_ns":          [True],
+                "profile":          ["", "profile_small", "profile_medium"],
+                "partition_ps":     ["ON", "OFF"],
+                },
+                "common_params": _common_tfm_builder_cfg,
+                "invalid": _common_tfm_invalid_configs + []
+                }
+
+config_cov_an521 = {"seed_params": {
+                "tfm_platform":     ["arm/mps2/an521"],
+                "toolchain_file":   ["toolchain_GNUARM.cmake"],
+                "psa_api":          [True, False],
+                "isolation_level":  ["1", "2", "3"],
+                "test_regression":  [True, False],
+                "test_psa_api":     ["OFF"],
+                "cmake_build_type": ["Debug", "Release", "Minsizerel"],
+                "with_otp":         ["off"],
+                "with_bl2":         [True],
+                "with_ns":          [True],
+                "profile":          ["", "profile_small", "profile_medium", "profile_large"],
+                "partition_ps":     ["ON", "OFF"],
+                },
+                "common_params": _common_tfm_builder_cfg,
+                "invalid": _common_tfm_invalid_configs + []
+                }
+
 # Configruation used for document building
 config_doxygen = {"common_params": {
                   "config_type": "tf-m_documents",
@@ -997,6 +1033,10 @@ _builtin_configs = {
                     "pp_OTP": config_pp_OTP,
                     "pp_PSA_API": config_pp_PSA_API,
                     "pp_psoc64": config_pp_PSoC64,
+
+                    #code coverage test group
+                    "coverage_an519": config_cov_an519,
+                    "coverage_an521": config_cov_an521,
 
                     #full test group in the old CI
                     "full": config_full,
