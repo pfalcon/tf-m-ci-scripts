@@ -818,7 +818,7 @@ config_nightly_STM32L562E_DK = {"seed_params": {
 
 config_pp_test = {"seed_params": {
                 "tfm_platform":     ["arm/mps2/an521", "arm/mps2/an519",
-                                     "arm/musca_b1/sse_200", "arm/musca_s1"],
+                                     "arm/musca_s1"],
                 "toolchain_file":   ["toolchain_GNUARM.cmake",
                                      "toolchain_ARMCLANG.cmake"],
                 "psa_api":          [True, False],
@@ -849,6 +849,24 @@ config_pp_test = {"seed_params": {
                     ("arm/mps2/an521", "toolchain_GNUARM.cmake",
                      True, "3", False, "OFF", "Debug",
                      "off", True, True, "profile_large", "ON"),
+                    # AN521_GNUARM_PSA_2_REG_Release_BL2_NS_MEDIUM_PSOFF
+                    ("arm/mps2/an521", "toolchain_GNUARM.cmake", True,
+                     "2", True, "OFF", "Release", "off", True, True, "profile_medium", "OFF"),
+                    # MUSCA_B1_ARMCLANG_PSA_3_REG_Debug_BL2_NS
+                    ("arm/musca_b1/sse_200", "toolchain_ARMCLANG.cmake",True,
+                     "3", True, "OFF", "Debug", "off", True, True, "", "ON"),
+                    # MUSCA_B1_GNUARM_1_REG_Minsizerel_BL2_NS
+                    ("arm/musca_b1/sse_200", "toolchain_GNUARM.cmake", False,
+                     "1", True, "OFF", "Minsizerel", "off", True, True, "", "ON"),
+                    # stm32l562e_dk_ARMCLANG_PSA_1_REG_Release_BL2_NS
+                    ("stm/stm32l562e_dk", "toolchain_ARMCLANG.cmake", True,
+                     "1", True, "OFF", "Release", "off", True, True, "", "ON"),
+                    # stm32l562e_dk_GNUARM_PSA_2_REG_Release_BL2_NS
+                    ("stm/stm32l562e_dk", "toolchain_GNUARM.cmake", True,
+                     "2", True, "OFF", "Release", "off", True, True, "", "ON"),
+                    # stm32l562e_dk_GNUARM_PSA_3_REG_Release_BL2_NS
+                    ("stm/stm32l562e_dk", "toolchain_GNUARM.cmake", True,
+                     "3", True, "OFF", "Release", "off", True, True, "", "ON"),
                 ],
                 "invalid": _common_tfm_invalid_configs + [
                     # invalid configs that are not supported by TF-M
