@@ -85,7 +85,7 @@ timestamps {
       verify = -1
     } finally {
       g = new Gerrit()
-      g.verifyStatusInWorkspace(verify, 'tf-m-build-docs', 'build')
+      g.verifyStatusInWorkspace(verify, "$JOB_NAME", 'build')
       def buildStatus = (verify == 1) ? 'Successful' : 'Failed'
       //g.commentInWorkspace("Build docs ${buildStatus}: ${env.RUN_DISPLAY_URL}")
       cleanWs()
@@ -93,8 +93,8 @@ timestamps {
   }
   node("master") {
     sh """
-    cp -a /var/jenkins_home/jobs/tf-m-build-docs/builds/$BUILD_NUMBER/archive/trusted-firmware-m/build/docs/reference_manual /var/jenkins_home/docs/
-    cp -a /var/jenkins_home/jobs/tf-m-build-docs/builds/$BUILD_NUMBER/archive/trusted-firmware-m/build/docs/user_guide /var/jenkins_home/docs/
+    cp -a /var/jenkins_home/jobs/$JOB_NAME/builds/$BUILD_NUMBER/archive/trusted-firmware-m/build/docs/reference_manual /var/jenkins_home/docs/
+    cp -a /var/jenkins_home/jobs/$JOB_NAME/builds/$BUILD_NUMBER/archive/trusted-firmware-m/build/docs/user_guide /var/jenkins_home/docs/
     """
   }
 }
