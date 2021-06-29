@@ -797,6 +797,25 @@ config_nightly_OTP = {"seed_params": {
                 "invalid": _common_tfm_invalid_configs + []
                 }
 
+config_nightly_STM32L562E_DK = {"seed_params": {
+                "tfm_platform":     ["stm/stm32l562e_dk"],
+                "toolchain_file":   ["toolchain_GNUARM.cmake",
+                                     "toolchain_ARMCLANG.cmake"],
+                "psa_api":          [True, False],
+                "isolation_level":  ["1", "2", "3"],
+                "test_regression":  [True],
+                "test_psa_api":     ["OFF"],
+                "cmake_build_type": ["Release"],
+                "with_otp":         ["off"],
+                "with_bl2":         [True],
+                "with_ns":          [True],
+                "profile":          [""],
+                "partition_ps":     ["ON"],
+                },
+                "common_params": _common_tfm_builder_cfg,
+                "invalid": _common_tfm_invalid_configs + []
+                }
+
 config_pp_test = {"seed_params": {
                 "tfm_platform":     ["arm/mps2/an521", "arm/mps2/an519",
                                      "arm/musca_b1/sse_200", "arm/musca_s1"],
@@ -960,25 +979,6 @@ config_cov_an521 = {"seed_params": {
                 "invalid": _common_tfm_invalid_configs + []
                 }
 
-config_pp_STM32L562E_DK = {"seed_params": {
-                "tfm_platform":     ["stm/stm32l562e_dk"],
-                "toolchain_file":   ["toolchain_GNUARM.cmake",
-                                     "toolchain_ARMCLANG.cmake"],
-                "psa_api":          [True],
-                "isolation_level":  ["1", "2", "3"],
-                "test_regression":  [True],
-                "test_psa_api":     ["OFF"],
-                "cmake_build_type": ["Release"],
-                "with_otp":         ["off"],
-                "with_bl2":         [True],
-                "with_ns":          [True],
-                "profile":          [""],
-                "partition_ps":     ["ON"],
-                },
-                "common_params": _common_tfm_builder_cfg,
-                "invalid": _common_tfm_invalid_configs + []
-                }
-
 # Configruation used for document building
 config_doxygen = {"common_params": {
                   "config_type": "tf-m_documents",
@@ -1079,13 +1079,13 @@ _builtin_configs = {
                     "nightly_psa_api": config_nightly_PSA_API,
                     "nightly_ff": config_nightly_PSA_FF,
                     "nightly_otp": config_nightly_OTP,
+                    "nightly_stm32l562e_dk": config_nightly_STM32L562E_DK,
 
                     #per patch test group
                     "pp_test": config_pp_test,
                     "pp_OTP": config_pp_OTP,
                     "pp_PSA_API": config_pp_PSA_API,
                     "pp_psoc64": config_pp_PSoC64,
-                    "pp_stm32l562e_dk": config_pp_STM32L562E_DK,
 
                     #code coverage test group
                     "coverage_an519": config_cov_an519,
