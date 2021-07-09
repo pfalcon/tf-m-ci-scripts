@@ -47,9 +47,8 @@ mapCompiler = {"toolchain_GNUARM.cmake":   "GNUARM",
 
 mapTestPsaApi = {"IPC":                      "FF",
                  "CRYPTO":                   "CRYPTO",
-                 "PROTECTED_STORAGE":        "PS",
                  "INITIAL_ATTESTATION":      "ATTEST",
-                 "INTERNAL_TRUSTED_STORAGE": "ITS"}
+                 "STORAGE":                  "STORAGE"}
 
 mapProfile = {"profile_small":  "SMALL",
               "profile_medium": "MEDIUM",
