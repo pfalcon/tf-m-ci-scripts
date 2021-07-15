@@ -99,10 +99,9 @@ _common_tfm_builder_cfg = {
                    "stm/stm32l562e_dk": [("echo 'STM32L562E-DK board post process';"
                                           "%(_tbm_build_dir_)s/postbuild.sh;"
                                           "pushd %(_tbm_build_dir_)s;"
-                                          "sed 's/^echo/#echo/; s/.*\$BINPATH/echo $BINPATH/; s/ -v//' TFM_UPDATE.sh > fwlayout.sh;"
-                                          "chmod a+x fwlayout.sh;"
-                                          "./fwlayout.sh | sed s:%(_tbm_build_dir_)s/:: | tee ./bin/layout.txt;"
-                                          "awk '{print $1}' bin/layout.txt | xargs tar jcf ./bin/stm32l562e-dk-tfm.tar.bz2; popd")]
+                                          "BIN_FILES=$(grep -o '\/.*\.bin' TFM_UPDATE.sh | sed 's/^/bin/');"
+                                          "tar jcf ./bin/stm32l562e-dk-tfm.tar.bz2 regression.sh TFM_UPDATE.sh ${BIN_FILES};"
+                                          "popd")]
                    },
 
     # (Optional) If set will fail if those artefacts are missing post build

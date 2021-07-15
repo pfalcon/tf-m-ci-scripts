@@ -144,6 +144,11 @@ def generate_test_definitions(config, work_dir, user_args):
                                     params,
                                     test_dict.get("binaries").get("firmware"),
                                 ),
+                                "tarball_url": get_artifact_url(
+                                    artifact_store_url,
+                                    params,
+                                    test_dict.get("binaries").get("tarball"),
+                                ),
                             }
                         )
                         params.update(

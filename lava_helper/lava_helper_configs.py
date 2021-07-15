@@ -2821,6 +2821,130 @@ musca_b1_otp_bl2 = {
     },
 }
 
+# STM32L562E-DK
+stm32l562e_dk = {
+    "templ": "stm32l562e_dk.jinja2",
+    "job_name": "stm32l562e_dk",
+    "device_type": "stm32l562e-dk",
+    "job_timeout": 24,
+    "action_timeout": 15,
+    "monitor_timeout": 15,
+    "poweroff_timeout": 5,
+    "platforms": {"stm32l562e_dk": ""},
+    "compilers": ["GNUARM", "ARMCLANG"],
+    "build_types": ["Release", "Minsizerel"],
+    "boot_types": ["BL2"],
+    "tests": {
+        "Regression": {
+            "binaries": {
+                "tarball": "stm32l562e-dk-tfm.tar.bz2",
+            },
+            "monitors": [
+                {
+                    'name': 'Secure_Test_Suites_Summary',
+                    'start': 'Secure test suites summary',
+                    'end': 'End of Secure test suites',
+                    'pattern': r"Test suite '(?P<"
+                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"(?P<result>PASSED|FAILED)",
+                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
+                    'required': ["secure_image_initializing"]
+                },
+                {
+                    'name': 'Non_Secure_Test_Suites_Summary',
+                    'start': 'Non-secure test suites summary',
+                    'end': 'End of Non-secure test suites',
+                    'pattern': r"Test suite '(?P<"
+                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"(?P<result>PASSED|FAILED)",
+                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
+                    'required': ["secure_image_initializing"]
+                }
+            ]  # Monitors
+        },
+        "RegressionIPC": {
+            "binaries": {
+                "tarball": "stm32l562e-dk-tfm.tar.bz2",
+            },
+            "monitors": [
+                {
+                    'name': 'Secure_Test_Suites_Summary',
+                    'start': 'Secure test suites summary',
+                    'end': 'End of Secure test suites',
+                    'pattern': r"Test suite '(?P<"
+                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"(?P<result>PASSED|FAILED)",
+                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
+                    'required': ["secure_image_initializing"]
+                },
+                {
+                    'name': 'Non_Secure_Test_Suites_Summary',
+                    'start': 'Non-secure test suites summary',
+                    'end': 'End of Non-secure test suites',
+                    'pattern': r"Test suite '(?P<"
+                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"(?P<result>PASSED|FAILED)",
+                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
+                    'required': ["secure_image_initializing"]
+                }
+            ]  # Monitors
+        },
+        "RegressionIPCTfmLevel2": {
+            "binaries": {
+                "tarball": "stm32l562e-dk-tfm.tar.bz2",
+            },
+            "monitors": [
+                {
+                    'name': 'Secure_Test_Suites_Summary',
+                    'start': 'Secure test suites summary',
+                    'end': 'End of Secure test suites',
+                    'pattern': r"Test suite '(?P<"
+                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"(?P<result>PASSED|FAILED)",
+                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
+                    'required': ["secure_image_initializing"]
+                },
+                {
+                    'name': 'Non_Secure_Test_Suites_Summary',
+                    'start': 'Non-secure test suites summary',
+                    'end': 'End of Non-secure test suites',
+                    'pattern': r"Test suite '(?P<"
+                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"(?P<result>PASSED|FAILED)",
+                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
+                    'required': ["secure_image_initializing"]
+                }
+            ]  # Monitors
+        },
+        "RegressionIPCTfmLevel3": {
+            "binaries": {
+                "tarball": "stm32l562e-dk-tfm.tar.bz2",
+            },
+            "monitors": [
+                {
+                    'name': 'Secure_Test_Suites_Summary',
+                    'start': 'Secure test suites summary',
+                    'end': 'End of Secure test suites',
+                    'pattern': r"Test suite '(?P<"
+                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"(?P<result>PASSED|FAILED)",
+                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
+                    'required': ["secure_image_initializing"]
+                },
+                {
+                    'name': 'Non_Secure_Test_Suites_Summary',
+                    'start': 'Non-secure test suites summary',
+                    'end': 'End of Non-secure test suites',
+                    'pattern': r"Test suite '(?P<"
+                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"(?P<result>PASSED|FAILED)",
+                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
+                    'required': ["secure_image_initializing"]
+                }
+            ]  # Monitors
+        },
+    },
+}
 
 # All configurations should be mapped here
 lava_gen_config_map = {
@@ -2832,6 +2956,7 @@ lava_gen_config_map = {
     "qemu_mps2_bl2": qemu_mps2_bl2,
     "musca_b1": musca_b1_bl2,
     "musca_b1_otp": musca_b1_otp_bl2,
+    "stm32l562e_dk": stm32l562e_dk,
 }
 
 lavagen_config_sort_order = [
