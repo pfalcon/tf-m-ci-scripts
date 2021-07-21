@@ -2762,7 +2762,7 @@ musca_b1_otp_bl2 = {
     "monitor_timeout": 30,
     "poweroff_timeout": 40,
     "platforms": {"MUSCA_B1_OTP": ""},
-    "compilers": ["ARMCLANG"],
+    "compilers": ["GNUARM"],
     "build_types": ["Debug"],
     "boot_types": ["BL2"],
     "tests": {

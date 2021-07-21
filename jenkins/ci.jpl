@@ -181,10 +181,10 @@ python3 ./configs.py -g ${filter_group.replace(" ", " -g ")} ${config}
     }
     // Only submit LAVA test for a specified OTP enabled config in nightly or release job
     else if (params_collection["OTP"] == "ENABLED" && \
-             params_collection["CONFIG_NAME"] != "MUSCA_B1_ARMCLANG_PSA_3_REG_Debug_OTP_BL2_NS") {
+             params_collection["CONFIG_NAME"] != "MUSCA_B1_GNUARM_PSA_3_REG_Debug_OTP_BL2_NS") {
       print("LAVA is not needed for ${build_url}")
     }
-    else if (params_collection["CONFIG_NAME"] == "MUSCA_B1_ARMCLANG_PSA_3_REG_Debug_OTP_BL2_NS" && \
+    else if (params_collection["CONFIG_NAME"] == "MUSCA_B1_GNUARM_PSA_3_REG_Debug_OTP_BL2_NS" && \
              !(env.JOB_NAME.equals("tf-m-nightly") || env.JOB_NAME.equals("tf-m-release"))) {
       print("LAVA is not needed for ${build_url}")
     }
