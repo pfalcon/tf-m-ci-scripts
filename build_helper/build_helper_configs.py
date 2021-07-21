@@ -130,6 +130,9 @@ _common_tfm_builder_cfg = {
 
 # List of all build configs that are impossible under all circumstances
 _common_tfm_invalid_configs = [
+    # LR_CODE size exceeds limit on MUSCA_B1 & MUSCA_S1 with regression tests in Debug mode built with ARMCLANG
+    ("arm/musca_b1/sse_200", "toolchain_ARMCLANG.cmake", "*", "*", True, "OFF", "Debug", "*", "*", "*", "", "*"),
+    ("arm/musca_s1", "toolchain_ARMCLANG.cmake", "*", "*", True, "OFF", "Debug", "*", "*", "*", "", "*"),
     # Load range overlap on Musca for IPC Debug type: T895
     ("arm/musca_b1/sse_200", "toolchain_ARMCLANG.cmake", "*", "*", "*", "IPC", "Debug", "*", "*", "*", "*", "*"),
     ("arm/musca_s1", "toolchain_ARMCLANG.cmake", "*", "*", "*", "IPC", "Debug", "*", "*", "*", "*", "*"),
