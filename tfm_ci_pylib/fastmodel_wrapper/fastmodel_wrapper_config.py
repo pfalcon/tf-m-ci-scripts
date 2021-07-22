@@ -24,7 +24,7 @@ __copyright__ = """
 
 __author__ = "tf-m@lists.trustedfirmware.org"
 __project__ = "Trusted Firmware-M Open CI"
-__version__ = "1.2.0"
+__version__ = "1.4.0"
 
 
 try:
