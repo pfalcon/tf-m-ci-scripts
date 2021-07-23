@@ -847,9 +847,6 @@ config_pp_test = {"seed_params": {
                     # AN521_GNUARM_PSA_2_REG_Release_BL2_NS_MEDIUM_PSOFF
                     ("arm/mps2/an521", "toolchain_GNUARM.cmake", True,
                      "2", True, "OFF", "Release", "off", True, True, "profile_medium", "OFF"),
-                    # MUSCA_B1_ARMCLANG_PSA_3_REG_Debug_BL2_NS
-                    ("arm/musca_b1/sse_200", "toolchain_ARMCLANG.cmake",True,
-                     "3", True, "OFF", "Debug", "off", True, True, "", "ON"),
                     # MUSCA_B1_GNUARM_1_REG_Minsizerel_BL2_NS
                     ("arm/musca_b1/sse_200", "toolchain_GNUARM.cmake", False,
                      "1", True, "OFF", "Minsizerel", "off", True, True, "", "ON"),
