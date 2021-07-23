@@ -72,10 +72,26 @@ cmake_commands=compile_commands.json
 #Library file for cppcheck
 library_file="$(fix_win_path $(get_full_path $mypath))/cppcheck/arm-cortex-m.cfg"
 suppress_file="$(fix_win_path $(get_full_path $mypath))/cppcheck/tfm-suppress-list.txt"
-toolchain_file="$(fix_win_path $(get_full_path ./))/toolchain_GNUARM.cmake"
-test_repo="$(fix_win_path $(get_full_path ./))/../tf-m-tests"
-mbedtls_repo="$(fix_win_path $(get_full_path ./))/../mbedtls"
-mcuboot_repo="$(fix_win_path $(get_full_path ./))/../mcuboot"
+tfm_repo="$(fix_win_path $(get_full_path ./))"
+toolchain_file="$tfm_repo/toolchain_GNUARM.cmake"
+test_repo="$tfm_repo/../tf-m-tests"
+mbedtls_repo="$tfm_repo/../mbedtls"
+mcuboot_repo="$tfm_repo/../mcuboot"
+
+#Apply TF-M patches to dependency repos
+cnt=$(ls $tfm_repo/lib/ext/mcuboot/*.patch 2> /dev/null | wc -l)
+if [ "$cnt" != "0" ] ; then
+  cd $mcuboot_repo
+  git apply $tfm_repo/lib/ext/mcuboot/*.patch
+  cd -
+fi
+
+cnt=$(ls $tfm_repo/lib/ext/mbedcrypto/*.patch 2> /dev/null | wc -l)
+if [ "$cnt" != "0" ] ; then
+  cd $mbedtls_repo
+  git apply $tfm_repo/lib/ext/mbedcrypto/*.patch
+  cd -
+fi
 
 #Cmake compile params
 cmake_params="-DCMAKE_EXPORT_COMPILE_COMMANDS=1 -DTFM_PLATFORM=arm/mps2/an521 -DTFM_TOOLCHAIN_FILE=$toolchain_file"
