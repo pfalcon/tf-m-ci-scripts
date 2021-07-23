@@ -489,6 +489,16 @@ class TFM_Build_Manager(structuredTask):
             ret_cfg = TFM_Build_Manager.generate_config_list(comb_cfg,
                                                              static_cfg)
 
+            # valid is an optional field. Do not proccess if it is missing
+            if "valid" in cfg:
+                # Valid configurations(Need to build)
+                valid_cfg = cfg["valid"]
+                # Add valid configs to build list
+                ret_cfg.update(TFM_Build_Manager.generate_optional_list(
+                    comb_cfg,
+                    static_cfg,
+                    valid_cfg))
+
             # invalid is an optional field. Do not proccess if it is missing
             if "invalid" in cfg:
                 # Invalid configurations(Do not build)
@@ -502,15 +512,6 @@ class TFM_Build_Manager(structuredTask):
                 # Subtract the two configurations
                 ret_cfg = {k: v for k, v in ret_cfg.items()
                            if k not in rejection_cfg}
-            # valid is an optional field. Do not proccess if it is missing
-            if "valid" in cfg:
-                # Valid configurations(Need to build)
-                valid_cfg = cfg["valid"]
-                # Add valid configs to build list
-                ret_cfg.update(TFM_Build_Manager.generate_optional_list(
-                    comb_cfg,
-                    static_cfg,
-                    valid_cfg))
             self.simple_config = False
         else:
             self.simple_config = True
