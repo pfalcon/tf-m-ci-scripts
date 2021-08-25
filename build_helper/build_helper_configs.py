@@ -367,6 +367,24 @@ config_STM32L562E_DK = {"seed_params": {
                 "invalid": _common_tfm_invalid_configs + []
                 }
 
+config_diphda = {"seed_params": {
+                "tfm_platform":     ["arm/diphda"],
+                "toolchain_file":   ["toolchain_GNUARM.cmake"],
+                "psa_api":          [True],
+                "isolation_level":  ["1"],
+                "test_regression":  [False],
+                "test_psa_api":     ["OFF"],
+                "cmake_build_type": ["Debug"],
+                "with_otp":         ["off"],
+                "with_bl2":         [True],
+                "with_ns":          [False],
+                "profile":          [""],
+                "partition_ps":     ["ON"],
+                },
+                "common_params": _common_tfm_builder_cfg,
+                "invalid": _common_tfm_invalid_configs + []
+                }
+
 config_AN519 = {"seed_params": {
                 "tfm_platform":     ["arm/mps2/an519"],
                 "toolchain_file":   ["toolchain_GNUARM.cmake",
@@ -1112,6 +1130,7 @@ _builtin_configs = {
                     "musca_b1_se": config_MUSCA_B1_SE,
                     "musca_s1": config_MUSCA_S1,
                     "psoc64": config_PSOC64,
+                    "diphda": config_diphda,
                     "ipc": config_IPC,
                     "doxygen": config_doxygen,
                     "debug": config_debug,

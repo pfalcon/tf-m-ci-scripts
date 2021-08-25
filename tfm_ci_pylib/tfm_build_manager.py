@@ -40,7 +40,8 @@ mapPlatform = {"cypress/psoc64":                "psoc64",
                "arm/musca_b1/sse_200":          "MUSCA_B1",
                "arm/musca_b1/secure_enclave":   "MUSCA_B1_SE",
                "arm/musca_s1":                  "MUSCA_S1",
-               "stm/stm32l562e_dk":             "stm32l562e_dk"}
+               "stm/stm32l562e_dk":             "stm32l562e_dk",
+               "arm/diphda":                    "DIPHDA"}
 
 mapCompiler = {"toolchain_GNUARM.cmake":   "GNUARM",
                "toolchain_ARMCLANG.cmake": "ARMCLANG"}
