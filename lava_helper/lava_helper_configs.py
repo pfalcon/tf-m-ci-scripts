@@ -142,7 +142,7 @@ tfm_mps2_sse_200 = {
                     'start': 'Secure test suites summary',
                     'end': 'End of Secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -165,7 +165,7 @@ tfm_mps2_sse_200 = {
                     'start': 'Non-secure test suites summary',
                     'end': r'End of Non-secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -196,7 +196,7 @@ tfm_mps2_sse_200 = {
                     'start': 'Secure test suites summary',
                     'end': 'End of Secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -219,7 +219,7 @@ tfm_mps2_sse_200 = {
                     'start': 'Non-secure test suites summary',
                     'end': r'End of Non-secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -249,7 +249,7 @@ tfm_mps2_sse_200 = {
                     'start': 'Secure test suites summary',
                     'end': 'End of Secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -272,7 +272,7 @@ tfm_mps2_sse_200 = {
                     'start': 'Non-secure test suites summary',
                     'end': r'End of Non-secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -302,7 +302,7 @@ tfm_mps2_sse_200 = {
                     'start': 'Secure test suites summary',
                     'end': 'End of Secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -325,7 +325,7 @@ tfm_mps2_sse_200 = {
                     'start': 'Non-secure test suites summary',
                     'end': r'End of Non-secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -356,7 +356,7 @@ tfm_mps2_sse_200 = {
                     'start': 'Secure test suites summary',
                     'end': 'End of Secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -379,7 +379,7 @@ tfm_mps2_sse_200 = {
                     'start': 'Non-secure test suites summary',
                     'end': r'End of Non-secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -409,7 +409,7 @@ tfm_mps2_sse_200 = {
                     'start': 'Secure test suites summary',
                     'end': 'End of Secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -432,7 +432,7 @@ tfm_mps2_sse_200 = {
                     'start': 'Non-secure test suites summary',
                     'end': r'End of Non-secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -462,7 +462,7 @@ tfm_mps2_sse_200 = {
                     'start': 'Secure test suites summary',
                     'end': 'End of Secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -485,7 +485,7 @@ tfm_mps2_sse_200 = {
                     'start': 'Non-secure test suites summary',
                     'end': r'End of Non-secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -649,7 +649,7 @@ fvp_mps2_an521_bl2 = {
                     'start': 'Secure test suites summary',
                     'end': 'End of Secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -672,7 +672,7 @@ fvp_mps2_an521_bl2 = {
                     'start': 'Non-secure test suites summary',
                     'end': r'End of Non-secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -703,7 +703,7 @@ fvp_mps2_an521_bl2 = {
                     'start': 'Secure test suites summary',
                     'end': 'End of Secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -726,7 +726,7 @@ fvp_mps2_an521_bl2 = {
                     'start': 'Non-secure test suites summary',
                     'end': r'End of Non-secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -756,7 +756,7 @@ fvp_mps2_an521_bl2 = {
                     'start': 'Secure test suites summary',
                     'end': 'End of Secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -779,7 +779,7 @@ fvp_mps2_an521_bl2 = {
                     'start': 'Non-secure test suites summary',
                     'end': r'End of Non-secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -809,7 +809,7 @@ fvp_mps2_an521_bl2 = {
                     'start': 'Secure test suites summary',
                     'end': 'End of Secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -832,7 +832,7 @@ fvp_mps2_an521_bl2 = {
                     'start': 'Non-secure test suites summary',
                     'end': r'End of Non-secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -863,7 +863,7 @@ fvp_mps2_an521_bl2 = {
                     'start': 'Secure test suites summary',
                     'end': 'End of Secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -886,7 +886,7 @@ fvp_mps2_an521_bl2 = {
                     'start': 'Non-secure test suites summary',
                     'end': r'End of Non-secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -916,7 +916,7 @@ fvp_mps2_an521_bl2 = {
                     'start': 'Secure test suites summary',
                     'end': 'End of Secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -939,7 +939,7 @@ fvp_mps2_an521_bl2 = {
                     'start': 'Non-secure test suites summary',
                     'end': r'End of Non-secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -969,7 +969,7 @@ fvp_mps2_an521_bl2 = {
                     'start': 'Secure test suites summary',
                     'end': 'End of Secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -992,7 +992,7 @@ fvp_mps2_an521_bl2 = {
                     'start': 'Non-secure test suites summary',
                     'end': r'End of Non-secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -1157,7 +1157,7 @@ fvp_mps2_an521_nobl2 = {
                     'start': 'Secure test suites summary',
                     'end': 'End of Secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -1180,7 +1180,7 @@ fvp_mps2_an521_nobl2 = {
                     'start': 'Non-secure test suites summary',
                     'end': r'End of Non-secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -1210,7 +1210,7 @@ fvp_mps2_an521_nobl2 = {
                     'start': 'Secure test suites summary',
                     'end': 'End of Secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -1233,7 +1233,7 @@ fvp_mps2_an521_nobl2 = {
                     'start': 'Non-secure test suites summary',
                     'end': r'End of Non-secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -1263,7 +1263,7 @@ fvp_mps2_an521_nobl2 = {
                     'start': 'Secure test suites summary',
                     'end': 'End of Secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -1286,7 +1286,7 @@ fvp_mps2_an521_nobl2 = {
                     'start': 'Non-secure test suites summary',
                     'end': r'End of Non-secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -1316,7 +1316,7 @@ fvp_mps2_an521_nobl2 = {
                     'start': 'Secure test suites summary',
                     'end': 'End of Secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -1339,7 +1339,7 @@ fvp_mps2_an521_nobl2 = {
                     'start': 'Non-secure test suites summary',
                     'end': r'End of Non-secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -1370,7 +1370,7 @@ fvp_mps2_an521_nobl2 = {
                     'start': 'Secure test suites summary',
                     'end': 'End of Secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -1393,7 +1393,7 @@ fvp_mps2_an521_nobl2 = {
                     'start': 'Non-secure test suites summary',
                     'end': r'End of Non-secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -1423,7 +1423,7 @@ fvp_mps2_an521_nobl2 = {
                     'start': 'Secure test suites summary',
                     'end': 'End of Secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -1446,7 +1446,7 @@ fvp_mps2_an521_nobl2 = {
                     'start': 'Non-secure test suites summary',
                     'end': r'End of Non-secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -1476,7 +1476,7 @@ fvp_mps2_an521_nobl2 = {
                     'start': 'Secure test suites summary',
                     'end': 'End of Secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -1499,7 +1499,7 @@ fvp_mps2_an521_nobl2 = {
                     'start': 'Non-secure test suites summary',
                     'end': r'End of Non-secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -1648,7 +1648,7 @@ fvp_mps2_an519_bl2 = {
                     'start': 'Secure test suites summary',
                     'end': 'End of Secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -1671,7 +1671,7 @@ fvp_mps2_an519_bl2 = {
                     'start': 'Non-secure test suites summary',
                     'end': r'End of Non-secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -1702,7 +1702,7 @@ fvp_mps2_an519_bl2 = {
                     'start': 'Secure test suites summary',
                     'end': 'End of Secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -1725,7 +1725,7 @@ fvp_mps2_an519_bl2 = {
                     'start': 'Non-secure test suites summary',
                     'end': r'End of Non-secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -1755,7 +1755,7 @@ fvp_mps2_an519_bl2 = {
                     'start': 'Secure test suites summary',
                     'end': 'End of Secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -1778,7 +1778,7 @@ fvp_mps2_an519_bl2 = {
                     'start': 'Non-secure test suites summary',
                     'end': r'End of Non-secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -1809,7 +1809,7 @@ fvp_mps2_an519_bl2 = {
                     'start': 'Secure test suites summary',
                     'end': 'End of Secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -1832,7 +1832,7 @@ fvp_mps2_an519_bl2 = {
                     'start': 'Non-secure test suites summary',
                     'end': r'End of Non-secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -1862,7 +1862,7 @@ fvp_mps2_an519_bl2 = {
                     'start': 'Secure test suites summary',
                     'end': 'End of Secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -1885,7 +1885,7 @@ fvp_mps2_an519_bl2 = {
                     'start': 'Non-secure test suites summary',
                     'end': r'End of Non-secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -2018,7 +2018,7 @@ fvp_mps2_an519_nobl2 = {
                     'start': 'Secure test suites summary',
                     'end': 'End of Secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -2041,7 +2041,7 @@ fvp_mps2_an519_nobl2 = {
                     'start': 'Non-secure test suites summary',
                     'end': r'End of Non-secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -2071,7 +2071,7 @@ fvp_mps2_an519_nobl2 = {
                     'start': 'Secure test suites summary',
                     'end': 'End of Secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -2094,7 +2094,7 @@ fvp_mps2_an519_nobl2 = {
                     'start': 'Non-secure test suites summary',
                     'end': r'End of Non-secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -2124,7 +2124,7 @@ fvp_mps2_an519_nobl2 = {
                     'start': 'Secure test suites summary',
                     'end': 'End of Secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -2147,7 +2147,7 @@ fvp_mps2_an519_nobl2 = {
                     'start': 'Non-secure test suites summary',
                     'end': r'End of Non-secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -2178,7 +2178,7 @@ fvp_mps2_an519_nobl2 = {
                     'start': 'Secure test suites summary',
                     'end': 'End of Secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -2201,7 +2201,7 @@ fvp_mps2_an519_nobl2 = {
                     'start': 'Non-secure test suites summary',
                     'end': r'End of Non-secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -2231,7 +2231,7 @@ fvp_mps2_an519_nobl2 = {
                     'start': 'Secure test suites summary',
                     'end': 'End of Secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -2254,7 +2254,7 @@ fvp_mps2_an519_nobl2 = {
                     'start': 'Non-secure test suites summary',
                     'end': r'End of Non-secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -2445,7 +2445,7 @@ musca_b1_bl2 = {
                     'start': 'Secure test suites summary',
                     'end': 'End of Secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -2468,7 +2468,7 @@ musca_b1_bl2 = {
                     'start': 'Non-secure test suites summary',
                     'end': r'End of Non-secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -2497,7 +2497,7 @@ musca_b1_bl2 = {
                     'start': 'Secure test suites summary',
                     'end': 'End of Secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -2520,7 +2520,7 @@ musca_b1_bl2 = {
                     'start': 'Non-secure test suites summary',
                     'end': r'End of Non-secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -2549,7 +2549,7 @@ musca_b1_bl2 = {
                     'start': 'Secure test suites summary',
                     'end': 'End of Secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -2572,7 +2572,7 @@ musca_b1_bl2 = {
                     'start': 'Non-secure test suites summary',
                     'end': r'End of Non-secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -2601,7 +2601,7 @@ musca_b1_bl2 = {
                     'start': 'Secure test suites summary',
                     'end': 'End of Secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -2624,7 +2624,7 @@ musca_b1_bl2 = {
                     'start': 'Non-secure test suites summary',
                     'end': r'End of Non-secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -2653,7 +2653,7 @@ musca_b1_bl2 = {
                     'start': 'Secure test suites summary',
                     'end': 'End of Secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -2676,7 +2676,7 @@ musca_b1_bl2 = {
                     'start': 'Non-secure test suites summary',
                     'end': r'End of Non-secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -2705,7 +2705,7 @@ musca_b1_bl2 = {
                     'start': 'Secure test suites summary',
                     'end': 'End of Secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -2728,7 +2728,7 @@ musca_b1_bl2 = {
                     'start': 'Non-secure test suites summary',
                     'end': r'End of Non-secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -2776,7 +2776,7 @@ musca_b1_otp_bl2 = {
                     'start': 'Secure test suites summary',
                     'end': 'End of Secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -2799,7 +2799,7 @@ musca_b1_otp_bl2 = {
                     'start': 'Non-secure test suites summary',
                     'end': r'End of Non-secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': [
@@ -2845,7 +2845,7 @@ stm32l562e_dk = {
                     'start': 'Secure test suites summary',
                     'end': 'End of Secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': ["secure_image_initializing"]
@@ -2855,7 +2855,7 @@ stm32l562e_dk = {
                     'start': 'Non-secure test suites summary',
                     'end': 'End of Non-secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': ["secure_image_initializing"]
@@ -2872,7 +2872,7 @@ stm32l562e_dk = {
                     'start': 'Secure test suites summary',
                     'end': 'End of Secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': ["secure_image_initializing"]
@@ -2882,7 +2882,7 @@ stm32l562e_dk = {
                     'start': 'Non-secure test suites summary',
                     'end': 'End of Non-secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': ["secure_image_initializing"]
@@ -2899,7 +2899,7 @@ stm32l562e_dk = {
                     'start': 'Secure test suites summary',
                     'end': 'End of Secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': ["secure_image_initializing"]
@@ -2909,7 +2909,7 @@ stm32l562e_dk = {
                     'start': 'Non-secure test suites summary',
                     'end': 'End of Non-secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': ["secure_image_initializing"]
@@ -2926,7 +2926,7 @@ stm32l562e_dk = {
                     'start': 'Secure test suites summary',
                     'end': 'End of Secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': ["secure_image_initializing"]
@@ -2936,7 +2936,7 @@ stm32l562e_dk = {
                     'start': 'Non-secure test suites summary',
                     'end': 'End of Non-secure test suites',
                     'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
                     'required': ["secure_image_initializing"]
