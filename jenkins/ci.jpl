@@ -178,6 +178,10 @@ python3 ./configs.py -g ${filter_group.replace(" ", " -g ")} ${config}
     if (build_res.result in failure_states) {
       error("Build failed at ${build_url}")
     }
+    // Configs without BL2 do not need LAVA tests
+    else if (params_collection["BL2"] == "False") {
+      print("LAVA is not needed for ${build_url}")
+    }
     // Configs without building NS app do not need LAVA tests
     else if (params_collection["NS"] == "False") {
       print("LAVA is not needed for ${build_url}")
