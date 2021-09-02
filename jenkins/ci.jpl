@@ -35,38 +35,38 @@ mapTestPsaApi = ["OFF":                      "",
                  "INITIAL_ATTESTATION":      "Attest",
                  "IPC":                      "FF"]
 
-// BL2, NS, PSA_API, ISOLATION_LEVEL, TEST_REG, TEST_PSA_API, PROFILE, CONFIG_NAME
+// PSA_API, ISOLATION_LEVEL, TEST_REG, TEST_PSA_API, PROFILE, CONFIG_NAME
 mapConfigs = [
-  ["True", "True", "False", "1", "False", "OFF",                      "N.A",            "Default"],
-  ["True", "True", "True",  "1", "False", "OFF",                      "N.A",            "CoreIPC"],
-  ["True", "True", "True",  "2", "False", "OFF",                      "N.A",            "CoreIPCTfmLevel2"],
-  ["True", "True", "True",  "3", "False", "OFF",                      "N.A",            "CoreIPCTfmLevel3"],
-  ["True", "True", "False", "1", "False", "OFF",                      "profile_small",  "DefaultProfileS"],
-  ["True", "True", "True",  "2", "False", "OFF",                      "profile_medium", "DefaultProfileM"],
-  ["True", "True", "True",  "3", "False", "OFF",                      "profile_large",  "DefaultProfileL"],
-  ["True", "True", "False", "1", "True",  "OFF",                      "N.A",            "Regression"],
-  ["True", "True", "True",  "1", "True",  "OFF",                      "N.A",            "RegressionIPC"],
-  ["True", "True", "True",  "2", "True",  "OFF",                      "N.A",            "RegressionIPCTfmLevel2"],
-  ["True", "True", "True",  "3", "True",  "OFF",                      "N.A",            "RegressionIPCTfmLevel3"],
-  ["True", "True", "False", "1", "True",  "OFF",                      "profile_small",  "RegressionProfileS"],
-  ["True", "True", "True",  "2", "True",  "OFF",                      "profile_medium", "RegressionProfileM"],
-  ["True", "True", "True",  "3", "True",  "OFF",                      "profile_large",  "RegressionProfileL"],
-  ["True", "True", "False", "1", "False", "STORAGE",                  "N.A",            "PsaApiTest (STORAGE)"],
-  ["True", "True", "False", "1", "False", "CRYPTO",                   "N.A",            "PsaApiTest (Crypto)"],
-  ["True", "True", "False", "1", "False", "INITIAL_ATTESTATION",      "N.A",            "PsaApiTest (Attest)"],
-  ["True", "True", "False", "1", "False", "IPC",                      "N.A",            "PsaApiTest (FF)"],
-  ["True", "True", "True",  "1", "False", "STORAGE",                  "N.A",            "PsaApiTestIPC (STORAGE)"],
-  ["True", "True", "True",  "1", "False", "CRYPTO",                   "N.A",            "PsaApiTestIPC (Crypto)"],
-  ["True", "True", "True",  "1", "False", "INITIAL_ATTESTATION",      "N.A",            "PsaApiTestIPC (Attest)"],
-  ["True", "True", "True",  "1", "False", "IPC",                      "N.A",            "PsaApiTestIPC (FF)"],
-  ["True", "True", "True",  "2", "False", "STORAGE",                  "N.A",            "PsaApiTestIPCTfmLevel2 (STORAGE)"],
-  ["True", "True", "True",  "2", "False", "CRYPTO",                   "N.A",            "PsaApiTestIPCTfmLevel2 (Crypto)"],
-  ["True", "True", "True",  "2", "False", "INITIAL_ATTESTATION",      "N.A",            "PsaApiTestIPCTfmLevel2 (Attest)"],
-  ["True", "True", "True",  "2", "False", "IPC",                      "N.A",            "PsaApiTestIPCTfmLevel2 (FF)"],
-  ["True", "True", "True",  "3", "False", "STORAGE",                  "N.A",            "PsaApiTestIPCTfmLevel3 (STORAGE)"],
-  ["True", "True", "True",  "3", "False", "CRYPTO",                   "N.A",            "PsaApiTestIPCTfmLevel3 (Crypto)"],
-  ["True", "True", "True",  "3", "False", "INITIAL_ATTESTATION",      "N.A",            "PsaApiTestIPCTfmLevel3 (Attest)"],
-  ["True", "True", "True",  "3", "False", "IPC",                      "N.A",            "PsaApiTestIPCTfmLevel3 (FF)"],
+  ["False", "1", "False", "OFF",                      "N.A",            "Default"],
+  ["True",  "1", "False", "OFF",                      "N.A",            "CoreIPC"],
+  ["True",  "2", "False", "OFF",                      "N.A",            "CoreIPCTfmLevel2"],
+  ["True",  "3", "False", "OFF",                      "N.A",            "CoreIPCTfmLevel3"],
+  ["False", "1", "False", "OFF",                      "profile_small",  "DefaultProfileS"],
+  ["True",  "2", "False", "OFF",                      "profile_medium", "DefaultProfileM"],
+  ["True",  "3", "False", "OFF",                      "profile_large",  "DefaultProfileL"],
+  ["False", "1", "True",  "OFF",                      "N.A",            "Regression"],
+  ["True",  "1", "True",  "OFF",                      "N.A",            "RegressionIPC"],
+  ["True",  "2", "True",  "OFF",                      "N.A",            "RegressionIPCTfmLevel2"],
+  ["True",  "3", "True",  "OFF",                      "N.A",            "RegressionIPCTfmLevel3"],
+  ["False", "1", "True",  "OFF",                      "profile_small",  "RegressionProfileS"],
+  ["True",  "2", "True",  "OFF",                      "profile_medium", "RegressionProfileM"],
+  ["True",  "3", "True",  "OFF",                      "profile_large",  "RegressionProfileL"],
+  ["False", "1", "False", "STORAGE",                  "N.A",            "PsaApiTest (STORAGE)"],
+  ["False", "1", "False", "CRYPTO",                   "N.A",            "PsaApiTest (Crypto)"],
+  ["False", "1", "False", "INITIAL_ATTESTATION",      "N.A",            "PsaApiTest (Attest)"],
+  ["False", "1", "False", "IPC",                      "N.A",            "PsaApiTest (FF)"],
+  ["True",  "1", "False", "STORAGE",                  "N.A",            "PsaApiTestIPC (STORAGE)"],
+  ["True",  "1", "False", "CRYPTO",                   "N.A",            "PsaApiTestIPC (Crypto)"],
+  ["True",  "1", "False", "INITIAL_ATTESTATION",      "N.A",            "PsaApiTestIPC (Attest)"],
+  ["True",  "1", "False", "IPC",                      "N.A",            "PsaApiTestIPC (FF)"],
+  ["True",  "2", "False", "STORAGE",                  "N.A",            "PsaApiTestIPCTfmLevel2 (STORAGE)"],
+  ["True",  "2", "False", "CRYPTO",                   "N.A",            "PsaApiTestIPCTfmLevel2 (Crypto)"],
+  ["True",  "2", "False", "INITIAL_ATTESTATION",      "N.A",            "PsaApiTestIPCTfmLevel2 (Attest)"],
+  ["True",  "2", "False", "IPC",                      "N.A",            "PsaApiTestIPCTfmLevel2 (FF)"],
+  ["True",  "3", "False", "STORAGE",                  "N.A",            "PsaApiTestIPCTfmLevel3 (STORAGE)"],
+  ["True",  "3", "False", "CRYPTO",                   "N.A",            "PsaApiTestIPCTfmLevel3 (Crypto)"],
+  ["True",  "3", "False", "INITIAL_ATTESTATION",      "N.A",            "PsaApiTestIPCTfmLevel3 (Attest)"],
+  ["True",  "3", "False", "IPC",                      "N.A",            "PsaApiTestIPCTfmLevel3 (FF)"],
 ]
 
 cfgs = ["Default", "CoreIPC", "CoreIPCTfmLevel2", "CoreIPCTfmLevel3",
@@ -103,13 +103,12 @@ def generateLavaParam(build_params) {
                    value: mapTestPsaApi[build_params["TEST_PSA_API"]])
 
   configName = "Config"
-  config_params = [build_params["BL2"], build_params["NS"], \
-                   build_params["PSA_API"], build_params["ISOLATION_LEVEL"], \
+  config_params = [build_params["PSA_API"], build_params["ISOLATION_LEVEL"], \
                    build_params["TEST_REGRESSION"], build_params["TEST_PSA_API"], \
                    build_params["PROFILE"]]
   for (config in mapConfigs) {
-    if (config_params == config[0..6]) {
-      configName += config[7].replace(' (', '_').replace(')', '')
+    if (config_params == config[0..4]) {
+      configName += config[5].replace(' (', '_').replace(')', '')
       break
     }
   }
@@ -339,11 +338,11 @@ def generateCsvContent(results) {
       }
     }
     result[3] = mapCompiler[result[3]]
-    build_params = result[5..12]
+    build_params = result[7..12]
     configName = ""
     for (map_cfg in mapConfigs) {
-      if (build_params[0..6] == map_cfg[0..6]) {
-        configName = map_cfg[7]
+      if (build_params[0..4] == map_cfg[0..4]) {
+        configName = map_cfg[5]
         break
       }
     }
@@ -351,7 +350,7 @@ def generateCsvContent(results) {
       configName = "Default"
     }
     else if (configName == "RegressionProfileM") {
-      if (build_params[7] == "OFF") {
+      if (build_params[5] == "OFF") {
         configName = "RegressionProfileM PSOFF"
       }
     }
