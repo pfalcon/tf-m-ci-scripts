@@ -175,9 +175,7 @@ python3 ./configs.py -g ${filter_group.replace(" ", " -g ")} ${config}
     }
     else if (params_collection["NS"] == "False" || \
              (params_collection["TFM_PLATFORM"].contains("musca_b1") && \
-             env.JOB_NAME.equals("tf-m-build-and-test")) || \
-             (params_collection["PROFILE"] == "profile_medium" && \
-              params_collection["PARTITION_PS"] == "OFF")) {
+             env.JOB_NAME.equals("tf-m-build-and-test"))) {
       print("LAVA is not needed for ${build_url}")
     }
     // Only submit LAVA test for a specified OTP enabled config in nightly or release job
