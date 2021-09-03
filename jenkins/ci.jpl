@@ -10,6 +10,8 @@
 import org.trustedfirmware.Gerrit
 import org.trustedfirmware.Summary
 
+failure_states = ["FAILURE", "ABORTED", "UNSTABLE", "NOT_BUILT"]
+
 mapPlatform = ["cypress/psoc64":                "psoc64",
                "arm/mps2/an519":                "AN519",
                "arm/mps2/an521":                "AN521",
@@ -121,6 +123,36 @@ def generateLavaParam(build_params) {
   return params
 }
 
+def submit_lava_tests(config, results, build_res, params, params_collection) {
+  print("Doing LAVA stuff for ${build_res.getAbsoluteUrl()}")
+  params += generateLavaParam(params_collection)
+  params += string(name: 'BUILD_NUMBER', value: "${build_res.number}")
+  params += string(name: 'BUILD_URL', value: build_res.getAbsoluteUrl())
+  params += string(name: 'LAVA_URL', value: env.LAVA_URL)
+  params += string(name: 'CI_SCRIPTS_BRANCH', value: env.CI_SCRIPTS_BRANCH)
+  params += string(name: 'LAVA_CREDENTIALS', value: env.LAVA_CREDENTIALS)
+  params += string(name: 'CODE_COVERAGE_EN', value: env.CODE_COVERAGE_EN)
+  def lava_res = build(job: 'tf-m-lava-submit', parameters: params, propagate: false)
+  def lava_resubmitted = false
+  if (lava_res.result in failure_states) {
+    error("LAVA Create and Submit failed at ${lava_res.getAbsoluteUrl()}")
+  } else {
+    lava_des = lava_res.getDescription()
+    if (lava_des.contains(" Submitted twice!")) {
+      lava_resubmitted = true
+      lava_des = lava_des - " Submitted twice!"
+    }
+    results['lava_jobs'] += lava_des
+  }
+  links = "Build Config: ${config}\n"
+  links += "Build URL: ${build_res.getAbsoluteUrl()}\n"
+  links += "LAVA Submit: ${lava_res.getAbsoluteUrl()}"
+  if (lava_resubmitted) {
+    links += "\nLAVA Job Re-Submitted!"
+  }
+  print(links)
+}
+
 def listConfigs(ci_scripts_dir, config_list, filter_group) {
   dir(ci_scripts_dir) {
     echo "Obtaining list of configs."
@@ -165,11 +197,10 @@ python3 ./configs.py -g ${filter_group.replace(" ", " -g ")} ${config}
   }
   return { -> results
     def build_res = build(job: 'tf-m-build-config', parameters: params, propagate: false)
-    def build_info = [build_res, config, params_collection]
-    results['builds'][build_res.number] = build_info
     def build_url = build_res.getAbsoluteUrl()
+    results['builds'][build_res.number] = [build_res, config, params_collection]
+
     print("${build_res.number}: ${config} ${build_res.result} ${build_url}")
-    failure_states = ["FAILURE", "ABORTED", "UNSTABLE", "NOT_BUILT"]
 
     // Filter out configs do not need LAVA tests
 
@@ -202,34 +233,7 @@ python3 ./configs.py -g ${filter_group.replace(" ", " -g ")} ${config}
 
     // Submit LAVA tests
     else {
-      print("Doing LAVA stuff for ${build_url}")
-      params += generateLavaParam(params_collection)
-      params += string(name: 'BUILD_NUMBER', value: "${build_res.number}")
-      params += string(name: 'BUILD_URL', value: build_url)
-      params += string(name: 'LAVA_URL', value: env.LAVA_URL)
-      params += string(name: 'CI_SCRIPTS_BRANCH', value: env.CI_SCRIPTS_BRANCH)
-      params += string(name: 'LAVA_CREDENTIALS', value: env.LAVA_CREDENTIALS)
-      params += string(name: 'CODE_COVERAGE_EN', value: env.CODE_COVERAGE_EN)
-      def lava_res = build(job: 'tf-m-lava-submit', parameters: params, propagate: false)
-      def lava_resubmitted = false
-      if (lava_res.result in failure_states) {
-        error("LAVA Create and Submit failed at ${lava_res.getAbsoluteUrl()}")
-      }
-      else {
-        lava_des = lava_res.getDescription()
-        if (lava_des.contains(" Submitted twice!")) {
-          lava_resubmitted = true
-          lava_des = lava_des - " Submitted twice!"
-        }
-        results['lava_jobs'] += lava_des
-      }
-      links = "Build Config: ${config}\n"
-      links += "Build URL: ${build_url}\n"
-      links += "LAVA Submit: ${lava_res.getAbsoluteUrl()}"
-      if (lava_resubmitted) {
-        links += "\nLAVA Job Re-Submitted!"
-      }
-      print(links)
+      submit_lava_tests(config, results, build_res, params, params_collection)
     }
   }
 }
