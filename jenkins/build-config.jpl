@@ -36,9 +36,11 @@ timestamps {
               refspec: '$GERRIT_REFSPEC', url: '$CODE_REPO'
             ]]
           ])
+        sh "git rev-parse --short HEAD"
       }
       dir("tf-m-ci-scripts") {
         checkout([$class: 'GitSCM', branches: [[name: '$CI_SCRIPTS_BRANCH']], userRemoteConfigs: [[credentialsId: 'GIT_SSH_KEY', url: '$CI_SCRIPTS_REPO']]])
+        sh "git rev-parse --short HEAD"
       }
       dir("mbedtls") {
         checkout(
@@ -53,6 +55,7 @@ timestamps {
             ]]
           ]
         )
+        sh "git rev-parse --short HEAD"
       }
       dir("mcuboot") {
         checkout(
@@ -67,6 +70,7 @@ timestamps {
             ]]
           ]
         )
+        sh "git rev-parse --short HEAD"
       }
       dir("tf-m-tests") {
         checkout(
@@ -81,6 +85,7 @@ timestamps {
             ]]
           ]
         )
+        sh "git rev-parse --short HEAD"
       }
       if (env.PSA_API_SUITE != "") {
         dir("psa-arch-tests") {
@@ -96,6 +101,7 @@ timestamps {
               ]]
             ]
           )
+          sh "git rev-parse --short HEAD"
         }
       }
     }
