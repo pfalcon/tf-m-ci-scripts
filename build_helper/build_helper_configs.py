@@ -206,6 +206,13 @@ _common_tfm_invalid_configs = [
     ("stm/stm32l562e_dk", "*", "*", "*", "*", "*", "*",  "*", False, "*", "*", "*"),
     # stm/stm32l562e_dk does not support Debug build type
     ("stm/stm32l562e_dk", "*", "*", "*", "*", "*", "Debug",  "*", "*", "*", "*", "*"),
+    # nxp/lpcxpresso55s69 only build with GCC
+    ("nxp/lpcxpresso55s69", "toolchain_ARMCLANG.cmake", "*", "*", "*", "*", "*",  "*", "*", "*", "*", "*"),
+    # nxp/lpcxpresso55s69 only build Profile M
+    ("nxp/lpcxpresso55s69", "*", "*", "*", "*", "*", "*",  "*", "*", "*", "profile_small", "*"),
+    ("nxp/lpcxpresso55s69", "*", "*", "*", "*", "*", "*",  "*", "*", "*", "profile_large", "*"),
+    # nxp/lpcxpresso55s69 have to turn off BL2 when build regression test
+    ("nxp/lpcxpresso55s69", "*", "*", "*", "True", "*", "*",  "*", "True", "*", "*", "*"),
     ]
 
 # Configure build manager to build several combinations
@@ -367,6 +374,24 @@ config_STM32L562E_DK = {"seed_params": {
                 "invalid": _common_tfm_invalid_configs + []
                 }
 
+config_LPCXPRESSO55S69 = {"seed_params": {
+                "tfm_platform":     ["nxp/lpcxpresso55s69"],
+                "toolchain_file":   ["toolchain_GNUARM.cmake"],
+                "psa_api":          [True],
+                "isolation_level":  ["2"],
+                "test_regression":  [True, False],
+                "test_psa_api":     ["OFF"],
+                "cmake_build_type": ["Relwithdebinfo"],
+                "with_otp":         ["off"],
+                "with_bl2":         [True, False],
+                "with_ns":          [True],
+                "profile":          ["profile_medium"],
+                "partition_ps":     ["ON"],
+                },
+                "common_params": _common_tfm_builder_cfg,
+                "invalid": _common_tfm_invalid_configs + []
+                }
+
 config_diphda = {"seed_params": {
                 "tfm_platform":     ["arm/diphda"],
                 "toolchain_file":   ["toolchain_GNUARM.cmake"],
@@ -429,7 +454,8 @@ config_full = {"seed_params": {
                                     "arm/musca_b1/sse_200",
                                     "arm/mps3/an524", "cypress/psoc64",
                                     "arm/musca_b1/secure_enclave",
-                                    "stm/stm32l562e_dk"],
+                                    "stm/stm32l562e_dk",
+                                    "nxp/lpcxpresso55s69"],
                "toolchain_file":   ["toolchain_GNUARM.cmake",
                                     "toolchain_ARMCLANG.cmake"],
                "psa_api":          [True, False],
@@ -828,6 +854,24 @@ config_nightly_STM32L562E_DK = {"seed_params": {
                 "invalid": _common_tfm_invalid_configs + []
                 }
 
+config_nightly_LPCXPRESSO55S69 = {"seed_params": {
+                "tfm_platform":     ["nxp/lpcxpresso55s69"],
+                "toolchain_file":   ["toolchain_GNUARM.cmake"],
+                "psa_api":          [True],
+                "isolation_level":  ["2"],
+                "test_regression":  [True, False],
+                "test_psa_api":     ["OFF"],
+                "cmake_build_type": ["Relwithdebinfo"],
+                "with_otp":         ["off"],
+                "with_bl2":         [True, False],
+                "with_ns":          [True],
+                "profile":          ["profile_medium"],
+                "partition_ps":     ["ON"],
+                },
+                "common_params": _common_tfm_builder_cfg,
+                "invalid": _common_tfm_invalid_configs + []
+                }
+
 config_pp_test = {"seed_params": {
                 "tfm_platform":     ["arm/mps2/an521", "arm/mps2/an519",
                                      "arm/musca_s1"],
@@ -1098,6 +1142,7 @@ _builtin_configs = {
                     "psa_ff_otp": config_PSA_FF_OTP,
                     "tfm_psoc64": config_PSOC64,
                     "tfm_stm32l562e_dk": config_STM32L562E_DK,
+                    "tfm_lpcxpresso55s69": config_LPCXPRESSO55S69,
 
                     #nightly test group
                     "nightly_test": config_nightly,
@@ -1106,6 +1151,7 @@ _builtin_configs = {
                     "nightly_ff": config_nightly_PSA_FF,
                     "nightly_otp": config_nightly_OTP,
                     "nightly_stm32l562e_dk": config_nightly_STM32L562E_DK,
+                    "nightly_lpcxpresso55s69": config_nightly_LPCXPRESSO55S69,
 
                     #per patch test group
                     "pp_test": config_pp_test,
