@@ -2325,7 +2325,434 @@ qemu_mps2_bl2 = {
     "compilers": ["GNUARM", "ARMCLANG"],
     "build_types": ["Debug", "Release"],
     "boot_types": ["BL2"],
-    "tests": {}
+    "tests": {
+        # 'Default': {
+        #     "binaries": {
+        #         "firmware": "tfm_s_ns_signed.bin",
+        #         "bootloader": "bl2.bin"
+        #     },
+        #     "monitors": [
+        #         {
+        #             'name': 'Secure_Test_Suites_Summary',
+        #             'start': r'[Sec Thread]',
+        #             'end': r'system starting',
+        #             'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
+        #                        r'(?P<test_case_id>Secure image '
+        #                        r'initializing)(?P<result>!)',
+        #             'fixup': {"pass": "!", "fail": ""},
+        #             'required': ["secure_image_initializing"]
+        #         }  # Monitors
+        #     ]
+        # },  # Default
+        # 'DefaultProfileS': {
+        #     "binaries": {
+        #         "firmware": "tfm_s_ns_signed.bin",
+        #         "bootloader": "bl2.bin"
+        #     },
+        #     "monitors": [
+        #         {
+        #             'name': 'Secure_Test_Suites_Summary',
+        #             'start': r'[Sec Thread]',
+        #             'end': r'system starting',
+        #             'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
+        #                        r'(?P<test_case_id>Secure image '
+        #                        r'initializing)(?P<result>!)',
+        #             'fixup': {"pass": "!", "fail": ""},
+        #             'required': ["secure_image_initializing"]
+        #         }  # Monitors
+        #     ]
+        # },  # DefaultProfileS
+        # 'DefaultProfileM': {
+        #     "binaries": {
+        #         "firmware": "tfm_s_ns_signed.bin",
+        #         "bootloader": "bl2.bin"
+        #     },
+        #     "monitors": [
+        #         {
+        #             'name': 'Secure_Test_Suites_Summary',
+        #             'start': r'[Sec Thread]',
+        #             'end': r'system starting',
+        #             'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
+        #                        r'(?P<test_case_id>Secure image '
+        #                        r'initializing)(?P<result>!)',
+        #             'fixup': {"pass": "!", "fail": ""},
+        #             'required': ["secure_image_initializing"]
+        #         }  # Monitors
+        #     ]
+        # },  # DefaultProfileM
+        'Regression': {
+            "binaries": {
+                "firmware": "tfm_s_ns_signed.bin",
+                "bootloader": "bl2.bin"
+            },
+            "monitors": [
+                {
+                    'name': 'Secure_Test_Suites_Summary',
+                    'start': 'Secure test suites summary',
+                    'end': 'End of Secure test suites',
+                    'pattern': r"Test suite '(?P<"
+                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"(?P<result>PASSED|FAILED)",
+                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
+                    'required': [
+                        ("psa_protected_storage_"
+                         "s_interface_tests_tfm_sst_test_2xxx_"),
+                        "sst_reliability_tests_tfm_sst_test_3xxx_",
+                        "sst_rollback_protection_tests_tfm_sst_test_4xxx_",
+                        ("psa_internal_trusted_storage_"
+                         "s_interface_tests_tfm_its_test_2xxx_"),
+                        "its_reliability_tests_tfm_its_test_3xxx_",
+                        ("audit_"
+                         "logging_secure_interface_test_tfm_audit_test_1xxx_"),
+                        "crypto_secure_interface_tests_tfm_crypto_test_5xxx_",
+                        ("initial_attestation_service_"
+                         "secure_interface_tests_tfm_attest_test_1xxx_"),
+                    ]
+                },
+                {
+                    'name': 'Non_Secure_Test_Suites_Summary',
+                    'start': 'Non-secure test suites summary',
+                    'end': r'End of Non-secure test suites',
+                    'pattern': r"Test suite '(?P<"
+                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"(?P<result>PASSED|FAILED)",
+                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
+                    'required': [
+                        ("psa_protected_storage"
+                         "_ns_interface_tests_tfm_sst_test_1xxx_"),
+                        ("psa_internal_trusted_storage"
+                         "_ns_interface_tests_tfm_its_test_1xxx_"),
+                        ("auditlog_"
+                         "non_secure_interface_test_tfm_audit_test_1xxx_"),
+                        ("crypto_"
+                         "non_secure_interface_test_tfm_crypto_test_6xxx_"),
+                        ("initial_attestation_service_"
+                         "non_secure_interface_tests_tfm_attest_test_2xxx_"),
+                        "core_non_secure_positive_tests_tfm_core_test_1xxx_"
+                    ]
+                }
+            ]  # Monitors
+        },  # Regression
+        'RegressionProfileM': {
+            "binaries": {
+                "firmware": "tfm_s_ns_signed.bin",
+                "bootloader": "bl2.bin"
+            },
+            "monitors": [
+                {
+                    'name': 'Secure_Test_Suites_Summary',
+                    'start': 'Secure test suites summary',
+                    'end': 'End of Secure test suites',
+                    'pattern': r"Test suite '(?P<"
+                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"(?P<result>PASSED|FAILED)",
+                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
+                    'required': [
+                        ("psa_protected_storage_"
+                         "s_interface_tests_tfm_sst_test_2xxx_"),
+                        "sst_reliability_tests_tfm_sst_test_3xxx_",
+                        "sst_rollback_protection_tests_tfm_sst_test_4xxx_",
+                        ("psa_internal_trusted_storage_"
+                         "s_interface_tests_tfm_its_test_2xxx_"),
+                        "its_reliability_tests_tfm_its_test_3xxx_",
+                        ("audit_"
+                         "logging_secure_interface_test_tfm_audit_test_1xxx_"),
+                        "crypto_secure_interface_tests_tfm_crypto_test_5xxx_",
+                        ("initial_attestation_service_"
+                         "secure_interface_tests_tfm_attest_test_1xxx_"),
+                    ]
+                },
+                {
+                    'name': 'Non_Secure_Test_Suites_Summary',
+                    'start': 'Non-secure test suites summary',
+                    'end': r'End of Non-secure test suites',
+                    'pattern': r"Test suite '(?P<"
+                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"(?P<result>PASSED|FAILED)",
+                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
+                    'required': [
+                        ("psa_protected_storage"
+                         "_ns_interface_tests_tfm_sst_test_1xxx_"),
+                        ("psa_internal_trusted_storage"
+                         "_ns_interface_tests_tfm_its_test_1xxx_"),
+                        ("auditlog_"
+                         "non_secure_interface_test_tfm_audit_test_1xxx_"),
+                        ("crypto_"
+                         "non_secure_interface_test_tfm_crypto_test_6xxx_"),
+                        ("initial_attestation_service_"
+                         "non_secure_interface_tests_tfm_attest_test_2xxx_"),
+                        "core_non_secure_positive_tests_tfm_core_test_1xxx_"
+                    ]
+                }
+            ]  # Monitors
+        },  # RegressionProfileM
+        'RegressionProfileS': {
+            "binaries": {
+                "firmware": "tfm_s_ns_signed.bin",
+                "bootloader": "bl2.bin"
+            },
+            "monitors": [
+                {
+                    'name': 'Secure_Test_Suites_Summary',
+                    'start': 'Secure test suites summary',
+                    'end': 'End of Secure test suites',
+                    'pattern': r"Test suite '(?P<"
+                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"(?P<result>PASSED|FAILED)",
+                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
+                    'required': [
+                        ("psa_protected_storage_"
+                         "s_interface_tests_tfm_sst_test_2xxx_"),
+                        "sst_reliability_tests_tfm_sst_test_3xxx_",
+                        "sst_rollback_protection_tests_tfm_sst_test_4xxx_",
+                        ("psa_internal_trusted_storage_"
+                         "s_interface_tests_tfm_its_test_2xxx_"),
+                        "its_reliability_tests_tfm_its_test_3xxx_",
+                        ("audit_"
+                         "logging_secure_interface_test_tfm_audit_test_1xxx_"),
+                        "crypto_secure_interface_tests_tfm_crypto_test_5xxx_",
+                        ("initial_attestation_service_"
+                         "secure_interface_tests_tfm_attest_test_1xxx_"),
+                    ]
+                },
+                {
+                    'name': 'Non_Secure_Test_Suites_Summary',
+                    'start': 'Non-secure test suites summary',
+                    'end': r'End of Non-secure test suites',
+                    'pattern': r"Test suite '(?P<"
+                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"(?P<result>PASSED|FAILED)",
+                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
+                    'required': [
+                        ("psa_protected_storage"
+                         "_ns_interface_tests_tfm_sst_test_1xxx_"),
+                        ("psa_internal_trusted_storage"
+                         "_ns_interface_tests_tfm_its_test_1xxx_"),
+                        ("auditlog_"
+                         "non_secure_interface_test_tfm_audit_test_1xxx_"),
+                        ("crypto_"
+                         "non_secure_interface_test_tfm_crypto_test_6xxx_"),
+                        ("initial_attestation_service_"
+                         "non_secure_interface_tests_tfm_attest_test_2xxx_"),
+                        "core_non_secure_positive_tests_tfm_core_test_1xxx_"
+                    ]
+                }
+            ]  # Monitors
+        },  # RegressionProfileS
+        'RegressionIPC': {
+            "binaries": {
+                "firmware": "tfm_s_ns_signed.bin",
+                "bootloader": "bl2.bin"
+            },
+            "monitors": [
+                {
+                    'name': 'Secure_Test_Suites_Summary',
+                    'start': 'Secure test suites summary',
+                    'end': 'End of Secure test suites',
+                    'pattern': r"Test suite '(?P<"
+                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"(?P<result>PASSED|FAILED)",
+                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
+                    'required': [
+                        ("psa_protected_storage_"
+                         "s_interface_tests_tfm_sst_test_2xxx_"),
+                        "sst_reliability_tests_tfm_sst_test_3xxx_",
+                        "sst_rollback_protection_tests_tfm_sst_test_4xxx_",
+                        ("psa_internal_trusted_storage_"
+                         "s_interface_tests_tfm_its_test_2xxx_"),
+                        "its_reliability_tests_tfm_its_test_3xxx_",
+                        ("audit_"
+                         "logging_secure_interface_test_tfm_audit_test_1xxx_"),
+                        "crypto_secure_interface_tests_tfm_crypto_test_5xxx_",
+                        ("initial_attestation_service_"
+                         "secure_interface_tests_tfm_attest_test_1xxx_"),
+                    ]
+                },
+                {
+                    'name': 'Non_Secure_Test_Suites_Summary',
+                    'start': 'Non-secure test suites summary',
+                    'end': r'End of Non-secure test suites',
+                    'pattern': r"Test suite '(?P<"
+                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"(?P<result>PASSED|FAILED)",
+                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
+                    'required': [
+                        ("psa_protected_storage"
+                         "_ns_interface_tests_tfm_sst_test_1xxx_"),
+                        ("psa_internal_trusted_storage"
+                         "_ns_interface_tests_tfm_its_test_1xxx_"),
+                        ("auditlog_"
+                         "non_secure_interface_test_tfm_audit_test_1xxx_"),
+                        ("crypto_"
+                         "non_secure_interface_test_tfm_crypto_test_6xxx_"),
+                        ("initial_attestation_service_"
+                         "non_secure_interface_tests_tfm_attest_test_2xxx_"),
+                        "core_non_secure_positive_tests_tfm_core_test_1xxx_"
+                    ]
+                }
+            ]  # Monitors
+        },  # Regression
+        'RegressionIPCTfmLevel2': {
+            "binaries": {
+                "firmware": "tfm_s_ns_signed.bin",
+                "bootloader": "bl2.bin"
+            },
+            "monitors": [
+                {
+                    'name': 'Secure_Test_Suites_Summary',
+                    'start': 'Secure test suites summary',
+                    'end': 'End of Secure test suites',
+                    'pattern': r"Test suite '(?P<"
+                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"(?P<result>PASSED|FAILED)",
+                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
+                    'required': [
+                        ("psa_protected_storage_"
+                         "s_interface_tests_tfm_sst_test_2xxx_"),
+                        "sst_reliability_tests_tfm_sst_test_3xxx_",
+                        "sst_rollback_protection_tests_tfm_sst_test_4xxx_",
+                        ("psa_internal_trusted_storage_"
+                         "s_interface_tests_tfm_its_test_2xxx_"),
+                        "its_reliability_tests_tfm_its_test_3xxx_",
+                        ("audit_"
+                         "logging_secure_interface_test_tfm_audit_test_1xxx_"),
+                        "crypto_secure_interface_tests_tfm_crypto_test_5xxx_",
+                        ("initial_attestation_service_"
+                         "secure_interface_tests_tfm_attest_test_1xxx_"),
+                    ]
+                },
+                {
+                    'name': 'Non_Secure_Test_Suites_Summary',
+                    'start': 'Non-secure test suites summary',
+                    'end': r'End of Non-secure test suites',
+                    'pattern': r"Test suite '(?P<"
+                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"(?P<result>PASSED|FAILED)",
+                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
+                    'required': [
+                        ("psa_protected_storage"
+                         "_ns_interface_tests_tfm_sst_test_1xxx_"),
+                        ("psa_internal_trusted_storage"
+                         "_ns_interface_tests_tfm_its_test_1xxx_"),
+                        ("auditlog_"
+                         "non_secure_interface_test_tfm_audit_test_1xxx_"),
+                        ("crypto_"
+                         "non_secure_interface_test_tfm_crypto_test_6xxx_"),
+                        ("initial_attestation_service_"
+                         "non_secure_interface_tests_tfm_attest_test_2xxx_"),
+                        "core_non_secure_positive_tests_tfm_core_test_1xxx_"
+                    ]
+                }
+            ]  # Monitors
+        },  # Regression
+        'RegressionIPCTfmLevel3': {
+            "binaries": {
+                "firmware": "tfm_s_ns_signed.bin",
+                "bootloader": "bl2.bin"
+            },
+            "monitors": [
+                {
+                    'name': 'Secure_Test_Suites_Summary',
+                    'start': 'Secure test suites summary',
+                    'end': 'End of Secure test suites',
+                    'pattern': r"Test suite '(?P<"
+                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"(?P<result>PASSED|FAILED)",
+                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
+                    'required': [
+                        ("psa_protected_storage_"
+                         "s_interface_tests_tfm_sst_test_2xxx_"),
+                        "sst_reliability_tests_tfm_sst_test_3xxx_",
+                        "sst_rollback_protection_tests_tfm_sst_test_4xxx_",
+                        ("psa_internal_trusted_storage_"
+                         "s_interface_tests_tfm_its_test_2xxx_"),
+                        "its_reliability_tests_tfm_its_test_3xxx_",
+                        ("audit_"
+                         "logging_secure_interface_test_tfm_audit_test_1xxx_"),
+                        "crypto_secure_interface_tests_tfm_crypto_test_5xxx_",
+                        ("initial_attestation_service_"
+                         "secure_interface_tests_tfm_attest_test_1xxx_"),
+                    ]
+                },
+                {
+                    'name': 'Non_Secure_Test_Suites_Summary',
+                    'start': 'Non-secure test suites summary',
+                    'end': r'End of Non-secure test suites',
+                    'pattern': r"Test suite '(?P<"
+                               r"test_case_id>[^\n]+)' has (.*) "
+                               r"(?P<result>PASSED|FAILED)",
+                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
+                    'required': [
+                        ("psa_protected_storage"
+                         "_ns_interface_tests_tfm_sst_test_1xxx_"),
+                        ("psa_internal_trusted_storage"
+                         "_ns_interface_tests_tfm_its_test_1xxx_"),
+                        ("auditlog_"
+                         "non_secure_interface_test_tfm_audit_test_1xxx_"),
+                        ("crypto_"
+                         "non_secure_interface_test_tfm_crypto_test_6xxx_"),
+                        ("initial_attestation_service_"
+                         "non_secure_interface_tests_tfm_attest_test_2xxx_"),
+                        "core_non_secure_positive_tests_tfm_core_test_1xxx_"
+                    ]
+                }
+            ]  # Monitors
+        },  # Regression
+        # 'CoreIPC': {
+        #     "binaries": {
+        #         "firmware": "tfm_s_ns_signed.bin",
+        #         "bootloader": "bl2.bin"
+        #     },
+        #     "monitors": [
+        #         {
+        #             'name': 'Secure_Test_Suites_Summary',
+        #             'start': r'[Sec Thread]',
+        #             'end': r'system starting',
+        #             'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
+        #                        r'(?P<test_case_id>Secure image '
+        #                        r'initializing)(?P<result>!)',
+        #             'fixup': {"pass": "!", "fail": ""},
+        #             'required': ["secure_image_initializing"]
+        #         }  # Monitors
+        #     ]
+        # },  # CoreIPC
+        # 'CoreIPCTfmLevel2': {
+        #     "binaries": {
+        #         "firmware": "tfm_s_ns_signed.bin",
+        #         "bootloader": "bl2.bin"
+        #     },
+        #     "monitors": [
+        #         {
+        #             'name': 'Secure_Test_Suites_Summary',
+        #             'start': r'[Sec Thread]',
+        #             'end': r'system starting',
+        #             'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
+        #                        r'(?P<test_case_id>Secure image '
+        #                        r'initializing)(?P<result>!)',
+        #             'fixup': {"pass": "!", "fail": ""},
+        #             'required': ["secure_image_initializing"]
+        #         }  # Monitors
+        #     ]
+        # },  # CoreIPCTfmLevel2
+        # 'CoreIPCTfmLevel3': {
+        #     "binaries": {
+        #         "firmware": "tfm_s_ns_signed.bin",
+        #         "bootloader": "bl2.bin"
+        #     },
+        #     "monitors": [
+        #         {
+        #             'name': 'Secure_Test_Suites_Summary',
+        #             'start': r'[Sec Thread]',
+        #             'end': r'system starting',
+        #             'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
+        #                        r'(?P<test_case_id>Secure image '
+        #                        r'initializing)(?P<result>!)',
+        #             'fixup': {"pass": "!", "fail": ""},
+        #             'required': ["secure_image_initializing"]
+        #         }  # Monitors
+        #     ]
+        # },  # CoreIPCTfmLevel3
+    }
 }
 
 
