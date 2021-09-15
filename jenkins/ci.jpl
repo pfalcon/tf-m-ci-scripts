@@ -37,38 +37,38 @@ mapTestPsaApi = ["OFF":                      "",
                  "INITIAL_ATTESTATION":      "Attest",
                  "IPC":                      "FF"]
 
-// PSA_API, ISOLATION_LEVEL, TEST_REG, TEST_PSA_API, PROFILE, CONFIG_NAME
+// LIB_MODEL, ISOLATION_LEVEL, TEST_REG, TEST_PSA_API, PROFILE, CONFIG_NAME
 mapConfigs = [
-  ["False", "1", "False", "OFF",                      "N.A",            "Default"],
-  ["True",  "1", "False", "OFF",                      "N.A",            "CoreIPC"],
-  ["True",  "2", "False", "OFF",                      "N.A",            "CoreIPCTfmLevel2"],
-  ["True",  "3", "False", "OFF",                      "N.A",            "CoreIPCTfmLevel3"],
-  ["False", "1", "False", "OFF",                      "profile_small",  "DefaultProfileS"],
-  ["True",  "2", "False", "OFF",                      "profile_medium", "DefaultProfileM"],
-  ["True",  "3", "False", "OFF",                      "profile_large",  "DefaultProfileL"],
-  ["False", "1", "True",  "OFF",                      "N.A",            "Regression"],
-  ["True",  "1", "True",  "OFF",                      "N.A",            "RegressionIPC"],
-  ["True",  "2", "True",  "OFF",                      "N.A",            "RegressionIPCTfmLevel2"],
-  ["True",  "3", "True",  "OFF",                      "N.A",            "RegressionIPCTfmLevel3"],
-  ["False", "1", "True",  "OFF",                      "profile_small",  "RegressionProfileS"],
-  ["True",  "2", "True",  "OFF",                      "profile_medium", "RegressionProfileM"],
-  ["True",  "3", "True",  "OFF",                      "profile_large",  "RegressionProfileL"],
-  ["False", "1", "False", "STORAGE",                  "N.A",            "PsaApiTest (STORAGE)"],
-  ["False", "1", "False", "CRYPTO",                   "N.A",            "PsaApiTest (Crypto)"],
-  ["False", "1", "False", "INITIAL_ATTESTATION",      "N.A",            "PsaApiTest (Attest)"],
-  ["False", "1", "False", "IPC",                      "N.A",            "PsaApiTest (FF)"],
-  ["True",  "1", "False", "STORAGE",                  "N.A",            "PsaApiTestIPC (STORAGE)"],
-  ["True",  "1", "False", "CRYPTO",                   "N.A",            "PsaApiTestIPC (Crypto)"],
-  ["True",  "1", "False", "INITIAL_ATTESTATION",      "N.A",            "PsaApiTestIPC (Attest)"],
-  ["True",  "1", "False", "IPC",                      "N.A",            "PsaApiTestIPC (FF)"],
-  ["True",  "2", "False", "STORAGE",                  "N.A",            "PsaApiTestIPCTfmLevel2 (STORAGE)"],
-  ["True",  "2", "False", "CRYPTO",                   "N.A",            "PsaApiTestIPCTfmLevel2 (Crypto)"],
-  ["True",  "2", "False", "INITIAL_ATTESTATION",      "N.A",            "PsaApiTestIPCTfmLevel2 (Attest)"],
-  ["True",  "2", "False", "IPC",                      "N.A",            "PsaApiTestIPCTfmLevel2 (FF)"],
-  ["True",  "3", "False", "STORAGE",                  "N.A",            "PsaApiTestIPCTfmLevel3 (STORAGE)"],
-  ["True",  "3", "False", "CRYPTO",                   "N.A",            "PsaApiTestIPCTfmLevel3 (Crypto)"],
-  ["True",  "3", "False", "INITIAL_ATTESTATION",      "N.A",            "PsaApiTestIPCTfmLevel3 (Attest)"],
-  ["True",  "3", "False", "IPC",                      "N.A",            "PsaApiTestIPCTfmLevel3 (FF)"],
+  ["True",  "1", "False", "OFF",                      "N.A",            "Default"],
+  ["False", "1", "False", "OFF",                      "N.A",            "CoreIPC"],
+  ["False", "2", "False", "OFF",                      "N.A",            "CoreIPCTfmLevel2"],
+  ["False", "3", "False", "OFF",                      "N.A",            "CoreIPCTfmLevel3"],
+  ["True",  "1", "False", "OFF",                      "profile_small",  "DefaultProfileS"],
+  ["False", "2", "False", "OFF",                      "profile_medium", "DefaultProfileM"],
+  ["False", "3", "False", "OFF",                      "profile_large",  "DefaultProfileL"],
+  ["True",  "1", "True",  "OFF",                      "N.A",            "Regression"],
+  ["False", "1", "True",  "OFF",                      "N.A",            "RegressionIPC"],
+  ["False", "2", "True",  "OFF",                      "N.A",            "RegressionIPCTfmLevel2"],
+  ["False", "3", "True",  "OFF",                      "N.A",            "RegressionIPCTfmLevel3"],
+  ["True",  "1", "True",  "OFF",                      "profile_small",  "RegressionProfileS"],
+  ["False", "2", "True",  "OFF",                      "profile_medium", "RegressionProfileM"],
+  ["False", "3", "True",  "OFF",                      "profile_large",  "RegressionProfileL"],
+  ["True",  "1", "False", "STORAGE",                  "N.A",            "PsaApiTest (STORAGE)"],
+  ["True",  "1", "False", "CRYPTO",                   "N.A",            "PsaApiTest (Crypto)"],
+  ["True",  "1", "False", "INITIAL_ATTESTATION",      "N.A",            "PsaApiTest (Attest)"],
+  ["True",  "1", "False", "IPC",                      "N.A",            "PsaApiTest (FF)"],
+  ["False", "1", "False", "STORAGE",                  "N.A",            "PsaApiTestIPC (STORAGE)"],
+  ["False", "1", "False", "CRYPTO",                   "N.A",            "PsaApiTestIPC (Crypto)"],
+  ["False", "1", "False", "INITIAL_ATTESTATION",      "N.A",            "PsaApiTestIPC (Attest)"],
+  ["False", "1", "False", "IPC",                      "N.A",            "PsaApiTestIPC (FF)"],
+  ["False", "2", "False", "STORAGE",                  "N.A",            "PsaApiTestIPCTfmLevel2 (STORAGE)"],
+  ["False", "2", "False", "CRYPTO",                   "N.A",            "PsaApiTestIPCTfmLevel2 (Crypto)"],
+  ["False", "2", "False", "INITIAL_ATTESTATION",      "N.A",            "PsaApiTestIPCTfmLevel2 (Attest)"],
+  ["False", "2", "False", "IPC",                      "N.A",            "PsaApiTestIPCTfmLevel2 (FF)"],
+  ["False", "3", "False", "STORAGE",                  "N.A",            "PsaApiTestIPCTfmLevel3 (STORAGE)"],
+  ["False", "3", "False", "CRYPTO",                   "N.A",            "PsaApiTestIPCTfmLevel3 (Crypto)"],
+  ["False", "3", "False", "INITIAL_ATTESTATION",      "N.A",            "PsaApiTestIPCTfmLevel3 (Attest)"],
+  ["False", "3", "False", "IPC",                      "N.A",            "PsaApiTestIPCTfmLevel3 (FF)"],
 ]
 
 cfgs = ["Default", "CoreIPC", "CoreIPCTfmLevel2", "CoreIPCTfmLevel3",
@@ -105,7 +105,7 @@ def generateLavaParam(build_params) {
                    value: mapTestPsaApi[build_params["TEST_PSA_API"]])
 
   configName = "Config"
-  config_params = [build_params["PSA_API"], build_params["ISOLATION_LEVEL"], \
+  config_params = [build_params["LIB_MODEL"], build_params["ISOLATION_LEVEL"], \
                    build_params["TEST_REGRESSION"], build_params["TEST_PSA_API"], \
                    build_params["PROFILE"]]
   for (config in mapConfigs) {
@@ -326,7 +326,7 @@ def generateCsvContent(results) {
                         result.value[2]['CMAKE_BUILD_TYPE'], \
                         result.value[2]['BL2'], \
                         result.value[2]['NS'], \
-                        result.value[2]['PSA_API'], \
+                        result.value[2]['LIB_MODEL'], \
                         result.value[2]['ISOLATION_LEVEL'], \
                         result.value[2]['TEST_REGRESSION'], \
                         result.value[2]['TEST_PSA_API'], \

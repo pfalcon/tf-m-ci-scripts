@@ -31,7 +31,7 @@ _common_tfm_builder_cfg = {
     # configuration tuples
     "sort_order": ["tfm_platform",
                    "toolchain_file",
-                   "psa_api",
+                   "lib_model",
                    "isolation_level",
                    "test_regression",
                    "test_psa_api",
@@ -48,7 +48,7 @@ _common_tfm_builder_cfg = {
     "config_template": "cmake " + \
         "-DTFM_PLATFORM=%(tfm_platform)s " + \
         "-DTFM_TOOLCHAIN_FILE=%(codebase_root_dir)s/%(toolchain_file)s " + \
-        "-DTFM_PSA_API=%(psa_api)s " + \
+        "-DTFM_LIB_MODEL=%(lib_model)s " + \
         "-DTFM_ISOLATION_LEVEL=%(isolation_level)s " + \
         "-DTEST_NS=%(test_regression)s -DTEST_S=%(test_regression)s " + \
         "-DTEST_PSA_API=%(test_psa_api)s " + \
@@ -135,13 +135,13 @@ _common_tfm_invalid_configs = [
     # Load range overlap on Musca for IPC Debug type: T895
     ("arm/musca_b1/sse_200", "toolchain_ARMCLANG.cmake", "*", "*", "*", "IPC", "Debug", "*", "*", "*", "*", "*"),
     ("arm/musca_s1", "toolchain_ARMCLANG.cmake", "*", "*", "*", "IPC", "Debug", "*", "*", "*", "*", "*"),
-    # LVL2 and LVL3 requires PSA api
-    ("*", "*", False, "2", "*", "*", "*", "*", "*", "*", "*", "*"),
-    ("*", "*", False, "3", "*", "*", "*", "*", "*", "*", "*", "*"),
+    # LVL2 and LVL3 requires IPC model
+    ("*", "*", True, "2", "*", "*", "*", "*", "*", "*", "*", "*"),
+    ("*", "*", True, "3", "*", "*", "*", "*", "*", "*", "*", "*"),
     # Regression requires NS
     ("*", "*", "*", "*", True, "*", "*", "*", "*", False, "*", "*"),
-    # psoc64 requires PSA api
-    ("cypress/psoc64", "*", False, "*", "*", "*", "*",  "*", "*", "*", "*", "*"),
+    # psoc64 requires IPC model
+    ("cypress/psoc64", "*", True, "*", "*", "*", "*",  "*", "*", "*", "*", "*"),
     # No PSA_ACK with regression
     ("*", "*", "*", "*", True, "IPC", "*", "*", "*", "*", "*", "*"),
     ("*", "*", "*", "*", True, "CRYPTO", "*", "*", "*", "*", "*", "*"),
@@ -166,8 +166,8 @@ _common_tfm_invalid_configs = [
     ("cypress/psoc64", "*", "*", "*", "*", "*", "Debug",  "*", "*", "*", "*", "*"),
     # Musca b1 does not support Profile S
     ("arm/musca_b1/sse_200", "*", "*", "*", "*", "*", "*",  "*", "*", "*", "profile_small", "*"),
-    # Musca B1 Secure Enclave requires PSA api, BL2, and supports only Isolation Level 1
-    ("arm/musca_b1/secure_enclave", "*", False, "*", "*", "*", "*", "*", "*", "*", "*", "*"),
+    # Musca B1 Secure Enclave requires IPC model, BL2, and supports only Isolation Level 1
+    ("arm/musca_b1/secure_enclave", "*", True, "*", "*", "*", "*", "*", "*", "*", "*", "*"),
     ("arm/musca_b1/secure_enclave", "*", "*", "*", "*", "*", "*",  "*", False, "*", "*", "*"),
     ("arm/musca_b1/secure_enclave", "*", "*", "2", "*", "*", "*", "*", "*", "*", "*", "*"),
     # Musca B1 Secure Enclave does not support tests, profiles, NS side building
@@ -184,16 +184,16 @@ _common_tfm_invalid_configs = [
     ("*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "profile_large", "OFF"),
     # PARTITION_PS should be OFF for Profile S
     ("*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "profile_small", "ON"),
-    # Proile M only support for PSA_API
-    ("*", "*", False, "*", "*", "*", "*", "*", "*", "*", "profile_medium", "*"),
+    # Proile M only support for IPC model
+    ("*", "*", True, "*", "*", "*", "*", "*", "*", "*", "profile_medium", "*"),
     # Profile M only support for Isolation Level 2
     ("*", "*", "*", "1", "*", "*", "*",  "*", "*", "*", "profile_medium", "*"),
     ("*", "*", "*", "3", "*", "*", "*",  "*", "*", "*", "profile_medium", "*"),
     # Profile L only support for Isolation Level 3
     ("*", "*", "*", "1", "*", "*", "*",  "*", "*", "*", "profile_large", "*"),
     ("*", "*", "*", "2", "*", "*", "*",  "*", "*", "*", "profile_large", "*"),
-    # Profile S does not support PSA_API
-    ("*", "*", True, "*", "*", "*", "*",  "*", "*", "*", "profile_small", "*"),
+    # Profile S does not support IPC model
+    ("*", "*", False, "*", "*", "*", "*",  "*", "*", "*", "profile_small", "*"),
     # Profile S only supports Isolation Level 2
     ("*", "*", "*", "2", "*", "*", "*",  "*", "*", "*", "profile_small", "*"),
     # Only AN521 and MUSCA_B1 support Isolation Level 3
@@ -220,7 +220,7 @@ config_AN524 = {"seed_params": {
                 "tfm_platform":     ["arm/mps3/an524"],
                 "toolchain_file":   ["toolchain_GNUARM.cmake",
                                      "toolchain_ARMCLANG.cmake"],
-                "psa_api":          [True, False],
+                "lib_model":        [True, False],
                 "isolation_level":  ["1", "2"],
                 "test_regression":  [True, False],
                 "test_psa_api":     ["OFF"],
@@ -239,7 +239,7 @@ config_AN521 = {"seed_params": {
                 "tfm_platform":     ["arm/mps2/an521"],
                 "toolchain_file":   ["toolchain_GNUARM.cmake",
                                      "toolchain_ARMCLANG.cmake"],
-                "psa_api":          [True, False],
+                "lib_model":        [True, False],
                 "isolation_level":  ["1", "2"],
                 "test_regression":  [True, False],
                 "test_psa_api":     ["OFF"],
@@ -259,7 +259,7 @@ config_PSA_API = {"seed_params": {
                                      "arm/musca_s1"],
                 "toolchain_file":   ["toolchain_GNUARM.cmake",
                                      "toolchain_ARMCLANG.cmake"],
-                "psa_api":          [True, False],
+                "lib_model":        [True, False],
                 "isolation_level":  ["1", "2", "3"],
                 "test_regression":  [False],
                 "test_psa_api":     ["CRYPTO",
@@ -281,7 +281,7 @@ config_PSA_FF = {"seed_params": {
                                      "arm/musca_s1"],
                 "toolchain_file":   ["toolchain_GNUARM.cmake",
                                      "toolchain_ARMCLANG.cmake"],
-                "psa_api":          [True],
+                "lib_model":        [False],
                 "isolation_level":  ["1", "2", "3"],
                 "test_regression":  [False],
                 "test_psa_api":     ["IPC"],
@@ -300,7 +300,7 @@ config_PSA_API_OTP = {"seed_params": {
                 "tfm_platform":     ["arm/musca_b1/sse_200"],
                 "toolchain_file":   ["toolchain_GNUARM.cmake",
                                      "toolchain_ARMCLANG.cmake"],
-                "psa_api":          [True, False],
+                "lib_model":        [True, False],
                 "isolation_level":  ["1", "2", "3"],
                 "test_regression":  [False],
                 "test_psa_api":     ["CRYPTO",
@@ -321,7 +321,7 @@ config_PSA_FF_OTP = {"seed_params": {
                 "tfm_platform":     ["arm/musca_b1/sse_200"],
                 "toolchain_file":   ["toolchain_GNUARM.cmake",
                                      "toolchain_ARMCLANG.cmake"],
-                "psa_api":          [True],
+                "lib_model":        [False],
                 "isolation_level":  ["1", "2", "3"],
                 "test_regression":  [False],
                 "test_psa_api":     ["IPC"],
@@ -340,7 +340,7 @@ config_PSOC64 = {"seed_params": {
                 "tfm_platform":     ["cypress/psoc64"],
                 "toolchain_file":   ["toolchain_GNUARM.cmake",
                                      "toolchain_ARMCLANG.cmake"],
-                "psa_api":          [True],
+                "lib_model":        [False],
                 "isolation_level":  ["1", "2", "3"],
                 "test_regression":  [True],
                 "test_psa_api":     ["OFF"],
@@ -359,7 +359,7 @@ config_STM32L562E_DK = {"seed_params": {
                 "tfm_platform":     ["stm/stm32l562e_dk"],
                 "toolchain_file":   ["toolchain_GNUARM.cmake",
                                      "toolchain_ARMCLANG.cmake"],
-                "psa_api":          [True, False],
+                "lib_model":        [True, False],
                 "isolation_level":  ["1", "2", "3"],
                 "test_regression":  [True],
                 "test_psa_api":     ["OFF"],
@@ -377,7 +377,7 @@ config_STM32L562E_DK = {"seed_params": {
 config_LPCXPRESSO55S69 = {"seed_params": {
                 "tfm_platform":     ["nxp/lpcxpresso55s69"],
                 "toolchain_file":   ["toolchain_GNUARM.cmake"],
-                "psa_api":          [True],
+                "lib_model":        [False],
                 "isolation_level":  ["2"],
                 "test_regression":  [True, False],
                 "test_psa_api":     ["OFF"],
@@ -395,7 +395,7 @@ config_LPCXPRESSO55S69 = {"seed_params": {
 config_diphda = {"seed_params": {
                 "tfm_platform":     ["arm/diphda"],
                 "toolchain_file":   ["toolchain_GNUARM.cmake"],
-                "psa_api":          [True],
+                "lib_model":        [False],
                 "isolation_level":  ["1"],
                 "test_regression":  [False],
                 "test_psa_api":     ["OFF"],
@@ -414,7 +414,7 @@ config_AN519 = {"seed_params": {
                 "tfm_platform":     ["arm/mps2/an519"],
                 "toolchain_file":   ["toolchain_GNUARM.cmake",
                                      "toolchain_ARMCLANG.cmake"],
-                "psa_api":          [True, False],
+                "lib_model":        [True, False],
                 "isolation_level":  ["1", "2"],
                 "test_regression":  [True, False],
                 "test_psa_api":     ["OFF"],
@@ -434,7 +434,7 @@ config_IPC =  {"seed_params": {
                                     "arm/musca_b1/sse_200"],
                "toolchain_file":   ["toolchain_GNUARM.cmake",
                                     "toolchain_ARMCLANG.cmake"],
-               "psa_api":          [True],
+               "lib_model":        [False],
                "isolation_level":  ["1", "2"],
                "test_regression":  [True, False],
                "test_psa_api":     ["OFF"],
@@ -458,7 +458,7 @@ config_full = {"seed_params": {
                                     "nxp/lpcxpresso55s69"],
                "toolchain_file":   ["toolchain_GNUARM.cmake",
                                     "toolchain_ARMCLANG.cmake"],
-               "psa_api":          [True, False],
+               "lib_model":        [True, False],
                "isolation_level":  ["1", "2"],
                "test_regression":  [True, False],
                "test_psa_api":     ["OFF"],
@@ -491,7 +491,7 @@ config_tfm_test = {"seed_params": {
                                      "arm/musca_b1/sse_200", "arm/musca_s1"],
                 "toolchain_file":   ["toolchain_ARMCLANG.cmake",
                                      "toolchain_GNUARM.cmake"],
-                "psa_api":          [True, False],
+                "lib_model":        [True, False],
                 "isolation_level":  ["1", "2", "3"],
                 "test_regression":  [True, False],
                 "test_psa_api":     ["OFF"],
@@ -510,7 +510,7 @@ config_tfm_test2 = {"seed_params": {
                 "tfm_platform":     ["arm/mps2/an519", "arm/mps3/an524"],
                 "toolchain_file":   ["toolchain_ARMCLANG.cmake",
                                      "toolchain_GNUARM.cmake"],
-                "psa_api":          [True, False],
+                "lib_model":        [True, False],
                 "isolation_level":  ["1", "2", "3"],
                 "test_regression":  [True, False],
                 "test_psa_api":     ["OFF"],
@@ -533,7 +533,7 @@ config_tfm_profile = {"seed_params": {
                                      "arm/musca_b1/sse_200"],
                 "toolchain_file":   ["toolchain_ARMCLANG.cmake",
                                      "toolchain_GNUARM.cmake"],
-                "psa_api":          [True, False],
+                "lib_model":        [True, False],
                 "isolation_level":  ["1", "2", "3"],
                 "test_regression":  [True, False],
                 "test_psa_api":     ["OFF"],
@@ -560,7 +560,7 @@ config_tfm_test_OTP = {"seed_params": {
                 "tfm_platform":     ["arm/musca_b1/sse_200"],
                 "toolchain_file":   ["toolchain_ARMCLANG.cmake",
                                      "toolchain_GNUARM.cmake"],
-                "psa_api":          [True, False],
+                "lib_model":        [True, False],
                 "isolation_level":  ["1", "2", "3"],
                 "test_regression":  [True, False],
                 "test_psa_api":     ["OFF"],
@@ -579,7 +579,7 @@ config_MUSCA_B1 = {"seed_params": {
                 "tfm_platform":     ["arm/musca_b1/sse_200"],
                 "toolchain_file":   ["toolchain_ARMCLANG.cmake",
                                      "toolchain_GNUARM.cmake"],
-                "psa_api":          [True, False],
+                "lib_model":        [True, False],
                 "isolation_level":  ["1", "2"],
                 "test_regression":  [True, False],
                 "test_psa_api":     ["OFF"],
@@ -598,7 +598,7 @@ config_MUSCA_B1_SE = {"seed_params": {
                 "tfm_platform":     ["arm/musca_b1/secure_enclave"],
                 "toolchain_file":   ["toolchain_ARMCLANG.cmake",
                                      "toolchain_GNUARM.cmake"],
-                "psa_api":          [True],
+                "lib_model":        [False],
                 "isolation_level":  ["1"],
                 "test_regression":  [False],
                 "test_psa_api":     ["OFF"],
@@ -617,7 +617,7 @@ config_MUSCA_S1 = {"seed_params": {
                 "tfm_platform":     ["arm/musca_s1"],
                 "toolchain_file":   ["toolchain_ARMCLANG.cmake",
                                      "toolchain_GNUARM.cmake"],
-                "psa_api":          [True, False],
+                "lib_model":        [True, False],
                 "isolation_level":  ["1", "2"],
                 "test_regression":  [True, False],
                 "test_psa_api":     ["OFF"],
@@ -638,7 +638,7 @@ config_release = {"seed_params": {
                                      "arm/mps3/an524"],
                 "toolchain_file":   ["toolchain_ARMCLANG.cmake",
                                      "toolchain_GNUARM.cmake"],
-                "psa_api":          [True, False],
+                "lib_model":        [True, False],
                 "isolation_level":  ["1", "2", "3"],
                 "test_regression":  [True, False],
                 "test_psa_api":     ["OFF"],
@@ -662,7 +662,7 @@ config_AN521_PSA_API = {"seed_params": {
                                      "arm/musca_b1/sse_200"],
                 "toolchain_file":   ["toolchain_GNUARM.cmake",
                                      "toolchain_ARMCLANG.cmake"],
-                "psa_api":          [True, False],
+                "lib_model":        [True, False],
                 "isolation_level":  ["1", "2"],
                 "test_regression":  [False],
                 "test_psa_api":     ["IPC",
@@ -688,7 +688,7 @@ config_AN521_PSA_IPC = {"seed_params": {
                                      "arm/musca_b1/sse_200"],
                 "toolchain_file":   ["toolchain_GNUARM.cmake",
                                      "toolchain_ARMCLANG.cmake"],
-                "psa_api":          [True],
+                "lib_model":        [False],
                 "isolation_level":  ["1", "2"],
                 "test_regression":  [False],
                 "test_psa_api":     ["IPC"],
@@ -714,7 +714,7 @@ config_nightly = {"seed_params": {
                                      "stm/stm32l562e_dk"],
                 "toolchain_file":   ["toolchain_GNUARM.cmake",
                                      "toolchain_ARMCLANG.cmake"],
-                "psa_api":          [True, False],
+                "lib_model":        [True, False],
                 "isolation_level":  ["1", "2", "3"],
                 "test_regression":  [True, False],
                 "test_psa_api":     ["OFF"],
@@ -751,7 +751,7 @@ config_nightly_profile = {"seed_params": {
                                      "arm/musca_b1/sse_200"],
                 "toolchain_file":   ["toolchain_ARMCLANG.cmake",
                                      "toolchain_GNUARM.cmake"],
-                "psa_api":          [True, False],
+                "lib_model":        [True, False],
                 "isolation_level":  ["1", "2", "3"],
                 "test_regression":  [True, False],
                 "test_psa_api":     ["OFF"],
@@ -779,7 +779,7 @@ config_nightly_PSA_API = {"seed_params": {
                                      "arm/musca_s1"],
                 "toolchain_file":   ["toolchain_GNUARM.cmake",
                                      "toolchain_ARMCLANG.cmake"],
-                "psa_api":          [True, False],
+                "lib_model":        [True, False],
                 "isolation_level":  ["1", "2", "3"],
                 "test_regression":  [False],
                 "test_psa_api":     ["CRYPTO",
@@ -801,7 +801,7 @@ config_nightly_PSA_FF = {"seed_params": {
                                      "arm/musca_s1"],
                 "toolchain_file":   ["toolchain_GNUARM.cmake",
                                      "toolchain_ARMCLANG.cmake"],
-                "psa_api":          [True],
+                "lib_model":        [False],
                 "isolation_level":  ["1", "2", "3"],
                 "test_regression":  [False],
                 "test_psa_api":     ["IPC"],
@@ -820,7 +820,7 @@ config_nightly_OTP = {"seed_params": {
                 "tfm_platform":     ["arm/musca_b1/sse_200"],
                 "toolchain_file":   ["toolchain_GNUARM.cmake",
                                      "toolchain_ARMCLANG.cmake"],
-                "psa_api":          [True, False],
+                "lib_model":        [True, False],
                 "isolation_level":  ["1", "2", "3"],
                 "test_regression":  [True],
                 "test_psa_api":     ["OFF"],
@@ -839,7 +839,7 @@ config_nightly_STM32L562E_DK = {"seed_params": {
                 "tfm_platform":     ["stm/stm32l562e_dk"],
                 "toolchain_file":   ["toolchain_GNUARM.cmake",
                                      "toolchain_ARMCLANG.cmake"],
-                "psa_api":          [True, False],
+                "lib_model":        [True, False],
                 "isolation_level":  ["1", "2", "3"],
                 "test_regression":  [True],
                 "test_psa_api":     ["OFF"],
@@ -857,7 +857,7 @@ config_nightly_STM32L562E_DK = {"seed_params": {
 config_nightly_LPCXPRESSO55S69 = {"seed_params": {
                 "tfm_platform":     ["nxp/lpcxpresso55s69"],
                 "toolchain_file":   ["toolchain_GNUARM.cmake"],
-                "psa_api":          [True],
+                "lib_model":        [False],
                 "isolation_level":  ["2"],
                 "test_regression":  [True, False],
                 "test_psa_api":     ["OFF"],
@@ -877,7 +877,7 @@ config_pp_test = {"seed_params": {
                                      "arm/musca_s1"],
                 "toolchain_file":   ["toolchain_GNUARM.cmake",
                                      "toolchain_ARMCLANG.cmake"],
-                "psa_api":          [True, False],
+                "lib_model":        [True, False],
                 "isolation_level":  ["1", "2", "3"],
                 "test_regression":  [True],
                 "test_psa_api":     ["OFF"],
@@ -891,34 +891,34 @@ config_pp_test = {"seed_params": {
                 "common_params": _common_tfm_builder_cfg,
                 "valid": [
                     ("arm/mps2/an521", "toolchain_GNUARM.cmake",
-                     False, "1", False, "OFF", "Debug",
+                     True, "1", False, "OFF", "Debug",
                      "off", True, True, "", "ON"),
                     ("arm/mps2/an521", "toolchain_ARMCLANG.cmake",
-                     True, "2", False, "OFF", "Debug",
+                     False, "2", False, "OFF", "Debug",
                      "off", True, True, "", "ON"),
                     ("arm/mps2/an521", "toolchain_ARMCLANG.cmake",
-                     True, "3", False, "OFF", "Release",
+                     False, "3", False, "OFF", "Release",
                      "off", True, True, "", "ON"),
                     ("arm/mps2/an521", "toolchain_GNUARM.cmake",
-                     True, "2", False, "OFF", "Debug",
+                     False, "2", False, "OFF", "Debug",
                      "off", True, True, "profile_medium", "ON"),
                     ("arm/mps2/an521", "toolchain_GNUARM.cmake",
-                     True, "3", False, "OFF", "Debug",
+                     False, "3", False, "OFF", "Debug",
                      "off", True, True, "profile_large", "ON"),
-                    # AN521_GNUARM_PSA_2_REG_Release_BL2_NS_MEDIUM_PSOFF
-                    ("arm/mps2/an521", "toolchain_GNUARM.cmake", True,
+                    # AN521_GNUARM_IPC_2_REG_Release_BL2_NS_MEDIUM_PSOFF
+                    ("arm/mps2/an521", "toolchain_GNUARM.cmake", False,
                      "2", True, "OFF", "Release", "off", True, True, "profile_medium", "OFF"),
-                    # MUSCA_B1_GNUARM_1_REG_Minsizerel_BL2_NS
-                    ("arm/musca_b1/sse_200", "toolchain_GNUARM.cmake", False,
+                    # MUSCA_B1_GNUARM_LIB_1_REG_Minsizerel_BL2_NS
+                    ("arm/musca_b1/sse_200", "toolchain_GNUARM.cmake", True,
                      "1", True, "OFF", "Minsizerel", "off", True, True, "", "ON"),
-                    # stm32l562e_dk_ARMCLANG_PSA_1_REG_Release_BL2_NS
-                    ("stm/stm32l562e_dk", "toolchain_ARMCLANG.cmake", True,
+                    # stm32l562e_dk_ARMCLANG_IPC_1_REG_Release_BL2_NS
+                    ("stm/stm32l562e_dk", "toolchain_ARMCLANG.cmake", False,
                      "1", True, "OFF", "Release", "off", True, True, "", "ON"),
-                    # stm32l562e_dk_GNUARM_PSA_2_REG_Release_BL2_NS
-                    ("stm/stm32l562e_dk", "toolchain_GNUARM.cmake", True,
+                    # stm32l562e_dk_GNUARM_IPC_2_REG_Release_BL2_NS
+                    ("stm/stm32l562e_dk", "toolchain_GNUARM.cmake", False,
                      "2", True, "OFF", "Release", "off", True, True, "", "ON"),
-                    # stm32l562e_dk_GNUARM_PSA_3_REG_Release_BL2_NS
-                    ("stm/stm32l562e_dk", "toolchain_GNUARM.cmake", True,
+                    # stm32l562e_dk_GNUARM_IPC_3_REG_Release_BL2_NS
+                    ("stm/stm32l562e_dk", "toolchain_GNUARM.cmake", False,
                      "3", True, "OFF", "Release", "off", True, True, "", "ON"),
                 ],
                 "invalid": _common_tfm_invalid_configs + [
@@ -950,7 +950,7 @@ config_pp_test = {"seed_params": {
                      "*",  "*", "*", "*", "profile_small", "*"),
                     ("*", "toolchain_ARMCLANG.cmake", "*", "*", "*", "*",
                      "*",  "*", "*", "*", "profile_medium", "*"),
-                    ("*", "toolchain_ARMCLANG.cmake", False, "*", "*", "*",
+                    ("*", "toolchain_ARMCLANG.cmake", True, "*", "*", "*",
                      "*",  "*", "*", "*", "*", "*"),
                 ]
                 }
@@ -958,7 +958,7 @@ config_pp_test = {"seed_params": {
 config_pp_OTP = {"seed_params": {
                 "tfm_platform":     ["arm/musca_b1/sse_200"],
                 "toolchain_file":   ["toolchain_GNUARM.cmake"],
-                "psa_api":          [True, False],
+                "lib_model":        [True, False],
                 "isolation_level":  ["1", "2"],
                 "test_regression":  [True],
                 "test_psa_api":     ["OFF"],
@@ -977,7 +977,7 @@ config_pp_OTP = {"seed_params": {
 config_pp_PSA_API = {"seed_params": {
                 "tfm_platform":     ["arm/mps2/an521"],
                 "toolchain_file":   ["toolchain_GNUARM.cmake"],
-                "psa_api":          [True],
+                "lib_model":        [False],
                 "isolation_level":  ["2"],
                 "test_regression":  [False],
                 "test_psa_api":     ["IPC",
@@ -998,7 +998,7 @@ config_pp_PSA_API = {"seed_params": {
 config_pp_PSoC64 = {"seed_params": {
                 "tfm_platform":     ["cypress/psoc64"],
                 "toolchain_file":   ["toolchain_GNUARM.cmake"],
-                "psa_api":          [True],
+                "lib_model":        [False],
                 "isolation_level":  ["1", "2"],
                 "test_regression":  [True],
                 "test_psa_api":     ["OFF"],
@@ -1016,7 +1016,7 @@ config_pp_PSoC64 = {"seed_params": {
 config_cov_an519 = {"seed_params": {
                 "tfm_platform":     ["arm/mps2/an519"],
                 "toolchain_file":   ["toolchain_GNUARM.cmake"],
-                "psa_api":          [True, False],
+                "lib_model":        [True, False],
                 "isolation_level":  ["1", "2", "3"],
                 "test_regression":  [True, False],
                 "test_psa_api":     ["OFF"],
@@ -1034,7 +1034,7 @@ config_cov_an519 = {"seed_params": {
 config_cov_an521 = {"seed_params": {
                 "tfm_platform":     ["arm/mps2/an521"],
                 "toolchain_file":   ["toolchain_GNUARM.cmake"],
-                "psa_api":          [True, False],
+                "lib_model":        [True, False],
                 "isolation_level":  ["1", "2", "3"],
                 "test_regression":  [True, False],
                 "test_psa_api":     ["OFF"],
@@ -1069,7 +1069,7 @@ config_doxygen = {"common_params": {
 config_debug = {"seed_params": {
                 "tfm_platform":     ["arm/mps2/an521"],
                 "toolchain_file":   ["toolchain_ARMCLANG.cmake"],
-                "psa_api":          [False],
+                "lib_model":        [True],
                 "isolation_level":  ["1"],
                 "test_regression":  [False],
                 "test_psa_api":     ["OFF"],
@@ -1089,7 +1089,7 @@ config_ci = {"seed_params": {
                 "tfm_platform":     ["arm/mps2/an521"],
                 "toolchain_file":   ["toolchain_ARMCLANG.cmake",
                                      "toolchain_GNUARM.cmake"],
-                "psa_api":          [True, False],
+                "lib_model":        [True, False],
                 "isolation_level":  ["1", "2"],
                 "test_regression":  [True, False],
                 "test_psa_api":     ["OFF"],
@@ -1102,9 +1102,9 @@ config_ci = {"seed_params": {
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + [
-                    ("*", "toolchain_ARMCLANG.cmake", True, "*", "*", "*",
+                    ("*", "toolchain_ARMCLANG.cmake", False, "*", "*", "*",
                      "*",  "*", "*", "*", "*", "*"),
-                    ("*", "toolchain_ARMCLANG.cmake", False, "1", "*", "*",
+                    ("*", "toolchain_ARMCLANG.cmake", True, "1", "*", "*",
                      "*",  "*", False, "*", "*", "*"),
                 ]
                 }
@@ -1112,7 +1112,7 @@ config_ci = {"seed_params": {
 config_lava_debug = {"seed_params": {
                 "tfm_platform":     ["arm/mps2/an521", "arm/mps2/an519"],
                 "toolchain_file":   ["toolchain_GNUARM.cmake"],
-                "psa_api":          [True, False],
+                "lib_model":        [True, False],
                 "isolation_level":  ["1", "2"],
                 "test_regression":  [True],
                 "test_psa_api":     ["OFF"],
@@ -1125,7 +1125,7 @@ config_lava_debug = {"seed_params": {
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + [
-                    ("arm/mps2/an521", "toolchain_GNUARM.cmake", True, "2", "*", "*",
+                    ("arm/mps2/an521", "toolchain_GNUARM.cmake", False, "2", "*", "*",
                      "*",  "*", True, "*", "*", "*")
                 ]
                 }

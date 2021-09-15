@@ -117,7 +117,7 @@ class TFM_Build_Manager(structuredTask):
             "CONFIG_NAME={}",
             "TFM_PLATFORM={}",
             "TOOLCHAIN_FILE={}",
-            "PSA_API={}",
+            "LIB_MODEL={}",
             "ISOLATION_LEVEL={}",
             "TEST_REGRESSION={}",
             "TEST_PSA_API={}",
@@ -134,7 +134,7 @@ class TFM_Build_Manager(structuredTask):
                 config,
                 config_details.tfm_platform,
                 config_details.toolchain_file,
-                config_details.psa_api,
+                config_details.lib_model,
                 config_details.isolation_level,
                 config_details.test_regression,
                 config_details.test_psa_api,
@@ -392,7 +392,7 @@ class TFM_Build_Manager(structuredTask):
         overwrite_params = {"codebase_root_dir": build_cfg["codebase_root_dir"],
                             "tfm_platform": i.tfm_platform,
                             "toolchain_file": i.toolchain_file,
-                            "psa_api": i.psa_api,
+                            "lib_model": i.lib_model,
                             "isolation_level": i.isolation_level,
                             "test_regression": i.test_regression,
                             "test_psa_api": i.test_psa_api,
@@ -568,8 +568,10 @@ class TFM_Build_Manager(structuredTask):
             config_param = []
             config_param.append(mapPlatform[list(i)[0]])
             config_param.append(mapCompiler[list(i)[1]])
-            if list(i)[2]:  # PSA_API
-                config_param.append("PSA")
+            if list(i)[2]:  # LIB_MODEL
+                config_param.append("LIB")
+            else:
+                config_param.append("IPC")
             config_param.append(list(i)[3]) # ISOLATION_LEVEL
             if list(i)[4]:  # TEST_REGRESSION
                 config_param.append("REG")

@@ -97,43 +97,43 @@ def identify_config():
 
     try :
         cfg = get_configs_by_name([CI_CONFIG])[CI_CONFIG]
-        if (cfg.psa_api and cfg.isolation_level == "1" and
+        if (not cfg.lib_model and cfg.isolation_level == "1" and
             not cfg.test_regression and cfg.test_psa_api == "OFF" and
             cfg.cmake_build_type == "Release" and cfg.with_otp == "off" and
             cfg.with_bl2 and cfg.with_ns and
             cfg.profile == "" and cfg.partition_ps == "ON"):
                 name_config = "CoreIPC"
-        elif (not cfg.psa_api and cfg.isolation_level == "1" and
+        elif (cfg.lib_model and cfg.isolation_level == "1" and
             not cfg.test_regression and cfg.test_psa_api == "OFF"      and
             cfg.cmake_build_type == "Release" and cfg.with_otp == "off"  and
             cfg.with_bl2 and cfg.with_ns and
             cfg.profile == "" and cfg.partition_ps == "ON"):
                 name_config = "Default"
-        elif (cfg.psa_api and cfg.isolation_level == "2"    and
+        elif (not cfg.lib_model and cfg.isolation_level == "2"    and
             not cfg.test_regression and cfg.test_psa_api == "OFF"     and
             cfg.cmake_build_type == "Release" and cfg.with_otp == "off" and
             cfg.with_bl2 and cfg.with_ns and
             cfg.profile == "" and cfg.partition_ps == "ON"):
                 name_config = "CoreIPCTfmLevel2"
-        elif (not cfg.psa_api and cfg.isolation_level == "1" and
+        elif (cfg.lib_model and cfg.isolation_level == "1" and
             not cfg.test_regression and cfg.test_psa_api == "OFF"      and
             cfg.cmake_build_type == "Release" and cfg.with_otp == "off"  and
             cfg.with_bl2 and cfg.with_ns and
             cfg.profile == "profile_small" and cfg.partition_ps == "OFF"):
                 name_config = "DefaultProfileS"
-        elif (not cfg.psa_api and cfg.isolation_level == "1" and
+        elif (cfg.lib_model and cfg.isolation_level == "1" and
             not cfg.test_regression and cfg.test_psa_api == "OFF"      and
             cfg.cmake_build_type == "Minsizerel" and cfg.with_otp == "off"  and
             cfg.with_bl2 and cfg.with_ns and
             cfg.profile == "profile_small" and cfg.partition_ps == "OFF"):
                 name_config = "MinSizeProfileS"
-        elif (cfg.psa_api and cfg.isolation_level == "2" and
+        elif (not cfg.lib_model and cfg.isolation_level == "2" and
             not cfg.test_regression and cfg.test_psa_api == "OFF"     and
             cfg.cmake_build_type == "Release" and cfg.with_otp == "off"  and
             cfg.with_bl2 and cfg.with_ns and
             cfg.profile == "profile_medium" and cfg.partition_ps == "ON"):
                 name_config = "DefaultProfileM"
-        elif (cfg.psa_api and cfg.isolation_level == "3" and
+        elif (not cfg.lib_model and cfg.isolation_level == "3" and
             not cfg.test_regression and cfg.test_psa_api == "OFF"     and
             cfg.cmake_build_type == "Release" and cfg.with_otp == "off"  and
             cfg.with_bl2 and cfg.with_ns and
