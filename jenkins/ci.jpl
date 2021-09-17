@@ -192,6 +192,15 @@ python3 ./configs.py -g ${filter_group.replace(" ", " -g ")} ${config}
   params += string(name: 'CODE_REPO', value: env.CODE_REPO)
   params += string(name: 'CODE_COVERAGE_EN', value: env.CODE_COVERAGE_EN)
   params += string(name: 'CI_SCRIPTS_BRANCH', value: env.CI_SCRIPTS_BRANCH)
+  params += string(name: 'MCUBOOT_REFSPEC', value: env.MCUBOOT_REFSPEC)
+  params += string(name: 'MCUBOOT_URL', value: env.MCUBOOT_URL)
+  params += string(name: 'MBEDTLS_VERSION', value: env.MBEDTLS_VERSION)
+  params += string(name: 'MCUBOOT_URL', value: env.MBEDTLS_URL)
+  params += string(name: 'TFM_TESTS_REFSPEC', value: env.TFM_TESTS_REFSPEC)
+  params += string(name: 'TFM_TESTS_URL', value: env.TFM_TESTS_URL)
+  params += string(name: 'PSA_ARCH_TESTS_VERSION', value: env.PSA_ARCH_TESTS_VERSION)
+  params += string(name: 'PSA_ARCH_TESTS_URL', value: env.PSA_ARCH_TESTS_URL)
+  params += string(name: 'SHARE_FOLDER', value: env.SHARE_FOLDER)
   if (env.JOB_NAME.equals("tf-m-nightly")) { //Setting the Memory footprint gathering.
      params += string(name: 'SQUAD_CONFIGURATIONS', value: env.SQUAD_CONFIGURATIONS)
   }
@@ -248,6 +257,15 @@ def buildDocs(results) {
   params += string(name: 'MBEDTLS_VERSION', value: env.MBEDTLS_VERSION)
   params += string(name: 'CODE_REPO', value: env.CODE_REPO)
   params += string(name: 'CI_SCRIPTS_BRANCH', value: env.CI_SCRIPTS_BRANCH)
+  params += string(name: 'MCUBOOT_REFSPEC', value: env.MCUBOOT_REFSPEC)
+  params += string(name: 'MCUBOOT_URL', value: env.MCUBOOT_URL)
+  params += string(name: 'MBEDTLS_VERSION', value: env.MBEDTLS_VERSION)
+  params += string(name: 'MCUBOOT_URL', value: env.MBEDTLS_URL)
+  params += string(name: 'TFM_TESTS_REFSPEC', value: env.TFM_TESTS_REFSPEC)
+  params += string(name: 'TFM_TESTS_URL', value: env.TFM_TESTS_URL)
+  params += string(name: 'PSA_ARCH_TESTS_VERSION', value: env.PSA_ARCH_TESTS_VERSION)
+  params += string(name: 'PSA_ARCH_TESTS_URL', value: env.PSA_ARCH_TESTS_URL)
+  params += string(name: 'SHARE_FOLDER', value: env.SHARE_FOLDER)
   return { -> results
     def res = build(job: 'tf-m-build-docs', parameters: params, propagate:false)
     print("${res.number}: Docs ${res.result} ${res.getAbsoluteUrl()}")
@@ -475,6 +493,8 @@ timestamps {
       dir("tf-m-ci-scripts") {
         checkout([$class: 'GitSCM', branches: [[name: '$CI_SCRIPTS_BRANCH']], userRemoteConfigs: [[credentialsId: 'GIT_SSH_KEY', url: '$CI_SCRIPTS_REPO']]])
         sh "git rev-parse --short HEAD"
+        // Clone TF-M repositories so share folder can be reused by downstream jobs
+        sh "./clone.sh"
       }
     }
     stage("Configs") {

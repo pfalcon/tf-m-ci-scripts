@@ -13,21 +13,10 @@ timestamps {
   node("docker-amd64-tf-m-bionic") {
     stage("Init") {
       cleanWs()
-      dir("trusted-firmware-m") {
-        checkout(
-          poll: false,
-          scm: [
-            $class: 'GitSCM',
-            branches: [[name: '$GERRIT_BRANCH']],
-            extensions: [[$class: 'BuildChooserSetting', buildChooser: [$class: 'GerritTriggerBuildChooser']]],
-            userRemoteConfigs: [[
-              credentialsId: 'GIT_SSH_KEY',
-              refspec: '$GERRIT_REFSPEC', url: '$CODE_REPO'
-            ]]
-          ])
-      }
       dir("tf-m-ci-scripts") {
         checkout([$class: 'GitSCM', branches: [[name: '$CI_SCRIPTS_BRANCH']], userRemoteConfigs: [[credentialsId: 'GIT_SSH_KEY', url: '$CI_SCRIPTS_REPO']]])
+        // Clone TF-M repositories so share folder can be reused by downstream jobs
+        sh "./clone.sh"
       }
     }
     stage("Check") {

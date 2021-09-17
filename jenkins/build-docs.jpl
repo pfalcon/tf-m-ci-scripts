@@ -13,63 +13,10 @@ timestamps {
   node("docker-amd64-tf-m-bionic") {
     stage("Init") {
       cleanWs()
-      dir("trusted-firmware-m") {
-        checkout(
-          poll: false,
-          scm: [
-            $class: 'GitSCM',
-            branches: [[name: '$GERRIT_BRANCH']],
-            extensions: [[$class: 'BuildChooserSetting', buildChooser: [$class: 'GerritTriggerBuildChooser']]],
-            userRemoteConfigs: [[
-              credentialsId: 'GIT_SSH_KEY',
-              refspec: '$GERRIT_REFSPEC', url: '$CODE_REPO'
-            ]]
-          ])
-      }
       dir("tf-m-ci-scripts") {
         checkout([$class: 'GitSCM', branches: [[name: '$CI_SCRIPTS_BRANCH']], userRemoteConfigs: [[credentialsId: 'GIT_SSH_KEY', url: '$CI_SCRIPTS_REPO']]])
-      }
-      dir("mbedtls") {
-        checkout(
-          changelog: false,
-          poll: false,
-          scm: [
-            $class: 'GitSCM',
-            branches: [[name: 'FETCH_HEAD']],
-            userRemoteConfigs: [[
-              refspec: 'refs/tags/$MBEDTLS_VERSION',
-              url: params.MBEDTLS_URL
-            ]]
-          ]
-        )
-      }
-      dir("mcuboot") {
-        checkout(
-          changelog: false,
-          poll: false,
-          scm: [
-            $class: 'GitSCM',
-            branches: [[name: 'FETCH_HEAD']],
-            userRemoteConfigs: [[
-              refspec: '$MCUBOOT_REFSPEC',
-              url: params.MCUBOOT_URL
-            ]]
-          ]
-        )
-      }
-      dir("tf-m-tests") {
-        checkout(
-          changelog: false,
-          poll: false,
-          scm: [
-            $class: 'GitSCM',
-            branches: [[name: 'FETCH_HEAD']],
-            userRemoteConfigs: [[
-              refspec: '$TFM_TESTS_REFSPEC',
-              url: params.TFM_TESTS_URL
-            ]]
-          ]
-        )
+        // Clone TF-M repositories so share folder can be reused by downstream jobs
+        sh "./clone.sh"
       }
     }
     try {
