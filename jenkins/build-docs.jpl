@@ -92,9 +92,11 @@ timestamps {
     }
   }
   node("master") {
-    sh """
-    cp -a /var/jenkins_home/jobs/$JOB_NAME/builds/$BUILD_NUMBER/archive/trusted-firmware-m/build/docs/reference_manual /var/jenkins_home/docs/
-    cp -a /var/jenkins_home/jobs/$JOB_NAME/builds/$BUILD_NUMBER/archive/trusted-firmware-m/build/docs/user_guide /var/jenkins_home/docs/
-    """
+    if (env.JOB_NAME.equals("tf-m-build-docs-nightly")) {
+      sh """
+         cp -a /var/jenkins_home/jobs/$JOB_NAME/builds/$BUILD_NUMBER/archive/trusted-firmware-m/build/docs/reference_manual /var/jenkins_home/docs/
+         cp -a /var/jenkins_home/jobs/$JOB_NAME/builds/$BUILD_NUMBER/archive/trusted-firmware-m/build/docs/user_guide /var/jenkins_home/docs/
+         """
+    }
   }
 }
