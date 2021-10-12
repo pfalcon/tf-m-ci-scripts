@@ -22,7 +22,7 @@ mapPlatform = ["cypress/psoc64":                "psoc64",
                "arm/musca_b1/secure_enclave":   "MUSCA_B1_SE",
                "arm/musca_s1":                  "MUSCA_S1",
                "stm/stm32l562e_dk":             "stm32l562e_dk",
-               "arm/diphda":                    "DIPHDA",
+               "arm/corstone1000":              "corstone1000",
                "nxp/lpcxpresso55s69":           "lpcxpresso55s69"]
 
 mapCompiler = ["toolchain_GNUARM.cmake":   "GNUARM",

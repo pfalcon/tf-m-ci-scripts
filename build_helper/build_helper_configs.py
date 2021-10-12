@@ -392,8 +392,8 @@ config_LPCXPRESSO55S69 = {"seed_params": {
                 "invalid": _common_tfm_invalid_configs + []
                 }
 
-config_diphda = {"seed_params": {
-                "tfm_platform":     ["arm/diphda"],
+config_corstone1000 = {"seed_params": {
+                "tfm_platform":     ["arm/corstone1000"],
                 "toolchain_file":   ["toolchain_GNUARM.cmake"],
                 "lib_model":        [False],
                 "isolation_level":  ["1"],
@@ -1176,7 +1176,7 @@ _builtin_configs = {
                     "musca_b1_se": config_MUSCA_B1_SE,
                     "musca_s1": config_MUSCA_S1,
                     "psoc64": config_PSOC64,
-                    "diphda": config_diphda,
+                    "corstone1000": config_corstone1000,
                     "ipc": config_IPC,
                     "doxygen": config_doxygen,
                     "debug": config_debug,
