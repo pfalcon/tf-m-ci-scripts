@@ -13,16 +13,9 @@
 
 set -ex
 
-cd mbedtls
-git apply ../trusted-firmware-m/lib/ext/mbedcrypto/*.patch
+mkdir -p ${WORKSPACE}/trusted-firmware-m/build/docs
+cd ${WORKSPACE}/trusted-firmware-m/build/docs
 
-mkdir ../trusted-firmware-m/build
-cd ../trusted-firmware-m/build
-
-cmake -S .. -B . -DTFM_PLATFORM=arm/mps2/an521 \
-                 -DTFM_TOOLCHAIN_FILE=../toolchain_GNUARM.cmake \
-                 -DMBEDCRYPTO_PATH=../../mbedtls \
-                 -DTFM_TEST_REPO_PATH=../../tf-m-tests \
-                 -DMCUBOOT_PATH=../../mcuboot
+cmake -S ${WORKSPACE}/trusted-firmware-m/docs -B .
 cmake --build ./ -- tfm_docs_refman_html
 cmake --build ./ -- tfm_docs_userguide_html
