@@ -65,6 +65,9 @@ mapProfile = {"profile_small":  "SMALL",
               "profile_medium": "MEDIUM",
               "profile_large":  "LARGE"}
 
+mapSFPOption = {"0": "SFP0",
+                "1": "SFP1",
+                "2": "SFP2"}
 
 class TFM_Build_Manager(structuredTask):
     """ Class that will load a configuration out of a json file, schedule
@@ -137,7 +140,9 @@ class TFM_Build_Manager(structuredTask):
             "PROFILE={}",
             "PARTITION_PS={}",
             "NSCE={}",
-            "MMIO={}"
+            "MMIO={}",
+            "FP={}",
+            "LAZY={}"
         ]
         print(
             "\n".join(argument_list)
@@ -156,7 +161,9 @@ class TFM_Build_Manager(structuredTask):
                 "N.A" if not config_details.profile else config_details.profile,
                 config_details.partition_ps,
                 config_details.nsce,
-                config_details.mmio
+                config_details.mmio,
+                config_details.fp,
+                config_details.lazy
             )
             .strip()
         )
@@ -416,11 +423,15 @@ class TFM_Build_Manager(structuredTask):
                             "profile": "" if i.profile=="N.A" else i.profile,
                             "partition_ps": i.partition_ps,
                             "nsce": i.nsce,
-                            "mmio": i.mmio}
+                            "mmio": i.mmio,
+                            "fp": i.fp,
+                            "lazy": i.lazy}
         if i.test_psa_api == "IPC":
             overwrite_params["test_psa_api"] += " -DINCLUDE_PANIC_TESTS=1"
             if i.tfm_platform == "arm/musca_b1/sse_200":
                 overwrite_params["test_psa_api"] += " -DITS_RAM_FS=ON -DPS_RAM_FS=ON"
+        if i.fp == "1" or i.fp == "2":
+            overwrite_params["test_psa_api"] += " -DTEST_S_FPU=ON -DTEST_NS_FPU=ON"
         build_cfg["config_template"] %= overwrite_params
         if len(build_cfg["build_cmds"]) > 1:
             overwrite_build_dir = {"_tbm_build_dir_": build_dir}
@@ -607,6 +618,10 @@ class TFM_Build_Manager(structuredTask):
                 config_param.append("NSCE")
             if list(i)[13] == "ON":
                 config_param.append("MMIO")
+            if list(i)[14] == "1" or list(i)[14] == "2":
+                config_param.append(mapSFPOption[list(i)[14]]) #FP
+            if list(i)[15] == "ON": # LAZY
+                config_param.append("SLAZY")
             i_str = "_".join(config_param)
             ret_cfg[i_str] = i
         return ret_cfg
