@@ -126,7 +126,8 @@ class TFM_Build_Manager(structuredTask):
             "BL2={}",
             "NS={}",
             "PROFILE={}",
-            "PARTITION_PS={}"
+            "PARTITION_PS={}",
+            "NSCE={}"
         ]
         print(
             "\n".join(argument_list)
@@ -143,7 +144,8 @@ class TFM_Build_Manager(structuredTask):
                 config_details.with_bl2,
                 config_details.with_ns,
                 "N.A" if not config_details.profile else config_details.profile,
-                config_details.partition_ps
+                config_details.partition_ps,
+                config_details.nsce
             )
             .strip()
         )
@@ -401,7 +403,8 @@ class TFM_Build_Manager(structuredTask):
                             "with_bl2": i.with_bl2,
                             "with_ns": i.with_ns,
                             "profile": "" if i.profile=="N.A" else i.profile,
-                            "partition_ps": i.partition_ps}
+                            "partition_ps": i.partition_ps,
+                            "nsce": i.nsce}
         if i.test_psa_api == "IPC":
             overwrite_params["test_psa_api"] += " -DINCLUDE_PANIC_TESTS=1"
             if i.tfm_platform == "arm/musca_b1/sse_200":
@@ -588,6 +591,8 @@ class TFM_Build_Manager(structuredTask):
                 config_param.append(mapProfile[list(i)[10]])
             if list(i)[11] == "OFF":    #PARTITION_PS
                 config_param.append("PSOFF")
+            if list(i)[12] == "ON":
+                config_param.append("NSCE")
             i_str = "_".join(config_param)
             ret_cfg[i_str] = i
         return ret_cfg
