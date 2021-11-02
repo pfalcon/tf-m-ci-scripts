@@ -216,7 +216,7 @@ _common_tfm_invalid_configs = [
     # nxp/lpcxpresso55s69 have to turn off BL2 when build regression test
     ("nxp/lpcxpresso55s69", "*", "*", "*", "True", "*", "*",  "*", "True", "*", "*", "*", "*"),
     # NSID does not support multi core
-    ("cypress/psoc64", "*", "*", "*", "*", "*", "*",  "*", "*", "*", "*", "*", "OFF"),
+    ("cypress/psoc64", "*", "*", "*", "*", "*", "*",  "*", "*", "*", "*", "*", "ON"),
     ]
 
 # Configure build manager to build several combinations
@@ -351,13 +351,13 @@ config_PSOC64 = {"seed_params": {
                 "toolchain_file":   ["toolchain_GNUARM.cmake",
                                      "toolchain_ARMCLANG.cmake"],
                 "lib_model":        [False],
-                "isolation_level":  ["1", "2", "3"],
+                "isolation_level":  ["1", "2"],
                 "test_regression":  [True],
                 "test_psa_api":     ["OFF"],
                 "cmake_build_type": ["Release"],
                 "with_otp":         ["off"],
                 "with_bl2":         [False],
-                "with_ns":          [True, False],
+                "with_ns":          [True],
                 "profile":          [""],
                 "partition_ps":     ["ON"],
                 "nsce":             ["OFF"],
@@ -736,9 +736,8 @@ config_AN521_PSA_IPC = {"seed_params": {
 config_nightly = {"seed_params": {
                "tfm_platform":      ["arm/mps2/an521", "arm/mps2/an519",
                                      "arm/musca_b1/sse_200", "arm/musca_s1",
-                                     "arm/mps3/an524", "cypress/psoc64",
-                                     "arm/musca_b1/secure_enclave",
-                                     "stm/stm32l562e_dk"],
+                                     "arm/mps3/an524", "stm/stm32l562e_dk",
+                                     "arm/musca_b1/secure_enclave"],
                 "toolchain_file":   ["toolchain_GNUARM.cmake",
                                      "toolchain_ARMCLANG.cmake"],
                 "lib_model":        [True, False],
@@ -878,6 +877,26 @@ config_nightly_OTP = {"seed_params": {
                 "cmake_build_type": ["Debug", "Release"],
                 "with_otp":         ["ENABLED"],
                 "with_bl2":         [True],
+                "with_ns":          [True],
+                "profile":          [""],
+                "partition_ps":     ["ON"],
+                "nsce":             ["OFF"],
+                },
+                "common_params": _common_tfm_builder_cfg,
+                "invalid": _common_tfm_invalid_configs + []
+                }
+
+config_nightly_psoc64 = {"seed_params": {
+                "tfm_platform":     ["cypress/psoc64"],
+                "toolchain_file":   ["toolchain_GNUARM.cmake",
+                                     "toolchain_ARMCLANG.cmake"],
+                "lib_model":        [False],
+                "isolation_level":  ["1", "2"],
+                "test_regression":  [True],
+                "test_psa_api":     ["OFF"],
+                "cmake_build_type": ["Release"],
+                "with_otp":         ["off"],
+                "with_bl2":         [False],
                 "with_ns":          [True],
                 "profile":          [""],
                 "partition_ps":     ["ON"],
@@ -1061,13 +1080,13 @@ config_pp_PSoC64 = {"seed_params": {
                 "tfm_platform":     ["cypress/psoc64"],
                 "toolchain_file":   ["toolchain_GNUARM.cmake"],
                 "lib_model":        [False],
-                "isolation_level":  ["1", "2"],
+                "isolation_level":  ["2"],
                 "test_regression":  [True],
                 "test_psa_api":     ["OFF"],
                 "cmake_build_type": ["Release"],
                 "with_otp":         ["off"],
                 "with_bl2":         [False],
-                "with_ns":          [True, False],
+                "with_ns":          [True],
                 "profile":          [""],
                 "partition_ps":     ["ON"],
                 "nsce":             ["OFF"],
@@ -1219,6 +1238,7 @@ _builtin_configs = {
                     "nightly_psa_api": config_nightly_PSA_API,
                     "nightly_ff": config_nightly_PSA_FF,
                     "nightly_otp": config_nightly_OTP,
+                    "nightly_psoc64": config_nightly_psoc64,
                     "nightly_stm32l562e_dk": config_nightly_STM32L562E_DK,
                     "nightly_lpcxpresso55s69": config_nightly_LPCXPRESSO55S69,
 
