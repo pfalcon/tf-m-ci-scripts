@@ -207,6 +207,10 @@ def main(user_args):
         for key in config_keys:
             if "fvp" not in key:
                 config_keys.remove(key)
+    if user_args.physical_board_only:
+        for key in config_keys:
+            if "fvp" in key or "qemu" in key:
+                config_keys.remove(key)
     if user_args.config_key:
         config_keys = [user_args.config_key]
     for config_key in config_keys:
@@ -220,6 +224,7 @@ def get_cmd_args():
     # Parse command line arguments to override config
     parser = argparse.ArgumentParser(description="Lava Create Jobs")
     cmdargs = parser.add_argument_group("Create LAVA Jobs")
+    device_type = parser.add_mutually_exclusive_group()
 
     # Configuration control
     cmdargs.add_argument(
@@ -268,12 +273,6 @@ def get_cmd_args():
         help="Set the jenkins job name",
     )
     cmdargs.add_argument(
-        "--fvp-only",
-        dest="fvp_only",
-        action="store_true",
-        help="Run test cases on FVP only",
-    )
-    cmdargs.add_argument(
         "--proj-config", dest="proj_config", action="store", help="Proj config"
     )
     cmdargs.add_argument(
@@ -292,8 +291,21 @@ def get_cmd_args():
     cmdargs.add_argument(
         "--psa-api-suite", dest="psa_suite", action="store", help="PSA API Suite name"
     )
-    return parser.parse_args()
 
+    device_type.add_argument(
+        "--fvp-only",
+        dest="fvp_only",
+        action="store_true",
+        help="Run test cases on FVP only",
+    )
+    device_type.add_argument(
+        "--physical-board-only",
+        dest="physical_board_only",
+        action="store_true",
+        help="Run test cases on physical boards only",
+    )
+
+    return parser.parse_args()
 
 if __name__ == "__main__":
     main(get_cmd_args())
