@@ -166,7 +166,7 @@ _common_tfm_invalid_configs = [
     ("cypress/psoc64", "*", "*", "*", "*", "*", "*",  "*", True, "*", "*", "*", "*"),
     # psoc64 does not support Debug build type
     ("cypress/psoc64", "*", "*", "*", "*", "*", "Debug",  "*", "*", "*", "*", "*", "*"),
-    # Musca b1 does not support Profile S
+    # Musca b1 SSE 200 does not support Profile S
     ("arm/musca_b1/sse_200", "*", "*", "*", "*", "*", "*",  "*", "*", "*", "profile_small", "*", "*"),
     # Musca B1 Secure Enclave requires IPC model, BL2, and supports only Isolation Level 1
     ("arm/musca_b1/secure_enclave", "*", True, "*", "*", "*", "*", "*", "*", "*", "*", "*", "*"),
@@ -180,6 +180,7 @@ _common_tfm_invalid_configs = [
     ("arm/musca_b1/secure_enclave", "*", "*", "*", "*", "STORAGE", "*", "*", "*", "*", "*", "*", "*"),
     ("arm/musca_b1/secure_enclave", "*", "*", "*", "*", "*", "*", "*", "*", "*", "profile_small", "*", "*"),
     ("arm/musca_b1/secure_enclave", "*", "*", "*", "*", "*", "*", "*", "*", "*", "profile_medium", "*", "*"),
+    ("arm/musca_b1/secure_enclave", "*", "*", "*", "*", "*", "*", "*", "*", "*", "profile_large", "*", "*"),
     ("arm/musca_b1/secure_enclave", "*", "*", "*", "*", "*", "*", "*", "*", True, "*", "*", "*"),
     # PARTITION_PS could be OFF only for Profile S and M
     ("*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "", "OFF", "*"),
@@ -196,8 +197,9 @@ _common_tfm_invalid_configs = [
     ("*", "*", "*", "2", "*", "*", "*",  "*", "*", "*", "profile_large", "*", "*"),
     # Profile S does not support IPC model
     ("*", "*", False, "*", "*", "*", "*",  "*", "*", "*", "profile_small", "*", "*"),
-    # Profile S only supports Isolation Level 2
+    # Profile S only supports Isolation Level 1
     ("*", "*", "*", "2", "*", "*", "*",  "*", "*", "*", "profile_small", "*", "*"),
+    ("*", "*", "*", "3", "*", "*", "*",  "*", "*", "*", "profile_small", "*", "*"),
     # Only AN521 and MUSCA_B1 support Isolation Level 3
     ("arm/mps2/an519", "*", "*", "3", "*", "*", "*",  "*", "*", "*", "*", "*", "*"),
     ("arm/mps3/an524", "*", "*", "3", "*", "*", "*",  "*", "*", "*", "*", "*", "*"),
