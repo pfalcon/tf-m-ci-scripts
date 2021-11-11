@@ -1286,6 +1286,186 @@ config_lava_debug = {"seed_params": {
                 ]
                 }
 
+config_an547 = {"seed_params": {
+                "tfm_platform":     ["arm/mps3/an547"],
+                "toolchain_file":   ["toolchain_GNUARM.cmake"],
+                "lib_model":        [False],
+                "isolation_level":  ["1"],
+                "test_regression":  [False],
+                "test_psa_api":     ["OFF"],
+                "cmake_build_type": ["Debug"],
+                "with_otp":         ["off"],
+                "with_bl2":         [True],
+                "with_ns":          [False],
+                "profile":          [""],
+                "partition_ps":     ["ON"],
+                "nsce":             ["OFF"],
+                "mmio":             ["OFF"],
+                },
+                "common_params": _common_tfm_builder_cfg,
+                "invalid": _common_tfm_invalid_configs + []
+                }
+
+config_corstone_polaris = {"seed_params": {
+                "tfm_platform":     ["arm/mps3/corstone_polaris"],
+                "toolchain_file":   ["toolchain_GNUARM.cmake"],
+                "lib_model":        [False],
+                "isolation_level":  ["1"],
+                "test_regression":  [False],
+                "test_psa_api":     ["OFF"],
+                "cmake_build_type": ["Debug"],
+                "with_otp":         ["off"],
+                "with_bl2":         [True],
+                "with_ns":          [False],
+                "profile":          [""],
+                "partition_ps":     ["ON"],
+                "nsce":             ["OFF"],
+                "mmio":             ["OFF"],
+                },
+                "common_params": _common_tfm_builder_cfg,
+                "invalid": _common_tfm_invalid_configs + []
+                }
+
+config_bl5340 = {"seed_params": {
+                "tfm_platform":     ["lairdconnectivity/bl5340_dvk_cpuapp"],
+                "toolchain_file":   ["toolchain_GNUARM.cmake"],
+                "lib_model":        [False],
+                "isolation_level":  ["1"],
+                "test_regression":  [False],
+                "test_psa_api":     ["OFF"],
+                "cmake_build_type": ["Debug"],
+                "with_otp":         ["off"],
+                "with_bl2":         [True],
+                "with_ns":          [False],
+                "profile":          [""],
+                "partition_ps":     ["ON"],
+                "nsce":             ["OFF"],
+                "mmio":             ["OFF"],
+                },
+                "common_params": _common_tfm_builder_cfg,
+                "invalid": _common_tfm_invalid_configs + []
+                }
+
+config_nrf5340dk = {"seed_params": {
+                "tfm_platform":     ["nordic_nrf/nrf5340dk_nrf5340_cpuapp"],
+                "toolchain_file":   ["toolchain_GNUARM.cmake"],
+                "lib_model":        [False],
+                "isolation_level":  ["1"],
+                "test_regression":  [False],
+                "test_psa_api":     ["OFF"],
+                "cmake_build_type": ["Debug"],
+                "with_otp":         ["off"],
+                "with_bl2":         [True],
+                "with_ns":          [False],
+                "profile":          [""],
+                "partition_ps":     ["ON"],
+                "nsce":             ["OFF"],
+                "mmio":             ["OFF"],
+                },
+                "common_params": _common_tfm_builder_cfg,
+                "invalid": _common_tfm_invalid_configs + []
+                }
+
+config_nrf9160dk = {"seed_params": {
+                "tfm_platform":     ["nordic_nrf/nrf9160dk_nrf9160"],
+                "toolchain_file":   ["toolchain_GNUARM.cmake"],
+                "lib_model":        [False],
+                "isolation_level":  ["1"],
+                "test_regression":  [False],
+                "test_psa_api":     ["OFF"],
+                "cmake_build_type": ["Debug"],
+                "with_otp":         ["off"],
+                "with_bl2":         [True],
+                "with_ns":          [False],
+                "profile":          [""],
+                "partition_ps":     ["ON"],
+                "nsce":             ["OFF"],
+                "mmio":             ["OFF"],
+                },
+                "common_params": _common_tfm_builder_cfg,
+                "invalid": _common_tfm_invalid_configs + []
+                }
+
+config_m2351 = {"seed_params": {
+                "tfm_platform":     ["nuvoton/m2351"],
+                "toolchain_file":   ["toolchain_GNUARM.cmake"],
+                "lib_model":        [False],
+                "isolation_level":  ["1"],
+                "test_regression":  [False],
+                "test_psa_api":     ["OFF"],
+                "cmake_build_type": ["Release"],
+                "with_otp":         ["off"],
+                "with_bl2":         [True],
+                "with_ns":          [False],
+                "profile":          [""],
+                "partition_ps":     ["ON"],
+                "nsce":             ["OFF"],
+                "mmio":             ["OFF"],
+                },
+                "common_params": _common_tfm_builder_cfg,
+                "invalid": _common_tfm_invalid_configs + []
+                }
+
+config_m2354 = {"seed_params": {
+                "tfm_platform":     ["nuvoton/m2354"],
+                "toolchain_file":   ["toolchain_GNUARM.cmake"],
+                "lib_model":        [False],
+                "isolation_level":  ["1"],
+                "test_regression":  [False],
+                "test_psa_api":     ["OFF"],
+                "cmake_build_type": ["Debug"],
+                "with_otp":         ["off"],
+                "with_bl2":         [True],
+                "with_ns":          [False],
+                "profile":          [""],
+                "partition_ps":     ["ON"],
+                "nsce":             ["OFF"],
+                "mmio":             ["OFF"],
+                },
+                "common_params": _common_tfm_builder_cfg,
+                "invalid": _common_tfm_invalid_configs + []
+                }
+
+config_b_u585i_iot02a = {"seed_params": {
+                "tfm_platform":     ["stm/b_u585i_iot02a"],
+                "toolchain_file":   ["toolchain_GNUARM.cmake"],
+                "lib_model":        [False],
+                "isolation_level":  ["1"],
+                "test_regression":  [False],
+                "test_psa_api":     ["OFF"],
+                "cmake_build_type": ["Release"],
+                "with_otp":         ["off"],
+                "with_bl2":         [True],
+                "with_ns":          [False],
+                "profile":          [""],
+                "partition_ps":     ["ON"],
+                "nsce":             ["OFF"],
+                "mmio":             ["OFF"],
+                },
+                "common_params": _common_tfm_builder_cfg,
+                "invalid": _common_tfm_invalid_configs + []
+                }
+
+config_nucleo_l552ze_q = {"seed_params": {
+                "tfm_platform":     ["stm/nucleo_l552ze_q"],
+                "toolchain_file":   ["toolchain_GNUARM.cmake"],
+                "lib_model":        [False],
+                "isolation_level":  ["1"],
+                "test_regression":  [False],
+                "test_psa_api":     ["OFF"],
+                "cmake_build_type": ["Release"],
+                "with_otp":         ["off"],
+                "with_bl2":         [True],
+                "with_ns":          [False],
+                "profile":          [""],
+                "partition_ps":     ["ON"],
+                "nsce":             ["OFF"],
+                "mmio":             ["OFF"],
+                },
+                "common_params": _common_tfm_builder_cfg,
+                "invalid": _common_tfm_invalid_configs + []
+                }
+
 _builtin_configs = {
                     #release test group
                     "tfm_test": config_tfm_test,
@@ -1323,6 +1503,21 @@ _builtin_configs = {
                     #code coverage test group
                     "coverage_an519": config_cov_an519,
                     "coverage_an521": config_cov_an521,
+
+                    #extra build group
+                    "arm_corstone1000": config_corstone1000,
+                    "arm_an547": config_an547,
+                    "arm_corstone_polaris": config_corstone_polaris,
+                    "cypress_psoc64": config_PSOC64,
+                    "laird_bl5340": config_bl5340,
+                    "nordic_nrf5340dk": config_nrf5340dk,
+                    "nordic_nrf9160dk": config_nrf9160dk,
+                    "nuvoton_m2351": config_m2351,
+                    "nuvoton_m2354": config_m2354,
+                    "nxp_lpcxpresso55s69": config_LPCXPRESSO55S69,
+                    "stm_b_u585i_iot02a": config_b_u585i_iot02a,
+                    "stm_nucleo_l552ze_q": config_nucleo_l552ze_q,
+                    "stm_stm32l562e_dk": config_STM32L562E_DK,
 
                     #full test group in the old CI
                     "full": config_full,

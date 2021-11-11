@@ -31,18 +31,27 @@ from .structured_task import structuredTask
 from .tfm_builder import TFM_Builder
 
 
-mapPlatform = {"cypress/psoc64":                "psoc64",
-               "arm/mps2/an519":                "AN519",
-               "arm/mps2/an521":                "AN521",
-               "arm/mps2/an539":                "AN539",
-               "arm/mps2/sse-200_aws":          "SSE-200_AWS",
-               "arm/mps3/an524":                "AN524",
-               "arm/musca_b1/sse_200":          "MUSCA_B1",
-               "arm/musca_b1/secure_enclave":   "MUSCA_B1_SE",
-               "arm/musca_s1":                  "MUSCA_S1",
-               "stm/stm32l562e_dk":             "stm32l562e_dk",
-               "arm/corstone1000":              "corstone1000",
-               "nxp/lpcxpresso55s69":           "lpcxpresso55s69"}
+mapPlatform = {"cypress/psoc64":                      "psoc64",
+               "arm/mps2/an519":                      "AN519",
+               "arm/mps2/an521":                      "AN521",
+               "arm/mps2/an539":                      "AN539",
+               "arm/mps2/sse-200_aws":                "SSE-200_AWS",
+               "arm/mps3/an524":                      "AN524",
+               "arm/musca_b1/sse_200":                "MUSCA_B1",
+               "arm/musca_b1/secure_enclave":         "MUSCA_B1_SE",
+               "arm/musca_s1":                        "MUSCA_S1",
+               "stm/stm32l562e_dk":                   "stm32l562e_dk",
+               "arm/corstone1000":                    "corstone1000",
+               "nxp/lpcxpresso55s69":                 "lpcxpresso55s69",
+               "arm/mps3/an547":                      "AN547",
+               "arm/mps3/corstone_polaris":           "Polaris",
+               "lairdconnectivity/bl5340_dvk_cpuapp": "BL5340",
+               "nordic_nrf/nrf5340dk_nrf5340_cpuapp": "nrf5340dk",
+               "nordic_nrf/nrf9160dk_nrf9160":        "nrf9160dk",
+               "nuvoton/m2351":                       "M2351",
+               "nuvoton/m2354":                       "M2354",
+               "stm/b_u585i_iot02a":                  "b_u585i_iot02a",
+               "stm/nucleo_l552ze_q":                 "nucleo_l552ze_q"}
 
 mapCompiler = {"toolchain_GNUARM.cmake":   "GNUARM",
                "toolchain_ARMCLANG.cmake": "ARMCLANG"}
