@@ -407,8 +407,8 @@ class TFM_Build_Manager(structuredTask):
                             "nsce": i.nsce}
         if i.test_psa_api == "IPC":
             overwrite_params["test_psa_api"] += " -DINCLUDE_PANIC_TESTS=1"
-        if i.tfm_platform == "arm/musca_b1/sse_200":
-            overwrite_params["test_psa_api"] += " -DITS_RAM_FS=ON -DPS_RAM_FS=ON"
+            if i.tfm_platform == "arm/musca_b1/sse_200":
+                overwrite_params["test_psa_api"] += " -DITS_RAM_FS=ON -DPS_RAM_FS=ON"
         build_cfg["config_template"] %= overwrite_params
         if len(build_cfg["build_cmds"]) > 1:
             overwrite_build_dir = {"_tbm_build_dir_": build_dir}
