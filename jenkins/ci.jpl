@@ -239,6 +239,9 @@ python3 ./configs.py -g ${filter_group.replace(" ", " -g ")} ${config}
              !(env.JOB_NAME.equals("tf-m-nightly") || env.JOB_NAME.equals("tf-m-release"))) {
       print("LAVA is not needed for ${build_url}")
     }
+    else if (env.JOB_NAME.equals("tf-m-extra-build")) {
+      print("LAVA is not needed in tf-m-extra-build job.")
+    }
 
     // Submit LAVA tests
     else {
@@ -496,7 +499,9 @@ timestamps {
       for (config in configs) {
         builds[config] = buildConfig("tf-m-ci-scripts", config, env.FILTER_GROUP, results)
       }
-      builds["docs"] = buildDocs(results)
+      if (!env.JOB_NAME.equals("tf-m-extra-build")) {
+        builds["docs"] = buildDocs(results)
+      }
     }
   }
 
