@@ -798,7 +798,7 @@ config_nightly = {"seed_params": {
                 ]
                 }
 
-config_nightly_nsce = {"seed_params": {
+config_nsce = {"seed_params": {
                "tfm_platform":      ["arm/mps2/an521"],
                 "toolchain_file":   ["toolchain_GNUARM.cmake",
                                      "toolchain_ARMCLANG.cmake"],
@@ -819,7 +819,7 @@ config_nightly_nsce = {"seed_params": {
                 "invalid": _common_tfm_invalid_configs + []
                 }
 
-config_nightly_mmio = {"seed_params": {
+config_mmio = {"seed_params": {
                "tfm_platform":      ["arm/mps2/an521"],
                 "toolchain_file":   ["toolchain_GNUARM.cmake",
                                      "toolchain_ARMCLANG.cmake"],
@@ -1286,6 +1286,8 @@ _builtin_configs = {
                     "tfm_test2": config_tfm_test2,
                     "tfm_profile": config_tfm_profile,
                     "tfm_test_otp": config_tfm_test_OTP,
+                    "tfm_nsce": config_nsce,
+                    "tfm_mmio": config_mmio,
                     "psa_api": config_PSA_API,
                     "psa_api_otp": config_PSA_API_OTP,
                     "psa_ff": config_PSA_FF,
@@ -1296,8 +1298,8 @@ _builtin_configs = {
 
                     #nightly test group
                     "nightly_test": config_nightly,
-                    "nightly_nsce": config_nightly_nsce,
-                    "nightly_mmio": config_nightly_mmio,
+                    "nightly_nsce": config_nsce,
+                    "nightly_mmio": config_mmio,
                     "nightly_profile": config_nightly_profile,
                     "nightly_psa_api": config_nightly_PSA_API,
                     "nightly_ff": config_nightly_PSA_FF,
