@@ -65,7 +65,7 @@ _common_tfm_builder_cfg = {
         "-DTFM_PROFILE=%(profile)s " + \
         "-DTFM_PARTITION_PROTECTED_STORAGE=%(partition_ps)s " + \
         "-DTFM_NS_MANAGE_NSID=%(nsce)s " + \
-        "-DCONFIG_TFM_ENABLE_MM_IOVEC=%(mmio)s " + \
+        "-DPSA_FRAMEWORK_HAS_MM_IOVEC=%(mmio)s " + \
         "%(codebase_root_dir)s",
 
     # A small subset of  string substitution params is allowed in commands.
