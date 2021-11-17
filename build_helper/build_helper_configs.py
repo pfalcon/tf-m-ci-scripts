@@ -231,7 +231,9 @@ _common_tfm_invalid_configs = [
     ("nxp/lpcxpresso55s69", "*", "*", "*", "*", "*", "*",  "*", "*", "*", "profile_small", "*", "*", "*"),
     ("nxp/lpcxpresso55s69", "*", "*", "*", "*", "*", "*",  "*", "*", "*", "profile_large", "*", "*", "*"),
     # nxp/lpcxpresso55s69 have to turn off BL2 when build regression test
-    ("nxp/lpcxpresso55s69", "*", "*", "*", "True", "*", "*",  "*", "True", "*", "*", "*", "*", "*"),
+    ("nxp/lpcxpresso55s69", "*", "*", "*", True, "*", "*",  "*", True, "*", "*", "*", "*", "*"),
+    # nxp/lpcxpresso55s69 turn off BL2 temporary, due to the oversize error
+    ("nxp/lpcxpresso55s69", "*", "*", "*", "*", "*", "*",  "*", True, "*", "*", "*", "*", "*"),
     # NSID does not support multi core
     ("cypress/psoc64", "*", "*", "*", "*", "*", "*",  "*", "*", "*", "*", "*", "ON", "*"),
     ]
@@ -420,7 +422,7 @@ config_LPCXPRESSO55S69 = {"seed_params": {
                 "test_psa_api":     ["OFF"],
                 "cmake_build_type": ["Relwithdebinfo"],
                 "with_otp":         ["off"],
-                "with_bl2":         [True, False],
+                "with_bl2":         [False],
                 "with_ns":          [True],
                 "profile":          ["profile_medium"],
                 "partition_ps":     ["ON"],
@@ -1004,7 +1006,7 @@ config_nightly_LPCXPRESSO55S69 = {"seed_params": {
                 "test_psa_api":     ["OFF"],
                 "cmake_build_type": ["Relwithdebinfo"],
                 "with_otp":         ["off"],
-                "with_bl2":         [True, False],
+                "with_bl2":         [False],
                 "with_ns":          [True],
                 "profile":          ["profile_medium"],
                 "partition_ps":     ["ON"],
