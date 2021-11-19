@@ -216,36 +216,39 @@ python3 ./configs.py -g ${filter_group.replace(" ", " -g ")} ${config}
     // Configs with build failure do not need LAVA tests
     if (build_res.result in failure_states) {
       error("Build failed at ${build_url}")
-    }
-    // Configs without BL2 do not need LAVA tests
-    else if (params_collection["BL2"] == "False") {
-      print("LAVA is not needed for ${build_url}")
-    }
-    // Configs without building NS app do not need LAVA tests
-    else if (params_collection["NS"] == "False") {
-      print("LAVA is not needed for ${build_url}")
-    }
-    // LAVA tests on MUSCA_B1 are not needed in per-patch job
-    else if (params_collection["TFM_PLATFORM"].contains("musca_b1") && \
-             env.JOB_NAME.equals("tf-m-build-and-test")) {
-      print("LAVA is not needed for ${build_url}")
-    }
-    // Only submit LAVA test for a specified OTP enabled config in nightly or release job
-    else if (params_collection["OTP"] == "ENABLED" && \
-             params_collection["CONFIG_NAME"] != "MUSCA_B1_GNUARM_PSA_3_REG_Debug_OTP_BL2_NS") {
-      print("LAVA is not needed for ${build_url}")
-    }
-    else if (params_collection["CONFIG_NAME"] == "MUSCA_B1_GNUARM_PSA_3_REG_Debug_OTP_BL2_NS" && \
-             !(env.JOB_NAME.equals("tf-m-nightly") || env.JOB_NAME.equals("tf-m-release"))) {
-      print("LAVA is not needed for ${build_url}")
-    }
-    else if (env.JOB_NAME.equals("tf-m-extra-build")) {
-      print("LAVA is not needed in tf-m-extra-build job.")
-    }
-
-    // Submit LAVA tests
-    else {
-      submit_lava_tests(config, results, build_res, params, params_collection)
+    } else {
+        // Build successful
+        // Submit test job for NXP LPCXpresso55S69
+        if (params_collection["TFM_PLATFORM"].contains("lpcxpresso55s69")) {
+          submit_lava_tests(config, results, build_res, params, params_collection)
+        } else {
+            // Configs without BL2 do not need LAVA tests
+            if (params_collection["BL2"] == "False") {
+              print("LAVA is not needed for ${build_url}")
+            }
+            // Configs without building NS app do not need LAVA tests
+            else if (params_collection["NS"] == "False") {
+              print("LAVA is not needed for ${build_url}")
+            }
+            // LAVA tests on MUSCA_B1 are not needed in per-patch job
+            else if (params_collection["TFM_PLATFORM"].contains("musca_b1") && \
+                     env.JOB_NAME.equals("tf-m-build-and-test")) {
+              print("LAVA is not needed for ${build_url}")
+            }
+            // Only submit LAVA test for a specified OTP enabled config in nightly or release job
+            else if (params_collection["OTP"] == "ENABLED" && \
+                     params_collection["CONFIG_NAME"] != "MUSCA_B1_GNUARM_PSA_3_REG_Debug_OTP_BL2_NS") {
+              print("LAVA is not needed for ${build_url}")
+            }
+            else if (params_collection["CONFIG_NAME"] == "MUSCA_B1_GNUARM_PSA_3_REG_Debug_OTP_BL2_NS" && \
+                     !(env.JOB_NAME.equals("tf-m-nightly") || env.JOB_NAME.equals("tf-m-release"))) {
+              print("LAVA is not needed for ${build_url}")
+            }
+            // Submit LAVA tests
+            else {
+              submit_lava_tests(config, results, build_res, params, params_collection)
+            }
+        }
     }
   }
 }

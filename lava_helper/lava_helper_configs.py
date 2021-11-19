@@ -3373,6 +3373,64 @@ stm32l562e_dk = {
     },
 }
 
+# LPCxpresso55S69
+lpcxpresso55s69 = {
+    "templ": "lpcxpresso55s69.jinja2",
+    "job_name": "lpcxpresso55s69",
+    "device_type": "lpcxpresso55s69",
+    "job_timeout": 24,
+    "action_timeout": 15,
+    "monitor_timeout": 15,
+    "poweroff_timeout": 5,
+    "platforms": {"lpcxpresso55s69": ""},
+    "compilers": ["GNUARM"],
+    "build_types": ["Relwithdebinfo"],
+    "boot_types": ["NOBL2"],
+    "tests": {
+        "DefaultProfileM": {
+            "binaries": {
+                "tarball": "lpcxpresso55s69-tfm.tar.bz2",
+            },
+            "monitors": [
+                {
+                    'name': 'Secure_Test_Suites_Summary',
+                    'start': 'Non-Secure system',
+                    'end': r'starting\\.{3}',
+                    'pattern': r'Non-Secure system starting\\.{3}',
+                    'fixup': {"pass": "!", "fail": ""},
+                }
+            ]  # Monitors
+        },
+        "RegressionProfileM": {
+            "binaries": {
+                "tarball": "lpcxpresso55s69-tfm.tar.bz2",
+            },
+            "monitors": [
+                {
+                    'name': 'Secure_Test_Suites_Summary',
+                    'start': 'Secure test suites summary',
+                    'end': 'End of Secure test suites',
+                    'pattern': r"Test suite '(?P<"
+                               r"test_case_id>[^\n]+)' has(.*) "
+                               r"(?P<result>PASSED|FAILED)",
+                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
+                    'required': ["secure_image_initializing"]
+                },
+                {
+                    'name': 'Non_Secure_Test_Suites_Summary',
+                    'start': 'Non-secure test suites summary',
+                    'end': 'End of Non-secure test suites',
+                    'pattern': r"Test suite '(?P<"
+                               r"test_case_id>[^\n]+)' has(.*) "
+                               r"(?P<result>PASSED|FAILED)",
+                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
+                    'required': ["secure_image_initializing"]
+                }
+            ]  # Monitors
+        },
+    }
+}
+
 # All configurations should be mapped here
 lava_gen_config_map = {
     "mps2_an521_bl2": tfm_mps2_sse_200,
@@ -3384,6 +3442,7 @@ lava_gen_config_map = {
     "musca_b1": musca_b1_bl2,
     "musca_b1_otp": musca_b1_otp_bl2,
     "stm32l562e_dk": stm32l562e_dk,
+    "lpcxpresso55s69": lpcxpresso55s69,
 }
 
 lavagen_config_sort_order = [

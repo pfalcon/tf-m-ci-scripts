@@ -105,7 +105,17 @@ _common_tfm_builder_cfg = {
                                           "pushd %(_tbm_build_dir_)s;"
                                           "BIN_FILES=$(grep -o '\/.*\.bin' TFM_UPDATE.sh | sed 's/^/bin/');"
                                           "tar jcf ./bin/stm32l562e-dk-tfm.tar.bz2 regression.sh TFM_UPDATE.sh ${BIN_FILES};"
-                                          "popd")]
+                                          "popd")],
+                   "nxp/lpcxpresso55s69": [("echo 'LPCXpresso55S69 board post process\n';"
+                                            "if [ -f \"%(_tbm_build_dir_)s/bin/bl2.hex\" ]; then FLASH_FILE='flash_bl2_JLink.py'; else FLASH_FILE='flash_JLink.py'; fi;"
+                                            "pushd %(_tbm_build_dir_)s/../platform/ext/target/nxp/lpcxpresso55s69/scripts;"
+                                            "LN=$(grep -n 'JLinkExe' ${FLASH_FILE}|awk -F: '{print $1}');"
+                                            "sed -i \"${LN}s/.*/    print('flash.jlink generated')/\" ${FLASH_FILE};"
+                                            "python3 ./${FLASH_FILE};"
+                                            "cd %(_tbm_build_dir_)s/bin;"
+                                            "BIN_FILES=$(grep loadfile flash.jlink | awk '{print $2}');"
+                                            "tar jcf lpcxpresso55s69-tfm.tar.bz2 flash.jlink ${BIN_FILES};"
+                                            "popd")]
                    },
 
     # (Optional) If set will fail if those artefacts are missing post build
