@@ -42,10 +42,8 @@ timestamps {
     stage("LAVA") {
       def device_type = ""
       def upstreamProject = getUpstreamJob()[0].upstreamProject
-      if (upstreamProject == "tf-m-build-and-test") {
-        device_type = "--physical-board-only "
-        print("Run test cases only on physical boards in per-patch.")
-      }
+      device_type = "--physical-board-only "
+      print("Run test cases only on physical boards.")
 
       withCredentials([usernamePassword(credentialsId: env.LAVA_CREDENTIALS, passwordVariable: 'LAVA_TOKEN', usernameVariable: 'LAVA_USER')]) {
         print("Generating LAVA jobs...")
