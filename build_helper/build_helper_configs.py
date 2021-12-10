@@ -139,6 +139,12 @@ _common_tfm_invalid_configs = [
     # Load range overlap on Musca for IPC Debug type: T895
     ("arm/musca_b1/sse_200", "toolchain_ARMCLANG.cmake", "*", "*", "*", "IPC", "Debug", "*", "*", "*", "*", "*", "*", "*"),
     ("arm/musca_s1", "toolchain_ARMCLANG.cmake", "*", "*", "*", "IPC", "Debug", "*", "*", "*", "*", "*", "*", "*"),
+    # Oversize issue on config lpcxpresso55s69_GNUARM_IPC_2_Relwithdebinfo_BL2_NS_MEDIUM
+    ("nxp/lpcxpresso55s69", "toolchain_GNUARM.cmake", False, "2", False, "OFF",
+     "Relwithdebinfo", "off", True, True, "profile_medium", "ON", "OFF", "OFF"),
+    # Oversize issue on config stm32l562e_dk_ARMCLANG_LIB_1_REG_Release_BL2_NS
+    ("stm/stm32l562e_dk", "toolchain_ARMCLANG.cmake", True, "1", True, "OFF",
+     "Release", "off", True, True, "", "ON", "OFF", "OFF"),
     # LVL2 and LVL3 requires IPC model
     ("*", "*", True, "2", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*"),
     ("*", "*", True, "3", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*"),
