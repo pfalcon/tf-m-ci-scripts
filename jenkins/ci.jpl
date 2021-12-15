@@ -213,8 +213,12 @@ python3 ./configs.py -g ${filter_group.replace(" ", " -g ")} ${config}
 
     // Filter out configs do not need LAVA tests
 
+    // Job tf-m-extra-build does not need LAVA tests
+    if (env.JOB_NAME.equals("tf-m-extra-build")) {
+      print("LAVA is not needed in tf-m-extra-build job.")
+    }
     // Configs with build failure do not need LAVA tests
-    if (build_res.result in failure_states) {
+    else if (build_res.result in failure_states) {
       error("Build failed at ${build_url}")
     } else {
         // Build successful
