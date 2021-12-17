@@ -69,6 +69,24 @@ mapSFPOption = {"0": "SFP0",
                 "1": "SFP1",
                 "2": "SFP2"}
 
+mapExtraParams = {"":              "",
+                  "CRYPTO_OFF":   ("-DTEST_S_CRYPTO=OFF "
+                                   "-DTEST_NS_CRYPTO=OFF "),
+                  "NS_ATTEST_ON": ("-DTEST_S_CRYPTO=OFF "
+                                   "-DTEST_NS_CRYPTO=OFF "
+                                   "-DTEST_S_ITS=OFF "
+                                   "-DTEST_NS_ITS=OFF "
+                                   "-DTEST_S_PLATFORM=OFF "
+                                   "-DTEST_NS_PLATFORM=OFF "
+                                   "-DTEST_NS_ATTESTATION=ON "
+                                   "-DTEST_S_ATTESTATION=OFF "
+                                   "-DTEST_NS_QCBOR=OFF "
+                                   "-DTEST_S_QCBOR=OFF "
+                                   "-DTEST_NS_T_COSE=OFF "
+                                   "-DTEST_S_T_COSE=OFF "
+                                   "-DTEST_NS_PS=OFF "
+                                   "-DTEST_S_PS=OFF ")}
+
 class TFM_Build_Manager(structuredTask):
     """ Class that will load a configuration out of a json file, schedule
     the builds, and produce a report """
@@ -142,7 +160,8 @@ class TFM_Build_Manager(structuredTask):
             "NSCE={}",
             "MMIO={}",
             "FP={}",
-            "LAZY={}"
+            "LAZY={}",
+            "EXTRA_PARAMS={}"
         ]
         print(
             "\n".join(argument_list)
@@ -163,7 +182,8 @@ class TFM_Build_Manager(structuredTask):
                 config_details.nsce,
                 config_details.mmio,
                 config_details.fp,
-                config_details.lazy
+                config_details.lazy,
+                "N.A" if not config_details.extra_params else config_details.extra_params,
             )
             .strip()
         )
@@ -425,7 +445,8 @@ class TFM_Build_Manager(structuredTask):
                             "nsce": i.nsce,
                             "mmio": i.mmio,
                             "fp": i.fp,
-                            "lazy": i.lazy}
+                            "lazy": i.lazy,
+                            "extra_params": mapExtraParams[i.extra_params]}
         if i.test_psa_api == "IPC":
             overwrite_params["test_psa_api"] += " -DINCLUDE_PANIC_TESTS=1"
             if i.tfm_platform == "arm/musca_b1/sse_200":
@@ -622,6 +643,8 @@ class TFM_Build_Manager(structuredTask):
                 config_param.append(mapSFPOption[list(i)[14]]) #FP
             if list(i)[15] == "ON": # LAZY
                 config_param.append("SLAZY")
+            if list(i)[16]: # EXTRA_PARAMS
+                config_param.append(list(i)[16])
             i_str = "_".join(config_param)
             ret_cfg[i_str] = i
         return ret_cfg
