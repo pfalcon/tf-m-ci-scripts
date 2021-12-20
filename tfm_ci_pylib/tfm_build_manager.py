@@ -86,7 +86,8 @@ mapExtraParams = {"":              "",
                                    "-DTEST_S_T_COSE=OFF "
                                    "-DTEST_NS_PS=OFF "
                                    "-DTEST_S_PS=OFF "),
-                  "NSCE":          "-DTFM_NS_MANAGE_NSID=ON "}
+                  "NSCE":          "-DTFM_NS_MANAGE_NSID=ON ",
+                  "MMIO":          "-DPSA_FRAMEWORK_HAS_MM_IOVEC=ON "}
 
 class TFM_Build_Manager(structuredTask):
     """ Class that will load a configuration out of a json file, schedule
@@ -158,7 +159,6 @@ class TFM_Build_Manager(structuredTask):
             "NS={}",
             "PROFILE={}",
             "PARTITION_PS={}",
-            "MMIO={}",
             "FP={}",
             "LAZY={}",
             "EXTRA_PARAMS={}"
@@ -179,7 +179,6 @@ class TFM_Build_Manager(structuredTask):
                 config_details.with_ns,
                 "N.A" if not config_details.profile else config_details.profile,
                 config_details.partition_ps,
-                config_details.mmio,
                 config_details.fp,
                 config_details.lazy,
                 "N.A" if not config_details.extra_params else config_details.extra_params,
@@ -441,7 +440,6 @@ class TFM_Build_Manager(structuredTask):
                             "with_ns": i.with_ns,
                             "profile": "" if i.profile=="N.A" else i.profile,
                             "partition_ps": i.partition_ps,
-                            "mmio": i.mmio,
                             "fp": i.fp,
                             "lazy": i.lazy,
                             "extra_params": mapExtraParams[i.extra_params]}
@@ -633,14 +631,12 @@ class TFM_Build_Manager(structuredTask):
                 config_param.append(mapProfile[list(i)[10]])
             if list(i)[11] == "OFF":    #PARTITION_PS
                 config_param.append("PSOFF")
-            if list(i)[12] == "ON":
-                config_param.append("MMIO")
-            if list(i)[13] == "1" or list(i)[13] == "2":
-                config_param.append(mapSFPOption[list(i)[13]]) #FP
-            if list(i)[14] == "ON": # LAZY
+            if list(i)[12] == "1" or list(i)[12] == "2":
+                config_param.append(mapSFPOption[list(i)[12]]) #FP
+            if list(i)[13] == "ON": # LAZY
                 config_param.append("SLAZY")
-            if list(i)[15]: # EXTRA_PARAMS
-                config_param.append(list(i)[15])
+            if list(i)[14]: # EXTRA_PARAMS
+                config_param.append(list(i)[14])
             i_str = "_".join(config_param)
             ret_cfg[i_str] = i
         return ret_cfg
