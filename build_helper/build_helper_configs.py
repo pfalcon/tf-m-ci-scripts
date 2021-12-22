@@ -410,7 +410,7 @@ config_STM32L562E_DK = {"seed_params": {
                                      "toolchain_ARMCLANG.cmake"],
                 "lib_model":        [True, False],
                 "isolation_level":  ["1", "2", "3"],
-                "test_regression":  [True],
+                "test_regression":  [True, False],
                 "test_psa_api":     ["OFF"],
                 "cmake_build_type": ["Release"],
                 "with_otp":         ["off"],
@@ -420,10 +420,17 @@ config_STM32L562E_DK = {"seed_params": {
                 "partition_ps":     ["ON"],
                 "fp":               ["0"],
                 "lazy":             ["OFF"],
-                "extra_params":     ["CRYPTO_OFF", "NS_ATTEST_ON"]
+                "extra_params":     ["CRYPTO_OFF", "CRYPTO_ON"]
                 },
                 "common_params": _common_tfm_builder_cfg,
-                "invalid": _common_tfm_invalid_configs + []
+                "invalid": _common_tfm_invalid_configs + [
+                    # all other tests are off when CRYPTO is ON
+                    ("stm/stm32l562e_dk", "*", "*", "*", True, "*", "*", "*",
+                     "*", "*", "*", "*", "*", "*", "CRYPTO_ON"),
+                    # all other tests are ON when CRYPTO is OFF
+                    ("stm/stm32l562e_dk", "*", "*", "*", False, "*", "*", "*",
+                     "*", "*", "*", "*", "*", "*", "CRYPTO_OFF"),
+                ]
                 }
 
 config_LPCXPRESSO55S69 = {"seed_params": {
@@ -1148,8 +1155,8 @@ config_pp_test = {"seed_params": {
                      "off", True, True, "", "ON", "0", "OFF", "CRYPTO_OFF"),
                     # stm32l562e_dk_GNUARM_IPC_2_REG_Release_BL2_NS
                     ("stm/stm32l562e_dk", "toolchain_GNUARM.cmake",
-                     False, "2", True, "OFF", "Release",
-                     "off", True, True, "", "ON", "0", "OFF", "NS_ATTEST_ON"),
+                     False, "2", False, "OFF", "Release",
+                     "off", True, True, "", "ON", "0", "OFF", "CRYPTO_ON"),
                     # stm32l562e_dk_GNUARM_IPC_3_REG_Release_BL2_NS
                     ("stm/stm32l562e_dk", "toolchain_GNUARM.cmake",
                      False, "3", True, "OFF", "Release",

@@ -108,6 +108,10 @@ def generateLavaParam(build_params) {
   config_params = [build_params["LIB_MODEL"], build_params["ISOLATION_LEVEL"], \
                    build_params["TEST_REGRESSION"], build_params["TEST_PSA_API"], \
                    build_params["PROFILE"]]
+  // Regression Test is enabled if CRYPTO is ON
+  if (build_params["EXTRA_PARAMS"] == "CRYPTO_ON") {
+    config_params[2] = "True"
+  }
   for (config in mapConfigs) {
     if (config_params == config[0..4]) {
       configName += config[5].replace(' (', '_').replace(')', '')
