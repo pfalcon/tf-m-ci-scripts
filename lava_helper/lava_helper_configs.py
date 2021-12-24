@@ -2433,59 +2433,6 @@ qemu_mps2_bl2 = {
                 }
             ]  # Monitors
         },  # Regression
-        'RegressionProfileM': {
-            "binaries": {
-                "firmware": "tfm_s_ns_signed.bin",
-                "bootloader": "bl2.bin"
-            },
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Secure test suites summary',
-                    'end': 'End of Secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage_"
-                         "s_interface_tests_tfm_sst_test_2xxx_"),
-                        "sst_reliability_tests_tfm_sst_test_3xxx_",
-                        "sst_rollback_protection_tests_tfm_sst_test_4xxx_",
-                        ("psa_internal_trusted_storage_"
-                         "s_interface_tests_tfm_its_test_2xxx_"),
-                        "its_reliability_tests_tfm_its_test_3xxx_",
-                        ("audit_"
-                         "logging_secure_interface_test_tfm_audit_test_1xxx_"),
-                        "crypto_secure_interface_tests_tfm_crypto_test_5xxx_",
-                        ("initial_attestation_service_"
-                         "secure_interface_tests_tfm_attest_test_1xxx_"),
-                    ]
-                },
-                {
-                    'name': 'Non_Secure_Test_Suites_Summary',
-                    'start': 'Non-secure test suites summary',
-                    'end': r'End of Non-secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage"
-                         "_ns_interface_tests_tfm_sst_test_1xxx_"),
-                        ("psa_internal_trusted_storage"
-                         "_ns_interface_tests_tfm_its_test_1xxx_"),
-                        ("auditlog_"
-                         "non_secure_interface_test_tfm_audit_test_1xxx_"),
-                        ("crypto_"
-                         "non_secure_interface_test_tfm_crypto_test_6xxx_"),
-                        ("initial_attestation_service_"
-                         "non_secure_interface_tests_tfm_attest_test_2xxx_"),
-                        "core_non_secure_positive_tests_tfm_core_test_1xxx_"
-                    ]
-                }
-            ]  # Monitors
-        },  # RegressionProfileM
         'RegressionProfileS': {
             "binaries": {
                 "firmware": "tfm_s_ns_signed.bin",
