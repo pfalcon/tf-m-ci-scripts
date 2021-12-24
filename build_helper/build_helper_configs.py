@@ -1040,28 +1040,6 @@ config_nightly_psoc64 = {"seed_params": {
                 "invalid": _common_tfm_invalid_configs + []
                 }
 
-config_nightly_STM32L562E_DK = {"seed_params": {
-                "tfm_platform":     ["stm/stm32l562e_dk"],
-                "toolchain_file":   ["toolchain_GNUARM.cmake",
-                                     "toolchain_ARMCLANG.cmake"],
-                "lib_model":        [True, False],
-                "isolation_level":  ["1", "2", "3"],
-                "test_regression":  [True],
-                "test_psa_api":     ["OFF"],
-                "cmake_build_type": ["Release"],
-                "with_otp":         ["off"],
-                "with_bl2":         [True],
-                "with_ns":          [True],
-                "profile":          [""],
-                "partition_ps":     ["ON"],
-                "fp":               ["0"],
-                "lazy":             ["OFF"],
-                "extra_params":     ["CRYPTO_OFF", "NS_ATTEST_ON"]
-                },
-                "common_params": _common_tfm_builder_cfg,
-                "invalid": _common_tfm_invalid_configs + []
-                }
-
 config_nightly_LPCXPRESSO55S69 = {"seed_params": {
                 "tfm_platform":     ["nxp/lpcxpresso55s69"],
                 "toolchain_file":   ["toolchain_GNUARM.cmake"],
@@ -1614,7 +1592,7 @@ _builtin_configs = {
                     "nightly_ff": config_nightly_PSA_FF,
                     "nightly_otp": config_nightly_OTP,
                     "nightly_psoc64": config_nightly_psoc64,
-                    "nightly_stm32l562e_dk": config_nightly_STM32L562E_DK,
+                    "nightly_stm32l562e_dk": config_STM32L562E_DK,
                     "nightly_lpcxpresso55s69": config_nightly_LPCXPRESSO55S69,
                     "nightly_fp":config_nightly_FP,
 
