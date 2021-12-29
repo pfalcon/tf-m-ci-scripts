@@ -280,9 +280,15 @@ CHECKPATCH_PATH=$(readlink -f "$CHECKPATCH_PATH")
 #Convert output file name to full path
 OUTPUT_FILE_PATH=$(readlink -f "$OUTPUT_FILE_PATH")
 
+# Convert TF-M specific type defs file to full path
+TFM_TYPE_DEF_FILE=$CHECKPATCH_PATH"/tfm_type_defs.txt"
+
+# Prepare CheckPatch config file
+CHECKPATCH_CONFG_FILENAME=$CHECKPATCH_PATH_DEF"/checkpatch.conf"
+sed -i "s#TFM_TYPE_DEF_FILE#$TFM_TYPE_DEF_FILE#g" $CHECKPATCH_CONFG_FILENAME
+
 # Create checkpatch command
 CHECKPATCH_APP=$CHECKPATCH_PATH"/checkpatch.pl"
-CHECKPATCH_CONFG_FILENAME=$CHECKPATCH_PATH_DEF"/checkpatch.conf"
 CHECKPATCH_CMD=$CHECKPATCH_APP" $(grep -o '^[^#]*' $CHECKPATCH_CONFG_FILENAME)"
 
 # Check if checkpatch is present
