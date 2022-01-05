@@ -27,6 +27,7 @@ def submitJobs(device_type, bl2_string, psa_string) {
       --lava-url ${env.LAVA_URL} --job-dir lava_jobs \
       --lava-user ${LAVA_USER} --lava-token ${LAVA_TOKEN} | egrep "^JOBS"
       """, returnStdout: true).trim()
+    print("${job_ids}")
     currentBuild.setDescription(job_ids)
   }
 }
