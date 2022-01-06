@@ -133,6 +133,7 @@ def submit_lava_tests(config, results, build_res, params, params_collection) {
   params += string(name: 'BUILD_NUMBER', value: "${build_res.number}")
   params += string(name: 'BUILD_URL', value: build_res.getAbsoluteUrl())
   params += string(name: 'LAVA_URL', value: env.LAVA_URL)
+  params += string(name: 'CI_SCRIPTS_REPO', value: env.CI_SCRIPTS_REPO)
   params += string(name: 'CI_SCRIPTS_BRANCH', value: env.CI_SCRIPTS_BRANCH)
   params += string(name: 'LAVA_CREDENTIALS', value: env.LAVA_CREDENTIALS)
   params += string(name: 'CODE_COVERAGE_EN', value: env.CODE_COVERAGE_EN)
@@ -195,6 +196,7 @@ python3 ./configs.py -g ${filter_group.replace(" ", " -g ")} ${config}
   params += string(name: 'MBEDTLS_VERSION', value: env.MBEDTLS_VERSION)
   params += string(name: 'CODE_REPO', value: env.CODE_REPO)
   params += string(name: 'CODE_COVERAGE_EN', value: env.CODE_COVERAGE_EN)
+  params += string(name: 'CI_SCRIPTS_REPO', value: env.CI_SCRIPTS_REPO)
   params += string(name: 'CI_SCRIPTS_BRANCH', value: env.CI_SCRIPTS_BRANCH)
   params += string(name: 'MCUBOOT_REFSPEC', value: env.MCUBOOT_REFSPEC)
   params += string(name: 'MCUBOOT_URL', value: env.MCUBOOT_URL)
@@ -269,6 +271,7 @@ def buildDocs(results) {
   params += string(name: 'GERRIT_PATCHSET_REVISION', value: env.GERRIT_PATCHSET_REVISION)
   params += string(name: 'GERRIT_REFSPEC', value: env.GERRIT_REFSPEC)
   params += string(name: 'CODE_REPO', value: env.CODE_REPO)
+  params += string(name: 'CI_SCRIPTS_REPO', value: env.CI_SCRIPTS_REPO)
   params += string(name: 'CI_SCRIPTS_BRANCH', value: env.CI_SCRIPTS_BRANCH)
   params += string(name: 'SHARE_FOLDER', value: env.SHARE_FOLDER)
   return { -> results
