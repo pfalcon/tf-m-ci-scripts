@@ -94,7 +94,7 @@ class LAVA_RPC_connector(xmlrpc.client.ServerProxy, object):
         if yaml_out_file:
             with open(yaml_out_file, "w") as F:
                 F.write(str(job_def))
-        def_o = yaml.load(job_def)
+        def_o = yaml.safe_load(job_def)
         return job_def, def_o.get('metadata', [])
 
     def get_job_log(self, job_id, target_out_file):
@@ -135,7 +135,7 @@ class LAVA_RPC_connector(xmlrpc.client.ServerProxy, object):
     def get_error_reason(self, job_id):
         try:
             lava_res = self.results.get_testsuite_results_yaml(job_id, 'lava')
-            results = yaml.load(lava_res)
+            results = yaml.safe_load(lava_res)
             for test in results:
                 if test['name'] == 'job':
                     return(test.get('metadata', {}).get('error_type', ''))
@@ -165,7 +165,7 @@ class LAVA_RPC_connector(xmlrpc.client.ServerProxy, object):
             return False
 
     def device_type_from_def(self, job_data):
-        def_yaml = yaml.load(job_data)
+        def_yaml = yaml.safe_load(job_data)
         return(def_yaml['device_type'])
 
     def has_device_type(self, job_data):
