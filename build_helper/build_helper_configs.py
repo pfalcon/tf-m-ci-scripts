@@ -48,7 +48,7 @@ _common_tfm_builder_cfg = {
     # Keys for the templace will come from the combinations of parameters
     # provided in the seed dictionary.
 
-    "config_template": "cmake " + \
+    "config_template": "cmake -G Ninja " + \
         "-DTFM_PLATFORM=%(tfm_platform)s " + \
         "-DTFM_TOOLCHAIN_FILE=%(codebase_root_dir)s/%(toolchain_file)s " + \
         "-DTFM_LIB_MODEL=%(lib_model)s " + \
