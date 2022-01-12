@@ -8,7 +8,7 @@ from __future__ import print_function
 
 __copyright__ = """
 /*
- * Copyright (c) 2018-2021, Arm Limited. All rights reserved.
+ * Copyright (c) 2018-2022, Arm Limited. All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  *
@@ -54,6 +54,7 @@ _common_tfm_builder_cfg = {
         "-DTFM_LIB_MODEL=%(lib_model)s " + \
         "-DTFM_ISOLATION_LEVEL=%(isolation_level)s " + \
         "-DTEST_NS=%(test_regression)s -DTEST_S=%(test_regression)s " + \
+        "-DTEST_BL2=%(test_regression)s " + \
         "-DTEST_PSA_API=%(test_psa_api)s " + \
         "-DCMAKE_BUILD_TYPE=%(cmake_build_type)s " + \
         "-DCRYPTO_HW_ACCELERATOR_OTP_STATE=%(with_otp)s " + \
