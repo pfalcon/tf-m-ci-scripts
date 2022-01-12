@@ -476,6 +476,20 @@ def configs = []
 def builds = [:]
 def results = [:]
 
+parallel_sema = 10
+
+def throttle(task) {
+    return { ->
+        waitUntil {if (parallel_sema > 0) {parallel_sema--; true} else {false}} // see JENKINS-27127
+        assert parallel_sema >= 0
+        try {
+            task()
+        } finally {
+            parallel_sema++
+        }
+    }
+}
+
 timestamps {
   node("docker-amd64-tf-m-bionic") {
     stage("Init") {
@@ -493,7 +507,7 @@ timestamps {
       results['builds'] = [:]
       results['lava_jobs'] = []
       for (config in configs) {
-        builds[config] = buildConfig("tf-m-ci-scripts", config, env.FILTER_GROUP, results)
+        builds[config] = throttle(buildConfig("tf-m-ci-scripts", config, env.FILTER_GROUP, results))
       }
       if (!env.JOB_NAME.equals("tf-m-extra-build")) {
         builds["docs"] = buildDocs(results)
