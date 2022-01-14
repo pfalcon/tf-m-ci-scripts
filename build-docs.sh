@@ -1,6 +1,6 @@
 #!/bin/bash
 #-------------------------------------------------------------------------------
-# Copyright (c) 2020-2021, Arm Limited and Contributors. All rights reserved.
+# Copyright (c) 2020-2022, Arm Limited and Contributors. All rights reserved.
 #
 # SPDX-License-Identifier: BSD-3-Clause
 #
@@ -12,6 +12,8 @@
 #
 
 set -ex
+
+export PATH=$PATH:$GCC_7_3_1_PATH
 
 mkdir -p ${WORKSPACE}/trusted-firmware-m/build/docs
 cd ${WORKSPACE}/trusted-firmware-m/build/docs

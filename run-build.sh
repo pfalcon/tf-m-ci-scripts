@@ -1,6 +1,6 @@
 #!/bin/bash
 #-------------------------------------------------------------------------------
-# Copyright (c) 2020, Arm Limited and Contributors. All rights reserved.
+# Copyright (c) 2020-2022, Arm Limited and Contributors. All rights reserved.
 #
 # SPDX-License-Identifier: BSD-3-Clause
 #
@@ -25,11 +25,19 @@ echo "output current build environment"
 cat /etc/issue
 uname -a
 grep -c ^processor /proc/cpuinfo
-armclang --version
-arm-none-eabi-gcc --version
 cmake --version
 python --version
 make --version
+
+# Export specific compiler path to env PATH
+compiler_path="${COMPILER_VERSION}_PATH"
+export PATH=$PATH:"${!compiler_path}"
+# Show compiler version
+if [ $COMPILER_VERSION =~ "ARMCLANG" ] ; then
+    armclang --version
+else
+    arm-none-eabi-gcc --version
+fi
 
 set -ex
 build_commands=$(python3 tf-m-ci-scripts/configs.py -b -g all $CONFIG_NAME)

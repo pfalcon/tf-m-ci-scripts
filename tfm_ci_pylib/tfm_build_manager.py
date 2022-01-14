@@ -120,6 +120,19 @@ class TFM_Build_Manager(structuredTask):
 
         super(TFM_Build_Manager, self).__init__(name="TFM_Build_Manager")
 
+    def set_compiler_version(self, config):
+        compiler_version = ""
+        # Set GCC version
+        if "GNUARM" in config.toolchain_file:
+            # Use GCC v7.3.1 by default
+            compiler_version = "GCC_7_3_1"
+        # Set ARMClang version
+        elif "ARMCLANG" in config.toolchain_file:
+            # Use ARMClang v6.13 by default
+            compiler_version = "ARMCLANG_6_13"
+
+        return compiler_version
+
     def get_config(self):
             return list(self._tbm_build_cfg.keys())
 
@@ -137,6 +150,7 @@ class TFM_Build_Manager(structuredTask):
             "CONFIG_NAME={}",
             "TFM_PLATFORM={}",
             "TOOLCHAIN_FILE={}",
+            "COMPILER_VERSION={}",
             "LIB_MODEL={}",
             "ISOLATION_LEVEL={}",
             "TEST_REGRESSION={}",
@@ -157,6 +171,7 @@ class TFM_Build_Manager(structuredTask):
                 config,
                 config_details.tfm_platform,
                 config_details.toolchain_file,
+                self.set_compiler_version(config_details),
                 config_details.lib_model,
                 config_details.isolation_level,
                 config_details.test_regression,
