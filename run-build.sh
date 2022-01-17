@@ -33,7 +33,7 @@ make --version
 compiler_path="${COMPILER_VERSION}_PATH"
 export PATH=$PATH:"${!compiler_path}"
 # Show compiler version
-if [ $COMPILER_VERSION =~ "ARMCLANG" ] ; then
+if [[ $COMPILER_VERSION =~ "ARMCLANG" ]] ; then
     armclang --version
 else
     arm-none-eabi-gcc --version
