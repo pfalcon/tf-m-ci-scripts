@@ -3,7 +3,7 @@
 #memory_footprint.py : Script for sending memory footprint data from the TFM CI
 #to a SQUAD web interface
 #
-#Copyright (c) 2020-2021, Arm Limited. All rights reserved.
+#Copyright (c) 2020-2022, Arm Limited. All rights reserved.
 #
 #SPDX-License-Identifier: BSD-3-Clause
 
@@ -179,6 +179,8 @@ def get_change_id(directory):
     return change_id
 
 if __name__ == "__main__":
+    # Export GCC v7.3.1 to ENV PATH
+    os.environ["PATH"] += os.pathsep + os.getenv('GCC_7_3_1_PATH')
     for i in range(len(REFERENCE_CONFIGS)):
         REFERENCE_CONFIGS[i] = REFERENCE_CONFIGS[i].strip().lower()
     config = identify_config()
