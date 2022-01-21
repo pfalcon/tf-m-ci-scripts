@@ -1525,7 +1525,6 @@ _builtin_configs = {
                     "doxygen": config_doxygen,
                     "debug": config_debug,
                     "release": config_release,
-                    "debug": config_debug,
 
                     #DevOps team test group
                     "lava_debug": config_lava_debug,
