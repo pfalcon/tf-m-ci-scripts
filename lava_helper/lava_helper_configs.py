@@ -47,6 +47,35 @@ def lava_gen_get_config_subset(config,
     return cfg
 
 
+# LAVA test-monitor definition for PSA API testsuites, testcases identified
+# by "UT" value in output (testcase identifier).
+monitors_psaapitest_by_ut = [
+    {
+        'name': 'psa_api_suite',
+        'start': 'Running..',
+        'end': 'Entering standby..',
+        'pattern': r" UT: +(?P<test_case_id>[A-Za-z0-9_]+)\r?\n"
+                   r".+?"
+                   r"TEST RESULT: (?P<result>(PASSED|FAILED|SKIPPED))",
+        'fixup': {"pass": "PASSED", "fail": "FAILED", "skip": "SKIPPED"},
+    },
+]
+
+# LAVA test-monitor definition for PSA API testsuites, testcases identified
+# by description in output (for when UT is not set to unique identifier).
+monitors_psaapitest_by_desc = [
+    {
+        'name': 'psa_api_suite',
+        'start': 'Running..',
+        'end': 'Entering standby..',
+        'pattern': r" DESCRIPTION: +(?P<test_case_id>.+?) \\|"
+                   r".+?"
+                   r"TEST RESULT: (?P<result>(PASSED|FAILED|SKIPPED))",
+        'fixup': {"pass": "PASSED", "fail": "FAILED", "skip": "SKIPPED"},
+    },
+]
+
+
 # MPS2 with BL2 bootloader
 # IMAGE0ADDRESS: 0x10000000
 # IMAGE0FILE: \Software\bl2.bin  ; BL2 bootloader
@@ -552,6 +581,31 @@ tfm_mps2_sse_200 = {
                 }  # Monitors
             ]
         },  # CoreIPCTfmLevel3
+
+#        'PsaApiTest_Crypto': {
+#            "binaries": {
+#                "firmware": "tfm_s_ns_signed.bin",
+#                "bootloader": "bl2.bin"
+#            },
+#            "monitors": monitors_psaapitest_by_ut,
+#        }, # PsaApiTest_Crypto
+
+        'PsaApiTest_STORAGE': {
+            "binaries": {
+                "firmware": "tfm_s_ns_signed.bin",
+                "bootloader": "bl2.bin"
+            },
+            "monitors": monitors_psaapitest_by_desc,
+        }, # PsaApiTest_Storage
+
+        'PsaApiTest_Attest': {
+            "binaries": {
+                "firmware": "tfm_s_ns_signed.bin",
+                "bootloader": "bl2.bin"
+            },
+            "monitors": monitors_psaapitest_by_ut,
+        }, # PsaApiTest_Attest
+
     }  # Tests
 }
 
@@ -1059,6 +1113,31 @@ fvp_mps2_an521_bl2 = {
                 }  # Monitors
             ]
         },  # CoreIPCTfmLevel3
+
+#        'PsaApiTest_Crypto': {
+#            "binaries": {
+#                "firmware": "bl2.axf",
+#                "bootloader": "tfm_s_ns_signed.bin"
+#            },
+#            "monitors": monitors_psaapitest_by_ut,
+#        }, # PsaApiTest_Crypto
+
+        'PsaApiTest_STORAGE': {
+            "binaries": {
+                "firmware": "bl2.axf",
+                "bootloader": "tfm_s_ns_signed.bin"
+            },
+            "monitors": monitors_psaapitest_by_desc,
+        }, # PsaApiTest_Storage
+
+        'PsaApiTest_Attest': {
+            "binaries": {
+                "firmware": "bl2.axf",
+                "bootloader": "tfm_s_ns_signed.bin"
+            },
+            "monitors": monitors_psaapitest_by_ut,
+        }, # PsaApiTest_Attest
+
     }  # Tests
 }
 
