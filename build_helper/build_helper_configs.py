@@ -1233,6 +1233,25 @@ config_debug = {"seed_params": {
                 "invalid": _common_tfm_invalid_configs + []
                 }
 
+config_debug_PSA_API = {"seed_params": {
+                "tfm_platform":     ["arm/mps2/an521"],
+                "toolchain_file":   ["toolchain_ARMCLANG.cmake"],
+                "lib_model":        [True],
+                "isolation_level":  ["1"],
+                "test_regression":  [False],
+                "test_psa_api":     ["CRYPTO"],
+                "cmake_build_type": ["Debug"],
+                "with_otp":         ["off"],
+                "with_bl2":         [True],
+                "with_ns":          [True],
+                "profile":          [""],
+                "partition_ps":     ["ON"],
+                "extra_params":     [""]
+                },
+                "common_params": _common_tfm_builder_cfg,
+                "invalid": _common_tfm_invalid_configs + []
+                }
+
 # Configuration used in CI
 config_ci = {"seed_params": {
                 "tfm_platform":     ["arm/mps2/an521"],
@@ -1524,6 +1543,7 @@ _builtin_configs = {
                     "ipc": config_IPC,
                     "doxygen": config_doxygen,
                     "debug": config_debug,
+                    "debug_PSA_API": config_debug_PSA_API,
                     "release": config_release,
 
                     #DevOps team test group
