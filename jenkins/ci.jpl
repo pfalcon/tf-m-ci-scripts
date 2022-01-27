@@ -571,7 +571,7 @@ timestamps {
                 g.verifyStatus(test_result, "lava_test", "test")
               }
               if (boot_result.toInteger() < 1 || test_result.toInteger() < 1) {
-                error("Marking job as failed due to failed boots: ${boot_output} or tests: ${test_output}")
+                error("Marking job as failed due to failed boots: \"${boot_output}\" or tests: \"${test_output}\"")
               }
             }
           }
