@@ -28,6 +28,9 @@ actions:
           fixupdict:
               '{{monitor.fixup.pass}}': pass
               '{{monitor.fixup.fail}}': fail
+              {%- if monitor.fixup.skip %}
+              '{{monitor.fixup.skip}}': skip
+              {%- endif %}
         {% endfor %}
 {% endblock %}
 
