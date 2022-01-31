@@ -222,7 +222,7 @@ def test_report(jobs, user_args, lava):
         info['artifacts_dir'] = "tf-m-ci-scripts/{}".format(info['job_dir'])
         jinja_data.append({job: [info, non_lava_results]})
         for result in non_lava_results:
-            if result['result'] != 'pass':
+            if result['result'] == 'fail':
                 fail_j.append(job) if job not in fail_j else fail_j
         time.sleep(0.5) # be friendly to LAVA
     fail_output = [lava_id_to_url(x, user_args) for x in fail_j]
