@@ -576,10 +576,14 @@ timestamps {
         print("ERROR: ${e}")
         success = false
       } finally {
+        println("finally1")
         archiveArtifacts artifacts: 'cfgs/**', allowEmptyArchive: true
+        println("finally2")
         if (all_jobs.size() > 0) {
+          println("finally3")
           emailNotification(success, 'test', filterFailedTest(output))
         }
+        println("finally4")
         cleanWs()
         if (!success) {
           error("There was an Error waiting for LAVA jobs")
