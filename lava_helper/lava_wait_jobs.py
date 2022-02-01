@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from __future__ import print_function
+from pprint import pprint
 
 __copyright__ = """
 /*
@@ -164,6 +165,9 @@ def job_links(jobs, user_args):
     print(job_links)
 
 def csv_report(jobs):
+    #print("csv_report: jobs:")
+    #pprint(jobs)
+    #print("---")
     lava_jobs = []
     for job, info in jobs.items():
         exist = False
@@ -184,6 +188,7 @@ def csv_report(jobs):
             for cfg in cfgs:
                 record[cfg] = "N.A."
             record[info['metadata']['name']] = generateTestResult(info)
+            #print("Appended record:", record)
             lava_jobs.append(record)
     lava_jobs.sort(key=lambda x: x["Platform"] + x["Compiler"] + x["Build Type"])
     with open("test_results.csv", "w", newline="") as csvfile:
