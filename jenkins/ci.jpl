@@ -551,6 +551,7 @@ timestamps {
       print("Wait for LAVA results here...")
       try {
         all_jobs = submitJobsToList(results['lava_jobs'])
+        output = ""
         if (all_jobs.size() > 0) {
           dir("tf-m-ci-scripts") {
             withCredentials([usernamePassword(credentialsId: env.LAVA_CREDENTIALS, passwordVariable: 'LAVA_TOKEN', usernameVariable: 'LAVA_USER')]) {
