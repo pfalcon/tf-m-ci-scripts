@@ -261,9 +261,9 @@ def main(user_args):
             wait_for_jobs(user_args)
             break
         except Exception as e:
-            print(e)
             if try_time < 2:
-                print("Try to get LAVA jobs again...")
+                print("Exception in wait_for_jobs: {!r}".format(e))
+                print("Trying to get LAVA jobs again...")
             else:
                 raise e
 
