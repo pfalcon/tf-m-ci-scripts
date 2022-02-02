@@ -58,6 +58,9 @@ cfgs = ["Default", "CoreIPC", "CoreIPCTfmLevel2", "CoreIPCTfmLevel3",
         "PsaApiTestIPCTfmLevel3 (Crypto)", "PsaApiTestIPCTfmLevel3 (Attest)",
         "PsaApiTestIPCTfmLevel3 (FF)"]
 
+# Convert test config identifiers to LAVA naming convention.
+cfgs = [x.replace(" (", "_").replace(")", "") for x in cfgs]
+
 def wait_for_jobs(user_args):
     job_list = user_args.job_ids.split(",")
     job_list = [int(x) for x in job_list if x != '']
