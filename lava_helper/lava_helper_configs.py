@@ -3504,6 +3504,135 @@ lpcxpresso55s69 = {
     }
 }
 
+# Cypress PSoC64
+psoc64 = {
+    "templ": "psoc64.jinja2",
+    "job_name": "psoc64",
+    "device_type": "cy8ckit-064s0s2-4343w",
+    "job_timeout": 120,
+    "action_timeout": 120,
+    "monitor_timeout": 120,
+    "poweroff_timeout": 5,
+    "platforms": {"psoc64": ""},
+    "compilers": ["GNUARM", "ARMCLANG"],
+    "build_types": ["Release", "Minsizerel"],
+    "boot_types": ["NOBL2"],
+    "tests": {
+        "Regression": {
+            "binaries": {
+                "spe_image": "tfm_s_signed.hex",
+                "nspe_image": "tfm_ns_signed.hex",
+            },
+            "monitors": [
+                {
+                    'name': 'Secure_Test_Suites_Summary',
+                    'start': 'Secure test suites summary',
+                    'end': 'End of Secure test suites',
+                    'pattern': r"Test suite '(?P<"
+                               r"test_case_id>[^\n]+)' has(.*) "
+                               r"(?P<result>PASSED|FAILED)",
+                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
+                    'required': ["secure_image_initializing"]
+                },
+                {
+                    'name': 'Non_Secure_Test_Suites_Summary',
+                    'start': 'Non-secure test suites summary',
+                    'end': 'End of Non-secure test suites',
+                    'pattern': r"Test suite '(?P<"
+                               r"test_case_id>[^\n]+)' has(.*) "
+                               r"(?P<result>PASSED|FAILED)",
+                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
+                    'required': ["secure_image_initializing"]
+                }
+            ]  # Monitors
+        },
+        "RegressionIPC": {
+            "binaries": {
+                "spe_image": "tfm_s_signed.hex",
+                "nspe_image": "tfm_ns_signed.hex",
+            },
+            "monitors": [
+                {
+                    'name': 'Secure_Test_Suites_Summary',
+                    'start': 'Secure test suites summary',
+                    'end': 'End of Secure test suites',
+                    'pattern': r"Test suite '(?P<"
+                               r"test_case_id>[^\n]+)' has(.*) "
+                               r"(?P<result>PASSED|FAILED)",
+                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
+                    'required': ["secure_image_initializing"]
+                },
+                {
+                    'name': 'Non_Secure_Test_Suites_Summary',
+                    'start': 'Non-secure test suites summary',
+                    'end': 'End of Non-secure test suites',
+                    'pattern': r"Test suite '(?P<"
+                               r"test_case_id>[^\n]+)' has(.*) "
+                               r"(?P<result>PASSED|FAILED)",
+                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
+                    'required': ["secure_image_initializing"]
+                }
+            ]  # Monitors
+        },
+        "RegressionIPCTfmLevel2": {
+            "binaries": {
+                "spe_image": "tfm_s_signed.hex",
+                "nspe_image": "tfm_ns_signed.hex",
+            },
+            "monitors": [
+                {
+                    'name': 'Secure_Test_Suites_Summary',
+                    'start': 'Secure test suites summary',
+                    'end': 'End of Secure test suites',
+                    'pattern': r"Test suite '(?P<"
+                               r"test_case_id>[^\n]+)' has(.*) "
+                               r"(?P<result>PASSED|FAILED)",
+                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
+                    'required': ["secure_image_initializing"]
+                },
+                {
+                    'name': 'Non_Secure_Test_Suites_Summary',
+                    'start': 'Non-secure test suites summary',
+                    'end': 'End of Non-secure test suites',
+                    'pattern': r"Test suite '(?P<"
+                               r"test_case_id>[^\n]+)' has(.*) "
+                               r"(?P<result>PASSED|FAILED)",
+                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
+                    'required': ["secure_image_initializing"]
+                }
+            ]  # Monitors
+        },
+        "RegressionIPCTfmLevel3": {
+            "binaries": {
+                "spe_image": "tfm_s_signed.hex",
+                "nspe_image": "tfm_ns_signed.hex",
+            },
+            "monitors": [
+                {
+                    'name': 'Secure_Test_Suites_Summary',
+                    'start': 'Secure test suites summary',
+                    'end': 'End of Secure test suites',
+                    'pattern': r"Test suite '(?P<"
+                               r"test_case_id>[^\n]+)' has(.*) "
+                               r"(?P<result>PASSED|FAILED)",
+                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
+                    'required': ["secure_image_initializing"]
+                },
+                {
+                    'name': 'Non_Secure_Test_Suites_Summary',
+                    'start': 'Non-secure test suites summary',
+                    'end': 'End of Non-secure test suites',
+                    'pattern': r"Test suite '(?P<"
+                               r"test_case_id>[^\n]+)' has(.*) "
+                               r"(?P<result>PASSED|FAILED)",
+                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
+                    'required': ["secure_image_initializing"]
+                }
+            ]  # Monitors
+        },
+    },
+}
+
 # All configurations should be mapped here
 lava_gen_config_map = {
     "mps2_an521_bl2": tfm_mps2_sse_200,
@@ -3516,6 +3645,7 @@ lava_gen_config_map = {
     "musca_b1_otp": musca_b1_otp_bl2,
     "stm32l562e_dk": stm32l562e_dk,
     "lpcxpresso55s69": lpcxpresso55s69,
+    "psoc64": psoc64,
 }
 
 lavagen_config_sort_order = [

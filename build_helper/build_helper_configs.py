@@ -114,7 +114,24 @@ _common_tfm_builder_cfg = {
                                             "cd %(_tbm_build_dir_)s/bin;"
                                             "BIN_FILES=$(grep loadfile flash.jlink | awk '{print $2}');"
                                             "tar jcf lpcxpresso55s69-tfm.tar.bz2 flash.jlink ${BIN_FILES};"
-                                            "popd")]
+                                            "popd")],
+                   "cypress/psoc64": [("echo 'Sign binaries for Cypress PSoC64 platform';"
+                                       "pushd %(_tbm_build_dir_)s/..;"
+                                       "sudo /usr/local/bin/cysecuretools "
+                                       "--policy platform/ext/target/cypress/psoc64/security/policy/policy_multi_CM0_CM4_tfm.json "
+                                       "--target cy8ckit-064s0s2-4343w "
+                                       "sign-image "
+                                       "--hex %(_tbm_build_dir_)s/bin/tfm_s.hex "
+                                       "--image-type BOOT --image-id 1;"
+                                       "sudo /usr/local/bin/cysecuretools "
+                                       "--policy platform/ext/target/cypress/psoc64/security/policy/policy_multi_CM0_CM4_tfm.json "
+                                       "--target cy8ckit-064s0s2-4343w "
+                                       "sign-image "
+                                       "--hex %(_tbm_build_dir_)s/bin/tfm_ns.hex "
+                                       "--image-type BOOT --image-id 16;"
+                                       "mv %(_tbm_build_dir_)s/bin/tfm_s.hex %(_tbm_build_dir_)s/bin/tfm_s_signed.hex;"
+                                       "mv %(_tbm_build_dir_)s/bin/tfm_ns.hex %(_tbm_build_dir_)s/bin/tfm_ns_signed.hex;"
+                                       "popd")]
                    },
 
     # (Optional) If set will fail if those artefacts are missing post build

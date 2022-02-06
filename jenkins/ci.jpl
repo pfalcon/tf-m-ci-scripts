@@ -228,8 +228,8 @@ python3 ./configs.py -g ${filter_group.replace(" ", " -g ")} ${config}
       error("Build failed at ${build_url}")
     } else {
         // Build successful
-        // Submit test job for NXP LPCXpresso55S69
-        if (params_collection["TFM_PLATFORM"].contains("lpcxpresso55s69")) {
+        // Submit test job for NXP LPCXpresso55S69 & Cypress PSoC64
+        if (params_collection["TFM_PLATFORM"].contains("lpcxpresso55s69") || params_collection["TFM_PLATFORM"].contains("psoc64")) {
           submit_lava_tests(config, results, build_res, params, params_collection)
         } else {
             // Configs without BL2 do not need LAVA tests

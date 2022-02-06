@@ -149,6 +149,16 @@ def generate_test_definitions(config, work_dir, user_args):
                                     params,
                                     test_dict.get("binaries").get("tarball"),
                                 ),
+                                "spe_url": get_artifact_url(
+                                    artifact_store_url,
+                                    params,
+                                    test_dict.get("binaries").get("spe_image"),
+                                ),
+                                "nspe_url": get_artifact_url(
+                                    artifact_store_url,
+                                    params,
+                                    test_dict.get("binaries").get("nspe_image"),
+                                ),
                             }
                         )
                         params.update(
@@ -189,7 +199,6 @@ def generate_lava_job_defs(user_args, config):
         config["platforms"] = {platform: config["platforms"][platform]}
     # Generate the output definition
     definitions = generate_test_definitions(config, work_dir, user_args)
-
     # Write it into a file
     out_dir = os.path.abspath(user_args.lava_def_output)
     os.makedirs(out_dir, exist_ok=True)

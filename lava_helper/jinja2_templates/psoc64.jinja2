@@ -1,0 +1,46 @@
+{#------------------------------------------------------------------------------
+# Copyright (c) 2020, Arm Limited and Contributors. All rights reserved.
+#
+# SPDX-License-Identifier: BSD-3-Clause
+#
+#-----------------------------------------------------------------------------#}
+{% extends 'jinja2_templates/base.jinja2' %}
+{% block actions %}
+actions:
+    - deploy:
+        timeout:
+          minutes: 12
+        to: flasher
+        images:
+          spe:
+            url: {{ spe_url }}
+          nspe:
+            url: {{ nspe_url }}
+
+    - boot:
+        method: minimal
+
+    - test:
+        monitors:
+        {%- for monitor in test.monitors %}
+        - name: "{{monitor.name}}"
+          start: "{{monitor.start}}"
+          end: "{{monitor.end}}"
+          pattern: "{{monitor.pattern}}"
+          fixupdict:
+              '{{monitor.fixup.pass}}': pass
+              '{{monitor.fixup.fail}}': fail
+        {% endfor %}
+{% endblock %}
+
+{% block metadata %}
+metadata:
+  build_no: {{ build_no }}
+  compiler: {{ compiler }}
+  build_type: {{ build_type }}
+  boot_type: {{ boot_type }}
+  name: {{ name }}
+  platform: {{ platform }}
+  build_name: {{ build_name }}
+  build_job_url: {{ build_job_url }}
+{% endblock %}
