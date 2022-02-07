@@ -460,7 +460,7 @@ config_corstone1000 = {"seed_params": {
                 "with_ns":          [False],
                 "profile":          [""],
                 "partition_ps":     ["ON"],
-                "extra_params":     [""]
+                "extra_params":     ["FVP", "FPGA"]
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + []

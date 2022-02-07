@@ -75,7 +75,9 @@ mapExtraParams = {"":              "",
                   "FPSOFT":        "-DCONFIG_TFM_FP=soft ",
                   "FPHARD":        "-DCONFIG_TFM_FP=hard ",
                   "FPHARD_LOFF":   ("-DCONFIG_TFM_FP=hard "
-                                    "-DCONFIG_TFM_LAZY_STACKING=OFF ")
+                                    "-DCONFIG_TFM_LAZY_STACKING=OFF "),
+                  "FVP":           "-DPLATFORM_IS_FVP=True",
+                  "FPGA":          "-DPLATFORM_IS_FVP=False"
                   }
 
 class TFM_Build_Manager(structuredTask):
