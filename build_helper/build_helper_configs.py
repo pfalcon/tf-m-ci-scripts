@@ -794,6 +794,16 @@ config_nightly = {"seed_params": {
                 "extra_params":     [""]
                 },
                 "common_params": _common_tfm_builder_cfg,
+                "valid": [
+                    # MUSCA_B1_GNUARM_IPC_1_REG_Release_BL2_NS_CC_DRIVER_PSA
+                    ("arm/musca_b1/sse_200", "toolchain_GNUARM.cmake",
+                     False, "1", True, "OFF", "Release",
+                     "off", True, True, "", "ON", "CC_DRIVER_PSA"),
+                    # MUSCA_S1_GNUARM_IPC_1_REG_Release_BL2_NS_CC_DRIVER_PSA
+                    ("arm/musca_s1", "toolchain_GNUARM.cmake",
+                     False, "1", True, "OFF", "Release",
+                     "off", True, True, "", "ON", "CC_DRIVER_PSA"),
+                ],
                 "invalid": _common_tfm_invalid_configs + [
                     ("arm/mps2/an519", "toolchain_GNUARM.cmake", "*", "*", "*",
                      "*", "Minsizerel", "*", "*", "*", "*", "*", "*"),
