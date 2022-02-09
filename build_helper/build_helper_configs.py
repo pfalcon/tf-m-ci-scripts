@@ -1073,6 +1073,10 @@ config_pp_test = {"seed_params": {
                     ("arm/musca_s1", "toolchain_GNUARM.cmake",
                      False, "2", True, "OFF", "Release",
                      "off", True, True, "", "ON", "FPHARD"),
+                    # MUSCA_S1_GNUARM_IPC_1_REG_Release_BL2_NS_CC_DRIVER_PSA
+                    ("arm/musca_s1", "toolchain_GNUARM.cmake",
+                     False, "1", True, "OFF", "Release",
+                     "off", True, True, "", "ON", "CC_DRIVER_PSA"),
                 ],
                 "invalid": _common_tfm_invalid_configs + [
                     # invalid configs that are not supported by TF-M
