@@ -614,6 +614,14 @@ tfm_mps2_sse_200 = {
             "monitors": monitors_psaapitest_by_ut,
         }, # PsaApiTest_Attest
 
+        'PsaApiTestIPC_Attest': {
+            "binaries": {
+                "firmware": "tfm_s_ns_signed.bin",
+                "bootloader": "bl2.bin"
+            },
+            "monitors": monitors_psaapitest_by_ut,
+        }, # PsaApiTestIPC_Attest
+
     }  # Tests
 }
 
@@ -1153,6 +1161,14 @@ fvp_mps2_an521_bl2 = {
             },
             "monitors": monitors_psaapitest_by_ut,
         }, # PsaApiTest_Attest
+
+        'PsaApiTestIPC_Attest': {
+            "binaries": {
+                "firmware": "bl2.axf",
+                "bootloader": "tfm_s_ns_signed.bin"
+            },
+            "monitors": monitors_psaapitest_by_ut,
+        }, # PsaApiTestIPC_Attest
 
     }  # Tests
 }
