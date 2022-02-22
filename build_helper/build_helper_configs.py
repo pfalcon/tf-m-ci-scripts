@@ -257,6 +257,25 @@ _common_tfm_invalid_configs = [
     ]
 
 # Configure build manager to build several combinations
+config_an552 = {"seed_params": {
+                "tfm_platform":     ["arm/mps3/an552"],
+                "compiler":         ["GCC_10_3"],
+                "lib_model":        [True, False],
+                "isolation_level":  ["1", "2"],
+                "test_regression":  [True, False],
+                "test_psa_api":     ["OFF"],
+                "cmake_build_type": ["Debug", "Release"],
+                "with_otp":         ["off"],
+                "with_bl2":         [True],
+                "with_ns":          [True],
+                "profile":          [""],
+                "partition_ps":     ["ON"],
+                "extra_params":     [""]
+                },
+                "common_params": _common_tfm_builder_cfg,
+                "invalid": _common_tfm_invalid_configs + []
+                }
+
 config_AN524 = {"seed_params": {
                 "tfm_platform":     ["arm/mps3/an524"],
                 "compiler":         ["GCC_7_3_1", "ARMCLANG_6_13"],
@@ -521,7 +540,9 @@ config_IPC =  {"seed_params": {
 config_full = {"seed_params": {
                "tfm_platform":     ["arm/mps2/an521", "arm/mps2/an519",
                                     "arm/musca_b1/sse_200",
-                                    "arm/mps3/an524", "cypress/psoc64",
+                                    "arm/mps3/an524", "arm/mps3/an547",
+                                    "arm/mps3/an552", "cypress/psoc64",
+                                    "arm/mps3/corstone_polaris",
                                     "arm/musca_b1/secure_enclave",
                                     "stm/stm32l562e_dk",
                                     "nxp/lpcxpresso55s69"],
@@ -551,6 +572,12 @@ config_full = {"seed_params": {
                    ("arm/musca_b1/sse_200", "*", "*", "*", "*", "*", "RelWithDebInfo",
                     "*", "*", "*", "*", "*", "*"),
                    ("arm/mps3/an524", "*", "*", "*", "*", "*", "RelWithDebInfo",
+                    "*", "*", "*", "*", "*", "*"),
+                   ("arm/mps3/an547", "*", "*", "*", "*", "*", "RelWithDebInfo",
+                    "*", "*", "*", "*", "*", "*"),
+                   ("arm/mps3/an552", "*", "*", "*", "*", "*", "RelWithDebInfo",
+                    "*", "*", "*", "*", "*", "*"),
+                   ("arm/mps3/corstone_polaris", "*", "*", "*", "*", "*", "RelWithDebInfo",
                     "*", "*", "*", "*", "*", "*"),
                ]
                }
@@ -1055,6 +1082,14 @@ config_pp_test = {"seed_params": {
                     ("arm/mps2/an521", "GCC_7_3_1",
                      True, "1", False, "OFF", "Debug",
                      "off", True, True, "", "ON", ""),
+                    # AN552_GNUARM_IPC_1_REG_Debug_BL2_NS
+                    ("arm/mps3/an552", "GCC_10_3",
+                     False, "1", True, "OFF", "Debug",
+                     "off", True, True, "", "ON", ""),
+                    # AN552_GNUARM_IPC_1_REG_Release_BL2_NS
+                    ("arm/mps3/an552", "GCC_10_3",
+                     False, "1", True, "OFF", "Release",
+                     "off", True, True, "", "ON", ""),
                     ("arm/mps2/an521", "ARMCLANG_6_13",
                      False, "2", False, "OFF", "Debug",
                      "off", True, True, "", "ON", ""),
@@ -1364,7 +1399,7 @@ config_lava_debug = {"seed_params": {
 
 config_an547 = {"seed_params": {
                 "tfm_platform":     ["arm/mps3/an547"],
-                "compiler":         ["GCC_7_3_1"],
+                "compiler":         ["GCC_10_3"],
                 "lib_model":        [False],
                 "isolation_level":  ["1"],
                 "test_regression":  [False],
@@ -1383,7 +1418,7 @@ config_an547 = {"seed_params": {
 
 config_corstone_polaris = {"seed_params": {
                 "tfm_platform":     ["arm/mps3/corstone_polaris"],
-                "compiler":         ["GCC_7_3_1"],
+                "compiler":         ["GCC_10_3"],
                 "lib_model":        [False],
                 "isolation_level":  ["1"],
                 "test_regression":  [False],
@@ -1578,6 +1613,7 @@ _builtin_configs = {
                     #extra build group
                     "arm_corstone1000": config_corstone1000,
                     "arm_an547": config_an547,
+                    "arm_an552": config_an552,
                     "arm_corstone_polaris": config_corstone_polaris,
                     "cypress_psoc64": config_PSOC64,
                     "laird_bl5340": config_bl5340,
