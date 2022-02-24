@@ -62,6 +62,8 @@ actions:
     -  "--parameter fvp_mps2.mps2_visualisation.disable-visualisation=1"
 {%- if enable_code_coverage %}
     -  "--plugin {CC}"
+    -  "--parameter fvp_mps2.UART0.shutdown_tag=\x04"
+    -  "--cpulimit 130"
 {%- endif %}
 
     prompts:
@@ -82,4 +84,21 @@ actions:
          '{{monitor.fixup.skip}}': skip
          {%- endif %}
     {%- endfor %}
+
+{%- if enable_code_coverage %}
+- test:
+    namespace: target
+    interactive:
+    - name: fvp_stopped
+      prompts: ['/OSCI/SystemC: Simulation stopped by user.']
+      script:
+      - name: fvp_stopped_1
+        command:
+    - name: fvp_trace_end
+      prompts: ['Trace path: FVP_MPS2_AEMv8M.cpu1']
+      script:
+      - name: fvp_trace_end_1
+        command:
+{%- endif %}
+
 {% endblock %}
