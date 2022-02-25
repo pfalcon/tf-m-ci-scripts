@@ -22,6 +22,21 @@ def run(cmd, cwd=None):
     subprocess.check_call(cmd, shell=True, cwd=cwd)
 
 
+def extract_trace_data(lava_log_fname, job_dir):
+    last_fname = None
+    f_out = None
+    with open(lava_log_fname) as f_in:
+        for l in f_in:
+            if l.startswith("covtrace-"):
+                fname, l = l.split(" ", 1)
+                if fname != last_fname:
+                    if f_out:
+                        f_out.close()
+                    f_out = open(job_dir + "/" + fname, "w")
+                    last_fname = fname
+                f_out.write(l)
+
+
 def coverage_reports(jobs, user_args):
     lava = test_lava_dispatch_credentials(user_args)
     for job_id, info in jobs.items():

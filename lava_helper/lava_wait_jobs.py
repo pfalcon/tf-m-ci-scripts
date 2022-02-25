@@ -120,6 +120,7 @@ def resubmit_failed_jobs(jobs, user_args):
     resubmitted_jobs = [int(x) for x in resubmitted_jobs if x != '']
     return resubmitted_jobs
 
+
 def fetch_artifacts(jobs, user_args, lava):
     if not user_args.artifacts_path:
         return
@@ -139,6 +140,7 @@ def fetch_artifacts(jobs, user_args, lava):
         lava.get_job_config(job_id, config)
         time.sleep(0.2)
         lava.get_job_results(job_id, results_file)
+        codecov_helper.extract_trace_data(target_log, job_dir)
     return(jobs)
 
 
