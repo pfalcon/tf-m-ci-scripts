@@ -1252,7 +1252,7 @@ config_doxygen = {"common_params": {
 # Configuration used in testing
 config_debug = {"seed_params": {
                 "tfm_platform":     ["arm/mps2/an521"],
-                "toolchain_file":   ["toolchain_ARMCLANG.cmake"],
+                "toolchain_file":   ["toolchain_GNUARM.cmake"],
                 "lib_model":        [True],
                 "isolation_level":  ["1"],
                 "test_regression":  [False],
