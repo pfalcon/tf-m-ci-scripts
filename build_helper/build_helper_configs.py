@@ -142,6 +142,9 @@ _common_tfm_builder_cfg = {
 
 # List of all build configs that are impossible under all circumstances
 _common_tfm_invalid_configs = [
+    # AN521_ARMCLANG_IPC_1_STORAGE_Debug_BL2_NS does not work as expected with ARMCLANG v6.13
+    ("arm/mps2/an521", "toolchain_ARMCLANG.cmake", False, "1", False, "STORAGE",
+     "Debug", "off", True, True, "", "ON", ""),
     # LR_CODE size exceeds limit on MUSCA_B1 & MUSCA_S1 with regression tests in Debug mode built with ARMCLANG
     ("arm/musca_b1/sse_200", "toolchain_ARMCLANG.cmake", "*", "*", True, "OFF", "Debug", "*", "*", "*", "", "*", "*"),
     ("arm/musca_s1", "toolchain_ARMCLANG.cmake", "*", "*", True, "OFF", "Debug", "*", "*", "*", "", "*", "*"),
