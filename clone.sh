@@ -69,6 +69,7 @@ repos=(
     "${MCUBOOT_PROJECT};${MCUBOOT_NAME};${MCUBOOT_REFSPEC}"
     "${PSA_ARCH_TESTS_PROJECT};${PSA_ARCH_TESTS_NAME};${PSA_ARCH_TESTS_REFSPEC}"
     "${PSA_QCBOR_PROJECT};${PSA_QCBOR_NAME};${PSA_QCBOR_REFSPEC}"
+    "https://review.trustedfirmware.org/ci/qa-tools;qa-tools;openci"
 )
 
 # Take into consideration non-CI runs where SHARE_FOLDER variable
