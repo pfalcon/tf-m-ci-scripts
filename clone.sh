@@ -26,6 +26,7 @@
 # file however the current approach prevents the latter unless the job
 # is triggered manually from the buider job itself.
 #
+set -ex
 
 # Global defaults
 GIT_CLONE_PARAMS="--no-checkout"
@@ -120,3 +121,7 @@ for repo in ${repos[@]}; do
     cp -a -f ${SHARE_FOLDER}/${REPO_NAME} ${WORKSPACE}/${REPO_NAME}
 
 done
+
+echo ${SHARE_FOLDER}
+pwd
+ls -l
