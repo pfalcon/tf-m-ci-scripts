@@ -22,6 +22,12 @@ def run(cmd, cwd=None):
     subprocess.check_call(cmd, shell=True, cwd=cwd)
 
 
+run("pwd")
+run("echo $SHARE_FOLDER")
+#run("env")
+#run("ls -l $SHARE_FOLDER")
+
+
 def extract_trace_data(lava_log_fname, job_dir):
     last_fname = None
     f_out = None
@@ -40,6 +46,7 @@ def extract_trace_data(lava_log_fname, job_dir):
 def coverage_reports(jobs, user_args):
     lava = test_lava_dispatch_credentials(user_args)
     for job_id, info in jobs.items():
+        print("coverage_reports: %s: %s" % (job_id, info))
         job_dir = info["job_dir"]
         metadata = info["metadata"]
 
@@ -54,6 +61,7 @@ def coverage_reports(jobs, user_args):
             dl_artifact("bl2.axf")
             dl_artifact("tfm_s.axf")
             dl_artifact("tfm_ns.axf")
+            #run("ls -l")
             run("python3 $SHARE_FOLDER/qa-tools/coverage-tool/coverage-reporting/intermediate_layer.py --config-json $SHARE_FOLDER/tf-m-ci-scripts/lava_helper/trace2covjson.json --local-workspace $SHARE_FOLDER", cwd=job_dir)
             run("python3 $SHARE_FOLDER/qa-tools/coverage-tool/coverage-reporting/generate_info_file.py --workspace $SHARE_FOLDER --json covjson.json", cwd=job_dir)
             run("lcov -rc lcov_branch_coverage=1 -r coverage.info '*/trusted-firmware-m/platform/*' -o coverage.info.tmp", cwd=job_dir)
