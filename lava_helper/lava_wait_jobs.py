@@ -26,6 +26,8 @@ from jinja2 import Environment, FileSystemLoader
 from lava_helper_configs import *
 from lava_helper import test_lava_dispatch_credentials
 from lava_submit_jobs import *
+import codecov_helper
+
 
 try:
     from tfm_ci_pylib.utils import save_json, load_json, sort_dict,\
@@ -83,6 +85,7 @@ def process_finished_jobs(finished_jobs, user_args):
     test_report(finished_jobs, user_args)
     failure_report(finished_jobs, user_args)
     csv_report(finished_jobs)
+    codecov_helper.coverage_reports(finished_jobs, user_args)
 
 
 def get_finished_jobs(job_list, user_args, lava):

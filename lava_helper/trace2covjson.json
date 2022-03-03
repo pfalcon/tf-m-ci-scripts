@@ -1,0 +1,57 @@
+{
+    "configuration":
+        {
+        "remove_workspace": true,
+        "include_assembly": true
+        },
+    "parameters":
+        {
+        "objdump": "/home/buildslave/compiler/gcc-7-3-1/bin/arm-none-eabi-objdump",
+        "readelf": "/home/buildslave/compiler/gcc-7-3-1/bin/arm-none-eabi-readelf",
+        "sources": [
+                    {
+                    "type": "git",
+                    "URL":  "https://git.trustedfirmware.org/TF-M/trusted-firmware-m.git/",
+                    "COMMIT": "",
+                    "REFSPEC": "",
+                    "LOCATION": "trusted-firmware-m"
+                    },
+                    {
+                    "type": "git",
+                    "URL":  "https://mucboot.com/mcuboot.git",
+                    "COMMIT": "",
+                    "REFSPEC": "",
+                    "LOCATION": "mcuboot"
+                    },
+                    {
+                    "type": "git",
+                    "URL":  "https://tf.org/mbed/mbed-crypto.git",
+                    "COMMIT": "",
+                    "REFSPEC": "",
+                    "LOCATION": "mbed-crypto"
+                    }
+                ],
+        "workspace": "/home/buildslave/workspace/tf-m-build-config",
+        "output_file": "covjson.json"
+        },
+    "elfs": [
+            {
+                    "name": "bl2.axf",
+                    "traces": [
+                                "covtrace-FVP_MPS2_AEMv8M.cpu0.log"
+                              ]
+                },
+            {
+                    "name": "tfm_s.axf",
+                    "traces": [
+                                "covtrace-FVP_MPS2_AEMv8M.cpu0.log"
+                              ]
+                },
+            {
+                    "name": "tfm_ns.axf",
+                    "traces": [
+                                "covtrace-FVP_MPS2_AEMv8M.cpu0.log"
+                              ]
+                }
+        ]
+}
