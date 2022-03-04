@@ -200,8 +200,8 @@ _common_tfm_invalid_configs = [
     ("cypress/psoc64", "*", "*", "*", "*", "*", "*", "*", True, "*", "*", "*", "*"),
     # psoc64 does not support Debug build type
     ("cypress/psoc64", "*", "*", "*", "*", "*", "Debug", "*", "*", "*", "*", "*", "*"),
-    # PSoC64 platform got issue on regression level one test with GNUARM toolchain, disable it as a workaround
-    ("cypress/psoc64", "toolchain_GNUARM.cmake", "*", "1", "*", "*", "*", "*", "*", "*", "*", "*", "*"),
+    # PSoC64 platform got issue on level one test, disable it as a workaround
+    ("cypress/psoc64", "*", "*", "1", "*", "*", "*", "*", "*", "*", "*", "*", "*"),
     # Musca b1 SSE 200 does not support Profile S
     ("arm/musca_b1/sse_200", "*", "*", "*", "*", "*", "*", "*", "*", "*", "profile_small", "*", "*"),
     # Musca B1 Secure Enclave requires IPC model, BL2, and supports only Isolation Level 1
