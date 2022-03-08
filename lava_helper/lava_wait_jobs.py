@@ -73,12 +73,17 @@ def wait_for_jobs(user_args):
     resubmit_jobs = resubmit_failed_jobs(finished_jobs, user_args)
     finished_resubmit_jobs = get_finished_jobs(resubmit_jobs, user_args, lava)
     finished_jobs.update(finished_resubmit_jobs)
+    return finished_jobs
+
+
+def process_finished_jobs(finished_jobs, user_args):
     print_lava_urls(finished_jobs, user_args)
     job_links(finished_jobs, user_args)
     boot_report(finished_jobs, user_args)
-    test_report(finished_jobs, user_args, lava)
+    test_report(finished_jobs, user_args)
     failure_report(finished_jobs, user_args)
     csv_report(finished_jobs)
+
 
 def get_finished_jobs(job_list, user_args, lava):
     finished_jobs = lava.block_wait_for_jobs(job_list, user_args.dispatch_timeout, 0.5)
@@ -212,7 +217,7 @@ def remove_lava_dupes(results):
                             results.remove(result)
     return(results)
 
-def test_report(jobs, user_args, lava):
+def test_report(jobs, user_args):
     # parsing of test results is WIP
     fail_j = []
     jinja_data = []
@@ -265,7 +270,7 @@ def main(user_args):
     user_args.lava_rpc = "RPC2"
     for try_time in range(3):
         try:
-            wait_for_jobs(user_args)
+            finished_jobs = wait_for_jobs(user_args)
             break
         except Exception as e:
             if try_time < 2:
@@ -273,6 +278,7 @@ def main(user_args):
                 print("Trying to get LAVA jobs again...")
             else:
                 raise e
+    process_finished_jobs(finished_jobs, user_args)
 
 def get_cmd_args():
     """ Parse command line arguments """
