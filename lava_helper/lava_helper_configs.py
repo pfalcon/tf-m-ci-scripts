@@ -753,7 +753,7 @@ psoc64 = {
 
 # All configurations should be mapped here
 lava_gen_config_map = {
-    "mps2_an521_bl2": tfm_mps2_sse_200,
+#    "mps2_an521_bl2": tfm_mps2_sse_200,
     "fvp_mps3_an552_bl2": fvp_mps3_an552_bl2,
     "fvp_mps2_an521_bl2": fvp_mps2_an521_bl2,
     "fvp_mps2_an521_nobl2": fvp_mps2_an521_nobl2,
