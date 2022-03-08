@@ -92,6 +92,7 @@ def process_finished_jobs(finished_jobs, user_args):
 
 
 def get_finished_jobs(job_list, user_args, lava):
+    print("get_finished_jobs: in: ", job_list)
     finished_jobs = lava.block_wait_for_jobs(job_list, user_args.dispatch_timeout, 5)
     unfinished_jobs = [item for item in job_list if item not in finished_jobs]
     for job in unfinished_jobs:
@@ -102,6 +103,7 @@ def get_finished_jobs(job_list, user_args, lava):
             info['job_dir'] = os.path.join(user_args.artifacts_path, "{}_{}".format(str(job), info['description']))
             finished_jobs[job] = info
     finished_jobs = fetch_artifacts(finished_jobs, user_args, lava)
+    #print("get_finished_jobs: out: ", finished_jobs)
     return finished_jobs
 
 def resubmit_failed_jobs(jobs, user_args):
