@@ -496,7 +496,7 @@ timestamps {
         builds[config] = buildConfig("tf-m-ci-scripts", config, env.FILTER_GROUP, results)
       }
       if (!env.JOB_NAME.equals("tf-m-extra-build")) {
-        builds["docs"] = buildDocs(results)
+//        builds["docs"] = buildDocs(results)
       }
     }
   }
