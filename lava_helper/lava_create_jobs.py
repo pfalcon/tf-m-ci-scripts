@@ -4,7 +4,7 @@ from __future__ import print_function
 
 __copyright__ = """
 /*
- * Copyright (c) 2020-2021, Arm Limited. All rights reserved.
+ * Copyright (c) 2020-2022, Arm Limited. All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  *
@@ -137,39 +137,16 @@ def generate_test_definitions(config, work_dir, user_args):
                             "cpu0_baseline": config.get("cpu0_baseline", 0),
                             "cpu0_initvtor_s": config.get("cpu0_initvtor_s", "0x10000000")
                         }
-                        params.update(
-                            {
-                                "firmware_url": get_artifact_url(
-                                    artifact_store_url,
-                                    params,
-                                    test_dict.get("binaries").get("firmware"),
-                                ),
-                                "tarball_url": get_artifact_url(
-                                    artifact_store_url,
-                                    params,
-                                    test_dict.get("binaries").get("tarball"),
-                                ),
-                                "spe_url": get_artifact_url(
-                                    artifact_store_url,
-                                    params,
-                                    test_dict.get("binaries").get("spe_image"),
-                                ),
-                                "nspe_url": get_artifact_url(
-                                    artifact_store_url,
-                                    params,
-                                    test_dict.get("binaries").get("nspe_image"),
-                                ),
-                            }
-                        )
-                        params.update(
-                            {
-                                "bootloader_url": get_artifact_url(
-                                    artifact_store_url,
-                                    params,
-                                    test_dict.get("binaries").get("bootloader"),
-                                ),
-                            }
-                        )
+                        for binary_type, binary_name in config["binaries"].items():
+                            params.update(
+                                {
+                                    "{}_url".format(binary_type): get_artifact_url(
+                                        artifact_store_url,
+                                        params,
+                                        binary_name
+                                    )
+                                }
+                            )
                         params.update(
                             {
                                 "job_name": get_job_name(

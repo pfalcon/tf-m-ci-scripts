@@ -109,12 +109,12 @@ tfm_mps2_sse_200 = {
     "compilers": ["GNUARM", "ARMCLANG"],
     "build_types": ["Debug", "Release", "Minsizerel"],
     "boot_types": ["BL2"],
+    "binaries": {
+        "firmware": "tfm_s_ns_signed.bin",
+        "bootloader": "bl2.bin"
+    },
     "tests": {
         'Default': {
-            "binaries": {
-                "firmware": "tfm_s_ns_signed.bin",
-                "bootloader": "bl2.bin"
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -126,10 +126,6 @@ tfm_mps2_sse_200 = {
             ]
         },  # Default
         'DefaultProfileS': {
-            "binaries": {
-                "firmware": "tfm_s_ns_signed.bin",
-                "bootloader": "bl2.bin"
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -141,10 +137,6 @@ tfm_mps2_sse_200 = {
             ]
         },  # DefaultProfileS
         'DefaultProfileM': {
-            "binaries": {
-                "firmware": "tfm_s_ns_signed.bin",
-                "bootloader": "bl2.bin"
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -156,10 +148,6 @@ tfm_mps2_sse_200 = {
             ]
         },  # DefaultProfileM
         'DefaultProfileL': {
-            "binaries": {
-                "firmware": "tfm_s_ns_signed.bin",
-                "bootloader": "bl2.bin"
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -172,10 +160,6 @@ tfm_mps2_sse_200 = {
         },  # DefaultProfileL
 
         'Regression': {
-            "binaries": {
-                "firmware": "tfm_s_ns_signed.bin",
-                "bootloader": "bl2.bin"
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -199,10 +183,6 @@ tfm_mps2_sse_200 = {
         },  # Regression
 
         'RegressionProfileM': {
-            "binaries": {
-                "firmware": "tfm_s_ns_signed.bin",
-                "bootloader": "bl2.bin"
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -225,10 +205,6 @@ tfm_mps2_sse_200 = {
             ]  # Monitors
         },  # RegressionProfileM
         'RegressionProfileS': {
-            "binaries": {
-                "firmware": "tfm_s_ns_signed.bin",
-                "bootloader": "bl2.bin"
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -251,10 +227,6 @@ tfm_mps2_sse_200 = {
             ]  # Monitors
         },  # RegressionProfileS
         'RegressionProfileL': {
-            "binaries": {
-                "firmware": "tfm_s_ns_signed.bin",
-                "bootloader": "bl2.bin"
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -278,10 +250,6 @@ tfm_mps2_sse_200 = {
         },  # RegressionProfileL
 
         'RegressionIPC': {
-            "binaries": {
-                "firmware": "tfm_s_ns_signed.bin",
-                "bootloader": "bl2.bin"
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -304,10 +272,6 @@ tfm_mps2_sse_200 = {
             ]  # Monitors
         },  # Regression
         'RegressionIPCTfmLevel2': {
-            "binaries": {
-                "firmware": "tfm_s_ns_signed.bin",
-                "bootloader": "bl2.bin"
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -330,10 +294,6 @@ tfm_mps2_sse_200 = {
             ]  # Monitors
         },  # Regression
         'RegressionIPCTfmLevel3': {
-            "binaries": {
-                "firmware": "tfm_s_ns_signed.bin",
-                "bootloader": "bl2.bin"
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -356,10 +316,6 @@ tfm_mps2_sse_200 = {
             ]  # Monitors
         },  # Regression
         'CoreIPC': {
-            "binaries": {
-                "firmware": "tfm_s_ns_signed.bin",
-                "bootloader": "bl2.bin"
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -371,10 +327,6 @@ tfm_mps2_sse_200 = {
             ]
         },  # CoreIPC
         'CoreIPCTfmLevel2': {
-            "binaries": {
-                "firmware": "tfm_s_ns_signed.bin",
-                "bootloader": "bl2.bin"
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -386,10 +338,6 @@ tfm_mps2_sse_200 = {
             ]
         },  # CoreIPCTfmLevel2
         'CoreIPCTfmLevel3': {
-            "binaries": {
-                "firmware": "tfm_s_ns_signed.bin",
-                "bootloader": "bl2.bin"
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -402,42 +350,22 @@ tfm_mps2_sse_200 = {
         },  # CoreIPCTfmLevel3
 
         'PsaApiTest_Crypto': {
-            "binaries": {
-                "firmware": "tfm_s_ns_signed.bin",
-                "bootloader": "bl2.bin"
-            },
             "monitors": monitors_psaapitest_crypto_workaround,
         }, # PsaApiTest_Crypto
 
         'PsaApiTest_STORAGE': {
-            "binaries": {
-                "firmware": "tfm_s_ns_signed.bin",
-                "bootloader": "bl2.bin"
-            },
             "monitors": monitors_psaapitest_by_desc,
         }, # PsaApiTest_Storage
 
         'PsaApiTestIPC_STORAGE': {
-            "binaries": {
-                "firmware": "tfm_s_ns_signed.bin",
-                "bootloader": "bl2.bin"
-            },
             "monitors": monitors_psaapitest_by_desc,
         }, # PsaApiTestIPC_Storage
 
         'PsaApiTest_Attest': {
-            "binaries": {
-                "firmware": "tfm_s_ns_signed.bin",
-                "bootloader": "bl2.bin"
-            },
             "monitors": monitors_psaapitest_by_ut,
         }, # PsaApiTest_Attest
 
         'PsaApiTestIPC_Attest': {
-            "binaries": {
-                "firmware": "tfm_s_ns_signed.bin",
-                "bootloader": "bl2.bin"
-            },
             "monitors": monitors_psaapitest_by_ut,
         }, # PsaApiTestIPC_Attest
 
@@ -446,8 +374,8 @@ tfm_mps2_sse_200 = {
 
 
 # FVP with BL2 bootloader
-# firmware <-> ns <-> application: --application cpu0=bl2.axf
-# bootloader <-> s <-> data: --data cpu0=tfm_s_ns_signed.bin@0x10080000
+# application: --application cpu0=bl2.axf
+# data: --data cpu0=tfm_s_ns_signed.bin@0x10080000
 fvp_mps2_an521_bl2 = {
     "templ": "fvp_mps2.jinja2",
     "job_name": "fvp_mps2_an521_bl2",
@@ -461,12 +389,12 @@ fvp_mps2_an521_bl2 = {
     "build_types": ["Debug", "Release", "Minsizerel"],
     "boot_types": ["BL2"],
     "data_bin_offset": "0x10080000",
+    "binaries": {
+        "application": "bl2.axf",
+        "data": "tfm_s_ns_signed.bin"
+    },
     "tests": {
         'Default': {
-            "binaries": {
-                "firmware": "bl2.axf",
-                "bootloader": "tfm_s_ns_signed.bin"
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -478,10 +406,6 @@ fvp_mps2_an521_bl2 = {
             ]
         },  # Default
         'DefaultProfileS': {
-            "binaries": {
-                "firmware": "bl2.axf",
-                "bootloader": "tfm_s_ns_signed.bin"
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -493,10 +417,6 @@ fvp_mps2_an521_bl2 = {
             ]
         },  # DefaultProfileS
         'DefaultProfileM': {
-            "binaries": {
-                "firmware": "bl2.axf",
-                "bootloader": "tfm_s_ns_signed.bin"
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -508,10 +428,6 @@ fvp_mps2_an521_bl2 = {
             ]
         },  # DefaultProfileM
         'DefaultProfileL': {
-            "binaries": {
-                "firmware": "bl2.axf",
-                "bootloader": "tfm_s_ns_signed.bin"
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -524,10 +440,6 @@ fvp_mps2_an521_bl2 = {
         },  # DefaultProfileL
 
         'Regression': {
-            "binaries": {
-                "firmware": "bl2.axf",
-                "bootloader": "tfm_s_ns_signed.bin"
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -551,10 +463,6 @@ fvp_mps2_an521_bl2 = {
         },  # Regression
 
         'RegressionProfileM': {
-            "binaries": {
-                "firmware": "bl2.axf",
-                "bootloader": "tfm_s_ns_signed.bin"
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -577,10 +485,6 @@ fvp_mps2_an521_bl2 = {
             ]  # Monitors
         },  # RegressionProfileM
         'RegressionProfileS': {
-            "binaries": {
-                "firmware": "bl2.axf",
-                "bootloader": "tfm_s_ns_signed.bin"
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -603,10 +507,6 @@ fvp_mps2_an521_bl2 = {
             ]  # Monitors
         },  # RegressionProfileS
         'RegressionProfileL': {
-            "binaries": {
-                "firmware": "bl2.axf",
-                "bootloader": "tfm_s_ns_signed.bin"
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -630,10 +530,6 @@ fvp_mps2_an521_bl2 = {
         },  # RegressionProfileL
 
         'RegressionIPC': {
-            "binaries": {
-                "firmware": "bl2.axf",
-                "bootloader": "tfm_s_ns_signed.bin"
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -656,10 +552,6 @@ fvp_mps2_an521_bl2 = {
             ]  # Monitors
         },  # Regression
         'RegressionIPCTfmLevel2': {
-            "binaries": {
-                "firmware": "bl2.axf",
-                "bootloader": "tfm_s_ns_signed.bin"
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -682,10 +574,6 @@ fvp_mps2_an521_bl2 = {
             ]  # Monitors
         },  # Regression
         'RegressionIPCTfmLevel3': {
-            "binaries": {
-                "firmware": "bl2.axf",
-                "bootloader": "tfm_s_ns_signed.bin"
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -708,10 +596,6 @@ fvp_mps2_an521_bl2 = {
             ]  # Monitors
         },  # Regression
         'CoreIPC': {
-            "binaries": {
-                "firmware": "bl2.axf",
-                "bootloader": "tfm_s_ns_signed.bin"
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -723,10 +607,6 @@ fvp_mps2_an521_bl2 = {
             ]
         },  # CoreIPC
         'CoreIPCTfmLevel2': {
-            "binaries": {
-                "firmware": "bl2.axf",
-                "bootloader": "tfm_s_ns_signed.bin"
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -738,10 +618,6 @@ fvp_mps2_an521_bl2 = {
             ]
         },  # CoreIPCTfmLevel2
         'CoreIPCTfmLevel3': {
-            "binaries": {
-                "firmware": "bl2.axf",
-                "bootloader": "tfm_s_ns_signed.bin"
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -754,42 +630,22 @@ fvp_mps2_an521_bl2 = {
         },  # CoreIPCTfmLevel3
 
         'PsaApiTest_Crypto': {
-            "binaries": {
-                "firmware": "bl2.axf",
-                "bootloader": "tfm_s_ns_signed.bin"
-            },
             "monitors": monitors_psaapitest_crypto_workaround,
         }, # PsaApiTest_Crypto
 
         'PsaApiTest_STORAGE': {
-            "binaries": {
-                "firmware": "bl2.axf",
-                "bootloader": "tfm_s_ns_signed.bin"
-            },
             "monitors": monitors_psaapitest_by_desc,
         }, # PsaApiTest_Storage
 
         'PsaApiTestIPC_STORAGE': {
-            "binaries": {
-                "firmware": "bl2.axf",
-                "bootloader": "tfm_s_ns_signed.bin"
-            },
             "monitors": monitors_psaapitest_by_desc,
         }, # PsaApiTestIPC_Storage
 
         'PsaApiTest_Attest': {
-            "binaries": {
-                "firmware": "bl2.axf",
-                "bootloader": "tfm_s_ns_signed.bin"
-            },
             "monitors": monitors_psaapitest_by_ut,
         }, # PsaApiTest_Attest
 
         'PsaApiTestIPC_Attest': {
-            "binaries": {
-                "firmware": "bl2.axf",
-                "bootloader": "tfm_s_ns_signed.bin"
-            },
             "monitors": monitors_psaapitest_by_ut,
         }, # PsaApiTestIPC_Attest
 
@@ -798,8 +654,8 @@ fvp_mps2_an521_bl2 = {
 
 
 # FVP without BL2 bootloader
-# firmware <-> ns <-> application: --application cpu0=tfm_s.axf
-# bootloader <-> s <-> data: --data cpu0=tfm_ns.bin@0x00100000
+# application: --application cpu0=tfm_s.axf
+# data: --data cpu0=tfm_ns.bin@0x00100000
 fvp_mps2_an521_nobl2 = {
     "templ": "fvp_mps2.jinja2",
     "job_name": "fvp_mps2_an521_nobl2",
@@ -814,12 +670,12 @@ fvp_mps2_an521_nobl2 = {
     "boot_types": ["NOBL2"],
     "data_bin_offset": "0x00100000",
     "cpu_baseline": 1,
+    "binaries": {
+        "application": "tfm_s.axf",
+        "data": "tfm_ns.bin"
+    },
     "tests": {
         'Default': {
-            "binaries": {
-                "firmware": "tfm_s.axf",
-                "bootloader": "tfm_ns.bin"
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -831,10 +687,6 @@ fvp_mps2_an521_nobl2 = {
             ]
         },  # Default
         'DefaultProfileS': {
-            "binaries": {
-                "firmware": "tfm_s.axf",
-                "bootloader": "tfm_ns.bin"
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -846,10 +698,6 @@ fvp_mps2_an521_nobl2 = {
             ]
         },  # DefaultProfileS
         'DefaultProfileM': {
-            "binaries": {
-                "firmware": "tfm_s.axf",
-                "bootloader": "tfm_ns.bin"
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -861,10 +709,6 @@ fvp_mps2_an521_nobl2 = {
             ]
         },  # DefaultProfileM
         'DefaultProfileL': {
-            "binaries": {
-                "firmware": "tfm_s.axf",
-                "bootloader": "tfm_ns.bin"
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -877,10 +721,6 @@ fvp_mps2_an521_nobl2 = {
         },  # DefaultProfileL
 
         'Regression': {
-            "binaries": {
-                "firmware": "tfm_s.axf",
-                "bootloader": "tfm_ns.bin"
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -903,10 +743,6 @@ fvp_mps2_an521_nobl2 = {
             ]  # Monitors
         },  # Regression
         'RegressionProfileM': {
-            "binaries": {
-                "firmware": "tfm_s.axf",
-                "bootloader": "tfm_ns.bin"
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -929,10 +765,6 @@ fvp_mps2_an521_nobl2 = {
             ]  # Monitors
         },  # RegressionProfileM
         'RegressionProfileS': {
-            "binaries": {
-                "firmware": "tfm_s.axf",
-                "bootloader": "tfm_ns.bin"
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -955,10 +787,6 @@ fvp_mps2_an521_nobl2 = {
             ]  # Monitors
         },  # RegressionProfileS
         'RegressionProfileL': {
-            "binaries": {
-                "firmware": "tfm_s.axf",
-                "bootloader": "tfm_ns.bin"
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -982,10 +810,6 @@ fvp_mps2_an521_nobl2 = {
         },  # RegressionProfileL
 
         'RegressionIPC': {
-            "binaries": {
-                "firmware": "tfm_s.axf",
-                "bootloader": "tfm_ns.bin"
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -1008,10 +832,6 @@ fvp_mps2_an521_nobl2 = {
             ]  # Monitors
         },  # RegressionIPC
         'RegressionIPCTfmLevel2': {
-            "binaries": {
-                "firmware": "tfm_s.axf",
-                "bootloader": "tfm_ns.bin"
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -1034,10 +854,6 @@ fvp_mps2_an521_nobl2 = {
             ]  # Monitors
         },  # RegressionIPCTfmLevel2
         'RegressionIPCTfmLevel3': {
-            "binaries": {
-                "firmware": "tfm_s.axf",
-                "bootloader": "tfm_ns.bin"
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -1060,10 +876,6 @@ fvp_mps2_an521_nobl2 = {
             ]  # Monitors
         },  # RegressionIPCTfmLevel3
         'CoreIPC': {
-            "binaries": {
-                "firmware": "tfm_s.axf",
-                "bootloader": "tfm_ns.bin"
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -1075,10 +887,6 @@ fvp_mps2_an521_nobl2 = {
             ]
         },  # CoreIPC
         'CoreIPCTfmLevel2': {
-            "binaries": {
-                "firmware": "tfm_s.axf",
-                "bootloader": "tfm_ns.bin"
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -1090,10 +898,6 @@ fvp_mps2_an521_nobl2 = {
             ]
         },  # CoreIPCTfmLevel2
         'CoreIPCTfmLevel3': {
-            "binaries": {
-                "firmware": "tfm_s.axf",
-                "bootloader": "tfm_ns.bin"
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -1109,8 +913,8 @@ fvp_mps2_an521_nobl2 = {
 
 
 # FVP with BL2 bootloader
-# firmware <-> ns <-> application: --application cpu0=bl2.axf
-# bootloader <-> s <-> data: --data cpu0=tfm_s_ns_signed.bin@0x10080000
+# application: --application cpu0=bl2.axf
+# data: --data cpu0=tfm_s_ns_signed.bin@0x10080000
 fvp_mps2_an519_bl2 = {
     "templ": "fvp_mps2.jinja2",
     "job_name": "fvp_mps2_an519_bl2",
@@ -1125,12 +929,12 @@ fvp_mps2_an519_bl2 = {
     "boot_types": ["BL2"],
     "data_bin_offset": "0x10080000",
     "cpu0_baseline": 1,
+    "binaries": {
+        "application": "bl2.axf",
+        "data": "tfm_s_ns_signed.bin"
+    },
     "tests": {
         'Default': {
-            "binaries": {
-                "firmware": "bl2.axf",
-                "bootloader": "tfm_s_ns_signed.bin"
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -1142,10 +946,6 @@ fvp_mps2_an519_bl2 = {
             ]
         },  # Default
         'DefaultProfileS': {
-            "binaries": {
-                "firmware": "bl2.axf",
-                "bootloader": "tfm_s_ns_signed.bin"
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -1157,10 +957,6 @@ fvp_mps2_an519_bl2 = {
             ]
         },  # DefaultProfileS
         'DefaultProfileM': {
-            "binaries": {
-                "firmware": "bl2.axf",
-                "bootloader": "tfm_s_ns_signed.bin"
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -1173,10 +969,6 @@ fvp_mps2_an519_bl2 = {
         },  # DefaultProfileM
 
         'Regression': {
-            "binaries": {
-                "firmware": "bl2.axf",
-                "bootloader": "tfm_s_ns_signed.bin"
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -1200,10 +992,6 @@ fvp_mps2_an519_bl2 = {
         },  # Regression
 
         'RegressionProfileM': {
-            "binaries": {
-                "firmware": "bl2.axf",
-                "bootloader": "tfm_s_ns_signed.bin"
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -1226,10 +1014,6 @@ fvp_mps2_an519_bl2 = {
             ]  # Monitors
         },  # RegressionProfileM
         'RegressionProfileS': {
-            "binaries": {
-                "firmware": "bl2.axf",
-                "bootloader": "tfm_s_ns_signed.bin"
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -1253,10 +1037,6 @@ fvp_mps2_an519_bl2 = {
         },  # RegressionProfileS
 
         'RegressionIPC': {
-            "binaries": {
-                "firmware": "bl2.axf",
-                "bootloader": "tfm_s_ns_signed.bin"
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -1279,10 +1059,6 @@ fvp_mps2_an519_bl2 = {
             ]  # Monitors
         },  # Regression
         'RegressionIPCTfmLevel2': {
-            "binaries": {
-                "firmware": "bl2.axf",
-                "bootloader": "tfm_s_ns_signed.bin"
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -1305,10 +1081,6 @@ fvp_mps2_an519_bl2 = {
             ]  # Monitors
         },  # Regression
         'CoreIPC': {
-            "binaries": {
-                "firmware": "bl2.axf",
-                "bootloader": "tfm_s_ns_signed.bin"
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -1320,10 +1092,6 @@ fvp_mps2_an519_bl2 = {
             ]
         },  # CoreIPC
         'CoreIPCTfmLevel2': {
-            "binaries": {
-                "firmware": "bl2.axf",
-                "bootloader": "tfm_s_ns_signed.bin"
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -1339,8 +1107,8 @@ fvp_mps2_an519_bl2 = {
 
 
 # FVP without BL2 bootloader
-# firmware <-> ns <-> application: --application cpu0=tfm_s.axf
-# bootloader <-> s <-> data: --data cpu0=tfm_ns.bin@0x00100000
+# application: --application cpu0=tfm_s.axf
+# data: --data cpu0=tfm_ns.bin@0x00100000
 fvp_mps2_an519_nobl2 = {
     "templ": "fvp_mps2.jinja2",
     "job_name": "fvp_mps2_an519_nobl2",
@@ -1355,12 +1123,12 @@ fvp_mps2_an519_nobl2 = {
     "boot_types": ["NOBL2"],
     "data_bin_offset": "0x00100000",
     "cpu0_baseline": 1,
+    "binaries": {
+        "application": "tfm_s.axf",
+        "data": "tfm_ns.bin"
+    },
     "tests": {
         'Default': {
-            "binaries": {
-                "firmware": "tfm_s.axf",
-                "bootloader": "tfm_ns.bin"
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -1372,10 +1140,6 @@ fvp_mps2_an519_nobl2 = {
             ]
         },  # Default
         'DefaultProfileS': {
-            "binaries": {
-                "firmware": "tfm_s.axf",
-                "bootloader": "tfm_ns.bin"
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -1387,10 +1151,6 @@ fvp_mps2_an519_nobl2 = {
             ]
         },  # DefaultProfileS
         'DefaultProfileM': {
-            "binaries": {
-                "firmware": "tfm_s.axf",
-                "bootloader": "tfm_ns.bin"
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -1403,10 +1163,6 @@ fvp_mps2_an519_nobl2 = {
         },  # DefaultProfileM
 
         'Regression': {
-            "binaries": {
-                "firmware": "tfm_s.axf",
-                "bootloader": "tfm_ns.bin"
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -1429,10 +1185,6 @@ fvp_mps2_an519_nobl2 = {
             ]  # Monitors
         },  # Regression
         'RegressionProfileM': {
-            "binaries": {
-                "firmware": "tfm_s.axf",
-                "bootloader": "tfm_ns.bin"
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -1455,10 +1207,6 @@ fvp_mps2_an519_nobl2 = {
             ]  # Monitors
         },  # RegressionProfileM
         'RegressionProfileS': {
-            "binaries": {
-                "firmware": "tfm_s.axf",
-                "bootloader": "tfm_ns.bin"
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -1482,10 +1230,6 @@ fvp_mps2_an519_nobl2 = {
         },  # RegressionProfileS
 
         'RegressionIPC': {
-            "binaries": {
-                "firmware": "tfm_s.axf",
-                "bootloader": "tfm_ns.bin"
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -1508,10 +1252,6 @@ fvp_mps2_an519_nobl2 = {
             ]  # Monitors
         },  # RegressionIPC
         'RegressionIPCTfmLevel2': {
-            "binaries": {
-                "firmware": "tfm_s.axf",
-                "bootloader": "tfm_ns.bin"
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -1534,10 +1274,6 @@ fvp_mps2_an519_nobl2 = {
             ]  # Monitors
         },  # RegressionIPCTfmLevel2
         'CoreIPC': {
-            "binaries": {
-                "firmware": "tfm_s.axf",
-                "bootloader": "tfm_ns.bin"
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -1549,10 +1285,6 @@ fvp_mps2_an519_nobl2 = {
             ]
         },  # CoreIPC
         'CoreIPCTfmLevel2': {
-            "binaries": {
-                "firmware": "tfm_s.axf",
-                "bootloader": "tfm_ns.bin"
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -1583,12 +1315,12 @@ qemu_mps2_bl2 = {
     "compilers": ["GNUARM", "ARMCLANG"],
     "build_types": ["Debug", "Release"],
     "boot_types": ["BL2"],
+    "binaries": {
+        "firmware": "tfm_s_ns_signed.bin",
+        "bootloader": "bl2.bin"
+    },
     "tests": {
         # 'Default': {
-        #     "binaries": {
-        #         "firmware": "tfm_s_ns_signed.bin",
-        #         "bootloader": "bl2.bin"
-        #     },
         #     "monitors": [
         #         {
         #             'name': 'Secure_Test_Suites_Summary',
@@ -1602,10 +1334,6 @@ qemu_mps2_bl2 = {
         #     ]
         # },  # Default
         # 'DefaultProfileS': {
-        #     "binaries": {
-        #         "firmware": "tfm_s_ns_signed.bin",
-        #         "bootloader": "bl2.bin"
-        #     },
         #     "monitors": [
         #         {
         #             'name': 'Secure_Test_Suites_Summary',
@@ -1619,10 +1347,6 @@ qemu_mps2_bl2 = {
         #     ]
         # },  # DefaultProfileS
         # 'DefaultProfileM': {
-        #     "binaries": {
-        #         "firmware": "tfm_s_ns_signed.bin",
-        #         "bootloader": "bl2.bin"
-        #     },
         #     "monitors": [
         #         {
         #             'name': 'Secure_Test_Suites_Summary',
@@ -1636,10 +1360,6 @@ qemu_mps2_bl2 = {
         #     ]
         # },  # DefaultProfileM
         'Regression': {
-            "binaries": {
-                "firmware": "tfm_s_ns_signed.bin",
-                "bootloader": "bl2.bin"
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -1662,10 +1382,6 @@ qemu_mps2_bl2 = {
             ]  # Monitors
         },  # Regression
         'RegressionProfileS': {
-            "binaries": {
-                "firmware": "tfm_s_ns_signed.bin",
-                "bootloader": "bl2.bin"
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -1688,10 +1404,6 @@ qemu_mps2_bl2 = {
             ]  # Monitors
         },  # RegressionProfileS
         'RegressionIPC': {
-            "binaries": {
-                "firmware": "tfm_s_ns_signed.bin",
-                "bootloader": "bl2.bin"
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -1714,10 +1426,6 @@ qemu_mps2_bl2 = {
             ]  # Monitors
         },  # Regression
         'RegressionIPCTfmLevel2': {
-            "binaries": {
-                "firmware": "tfm_s_ns_signed.bin",
-                "bootloader": "bl2.bin"
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -1740,10 +1448,6 @@ qemu_mps2_bl2 = {
             ]  # Monitors
         },  # Regression
         'RegressionIPCTfmLevel3': {
-            "binaries": {
-                "firmware": "tfm_s_ns_signed.bin",
-                "bootloader": "bl2.bin"
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -1766,10 +1470,6 @@ qemu_mps2_bl2 = {
             ]  # Monitors
         },  # Regression
         # 'CoreIPC': {
-        #     "binaries": {
-        #         "firmware": "tfm_s_ns_signed.bin",
-        #         "bootloader": "bl2.bin"
-        #     },
         #     "monitors": [
         #         {
         #             'name': 'Secure_Test_Suites_Summary',
@@ -1783,10 +1483,6 @@ qemu_mps2_bl2 = {
         #     ]
         # },  # CoreIPC
         # 'CoreIPCTfmLevel2': {
-        #     "binaries": {
-        #         "firmware": "tfm_s_ns_signed.bin",
-        #         "bootloader": "bl2.bin"
-        #     },
         #     "monitors": [
         #         {
         #             'name': 'Secure_Test_Suites_Summary',
@@ -1800,10 +1496,6 @@ qemu_mps2_bl2 = {
         #     ]
         # },  # CoreIPCTfmLevel2
         # 'CoreIPCTfmLevel3': {
-        #     "binaries": {
-        #         "firmware": "tfm_s_ns_signed.bin",
-        #         "bootloader": "bl2.bin"
-        #     },
         #     "monitors": [
         #         {
         #             'name': 'Secure_Test_Suites_Summary',
@@ -1835,11 +1527,11 @@ musca_b1_bl2 = {
     "compilers": ["GNUARM", "ARMCLANG"],
     "build_types": ["Debug", "Release", "Minsizerel"],
     "boot_types": ["BL2"],
+    "binaries": {
+        "firmware": "tfm.hex",
+    },
     "tests": {
         "Default": {
-            "binaries": {
-                "firmware": "tfm.hex",
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -1851,9 +1543,6 @@ musca_b1_bl2 = {
             ]  # Monitors
         },
         "CoreIPC": {
-            "binaries": {
-                "firmware": "tfm.hex",
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -1865,9 +1554,6 @@ musca_b1_bl2 = {
             ]  # Monitors
         },
         "CoreIPCTfmLevel2": {
-            "binaries": {
-                "firmware": "tfm.hex",
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -1879,9 +1565,6 @@ musca_b1_bl2 = {
             ]  # Monitors
         },
         "CoreIPCTfmLevel3": {
-            "binaries": {
-                "firmware": "tfm.hex",
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -1893,9 +1576,6 @@ musca_b1_bl2 = {
             ]  # Monitors
         },
         "DefaultProfileM": {
-            "binaries": {
-                "firmware": "tfm.hex",
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -1907,9 +1587,6 @@ musca_b1_bl2 = {
             ]  # Monitors
         },
         "DefaultProfileS": {
-            "binaries": {
-                "firmware": "tfm.hex",
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -1921,9 +1598,6 @@ musca_b1_bl2 = {
             ]  # Monitors
         },
         "Regression": {
-            "binaries": {
-                "firmware": "tfm.hex",
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -1946,9 +1620,6 @@ musca_b1_bl2 = {
             ]  # Monitors
         },
         "RegressionIPC": {
-            "binaries": {
-                "firmware": "tfm.hex",
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -1971,9 +1642,6 @@ musca_b1_bl2 = {
             ]  # Monitors
         },
         "RegressionIPCTfmLevel2": {
-            "binaries": {
-                "firmware": "tfm.hex",
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -1996,9 +1664,6 @@ musca_b1_bl2 = {
             ]  # Monitors
         },
         "RegressionIPCTfmLevel3": {
-            "binaries": {
-                "firmware": "tfm.hex",
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -2021,9 +1686,6 @@ musca_b1_bl2 = {
             ]  # Monitors
         },
         "RegressionProfileM": {
-            "binaries": {
-                "firmware": "tfm.hex",
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -2046,9 +1708,6 @@ musca_b1_bl2 = {
             ]  # Monitors
         },
         "RegressionProfileS": {
-            "binaries": {
-                "firmware": "tfm.hex",
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -2088,11 +1747,11 @@ musca_b1_otp_bl2 = {
     "compilers": ["GNUARM"],
     "build_types": ["Debug"],
     "boot_types": ["BL2"],
+    "binaries": {
+        "firmware": "tfm.hex",
+    },
     "tests": {
         "RegressionIPCTfmLevel3": {
-            "binaries": {
-                "firmware": "tfm.hex",
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -2130,11 +1789,11 @@ stm32l562e_dk = {
     "compilers": ["GNUARM", "ARMCLANG"],
     "build_types": ["Release", "Minsizerel"],
     "boot_types": ["BL2"],
+    "binaries": {
+        "tarball": "stm32l562e-dk-tfm.tar.bz2",
+    },
     "tests": {
         "Regression": {
-            "binaries": {
-                "tarball": "stm32l562e-dk-tfm.tar.bz2",
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -2157,9 +1816,6 @@ stm32l562e_dk = {
             ]  # Monitors
         },
         "RegressionIPC": {
-            "binaries": {
-                "tarball": "stm32l562e-dk-tfm.tar.bz2",
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -2182,9 +1838,6 @@ stm32l562e_dk = {
             ]  # Monitors
         },
         "RegressionIPCTfmLevel2": {
-            "binaries": {
-                "tarball": "stm32l562e-dk-tfm.tar.bz2",
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -2207,9 +1860,6 @@ stm32l562e_dk = {
             ]  # Monitors
         },
         "RegressionIPCTfmLevel3": {
-            "binaries": {
-                "tarball": "stm32l562e-dk-tfm.tar.bz2",
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -2247,11 +1897,11 @@ lpcxpresso55s69 = {
     "compilers": ["GNUARM"],
     "build_types": ["Relwithdebinfo"],
     "boot_types": ["NOBL2"],
+    "binaries": {
+        "tarball": "lpcxpresso55s69-tfm.tar.bz2",
+    },
     "tests": {
         "DefaultProfileM": {
-            "binaries": {
-                "tarball": "lpcxpresso55s69-tfm.tar.bz2",
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -2263,9 +1913,6 @@ lpcxpresso55s69 = {
             ]  # Monitors
         },
         "RegressionProfileM": {
-            "binaries": {
-                "tarball": "lpcxpresso55s69-tfm.tar.bz2",
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -2303,12 +1950,12 @@ psoc64 = {
     "compilers": ["GNUARM", "ARMCLANG"],
     "build_types": ["Release", "Minsizerel"],
     "boot_types": ["NOBL2"],
+    "binaries": {
+        "spe": "tfm_s_signed.hex",
+        "nspe": "tfm_ns_signed.hex",
+    },
     "tests": {
         "Regression": {
-            "binaries": {
-                "spe_image": "tfm_s_signed.hex",
-                "nspe_image": "tfm_ns_signed.hex",
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -2331,10 +1978,6 @@ psoc64 = {
             ]  # Monitors
         },
         "RegressionIPC": {
-            "binaries": {
-                "spe_image": "tfm_s_signed.hex",
-                "nspe_image": "tfm_ns_signed.hex",
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -2357,10 +2000,6 @@ psoc64 = {
             ]  # Monitors
         },
         "RegressionIPCTfmLevel2": {
-            "binaries": {
-                "spe_image": "tfm_s_signed.hex",
-                "nspe_image": "tfm_ns_signed.hex",
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',
@@ -2383,10 +2022,6 @@ psoc64 = {
             ]  # Monitors
         },
         "RegressionIPCTfmLevel3": {
-            "binaries": {
-                "spe_image": "tfm_s_signed.hex",
-                "nspe_image": "tfm_ns_signed.hex",
-            },
             "monitors": [
                 {
                     'name': 'Secure_Test_Suites_Summary',

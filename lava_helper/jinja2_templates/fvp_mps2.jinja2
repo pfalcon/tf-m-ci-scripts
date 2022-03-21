@@ -1,5 +1,5 @@
 {#------------------------------------------------------------------------------
-# Copyright (c) 2018-2019, Arm Limited and Contributors. All rights reserved.
+# Copyright (c) 2018-2022, Arm Limited and Contributors. All rights reserved.
 #
 # SPDX-License-Identifier: BSD-3-Clause
 #
@@ -20,10 +20,10 @@ actions:
     namespace: docker
     to: fvp
     images:
-      ns:
-        url: {{ firmware_url }}
-      s:
-        url: {{ bootloader_url }}
+      app:
+        url: {{ application_url }}
+      data:
+        url: {{ data_url }}
 {%- if enable_code_coverage %}
       cc:
         url: {{ coverage_trace_plugin }}
@@ -44,8 +44,8 @@ actions:
     license_variable: '{{ license_variable }}'
     use_telnet: False
     arguments:
-    -  "--application cpu0={NS}"
-    -  "--data cpu0={S}@{{ data_bin_offset }}"
+    -  "--application cpu0={APP}"
+    -  "--data cpu0={DATA}@{{ data_bin_offset }}"
     -  "--parameter fvp_mps2.platform_type=2"
     -  "--parameter cpu0.baseline={{ cpu0_baseline }}"
     -  "--parameter cpu0.INITVTOR_S={{ cpu0_initvtor_s }}"
