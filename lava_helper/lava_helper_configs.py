@@ -8,7 +8,7 @@ from __future__ import print_function
 
 __copyright__ = """
 /*
- * Copyright (c) 2018-2021, Arm Limited. All rights reserved.
+ * Copyright (c) 2018-2022, Arm Limited. All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  *
@@ -122,7 +122,6 @@ tfm_mps2_sse_200 = {
                     'end': r'starting\\.{3}',
                     'pattern': r'Non-Secure system starting\\.{3}',
                     'fixup': {"pass": "!", "fail": ""},
-                    'required': ["secure_image_initializing"]
                 }  # Monitors
             ]
         },  # Default
@@ -138,7 +137,6 @@ tfm_mps2_sse_200 = {
                     'end': r'starting\\.{3}',
                     'pattern': r'Non-Secure system starting\\.{3}',
                     'fixup': {"pass": "!", "fail": ""},
-                    'required': ["secure_image_initializing"]
                 } # Monitors
             ]
         },  # DefaultProfileS
@@ -154,7 +152,6 @@ tfm_mps2_sse_200 = {
                     'end': r'starting\\.{3}',
                     'pattern': r'Non-Secure system starting\\.{3}',
                     'fixup': {"pass": "!", "fail": ""},
-                    'required': ["secure_image_initializing"]
                 } # Monitors
             ]
         },  # DefaultProfileM
@@ -170,7 +167,6 @@ tfm_mps2_sse_200 = {
                     'end': r'starting\\.{3}',
                     'pattern': r'Non-Secure system starting\\.{3}',
                     'fixup': {"pass": "!", "fail": ""},
-                    'required': ["secure_image_initializing"]
                 } # Monitors
             ]
         },  # DefaultProfileL
@@ -189,20 +185,6 @@ tfm_mps2_sse_200 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage_"
-                           "s_interface_tests_tfm_sst_test_2xxx_"),
-                        "sst_reliability_tests_tfm_sst_test_3xxx_",
-                        "sst_rollback_protection_tests_tfm_sst_test_4xxx_",
-                        ("psa_internal_trusted_storage_"
-                           "s_interface_tests_tfm_its_test_2xxx_"),
-                        "its_reliability_tests_tfm_its_test_3xxx_",
-                        ("audit_"
-                         "logging_secure_interface_test_tfm_audit_test_1xxx_"),
-                        "crypto_secure_interface_tests_tfm_crypto_test_5xxx_",
-                        ("initial_attestation_service_"
-                         "secure_interface_tests_tfm_attest_test_1xxx_"),
-                    ]
                 },
                 {
                     'name': 'Non_Secure_Test_Suites_Summary',
@@ -212,19 +194,6 @@ tfm_mps2_sse_200 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage"
-                         "_ns_interface_tests_tfm_sst_test_1xxx_"),
-                        ("psa_internal_trusted_storage"
-                         "_ns_interface_tests_tfm_its_test_1xxx_"),
-                        ("auditlog_"
-                         "non_secure_interface_test_tfm_audit_test_1xxx_"),
-                        ("crypto_"
-                         "non_secure_interface_test_tfm_crypto_test_6xxx_"),
-                        ("initial_attestation_service_"
-                         "non_secure_interface_tests_tfm_attest_test_2xxx_"),
-                        "core_non_secure_positive_tests_tfm_core_test_1xxx_"
-                    ]
                 }
             ]  # Monitors
         },  # Regression
@@ -243,20 +212,6 @@ tfm_mps2_sse_200 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage_"
-                           "s_interface_tests_tfm_sst_test_2xxx_"),
-                        "sst_reliability_tests_tfm_sst_test_3xxx_",
-                        "sst_rollback_protection_tests_tfm_sst_test_4xxx_",
-                        ("psa_internal_trusted_storage_"
-                           "s_interface_tests_tfm_its_test_2xxx_"),
-                        "its_reliability_tests_tfm_its_test_3xxx_",
-                        ("audit_"
-                         "logging_secure_interface_test_tfm_audit_test_1xxx_"),
-                        "crypto_secure_interface_tests_tfm_crypto_test_5xxx_",
-                        ("initial_attestation_service_"
-                         "secure_interface_tests_tfm_attest_test_1xxx_"),
-                    ]
                 },
                 {
                     'name': 'Non_Secure_Test_Suites_Summary',
@@ -266,19 +221,6 @@ tfm_mps2_sse_200 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage"
-                         "_ns_interface_tests_tfm_sst_test_1xxx_"),
-                        ("psa_internal_trusted_storage"
-                         "_ns_interface_tests_tfm_its_test_1xxx_"),
-                        ("auditlog_"
-                         "non_secure_interface_test_tfm_audit_test_1xxx_"),
-                        ("crypto_"
-                         "non_secure_interface_test_tfm_crypto_test_6xxx_"),
-                        ("initial_attestation_service_"
-                         "non_secure_interface_tests_tfm_attest_test_2xxx_"),
-                        "core_non_secure_positive_tests_tfm_core_test_1xxx_"
-                    ]
                 }
             ]  # Monitors
         },  # RegressionProfileM
@@ -296,20 +238,6 @@ tfm_mps2_sse_200 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage_"
-                           "s_interface_tests_tfm_sst_test_2xxx_"),
-                        "sst_reliability_tests_tfm_sst_test_3xxx_",
-                        "sst_rollback_protection_tests_tfm_sst_test_4xxx_",
-                        ("psa_internal_trusted_storage_"
-                           "s_interface_tests_tfm_its_test_2xxx_"),
-                        "its_reliability_tests_tfm_its_test_3xxx_",
-                        ("audit_"
-                         "logging_secure_interface_test_tfm_audit_test_1xxx_"),
-                        "crypto_secure_interface_tests_tfm_crypto_test_5xxx_",
-                        ("initial_attestation_service_"
-                         "secure_interface_tests_tfm_attest_test_1xxx_"),
-                    ]
                 },
                 {
                     'name': 'Non_Secure_Test_Suites_Summary',
@@ -319,19 +247,6 @@ tfm_mps2_sse_200 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage"
-                         "_ns_interface_tests_tfm_sst_test_1xxx_"),
-                        ("psa_internal_trusted_storage"
-                         "_ns_interface_tests_tfm_its_test_1xxx_"),
-                        ("auditlog_"
-                         "non_secure_interface_test_tfm_audit_test_1xxx_"),
-                        ("crypto_"
-                         "non_secure_interface_test_tfm_crypto_test_6xxx_"),
-                        ("initial_attestation_service_"
-                         "non_secure_interface_tests_tfm_attest_test_2xxx_"),
-                        "core_non_secure_positive_tests_tfm_core_test_1xxx_"
-                    ]
                 }
             ]  # Monitors
         },  # RegressionProfileS
@@ -349,20 +264,6 @@ tfm_mps2_sse_200 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage_"
-                           "s_interface_tests_tfm_sst_test_2xxx_"),
-                        "sst_reliability_tests_tfm_sst_test_3xxx_",
-                        "sst_rollback_protection_tests_tfm_sst_test_4xxx_",
-                        ("psa_internal_trusted_storage_"
-                           "s_interface_tests_tfm_its_test_2xxx_"),
-                        "its_reliability_tests_tfm_its_test_3xxx_",
-                        ("audit_"
-                         "logging_secure_interface_test_tfm_audit_test_1xxx_"),
-                        "crypto_secure_interface_tests_tfm_crypto_test_5xxx_",
-                        ("initial_attestation_service_"
-                         "secure_interface_tests_tfm_attest_test_1xxx_"),
-                    ]
                 },
                 {
                     'name': 'Non_Secure_Test_Suites_Summary',
@@ -372,19 +273,6 @@ tfm_mps2_sse_200 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage"
-                         "_ns_interface_tests_tfm_sst_test_1xxx_"),
-                        ("psa_internal_trusted_storage"
-                         "_ns_interface_tests_tfm_its_test_1xxx_"),
-                        ("auditlog_"
-                         "non_secure_interface_test_tfm_audit_test_1xxx_"),
-                        ("crypto_"
-                         "non_secure_interface_test_tfm_crypto_test_6xxx_"),
-                        ("initial_attestation_service_"
-                         "non_secure_interface_tests_tfm_attest_test_2xxx_"),
-                        "core_non_secure_positive_tests_tfm_core_test_1xxx_"
-                    ]
                 }
             ]  # Monitors
         },  # RegressionProfileL
@@ -403,20 +291,6 @@ tfm_mps2_sse_200 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage_"
-                           "s_interface_tests_tfm_sst_test_2xxx_"),
-                        "sst_reliability_tests_tfm_sst_test_3xxx_",
-                        "sst_rollback_protection_tests_tfm_sst_test_4xxx_",
-                        ("psa_internal_trusted_storage_"
-                           "s_interface_tests_tfm_its_test_2xxx_"),
-                        "its_reliability_tests_tfm_its_test_3xxx_",
-                        ("audit_"
-                         "logging_secure_interface_test_tfm_audit_test_1xxx_"),
-                        "crypto_secure_interface_tests_tfm_crypto_test_5xxx_",
-                        ("initial_attestation_service_"
-                         "secure_interface_tests_tfm_attest_test_1xxx_"),
-                    ]
                 },
                 {
                     'name': 'Non_Secure_Test_Suites_Summary',
@@ -426,19 +300,6 @@ tfm_mps2_sse_200 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage"
-                         "_ns_interface_tests_tfm_sst_test_1xxx_"),
-                        ("psa_internal_trusted_storage"
-                         "_ns_interface_tests_tfm_its_test_1xxx_"),
-                        ("auditlog_"
-                         "non_secure_interface_test_tfm_audit_test_1xxx_"),
-                        ("crypto_"
-                         "non_secure_interface_test_tfm_crypto_test_6xxx_"),
-                        ("initial_attestation_service_"
-                         "non_secure_interface_tests_tfm_attest_test_2xxx_"),
-                        "core_non_secure_positive_tests_tfm_core_test_1xxx_"
-                    ]
                 }
             ]  # Monitors
         },  # Regression
@@ -456,20 +317,6 @@ tfm_mps2_sse_200 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage_"
-                           "s_interface_tests_tfm_sst_test_2xxx_"),
-                        "sst_reliability_tests_tfm_sst_test_3xxx_",
-                        "sst_rollback_protection_tests_tfm_sst_test_4xxx_",
-                        ("psa_internal_trusted_storage_"
-                           "s_interface_tests_tfm_its_test_2xxx_"),
-                        "its_reliability_tests_tfm_its_test_3xxx_",
-                        ("audit_"
-                         "logging_secure_interface_test_tfm_audit_test_1xxx_"),
-                        "crypto_secure_interface_tests_tfm_crypto_test_5xxx_",
-                        ("initial_attestation_service_"
-                         "secure_interface_tests_tfm_attest_test_1xxx_"),
-                    ]
                 },
                 {
                     'name': 'Non_Secure_Test_Suites_Summary',
@@ -479,19 +326,6 @@ tfm_mps2_sse_200 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage"
-                         "_ns_interface_tests_tfm_sst_test_1xxx_"),
-                        ("psa_internal_trusted_storage"
-                         "_ns_interface_tests_tfm_its_test_1xxx_"),
-                        ("auditlog_"
-                         "non_secure_interface_test_tfm_audit_test_1xxx_"),
-                        ("crypto_"
-                         "non_secure_interface_test_tfm_crypto_test_6xxx_"),
-                        ("initial_attestation_service_"
-                         "non_secure_interface_tests_tfm_attest_test_2xxx_"),
-                        "core_non_secure_positive_tests_tfm_core_test_1xxx_"
-                    ]
                 }
             ]  # Monitors
         },  # Regression
@@ -509,20 +343,6 @@ tfm_mps2_sse_200 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage_"
-                           "s_interface_tests_tfm_sst_test_2xxx_"),
-                        "sst_reliability_tests_tfm_sst_test_3xxx_",
-                        "sst_rollback_protection_tests_tfm_sst_test_4xxx_",
-                        ("psa_internal_trusted_storage_"
-                           "s_interface_tests_tfm_its_test_2xxx_"),
-                        "its_reliability_tests_tfm_its_test_3xxx_",
-                        ("audit_"
-                         "logging_secure_interface_test_tfm_audit_test_1xxx_"),
-                        "crypto_secure_interface_tests_tfm_crypto_test_5xxx_",
-                        ("initial_attestation_service_"
-                         "secure_interface_tests_tfm_attest_test_1xxx_"),
-                    ]
                 },
                 {
                     'name': 'Non_Secure_Test_Suites_Summary',
@@ -532,19 +352,6 @@ tfm_mps2_sse_200 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage"
-                         "_ns_interface_tests_tfm_sst_test_1xxx_"),
-                        ("psa_internal_trusted_storage"
-                         "_ns_interface_tests_tfm_its_test_1xxx_"),
-                        ("auditlog_"
-                         "non_secure_interface_test_tfm_audit_test_1xxx_"),
-                        ("crypto_"
-                         "non_secure_interface_test_tfm_crypto_test_6xxx_"),
-                        ("initial_attestation_service_"
-                         "non_secure_interface_tests_tfm_attest_test_2xxx_"),
-                        "core_non_secure_positive_tests_tfm_core_test_1xxx_"
-                    ]
                 }
             ]  # Monitors
         },  # Regression
@@ -560,7 +367,6 @@ tfm_mps2_sse_200 = {
                     'end': r'starting\\.{3}',
                     'pattern': r'Non-Secure system starting\\.{3}',
                     'fixup': {"pass": "!", "fail": ""},
-                    'required': ["secure_image_initializing"]
                 }  # Monitors
             ]
         },  # CoreIPC
@@ -576,7 +382,6 @@ tfm_mps2_sse_200 = {
                     'end': r'starting\\.{3}',
                     'pattern': r'Non-Secure system starting\\.{3}',
                     'fixup': {"pass": "!", "fail": ""},
-                    'required': ["secure_image_initializing"]
                 }  # Monitors
             ]
         },  # CoreIPCTfmLevel2
@@ -592,7 +397,6 @@ tfm_mps2_sse_200 = {
                     'end': r'starting\\.{3}',
                     'pattern': r'Non-Secure system starting\\.{3}',
                     'fixup': {"pass": "!", "fail": ""},
-                    'required': ["secure_image_initializing"]
                 }  # Monitors
             ]
         },  # CoreIPCTfmLevel3
@@ -670,7 +474,6 @@ fvp_mps2_an521_bl2 = {
                     'end': r'starting\\.{3}',
                     'pattern': r'Non-Secure system starting\\.{3}',
                     'fixup': {"pass": "!", "fail": ""},
-                    'required': ["secure_image_initializing"]
                 } # Monitors
             ]
         },  # Default
@@ -686,7 +489,6 @@ fvp_mps2_an521_bl2 = {
                     'end': r'starting\\.{3}',
                     'pattern': r'Non-Secure system starting\\.{3}',
                     'fixup': {"pass": "!", "fail": ""},
-                    'required': ["secure_image_initializing"]
                 } # Monitors
             ]
         },  # DefaultProfileS
@@ -702,7 +504,6 @@ fvp_mps2_an521_bl2 = {
                     'end': r'starting\\.{3}',
                     'pattern': r'Non-Secure system starting\\.{3}',
                     'fixup': {"pass": "!", "fail": ""},
-                    'required': ["secure_image_initializing"]
                 } # Monitors
             ]
         },  # DefaultProfileM
@@ -718,7 +519,6 @@ fvp_mps2_an521_bl2 = {
                     'end': r'starting\\.{3}',
                     'pattern': r'Non-Secure system starting\\.{3}',
                     'fixup': {"pass": "!", "fail": ""},
-                    'required': ["secure_image_initializing"]
                 } # Monitors
             ]
         },  # DefaultProfileL
@@ -737,20 +537,6 @@ fvp_mps2_an521_bl2 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage_"
-                           "s_interface_tests_tfm_sst_test_2xxx_"),
-                        "sst_reliability_tests_tfm_sst_test_3xxx_",
-                        "sst_rollback_protection_tests_tfm_sst_test_4xxx_",
-                        ("psa_internal_trusted_storage_"
-                           "s_interface_tests_tfm_its_test_2xxx_"),
-                        "its_reliability_tests_tfm_its_test_3xxx_",
-                        ("audit_"
-                         "logging_secure_interface_test_tfm_audit_test_1xxx_"),
-                        "crypto_secure_interface_tests_tfm_crypto_test_5xxx_",
-                        ("initial_attestation_service_"
-                         "secure_interface_tests_tfm_attest_test_1xxx_"),
-                    ]
                 },
                 {
                     'name': 'Non_Secure_Test_Suites_Summary',
@@ -760,19 +546,6 @@ fvp_mps2_an521_bl2 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage"
-                         "_ns_interface_tests_tfm_sst_test_1xxx_"),
-                        ("psa_internal_trusted_storage"
-                         "_ns_interface_tests_tfm_its_test_1xxx_"),
-                        ("auditlog_"
-                         "non_secure_interface_test_tfm_audit_test_1xxx_"),
-                        ("crypto_"
-                         "non_secure_interface_test_tfm_crypto_test_6xxx_"),
-                        ("initial_attestation_service_"
-                         "non_secure_interface_tests_tfm_attest_test_2xxx_"),
-                        "core_non_secure_positive_tests_tfm_core_test_1xxx_"
-                    ]
                 }
             ]  # Monitors
         },  # Regression
@@ -791,20 +564,6 @@ fvp_mps2_an521_bl2 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage_"
-                           "s_interface_tests_tfm_sst_test_2xxx_"),
-                        "sst_reliability_tests_tfm_sst_test_3xxx_",
-                        "sst_rollback_protection_tests_tfm_sst_test_4xxx_",
-                        ("psa_internal_trusted_storage_"
-                           "s_interface_tests_tfm_its_test_2xxx_"),
-                        "its_reliability_tests_tfm_its_test_3xxx_",
-                        ("audit_"
-                         "logging_secure_interface_test_tfm_audit_test_1xxx_"),
-                        "crypto_secure_interface_tests_tfm_crypto_test_5xxx_",
-                        ("initial_attestation_service_"
-                         "secure_interface_tests_tfm_attest_test_1xxx_"),
-                    ]
                 },
                 {
                     'name': 'Non_Secure_Test_Suites_Summary',
@@ -814,19 +573,6 @@ fvp_mps2_an521_bl2 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage"
-                         "_ns_interface_tests_tfm_sst_test_1xxx_"),
-                        ("psa_internal_trusted_storage"
-                         "_ns_interface_tests_tfm_its_test_1xxx_"),
-                        ("auditlog_"
-                         "non_secure_interface_test_tfm_audit_test_1xxx_"),
-                        ("crypto_"
-                         "non_secure_interface_test_tfm_crypto_test_6xxx_"),
-                        ("initial_attestation_service_"
-                         "non_secure_interface_tests_tfm_attest_test_2xxx_"),
-                        "core_non_secure_positive_tests_tfm_core_test_1xxx_"
-                    ]
                 }
             ]  # Monitors
         },  # RegressionProfileM
@@ -844,20 +590,6 @@ fvp_mps2_an521_bl2 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage_"
-                           "s_interface_tests_tfm_sst_test_2xxx_"),
-                        "sst_reliability_tests_tfm_sst_test_3xxx_",
-                        "sst_rollback_protection_tests_tfm_sst_test_4xxx_",
-                        ("psa_internal_trusted_storage_"
-                           "s_interface_tests_tfm_its_test_2xxx_"),
-                        "its_reliability_tests_tfm_its_test_3xxx_",
-                        ("audit_"
-                         "logging_secure_interface_test_tfm_audit_test_1xxx_"),
-                        "crypto_secure_interface_tests_tfm_crypto_test_5xxx_",
-                        ("initial_attestation_service_"
-                         "secure_interface_tests_tfm_attest_test_1xxx_"),
-                    ]
                 },
                 {
                     'name': 'Non_Secure_Test_Suites_Summary',
@@ -867,19 +599,6 @@ fvp_mps2_an521_bl2 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage"
-                         "_ns_interface_tests_tfm_sst_test_1xxx_"),
-                        ("psa_internal_trusted_storage"
-                         "_ns_interface_tests_tfm_its_test_1xxx_"),
-                        ("auditlog_"
-                         "non_secure_interface_test_tfm_audit_test_1xxx_"),
-                        ("crypto_"
-                         "non_secure_interface_test_tfm_crypto_test_6xxx_"),
-                        ("initial_attestation_service_"
-                         "non_secure_interface_tests_tfm_attest_test_2xxx_"),
-                        "core_non_secure_positive_tests_tfm_core_test_1xxx_"
-                    ]
                 }
             ]  # Monitors
         },  # RegressionProfileS
@@ -897,20 +616,6 @@ fvp_mps2_an521_bl2 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage_"
-                           "s_interface_tests_tfm_sst_test_2xxx_"),
-                        "sst_reliability_tests_tfm_sst_test_3xxx_",
-                        "sst_rollback_protection_tests_tfm_sst_test_4xxx_",
-                        ("psa_internal_trusted_storage_"
-                           "s_interface_tests_tfm_its_test_2xxx_"),
-                        "its_reliability_tests_tfm_its_test_3xxx_",
-                        ("audit_"
-                         "logging_secure_interface_test_tfm_audit_test_1xxx_"),
-                        "crypto_secure_interface_tests_tfm_crypto_test_5xxx_",
-                        ("initial_attestation_service_"
-                         "secure_interface_tests_tfm_attest_test_1xxx_"),
-                    ]
                 },
                 {
                     'name': 'Non_Secure_Test_Suites_Summary',
@@ -920,19 +625,6 @@ fvp_mps2_an521_bl2 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage"
-                         "_ns_interface_tests_tfm_sst_test_1xxx_"),
-                        ("psa_internal_trusted_storage"
-                         "_ns_interface_tests_tfm_its_test_1xxx_"),
-                        ("auditlog_"
-                         "non_secure_interface_test_tfm_audit_test_1xxx_"),
-                        ("crypto_"
-                         "non_secure_interface_test_tfm_crypto_test_6xxx_"),
-                        ("initial_attestation_service_"
-                         "non_secure_interface_tests_tfm_attest_test_2xxx_"),
-                        "core_non_secure_positive_tests_tfm_core_test_1xxx_"
-                    ]
                 }
             ]  # Monitors
         },  # RegressionProfileL
@@ -951,20 +643,6 @@ fvp_mps2_an521_bl2 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage_"
-                           "s_interface_tests_tfm_sst_test_2xxx_"),
-                        "sst_reliability_tests_tfm_sst_test_3xxx_",
-                        "sst_rollback_protection_tests_tfm_sst_test_4xxx_",
-                        ("psa_internal_trusted_storage_"
-                           "s_interface_tests_tfm_its_test_2xxx_"),
-                        "its_reliability_tests_tfm_its_test_3xxx_",
-                        ("audit_"
-                         "logging_secure_interface_test_tfm_audit_test_1xxx_"),
-                        "crypto_secure_interface_tests_tfm_crypto_test_5xxx_",
-                        ("initial_attestation_service_"
-                         "secure_interface_tests_tfm_attest_test_1xxx_"),
-                    ]
                 },
                 {
                     'name': 'Non_Secure_Test_Suites_Summary',
@@ -974,19 +652,6 @@ fvp_mps2_an521_bl2 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage"
-                         "_ns_interface_tests_tfm_sst_test_1xxx_"),
-                        ("psa_internal_trusted_storage"
-                         "_ns_interface_tests_tfm_its_test_1xxx_"),
-                        ("auditlog_"
-                         "non_secure_interface_test_tfm_audit_test_1xxx_"),
-                        ("crypto_"
-                         "non_secure_interface_test_tfm_crypto_test_6xxx_"),
-                        ("initial_attestation_service_"
-                         "non_secure_interface_tests_tfm_attest_test_2xxx_"),
-                        "core_non_secure_positive_tests_tfm_core_test_1xxx_"
-                    ]
                 }
             ]  # Monitors
         },  # Regression
@@ -1004,20 +669,6 @@ fvp_mps2_an521_bl2 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage_"
-                           "s_interface_tests_tfm_sst_test_2xxx_"),
-                        "sst_reliability_tests_tfm_sst_test_3xxx_",
-                        "sst_rollback_protection_tests_tfm_sst_test_4xxx_",
-                        ("psa_internal_trusted_storage_"
-                           "s_interface_tests_tfm_its_test_2xxx_"),
-                        "its_reliability_tests_tfm_its_test_3xxx_",
-                        ("audit_"
-                         "logging_secure_interface_test_tfm_audit_test_1xxx_"),
-                        "crypto_secure_interface_tests_tfm_crypto_test_5xxx_",
-                        ("initial_attestation_service_"
-                         "secure_interface_tests_tfm_attest_test_1xxx_"),
-                    ]
                 },
                 {
                     'name': 'Non_Secure_Test_Suites_Summary',
@@ -1027,19 +678,6 @@ fvp_mps2_an521_bl2 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage"
-                         "_ns_interface_tests_tfm_sst_test_1xxx_"),
-                        ("psa_internal_trusted_storage"
-                         "_ns_interface_tests_tfm_its_test_1xxx_"),
-                        ("auditlog_"
-                         "non_secure_interface_test_tfm_audit_test_1xxx_"),
-                        ("crypto_"
-                         "non_secure_interface_test_tfm_crypto_test_6xxx_"),
-                        ("initial_attestation_service_"
-                         "non_secure_interface_tests_tfm_attest_test_2xxx_"),
-                        "core_non_secure_positive_tests_tfm_core_test_1xxx_"
-                    ]
                 }
             ]  # Monitors
         },  # Regression
@@ -1057,20 +695,6 @@ fvp_mps2_an521_bl2 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage_"
-                           "s_interface_tests_tfm_sst_test_2xxx_"),
-                        "sst_reliability_tests_tfm_sst_test_3xxx_",
-                        "sst_rollback_protection_tests_tfm_sst_test_4xxx_",
-                        ("psa_internal_trusted_storage_"
-                           "s_interface_tests_tfm_its_test_2xxx_"),
-                        "its_reliability_tests_tfm_its_test_3xxx_",
-                        ("audit_"
-                         "logging_secure_interface_test_tfm_audit_test_1xxx_"),
-                        "crypto_secure_interface_tests_tfm_crypto_test_5xxx_",
-                        ("initial_attestation_service_"
-                         "secure_interface_tests_tfm_attest_test_1xxx_"),
-                    ]
                 },
                 {
                     'name': 'Non_Secure_Test_Suites_Summary',
@@ -1080,19 +704,6 @@ fvp_mps2_an521_bl2 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage"
-                         "_ns_interface_tests_tfm_sst_test_1xxx_"),
-                        ("psa_internal_trusted_storage"
-                         "_ns_interface_tests_tfm_its_test_1xxx_"),
-                        ("auditlog_"
-                         "non_secure_interface_test_tfm_audit_test_1xxx_"),
-                        ("crypto_"
-                         "non_secure_interface_test_tfm_crypto_test_6xxx_"),
-                        ("initial_attestation_service_"
-                         "non_secure_interface_tests_tfm_attest_test_2xxx_"),
-                        "core_non_secure_positive_tests_tfm_core_test_1xxx_"
-                    ]
                 }
             ]  # Monitors
         },  # Regression
@@ -1108,7 +719,6 @@ fvp_mps2_an521_bl2 = {
                     'end': r'starting\\.{3}',
                     'pattern': r'Non-Secure system starting\\.{3}',
                     'fixup': {"pass": "!", "fail": ""},
-                    'required': ["secure_image_initializing"]
                 }  # Monitors
             ]
         },  # CoreIPC
@@ -1124,7 +734,6 @@ fvp_mps2_an521_bl2 = {
                     'end': r'starting\\.{3}',
                     'pattern': r'Non-Secure system starting\\.{3}',
                     'fixup': {"pass": "!", "fail": ""},
-                    'required': ["secure_image_initializing"]
                 }  # Monitors
             ]
         },  # CoreIPCTfmLevel2
@@ -1140,7 +749,6 @@ fvp_mps2_an521_bl2 = {
                     'end': r'starting\\.{3}',
                     'pattern': r'Non-Secure system starting\\.{3}',
                     'fixup': {"pass": "!", "fail": ""},
-                    'required': ["secure_image_initializing"]
                 }  # Monitors
             ]
         },  # CoreIPCTfmLevel3
@@ -1219,7 +827,6 @@ fvp_mps2_an521_nobl2 = {
                     'end': r'starting\\.{3}',
                     'pattern': r'Non-Secure system starting\\.{3}',
                     'fixup': {"pass": "!", "fail": ""},
-                    'required': ["secure_image_initializing"]
                 }
             ]
         },  # Default
@@ -1235,7 +842,6 @@ fvp_mps2_an521_nobl2 = {
                     'end': r'starting\\.{3}',
                     'pattern': r'Non-Secure system starting\\.{3}',
                     'fixup': {"pass": "!", "fail": ""},
-                    'required': ["secure_image_initializing"]
                 } # Monitors
             ]
         },  # DefaultProfileS
@@ -1251,7 +857,6 @@ fvp_mps2_an521_nobl2 = {
                     'end': r'starting\\.{3}',
                     'pattern': r'Non-Secure system starting\\.{3}',
                     'fixup': {"pass": "!", "fail": ""},
-                    'required': ["secure_image_initializing"]
                 } # Monitors
             ]
         },  # DefaultProfileM
@@ -1267,7 +872,6 @@ fvp_mps2_an521_nobl2 = {
                     'end': r'starting\\.{3}',
                     'pattern': r'Non-Secure system starting\\.{3}',
                     'fixup': {"pass": "!", "fail": ""},
-                    'required': ["secure_image_initializing"]
                 } # Monitors
             ]
         },  # DefaultProfileL
@@ -1286,20 +890,6 @@ fvp_mps2_an521_nobl2 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage_"
-                           "s_interface_tests_tfm_sst_test_2xxx_"),
-                        "sst_reliability_tests_tfm_sst_test_3xxx_",
-                        "sst_rollback_protection_tests_tfm_sst_test_4xxx_",
-                        ("psa_internal_trusted_storage_"
-                           "s_interface_tests_tfm_its_test_2xxx_"),
-                        "its_reliability_tests_tfm_its_test_3xxx_",
-                        ("audit_"
-                         "logging_secure_interface_test_tfm_audit_test_1xxx_"),
-                        "crypto_secure_interface_tests_tfm_crypto_test_5xxx_",
-                        ("initial_attestation_service_"
-                         "secure_interface_tests_tfm_attest_test_1xxx_"),
-                    ]
                 },
                 {
                     'name': 'Non_Secure_Test_Suites_Summary',
@@ -1309,19 +899,6 @@ fvp_mps2_an521_nobl2 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage"
-                         "_ns_interface_tests_tfm_sst_test_1xxx_"),
-                        ("psa_internal_trusted_storage"
-                         "_ns_interface_tests_tfm_its_test_1xxx_"),
-                        ("auditlog_"
-                         "non_secure_interface_test_tfm_audit_test_1xxx_"),
-                        ("crypto_"
-                         "non_secure_interface_test_tfm_crypto_test_6xxx_"),
-                        ("initial_attestation_service_"
-                         "non_secure_interface_tests_tfm_attest_test_2xxx_"),
-                        "core_non_secure_positive_tests_tfm_core_test_1xxx_"
-                    ]
                 }
             ]  # Monitors
         },  # Regression
@@ -1339,20 +916,6 @@ fvp_mps2_an521_nobl2 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage_"
-                           "s_interface_tests_tfm_sst_test_2xxx_"),
-                        "sst_reliability_tests_tfm_sst_test_3xxx_",
-                        "sst_rollback_protection_tests_tfm_sst_test_4xxx_",
-                        ("psa_internal_trusted_storage_"
-                           "s_interface_tests_tfm_its_test_2xxx_"),
-                        "its_reliability_tests_tfm_its_test_3xxx_",
-                        ("audit_"
-                         "logging_secure_interface_test_tfm_audit_test_1xxx_"),
-                        "crypto_secure_interface_tests_tfm_crypto_test_5xxx_",
-                        ("initial_attestation_service_"
-                         "secure_interface_tests_tfm_attest_test_1xxx_"),
-                    ]
                 },
                 {
                     'name': 'Non_Secure_Test_Suites_Summary',
@@ -1362,19 +925,6 @@ fvp_mps2_an521_nobl2 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage"
-                         "_ns_interface_tests_tfm_sst_test_1xxx_"),
-                        ("psa_internal_trusted_storage"
-                         "_ns_interface_tests_tfm_its_test_1xxx_"),
-                        ("auditlog_"
-                         "non_secure_interface_test_tfm_audit_test_1xxx_"),
-                        ("crypto_"
-                         "non_secure_interface_test_tfm_crypto_test_6xxx_"),
-                        ("initial_attestation_service_"
-                         "non_secure_interface_tests_tfm_attest_test_2xxx_"),
-                        "core_non_secure_positive_tests_tfm_core_test_1xxx_"
-                    ]
                 }
             ]  # Monitors
         },  # RegressionProfileM
@@ -1392,20 +942,6 @@ fvp_mps2_an521_nobl2 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage_"
-                           "s_interface_tests_tfm_sst_test_2xxx_"),
-                        "sst_reliability_tests_tfm_sst_test_3xxx_",
-                        "sst_rollback_protection_tests_tfm_sst_test_4xxx_",
-                        ("psa_internal_trusted_storage_"
-                           "s_interface_tests_tfm_its_test_2xxx_"),
-                        "its_reliability_tests_tfm_its_test_3xxx_",
-                        ("audit_"
-                         "logging_secure_interface_test_tfm_audit_test_1xxx_"),
-                        "crypto_secure_interface_tests_tfm_crypto_test_5xxx_",
-                        ("initial_attestation_service_"
-                         "secure_interface_tests_tfm_attest_test_1xxx_"),
-                    ]
                 },
                 {
                     'name': 'Non_Secure_Test_Suites_Summary',
@@ -1415,19 +951,6 @@ fvp_mps2_an521_nobl2 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage"
-                         "_ns_interface_tests_tfm_sst_test_1xxx_"),
-                        ("psa_internal_trusted_storage"
-                         "_ns_interface_tests_tfm_its_test_1xxx_"),
-                        ("auditlog_"
-                         "non_secure_interface_test_tfm_audit_test_1xxx_"),
-                        ("crypto_"
-                         "non_secure_interface_test_tfm_crypto_test_6xxx_"),
-                        ("initial_attestation_service_"
-                         "non_secure_interface_tests_tfm_attest_test_2xxx_"),
-                        "core_non_secure_positive_tests_tfm_core_test_1xxx_"
-                    ]
                 }
             ]  # Monitors
         },  # RegressionProfileS
@@ -1445,20 +968,6 @@ fvp_mps2_an521_nobl2 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage_"
-                           "s_interface_tests_tfm_sst_test_2xxx_"),
-                        "sst_reliability_tests_tfm_sst_test_3xxx_",
-                        "sst_rollback_protection_tests_tfm_sst_test_4xxx_",
-                        ("psa_internal_trusted_storage_"
-                           "s_interface_tests_tfm_its_test_2xxx_"),
-                        "its_reliability_tests_tfm_its_test_3xxx_",
-                        ("audit_"
-                         "logging_secure_interface_test_tfm_audit_test_1xxx_"),
-                        "crypto_secure_interface_tests_tfm_crypto_test_5xxx_",
-                        ("initial_attestation_service_"
-                         "secure_interface_tests_tfm_attest_test_1xxx_"),
-                    ]
                 },
                 {
                     'name': 'Non_Secure_Test_Suites_Summary',
@@ -1468,19 +977,6 @@ fvp_mps2_an521_nobl2 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage"
-                         "_ns_interface_tests_tfm_sst_test_1xxx_"),
-                        ("psa_internal_trusted_storage"
-                         "_ns_interface_tests_tfm_its_test_1xxx_"),
-                        ("auditlog_"
-                         "non_secure_interface_test_tfm_audit_test_1xxx_"),
-                        ("crypto_"
-                         "non_secure_interface_test_tfm_crypto_test_6xxx_"),
-                        ("initial_attestation_service_"
-                         "non_secure_interface_tests_tfm_attest_test_2xxx_"),
-                        "core_non_secure_positive_tests_tfm_core_test_1xxx_"
-                    ]
                 }
             ]  # Monitors
         },  # RegressionProfileL
@@ -1499,20 +995,6 @@ fvp_mps2_an521_nobl2 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage_"
-                           "s_interface_tests_tfm_sst_test_2xxx_"),
-                        "sst_reliability_tests_tfm_sst_test_3xxx_",
-                        "sst_rollback_protection_tests_tfm_sst_test_4xxx_",
-                        ("psa_internal_trusted_storage_"
-                           "s_interface_tests_tfm_its_test_2xxx_"),
-                        "its_reliability_tests_tfm_its_test_3xxx_",
-                        ("audit_"
-                         "logging_secure_interface_test_tfm_audit_test_1xxx_"),
-                        "crypto_secure_interface_tests_tfm_crypto_test_5xxx_",
-                        ("initial_attestation_service_"
-                         "secure_interface_tests_tfm_attest_test_1xxx_"),
-                    ]
                 },
                 {
                     'name': 'Non_Secure_Test_Suites_Summary',
@@ -1522,19 +1004,6 @@ fvp_mps2_an521_nobl2 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage"
-                         "_ns_interface_tests_tfm_sst_test_1xxx_"),
-                        ("psa_internal_trusted_storage"
-                         "_ns_interface_tests_tfm_its_test_1xxx_"),
-                        ("auditlog_"
-                         "non_secure_interface_test_tfm_audit_test_1xxx_"),
-                        ("crypto_"
-                         "non_secure_interface_test_tfm_crypto_test_6xxx_"),
-                        ("initial_attestation_service_"
-                         "non_secure_interface_tests_tfm_attest_test_2xxx_"),
-                        "core_non_secure_positive_tests_tfm_core_test_1xxx_"
-                    ]
                 }
             ]  # Monitors
         },  # RegressionIPC
@@ -1552,20 +1021,6 @@ fvp_mps2_an521_nobl2 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage_"
-                           "s_interface_tests_tfm_sst_test_2xxx_"),
-                        "sst_reliability_tests_tfm_sst_test_3xxx_",
-                        "sst_rollback_protection_tests_tfm_sst_test_4xxx_",
-                        ("psa_internal_trusted_storage_"
-                           "s_interface_tests_tfm_its_test_2xxx_"),
-                        "its_reliability_tests_tfm_its_test_3xxx_",
-                        ("audit_"
-                         "logging_secure_interface_test_tfm_audit_test_1xxx_"),
-                        "crypto_secure_interface_tests_tfm_crypto_test_5xxx_",
-                        ("initial_attestation_service_"
-                         "secure_interface_tests_tfm_attest_test_1xxx_"),
-                    ]
                 },
                 {
                     'name': 'Non_Secure_Test_Suites_Summary',
@@ -1575,19 +1030,6 @@ fvp_mps2_an521_nobl2 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage"
-                         "_ns_interface_tests_tfm_sst_test_1xxx_"),
-                        ("psa_internal_trusted_storage"
-                         "_ns_interface_tests_tfm_its_test_1xxx_"),
-                        ("auditlog_"
-                         "non_secure_interface_test_tfm_audit_test_1xxx_"),
-                        ("crypto_"
-                         "non_secure_interface_test_tfm_crypto_test_6xxx_"),
-                        ("initial_attestation_service_"
-                         "non_secure_interface_tests_tfm_attest_test_2xxx_"),
-                        "core_non_secure_positive_tests_tfm_core_test_1xxx_"
-                    ]
                 }
             ]  # Monitors
         },  # RegressionIPCTfmLevel2
@@ -1605,20 +1047,6 @@ fvp_mps2_an521_nobl2 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage_"
-                           "s_interface_tests_tfm_sst_test_2xxx_"),
-                        "sst_reliability_tests_tfm_sst_test_3xxx_",
-                        "sst_rollback_protection_tests_tfm_sst_test_4xxx_",
-                        ("psa_internal_trusted_storage_"
-                           "s_interface_tests_tfm_its_test_2xxx_"),
-                        "its_reliability_tests_tfm_its_test_3xxx_",
-                        ("audit_"
-                         "logging_secure_interface_test_tfm_audit_test_1xxx_"),
-                        "crypto_secure_interface_tests_tfm_crypto_test_5xxx_",
-                        ("initial_attestation_service_"
-                         "secure_interface_tests_tfm_attest_test_1xxx_"),
-                    ]
                 },
                 {
                     'name': 'Non_Secure_Test_Suites_Summary',
@@ -1628,19 +1056,6 @@ fvp_mps2_an521_nobl2 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage"
-                         "_ns_interface_tests_tfm_sst_test_1xxx_"),
-                        ("psa_internal_trusted_storage"
-                         "_ns_interface_tests_tfm_its_test_1xxx_"),
-                        ("auditlog_"
-                         "non_secure_interface_test_tfm_audit_test_1xxx_"),
-                        ("crypto_"
-                         "non_secure_interface_test_tfm_crypto_test_6xxx_"),
-                        ("initial_attestation_service_"
-                         "non_secure_interface_tests_tfm_attest_test_2xxx_"),
-                        "core_non_secure_positive_tests_tfm_core_test_1xxx_"
-                    ]
                 }
             ]  # Monitors
         },  # RegressionIPCTfmLevel3
@@ -1656,7 +1071,6 @@ fvp_mps2_an521_nobl2 = {
                     'end': r'starting\\.{3}',
                     'pattern': r'Non-Secure system starting\\.{3}',
                     'fixup': {"pass": "!", "fail": ""},
-                    'required': ["secure_image_initializing"]
                 }  # Monitors
             ]
         },  # CoreIPC
@@ -1672,7 +1086,6 @@ fvp_mps2_an521_nobl2 = {
                     'end': r'starting\\.{3}',
                     'pattern': r'Non-Secure system starting\\.{3}',
                     'fixup': {"pass": "!", "fail": ""},
-                    'required': ["secure_image_initializing"]
                 }  # Monitors
             ]
         },  # CoreIPCTfmLevel2
@@ -1688,7 +1101,6 @@ fvp_mps2_an521_nobl2 = {
                     'end': r'starting\\.{3}',
                     'pattern': r'Non-Secure system starting\\.{3}',
                     'fixup': {"pass": "!", "fail": ""},
-                    'required': ["secure_image_initializing"]
                 }  # Monitors
             ]
         },  # CoreIPCTfmLevel3
@@ -1726,7 +1138,6 @@ fvp_mps2_an519_bl2 = {
                     'end': r'starting\\.{3}',
                     'pattern': r'Non-Secure system starting\\.{3}',
                     'fixup': {"pass": "!", "fail": ""},
-                    'required': ["secure_image_initializing"]
                 } # Monitors
             ]
         },  # Default
@@ -1742,7 +1153,6 @@ fvp_mps2_an519_bl2 = {
                     'end': r'starting\\.{3}',
                     'pattern': r'Non-Secure system starting\\.{3}',
                     'fixup': {"pass": "!", "fail": ""},
-                    'required': ["secure_image_initializing"]
                 } # Monitors
             ]
         },  # DefaultProfileS
@@ -1758,7 +1168,6 @@ fvp_mps2_an519_bl2 = {
                     'end': r'starting\\.{3}',
                     'pattern': r'Non-Secure system starting\\.{3}',
                     'fixup': {"pass": "!", "fail": ""},
-                    'required': ["secure_image_initializing"]
                 } # Monitors
             ]
         },  # DefaultProfileM
@@ -1777,20 +1186,6 @@ fvp_mps2_an519_bl2 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage_"
-                           "s_interface_tests_tfm_sst_test_2xxx_"),
-                        "sst_reliability_tests_tfm_sst_test_3xxx_",
-                        "sst_rollback_protection_tests_tfm_sst_test_4xxx_",
-                        ("psa_internal_trusted_storage_"
-                           "s_interface_tests_tfm_its_test_2xxx_"),
-                        "its_reliability_tests_tfm_its_test_3xxx_",
-                        ("audit_"
-                         "logging_secure_interface_test_tfm_audit_test_1xxx_"),
-                        "crypto_secure_interface_tests_tfm_crypto_test_5xxx_",
-                        ("initial_attestation_service_"
-                         "secure_interface_tests_tfm_attest_test_1xxx_"),
-                    ]
                 },
                 {
                     'name': 'Non_Secure_Test_Suites_Summary',
@@ -1800,19 +1195,6 @@ fvp_mps2_an519_bl2 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage"
-                         "_ns_interface_tests_tfm_sst_test_1xxx_"),
-                        ("psa_internal_trusted_storage"
-                         "_ns_interface_tests_tfm_its_test_1xxx_"),
-                        ("auditlog_"
-                         "non_secure_interface_test_tfm_audit_test_1xxx_"),
-                        ("crypto_"
-                         "non_secure_interface_test_tfm_crypto_test_6xxx_"),
-                        ("initial_attestation_service_"
-                         "non_secure_interface_tests_tfm_attest_test_2xxx_"),
-                        "core_non_secure_positive_tests_tfm_core_test_1xxx_"
-                    ]
                 }
             ]  # Monitors
         },  # Regression
@@ -1831,20 +1213,6 @@ fvp_mps2_an519_bl2 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage_"
-                           "s_interface_tests_tfm_sst_test_2xxx_"),
-                        "sst_reliability_tests_tfm_sst_test_3xxx_",
-                        "sst_rollback_protection_tests_tfm_sst_test_4xxx_",
-                        ("psa_internal_trusted_storage_"
-                           "s_interface_tests_tfm_its_test_2xxx_"),
-                        "its_reliability_tests_tfm_its_test_3xxx_",
-                        ("audit_"
-                         "logging_secure_interface_test_tfm_audit_test_1xxx_"),
-                        "crypto_secure_interface_tests_tfm_crypto_test_5xxx_",
-                        ("initial_attestation_service_"
-                         "secure_interface_tests_tfm_attest_test_1xxx_"),
-                    ]
                 },
                 {
                     'name': 'Non_Secure_Test_Suites_Summary',
@@ -1854,19 +1222,6 @@ fvp_mps2_an519_bl2 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage"
-                         "_ns_interface_tests_tfm_sst_test_1xxx_"),
-                        ("psa_internal_trusted_storage"
-                         "_ns_interface_tests_tfm_its_test_1xxx_"),
-                        ("auditlog_"
-                         "non_secure_interface_test_tfm_audit_test_1xxx_"),
-                        ("crypto_"
-                         "non_secure_interface_test_tfm_crypto_test_6xxx_"),
-                        ("initial_attestation_service_"
-                         "non_secure_interface_tests_tfm_attest_test_2xxx_"),
-                        "core_non_secure_positive_tests_tfm_core_test_1xxx_"
-                    ]
                 }
             ]  # Monitors
         },  # RegressionProfileM
@@ -1884,20 +1239,6 @@ fvp_mps2_an519_bl2 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage_"
-                           "s_interface_tests_tfm_sst_test_2xxx_"),
-                        "sst_reliability_tests_tfm_sst_test_3xxx_",
-                        "sst_rollback_protection_tests_tfm_sst_test_4xxx_",
-                        ("psa_internal_trusted_storage_"
-                           "s_interface_tests_tfm_its_test_2xxx_"),
-                        "its_reliability_tests_tfm_its_test_3xxx_",
-                        ("audit_"
-                         "logging_secure_interface_test_tfm_audit_test_1xxx_"),
-                        "crypto_secure_interface_tests_tfm_crypto_test_5xxx_",
-                        ("initial_attestation_service_"
-                         "secure_interface_tests_tfm_attest_test_1xxx_"),
-                    ]
                 },
                 {
                     'name': 'Non_Secure_Test_Suites_Summary',
@@ -1907,19 +1248,6 @@ fvp_mps2_an519_bl2 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage"
-                         "_ns_interface_tests_tfm_sst_test_1xxx_"),
-                        ("psa_internal_trusted_storage"
-                         "_ns_interface_tests_tfm_its_test_1xxx_"),
-                        ("auditlog_"
-                         "non_secure_interface_test_tfm_audit_test_1xxx_"),
-                        ("crypto_"
-                         "non_secure_interface_test_tfm_crypto_test_6xxx_"),
-                        ("initial_attestation_service_"
-                         "non_secure_interface_tests_tfm_attest_test_2xxx_"),
-                        "core_non_secure_positive_tests_tfm_core_test_1xxx_"
-                    ]
                 }
             ]  # Monitors
         },  # RegressionProfileS
@@ -1938,20 +1266,6 @@ fvp_mps2_an519_bl2 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage_"
-                           "s_interface_tests_tfm_sst_test_2xxx_"),
-                        "sst_reliability_tests_tfm_sst_test_3xxx_",
-                        "sst_rollback_protection_tests_tfm_sst_test_4xxx_",
-                        ("psa_internal_trusted_storage_"
-                           "s_interface_tests_tfm_its_test_2xxx_"),
-                        "its_reliability_tests_tfm_its_test_3xxx_",
-                        ("audit_"
-                         "logging_secure_interface_test_tfm_audit_test_1xxx_"),
-                        "crypto_secure_interface_tests_tfm_crypto_test_5xxx_",
-                        ("initial_attestation_service_"
-                         "secure_interface_tests_tfm_attest_test_1xxx_"),
-                    ]
                 },
                 {
                     'name': 'Non_Secure_Test_Suites_Summary',
@@ -1961,19 +1275,6 @@ fvp_mps2_an519_bl2 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage"
-                         "_ns_interface_tests_tfm_sst_test_1xxx_"),
-                        ("psa_internal_trusted_storage"
-                         "_ns_interface_tests_tfm_its_test_1xxx_"),
-                        ("auditlog_"
-                         "non_secure_interface_test_tfm_audit_test_1xxx_"),
-                        ("crypto_"
-                         "non_secure_interface_test_tfm_crypto_test_6xxx_"),
-                        ("initial_attestation_service_"
-                         "non_secure_interface_tests_tfm_attest_test_2xxx_"),
-                        "core_non_secure_positive_tests_tfm_core_test_1xxx_"
-                    ]
                 }
             ]  # Monitors
         },  # Regression
@@ -1991,20 +1292,6 @@ fvp_mps2_an519_bl2 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage_"
-                           "s_interface_tests_tfm_sst_test_2xxx_"),
-                        "sst_reliability_tests_tfm_sst_test_3xxx_",
-                        "sst_rollback_protection_tests_tfm_sst_test_4xxx_",
-                        ("psa_internal_trusted_storage_"
-                           "s_interface_tests_tfm_its_test_2xxx_"),
-                        "its_reliability_tests_tfm_its_test_3xxx_",
-                        ("audit_"
-                         "logging_secure_interface_test_tfm_audit_test_1xxx_"),
-                        "crypto_secure_interface_tests_tfm_crypto_test_5xxx_",
-                        ("initial_attestation_service_"
-                         "secure_interface_tests_tfm_attest_test_1xxx_"),
-                    ]
                 },
                 {
                     'name': 'Non_Secure_Test_Suites_Summary',
@@ -2014,19 +1301,6 @@ fvp_mps2_an519_bl2 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage"
-                         "_ns_interface_tests_tfm_sst_test_1xxx_"),
-                        ("psa_internal_trusted_storage"
-                         "_ns_interface_tests_tfm_its_test_1xxx_"),
-                        ("auditlog_"
-                         "non_secure_interface_test_tfm_audit_test_1xxx_"),
-                        ("crypto_"
-                         "non_secure_interface_test_tfm_crypto_test_6xxx_"),
-                        ("initial_attestation_service_"
-                         "non_secure_interface_tests_tfm_attest_test_2xxx_"),
-                        "core_non_secure_positive_tests_tfm_core_test_1xxx_"
-                    ]
                 }
             ]  # Monitors
         },  # Regression
@@ -2042,7 +1316,6 @@ fvp_mps2_an519_bl2 = {
                     'end': r'starting\\.{3}',
                     'pattern': r'Non-Secure system starting\\.{3}',
                     'fixup': {"pass": "!", "fail": ""},
-                    'required': ["secure_image_initializing"]
                 }  # Monitors
             ]
         },  # CoreIPC
@@ -2058,7 +1331,6 @@ fvp_mps2_an519_bl2 = {
                     'end': r'starting\\.{3}',
                     'pattern': r'Non-Secure system starting\\.{3}',
                     'fixup': {"pass": "!", "fail": ""},
-                    'required': ["secure_image_initializing"]
                 }  # Monitors
             ]
         },  # CoreIPCTfmLevel2
@@ -2096,7 +1368,6 @@ fvp_mps2_an519_nobl2 = {
                     'end': r'starting\\.{3}',
                     'pattern': r'Non-Secure system starting\\.{3}',
                     'fixup': {"pass": "!", "fail": ""},
-                    'required': ["secure_image_initializing"]
                 }
             ]
         },  # Default
@@ -2112,7 +1383,6 @@ fvp_mps2_an519_nobl2 = {
                     'end': r'starting\\.{3}',
                     'pattern': r'Non-Secure system starting\\.{3}',
                     'fixup': {"pass": "!", "fail": ""},
-                    'required': ["secure_image_initializing"]
                 } # Monitors
             ]
         },  # DefaultProfileS
@@ -2128,7 +1398,6 @@ fvp_mps2_an519_nobl2 = {
                     'end': r'starting\\.{3}',
                     'pattern': r'Non-Secure system starting\\.{3}',
                     'fixup': {"pass": "!", "fail": ""},
-                    'required': ["secure_image_initializing"]
                 } # Monitors
             ]
         },  # DefaultProfileM
@@ -2147,20 +1416,6 @@ fvp_mps2_an519_nobl2 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage_"
-                           "s_interface_tests_tfm_sst_test_2xxx_"),
-                        "sst_reliability_tests_tfm_sst_test_3xxx_",
-                        "sst_rollback_protection_tests_tfm_sst_test_4xxx_",
-                        ("psa_internal_trusted_storage_"
-                           "s_interface_tests_tfm_its_test_2xxx_"),
-                        "its_reliability_tests_tfm_its_test_3xxx_",
-                        ("audit_"
-                         "logging_secure_interface_test_tfm_audit_test_1xxx_"),
-                        "crypto_secure_interface_tests_tfm_crypto_test_5xxx_",
-                        ("initial_attestation_service_"
-                         "secure_interface_tests_tfm_attest_test_1xxx_"),
-                    ]
                 },
                 {
                     'name': 'Non_Secure_Test_Suites_Summary',
@@ -2170,19 +1425,6 @@ fvp_mps2_an519_nobl2 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage"
-                         "_ns_interface_tests_tfm_sst_test_1xxx_"),
-                        ("psa_internal_trusted_storage"
-                         "_ns_interface_tests_tfm_its_test_1xxx_"),
-                        ("auditlog_"
-                         "non_secure_interface_test_tfm_audit_test_1xxx_"),
-                        ("crypto_"
-                         "non_secure_interface_test_tfm_crypto_test_6xxx_"),
-                        ("initial_attestation_service_"
-                         "non_secure_interface_tests_tfm_attest_test_2xxx_"),
-                        "core_non_secure_positive_tests_tfm_core_test_1xxx_"
-                    ]
                 }
             ]  # Monitors
         },  # Regression
@@ -2200,20 +1442,6 @@ fvp_mps2_an519_nobl2 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage_"
-                           "s_interface_tests_tfm_sst_test_2xxx_"),
-                        "sst_reliability_tests_tfm_sst_test_3xxx_",
-                        "sst_rollback_protection_tests_tfm_sst_test_4xxx_",
-                        ("psa_internal_trusted_storage_"
-                           "s_interface_tests_tfm_its_test_2xxx_"),
-                        "its_reliability_tests_tfm_its_test_3xxx_",
-                        ("audit_"
-                         "logging_secure_interface_test_tfm_audit_test_1xxx_"),
-                        "crypto_secure_interface_tests_tfm_crypto_test_5xxx_",
-                        ("initial_attestation_service_"
-                         "secure_interface_tests_tfm_attest_test_1xxx_"),
-                    ]
                 },
                 {
                     'name': 'Non_Secure_Test_Suites_Summary',
@@ -2223,19 +1451,6 @@ fvp_mps2_an519_nobl2 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage"
-                         "_ns_interface_tests_tfm_sst_test_1xxx_"),
-                        ("psa_internal_trusted_storage"
-                         "_ns_interface_tests_tfm_its_test_1xxx_"),
-                        ("auditlog_"
-                         "non_secure_interface_test_tfm_audit_test_1xxx_"),
-                        ("crypto_"
-                         "non_secure_interface_test_tfm_crypto_test_6xxx_"),
-                        ("initial_attestation_service_"
-                         "non_secure_interface_tests_tfm_attest_test_2xxx_"),
-                        "core_non_secure_positive_tests_tfm_core_test_1xxx_"
-                    ]
                 }
             ]  # Monitors
         },  # RegressionProfileM
@@ -2253,20 +1468,6 @@ fvp_mps2_an519_nobl2 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage_"
-                           "s_interface_tests_tfm_sst_test_2xxx_"),
-                        "sst_reliability_tests_tfm_sst_test_3xxx_",
-                        "sst_rollback_protection_tests_tfm_sst_test_4xxx_",
-                        ("psa_internal_trusted_storage_"
-                           "s_interface_tests_tfm_its_test_2xxx_"),
-                        "its_reliability_tests_tfm_its_test_3xxx_",
-                        ("audit_"
-                         "logging_secure_interface_test_tfm_audit_test_1xxx_"),
-                        "crypto_secure_interface_tests_tfm_crypto_test_5xxx_",
-                        ("initial_attestation_service_"
-                         "secure_interface_tests_tfm_attest_test_1xxx_"),
-                    ]
                 },
                 {
                     'name': 'Non_Secure_Test_Suites_Summary',
@@ -2276,19 +1477,6 @@ fvp_mps2_an519_nobl2 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage"
-                         "_ns_interface_tests_tfm_sst_test_1xxx_"),
-                        ("psa_internal_trusted_storage"
-                         "_ns_interface_tests_tfm_its_test_1xxx_"),
-                        ("auditlog_"
-                         "non_secure_interface_test_tfm_audit_test_1xxx_"),
-                        ("crypto_"
-                         "non_secure_interface_test_tfm_crypto_test_6xxx_"),
-                        ("initial_attestation_service_"
-                         "non_secure_interface_tests_tfm_attest_test_2xxx_"),
-                        "core_non_secure_positive_tests_tfm_core_test_1xxx_"
-                    ]
                 }
             ]  # Monitors
         },  # RegressionProfileS
@@ -2307,20 +1495,6 @@ fvp_mps2_an519_nobl2 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage_"
-                           "s_interface_tests_tfm_sst_test_2xxx_"),
-                        "sst_reliability_tests_tfm_sst_test_3xxx_",
-                        "sst_rollback_protection_tests_tfm_sst_test_4xxx_",
-                        ("psa_internal_trusted_storage_"
-                           "s_interface_tests_tfm_its_test_2xxx_"),
-                        "its_reliability_tests_tfm_its_test_3xxx_",
-                        ("audit_"
-                         "logging_secure_interface_test_tfm_audit_test_1xxx_"),
-                        "crypto_secure_interface_tests_tfm_crypto_test_5xxx_",
-                        ("initial_attestation_service_"
-                         "secure_interface_tests_tfm_attest_test_1xxx_"),
-                    ]
                 },
                 {
                     'name': 'Non_Secure_Test_Suites_Summary',
@@ -2330,19 +1504,6 @@ fvp_mps2_an519_nobl2 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage"
-                         "_ns_interface_tests_tfm_sst_test_1xxx_"),
-                        ("psa_internal_trusted_storage"
-                         "_ns_interface_tests_tfm_its_test_1xxx_"),
-                        ("auditlog_"
-                         "non_secure_interface_test_tfm_audit_test_1xxx_"),
-                        ("crypto_"
-                         "non_secure_interface_test_tfm_crypto_test_6xxx_"),
-                        ("initial_attestation_service_"
-                         "non_secure_interface_tests_tfm_attest_test_2xxx_"),
-                        "core_non_secure_positive_tests_tfm_core_test_1xxx_"
-                    ]
                 }
             ]  # Monitors
         },  # RegressionIPC
@@ -2360,20 +1521,6 @@ fvp_mps2_an519_nobl2 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage_"
-                           "s_interface_tests_tfm_sst_test_2xxx_"),
-                        "sst_reliability_tests_tfm_sst_test_3xxx_",
-                        "sst_rollback_protection_tests_tfm_sst_test_4xxx_",
-                        ("psa_internal_trusted_storage_"
-                           "s_interface_tests_tfm_its_test_2xxx_"),
-                        "its_reliability_tests_tfm_its_test_3xxx_",
-                        ("audit_"
-                         "logging_secure_interface_test_tfm_audit_test_1xxx_"),
-                        "crypto_secure_interface_tests_tfm_crypto_test_5xxx_",
-                        ("initial_attestation_service_"
-                         "secure_interface_tests_tfm_attest_test_1xxx_"),
-                    ]
                 },
                 {
                     'name': 'Non_Secure_Test_Suites_Summary',
@@ -2383,19 +1530,6 @@ fvp_mps2_an519_nobl2 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage"
-                         "_ns_interface_tests_tfm_sst_test_1xxx_"),
-                        ("psa_internal_trusted_storage"
-                         "_ns_interface_tests_tfm_its_test_1xxx_"),
-                        ("auditlog_"
-                         "non_secure_interface_test_tfm_audit_test_1xxx_"),
-                        ("crypto_"
-                         "non_secure_interface_test_tfm_crypto_test_6xxx_"),
-                        ("initial_attestation_service_"
-                         "non_secure_interface_tests_tfm_attest_test_2xxx_"),
-                        "core_non_secure_positive_tests_tfm_core_test_1xxx_"
-                    ]
                 }
             ]  # Monitors
         },  # RegressionIPCTfmLevel2
@@ -2411,7 +1545,6 @@ fvp_mps2_an519_nobl2 = {
                     'end': r'starting\\.{3}',
                     'pattern': r'Non-Secure system starting\\.{3}',
                     'fixup': {"pass": "!", "fail": ""},
-                    'required': ["secure_image_initializing"]
                 }  # Monitors
             ]
         },  # CoreIPC
@@ -2427,7 +1560,6 @@ fvp_mps2_an519_nobl2 = {
                     'end': r'starting\\.{3}',
                     'pattern': r'Non-Secure system starting\\.{3}',
                     'fixup': {"pass": "!", "fail": ""},
-                    'required': ["secure_image_initializing"]
                 }  # Monitors
             ]
         },  # CoreIPCTfmLevel2
@@ -2465,8 +1597,7 @@ qemu_mps2_bl2 = {
         #             'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
         #                        r'(?P<test_case_id>Secure image '
         #                        r'initializing)(?P<result>!)',
-        #             'fixup': {"pass": "!", "fail": ""},
-        #             'required': ["secure_image_initializing"]
+        #             'fixup': {"pass": "!", "fail": ""}
         #         }  # Monitors
         #     ]
         # },  # Default
@@ -2483,8 +1614,7 @@ qemu_mps2_bl2 = {
         #             'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
         #                        r'(?P<test_case_id>Secure image '
         #                        r'initializing)(?P<result>!)',
-        #             'fixup': {"pass": "!", "fail": ""},
-        #             'required': ["secure_image_initializing"]
+        #             'fixup': {"pass": "!", "fail": ""}
         #         }  # Monitors
         #     ]
         # },  # DefaultProfileS
@@ -2501,8 +1631,7 @@ qemu_mps2_bl2 = {
         #             'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
         #                        r'(?P<test_case_id>Secure image '
         #                        r'initializing)(?P<result>!)',
-        #             'fixup': {"pass": "!", "fail": ""},
-        #             'required': ["secure_image_initializing"]
+        #             'fixup': {"pass": "!", "fail": ""}
         #         }  # Monitors
         #     ]
         # },  # DefaultProfileM
@@ -2520,20 +1649,6 @@ qemu_mps2_bl2 = {
                                r"test_case_id>[^\n]+)' has (.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage_"
-                         "s_interface_tests_tfm_sst_test_2xxx_"),
-                        "sst_reliability_tests_tfm_sst_test_3xxx_",
-                        "sst_rollback_protection_tests_tfm_sst_test_4xxx_",
-                        ("psa_internal_trusted_storage_"
-                         "s_interface_tests_tfm_its_test_2xxx_"),
-                        "its_reliability_tests_tfm_its_test_3xxx_",
-                        ("audit_"
-                         "logging_secure_interface_test_tfm_audit_test_1xxx_"),
-                        "crypto_secure_interface_tests_tfm_crypto_test_5xxx_",
-                        ("initial_attestation_service_"
-                         "secure_interface_tests_tfm_attest_test_1xxx_"),
-                    ]
                 },
                 {
                     'name': 'Non_Secure_Test_Suites_Summary',
@@ -2543,19 +1658,6 @@ qemu_mps2_bl2 = {
                                r"test_case_id>[^\n]+)' has (.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage"
-                         "_ns_interface_tests_tfm_sst_test_1xxx_"),
-                        ("psa_internal_trusted_storage"
-                         "_ns_interface_tests_tfm_its_test_1xxx_"),
-                        ("auditlog_"
-                         "non_secure_interface_test_tfm_audit_test_1xxx_"),
-                        ("crypto_"
-                         "non_secure_interface_test_tfm_crypto_test_6xxx_"),
-                        ("initial_attestation_service_"
-                         "non_secure_interface_tests_tfm_attest_test_2xxx_"),
-                        "core_non_secure_positive_tests_tfm_core_test_1xxx_"
-                    ]
                 }
             ]  # Monitors
         },  # Regression
@@ -2573,20 +1675,6 @@ qemu_mps2_bl2 = {
                                r"test_case_id>[^\n]+)' has (.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage_"
-                         "s_interface_tests_tfm_sst_test_2xxx_"),
-                        "sst_reliability_tests_tfm_sst_test_3xxx_",
-                        "sst_rollback_protection_tests_tfm_sst_test_4xxx_",
-                        ("psa_internal_trusted_storage_"
-                         "s_interface_tests_tfm_its_test_2xxx_"),
-                        "its_reliability_tests_tfm_its_test_3xxx_",
-                        ("audit_"
-                         "logging_secure_interface_test_tfm_audit_test_1xxx_"),
-                        "crypto_secure_interface_tests_tfm_crypto_test_5xxx_",
-                        ("initial_attestation_service_"
-                         "secure_interface_tests_tfm_attest_test_1xxx_"),
-                    ]
                 },
                 {
                     'name': 'Non_Secure_Test_Suites_Summary',
@@ -2596,19 +1684,6 @@ qemu_mps2_bl2 = {
                                r"test_case_id>[^\n]+)' has (.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage"
-                         "_ns_interface_tests_tfm_sst_test_1xxx_"),
-                        ("psa_internal_trusted_storage"
-                         "_ns_interface_tests_tfm_its_test_1xxx_"),
-                        ("auditlog_"
-                         "non_secure_interface_test_tfm_audit_test_1xxx_"),
-                        ("crypto_"
-                         "non_secure_interface_test_tfm_crypto_test_6xxx_"),
-                        ("initial_attestation_service_"
-                         "non_secure_interface_tests_tfm_attest_test_2xxx_"),
-                        "core_non_secure_positive_tests_tfm_core_test_1xxx_"
-                    ]
                 }
             ]  # Monitors
         },  # RegressionProfileS
@@ -2626,20 +1701,6 @@ qemu_mps2_bl2 = {
                                r"test_case_id>[^\n]+)' has (.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage_"
-                         "s_interface_tests_tfm_sst_test_2xxx_"),
-                        "sst_reliability_tests_tfm_sst_test_3xxx_",
-                        "sst_rollback_protection_tests_tfm_sst_test_4xxx_",
-                        ("psa_internal_trusted_storage_"
-                         "s_interface_tests_tfm_its_test_2xxx_"),
-                        "its_reliability_tests_tfm_its_test_3xxx_",
-                        ("audit_"
-                         "logging_secure_interface_test_tfm_audit_test_1xxx_"),
-                        "crypto_secure_interface_tests_tfm_crypto_test_5xxx_",
-                        ("initial_attestation_service_"
-                         "secure_interface_tests_tfm_attest_test_1xxx_"),
-                    ]
                 },
                 {
                     'name': 'Non_Secure_Test_Suites_Summary',
@@ -2649,19 +1710,6 @@ qemu_mps2_bl2 = {
                                r"test_case_id>[^\n]+)' has (.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage"
-                         "_ns_interface_tests_tfm_sst_test_1xxx_"),
-                        ("psa_internal_trusted_storage"
-                         "_ns_interface_tests_tfm_its_test_1xxx_"),
-                        ("auditlog_"
-                         "non_secure_interface_test_tfm_audit_test_1xxx_"),
-                        ("crypto_"
-                         "non_secure_interface_test_tfm_crypto_test_6xxx_"),
-                        ("initial_attestation_service_"
-                         "non_secure_interface_tests_tfm_attest_test_2xxx_"),
-                        "core_non_secure_positive_tests_tfm_core_test_1xxx_"
-                    ]
                 }
             ]  # Monitors
         },  # Regression
@@ -2679,20 +1727,6 @@ qemu_mps2_bl2 = {
                                r"test_case_id>[^\n]+)' has (.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage_"
-                         "s_interface_tests_tfm_sst_test_2xxx_"),
-                        "sst_reliability_tests_tfm_sst_test_3xxx_",
-                        "sst_rollback_protection_tests_tfm_sst_test_4xxx_",
-                        ("psa_internal_trusted_storage_"
-                         "s_interface_tests_tfm_its_test_2xxx_"),
-                        "its_reliability_tests_tfm_its_test_3xxx_",
-                        ("audit_"
-                         "logging_secure_interface_test_tfm_audit_test_1xxx_"),
-                        "crypto_secure_interface_tests_tfm_crypto_test_5xxx_",
-                        ("initial_attestation_service_"
-                         "secure_interface_tests_tfm_attest_test_1xxx_"),
-                    ]
                 },
                 {
                     'name': 'Non_Secure_Test_Suites_Summary',
@@ -2702,19 +1736,6 @@ qemu_mps2_bl2 = {
                                r"test_case_id>[^\n]+)' has (.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage"
-                         "_ns_interface_tests_tfm_sst_test_1xxx_"),
-                        ("psa_internal_trusted_storage"
-                         "_ns_interface_tests_tfm_its_test_1xxx_"),
-                        ("auditlog_"
-                         "non_secure_interface_test_tfm_audit_test_1xxx_"),
-                        ("crypto_"
-                         "non_secure_interface_test_tfm_crypto_test_6xxx_"),
-                        ("initial_attestation_service_"
-                         "non_secure_interface_tests_tfm_attest_test_2xxx_"),
-                        "core_non_secure_positive_tests_tfm_core_test_1xxx_"
-                    ]
                 }
             ]  # Monitors
         },  # Regression
@@ -2732,20 +1753,6 @@ qemu_mps2_bl2 = {
                                r"test_case_id>[^\n]+)' has (.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage_"
-                         "s_interface_tests_tfm_sst_test_2xxx_"),
-                        "sst_reliability_tests_tfm_sst_test_3xxx_",
-                        "sst_rollback_protection_tests_tfm_sst_test_4xxx_",
-                        ("psa_internal_trusted_storage_"
-                         "s_interface_tests_tfm_its_test_2xxx_"),
-                        "its_reliability_tests_tfm_its_test_3xxx_",
-                        ("audit_"
-                         "logging_secure_interface_test_tfm_audit_test_1xxx_"),
-                        "crypto_secure_interface_tests_tfm_crypto_test_5xxx_",
-                        ("initial_attestation_service_"
-                         "secure_interface_tests_tfm_attest_test_1xxx_"),
-                    ]
                 },
                 {
                     'name': 'Non_Secure_Test_Suites_Summary',
@@ -2755,19 +1762,6 @@ qemu_mps2_bl2 = {
                                r"test_case_id>[^\n]+)' has (.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage"
-                         "_ns_interface_tests_tfm_sst_test_1xxx_"),
-                        ("psa_internal_trusted_storage"
-                         "_ns_interface_tests_tfm_its_test_1xxx_"),
-                        ("auditlog_"
-                         "non_secure_interface_test_tfm_audit_test_1xxx_"),
-                        ("crypto_"
-                         "non_secure_interface_test_tfm_crypto_test_6xxx_"),
-                        ("initial_attestation_service_"
-                         "non_secure_interface_tests_tfm_attest_test_2xxx_"),
-                        "core_non_secure_positive_tests_tfm_core_test_1xxx_"
-                    ]
                 }
             ]  # Monitors
         },  # Regression
@@ -2784,8 +1778,7 @@ qemu_mps2_bl2 = {
         #             'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
         #                        r'(?P<test_case_id>Secure image '
         #                        r'initializing)(?P<result>!)',
-        #             'fixup': {"pass": "!", "fail": ""},
-        #             'required': ["secure_image_initializing"]
+        #             'fixup': {"pass": "!", "fail": ""}
         #         }  # Monitors
         #     ]
         # },  # CoreIPC
@@ -2802,8 +1795,7 @@ qemu_mps2_bl2 = {
         #             'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
         #                        r'(?P<test_case_id>Secure image '
         #                        r'initializing)(?P<result>!)',
-        #             'fixup': {"pass": "!", "fail": ""},
-        #             'required': ["secure_image_initializing"]
+        #             'fixup': {"pass": "!", "fail": ""}
         #         }  # Monitors
         #     ]
         # },  # CoreIPCTfmLevel2
@@ -2820,8 +1812,7 @@ qemu_mps2_bl2 = {
         #             'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
         #                        r'(?P<test_case_id>Secure image '
         #                        r'initializing)(?P<result>!)',
-        #             'fixup': {"pass": "!", "fail": ""},
-        #             'required': ["secure_image_initializing"]
+        #             'fixup': {"pass": "!", "fail": ""}
         #         }  # Monitors
         #     ]
         # },  # CoreIPCTfmLevel3
@@ -2856,7 +1847,6 @@ musca_b1_bl2 = {
                     'end': r'starting\\.{3}',
                     'pattern': r'Non-Secure system starting\\.{3}',
                     'fixup': {"pass": "!", "fail": ""},
-                    'required': ["secure_image_initializing"]
                 }
             ]  # Monitors
         },
@@ -2871,7 +1861,6 @@ musca_b1_bl2 = {
                     'end': r'starting\\.{3}',
                     'pattern': r'Non-Secure system starting\\.{3}',
                     'fixup': {"pass": "!", "fail": ""},
-                    'required': ["secure_image_initializing"]
                 }
             ]  # Monitors
         },
@@ -2886,7 +1875,6 @@ musca_b1_bl2 = {
                     'end': r'starting\\.{3}',
                     'pattern': r'Non-Secure system starting\\.{3}',
                     'fixup': {"pass": "!", "fail": ""},
-                    'required': ["secure_image_initializing"]
                 }
             ]  # Monitors
         },
@@ -2901,7 +1889,6 @@ musca_b1_bl2 = {
                     'end': r'starting\\.{3}',
                     'pattern': r'Non-Secure system starting\\.{3}',
                     'fixup': {"pass": "!", "fail": ""},
-                    'required': ["secure_image_initializing"]
                 }
             ]  # Monitors
         },
@@ -2916,7 +1903,6 @@ musca_b1_bl2 = {
                     'end': r'starting\\.{3}',
                     'pattern': r'Non-Secure system starting\\.{3}',
                     'fixup': {"pass": "!", "fail": ""},
-                    'required': ["secure_image_initializing"]
                 }
             ]  # Monitors
         },
@@ -2931,7 +1917,6 @@ musca_b1_bl2 = {
                     'end': r'starting\\.{3}',
                     'pattern': r'Non-Secure system starting\\.{3}',
                     'fixup': {"pass": "!", "fail": ""},
-                    'required': ["secure_image_initializing"]
                 }
             ]  # Monitors
         },
@@ -2948,20 +1933,6 @@ musca_b1_bl2 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage_"
-                         "s_interface_tests_tfm_sst_test_2xxx_"),
-                        "sst_reliability_tests_tfm_sst_test_3xxx_",
-                        "sst_rollback_protection_tests_tfm_sst_test_4xxx_",
-                        ("psa_internal_trusted_storage_"
-                         "s_interface_tests_tfm_its_test_2xxx_"),
-                        "its_reliability_tests_tfm_its_test_3xxx_",
-                        ("audit_"
-                         "logging_secure_interface_test_tfm_audit_test_1xxx_"),
-                        "crypto_secure_interface_tests_tfm_crypto_test_5xxx_",
-                        ("initial_attestation_service_"
-                         "secure_interface_tests_tfm_attest_test_1xxx_"),
-                    ]
                 },
                 {
                     'name': 'Non_Secure_Test_Suites_Summary',
@@ -2971,19 +1942,6 @@ musca_b1_bl2 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage"
-                         "_ns_interface_tests_tfm_sst_test_1xxx_"),
-                        ("psa_internal_trusted_storage"
-                         "_ns_interface_tests_tfm_its_test_1xxx_"),
-                        ("auditlog_"
-                         "non_secure_interface_test_tfm_audit_test_1xxx_"),
-                        ("crypto_"
-                         "non_secure_interface_test_tfm_crypto_test_6xxx_"),
-                        ("initial_attestation_service_"
-                         "non_secure_interface_tests_tfm_attest_test_2xxx_"),
-                        "core_non_secure_positive_tests_tfm_core_test_1xxx_"
-                    ]
                 }
             ]  # Monitors
         },
@@ -3000,20 +1958,6 @@ musca_b1_bl2 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage_"
-                         "s_interface_tests_tfm_sst_test_2xxx_"),
-                        "sst_reliability_tests_tfm_sst_test_3xxx_",
-                        "sst_rollback_protection_tests_tfm_sst_test_4xxx_",
-                        ("psa_internal_trusted_storage_"
-                         "s_interface_tests_tfm_its_test_2xxx_"),
-                        "its_reliability_tests_tfm_its_test_3xxx_",
-                        ("audit_"
-                         "logging_secure_interface_test_tfm_audit_test_1xxx_"),
-                        "crypto_secure_interface_tests_tfm_crypto_test_5xxx_",
-                        ("initial_attestation_service_"
-                         "secure_interface_tests_tfm_attest_test_1xxx_"),
-                    ]
                 },
                 {
                     'name': 'Non_Secure_Test_Suites_Summary',
@@ -3023,19 +1967,6 @@ musca_b1_bl2 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage"
-                         "_ns_interface_tests_tfm_sst_test_1xxx_"),
-                        ("psa_internal_trusted_storage"
-                         "_ns_interface_tests_tfm_its_test_1xxx_"),
-                        ("auditlog_"
-                         "non_secure_interface_test_tfm_audit_test_1xxx_"),
-                        ("crypto_"
-                         "non_secure_interface_test_tfm_crypto_test_6xxx_"),
-                        ("initial_attestation_service_"
-                         "non_secure_interface_tests_tfm_attest_test_2xxx_"),
-                        "core_non_secure_positive_tests_tfm_core_test_1xxx_"
-                    ]
                 }
             ]  # Monitors
         },
@@ -3052,20 +1983,6 @@ musca_b1_bl2 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage_"
-                         "s_interface_tests_tfm_sst_test_2xxx_"),
-                        "sst_reliability_tests_tfm_sst_test_3xxx_",
-                        "sst_rollback_protection_tests_tfm_sst_test_4xxx_",
-                        ("psa_internal_trusted_storage_"
-                         "s_interface_tests_tfm_its_test_2xxx_"),
-                        "its_reliability_tests_tfm_its_test_3xxx_",
-                        ("audit_"
-                         "logging_secure_interface_test_tfm_audit_test_1xxx_"),
-                        "crypto_secure_interface_tests_tfm_crypto_test_5xxx_",
-                        ("initial_attestation_service_"
-                         "secure_interface_tests_tfm_attest_test_1xxx_"),
-                    ]
                 },
                 {
                     'name': 'Non_Secure_Test_Suites_Summary',
@@ -3075,19 +1992,6 @@ musca_b1_bl2 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage"
-                         "_ns_interface_tests_tfm_sst_test_1xxx_"),
-                        ("psa_internal_trusted_storage"
-                         "_ns_interface_tests_tfm_its_test_1xxx_"),
-                        ("auditlog_"
-                         "non_secure_interface_test_tfm_audit_test_1xxx_"),
-                        ("crypto_"
-                         "non_secure_interface_test_tfm_crypto_test_6xxx_"),
-                        ("initial_attestation_service_"
-                         "non_secure_interface_tests_tfm_attest_test_2xxx_"),
-                        "core_non_secure_positive_tests_tfm_core_test_1xxx_"
-                    ]
                 }
             ]  # Monitors
         },
@@ -3104,20 +2008,6 @@ musca_b1_bl2 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage_"
-                         "s_interface_tests_tfm_sst_test_2xxx_"),
-                        "sst_reliability_tests_tfm_sst_test_3xxx_",
-                        "sst_rollback_protection_tests_tfm_sst_test_4xxx_",
-                        ("psa_internal_trusted_storage_"
-                         "s_interface_tests_tfm_its_test_2xxx_"),
-                        "its_reliability_tests_tfm_its_test_3xxx_",
-                        ("audit_"
-                         "logging_secure_interface_test_tfm_audit_test_1xxx_"),
-                        "crypto_secure_interface_tests_tfm_crypto_test_5xxx_",
-                        ("initial_attestation_service_"
-                         "secure_interface_tests_tfm_attest_test_1xxx_"),
-                    ]
                 },
                 {
                     'name': 'Non_Secure_Test_Suites_Summary',
@@ -3127,19 +2017,6 @@ musca_b1_bl2 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage"
-                         "_ns_interface_tests_tfm_sst_test_1xxx_"),
-                        ("psa_internal_trusted_storage"
-                         "_ns_interface_tests_tfm_its_test_1xxx_"),
-                        ("auditlog_"
-                         "non_secure_interface_test_tfm_audit_test_1xxx_"),
-                        ("crypto_"
-                         "non_secure_interface_test_tfm_crypto_test_6xxx_"),
-                        ("initial_attestation_service_"
-                         "non_secure_interface_tests_tfm_attest_test_2xxx_"),
-                        "core_non_secure_positive_tests_tfm_core_test_1xxx_"
-                    ]
                 }
             ]  # Monitors
         },
@@ -3156,20 +2033,6 @@ musca_b1_bl2 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage_"
-                         "s_interface_tests_tfm_sst_test_2xxx_"),
-                        "sst_reliability_tests_tfm_sst_test_3xxx_",
-                        "sst_rollback_protection_tests_tfm_sst_test_4xxx_",
-                        ("psa_internal_trusted_storage_"
-                         "s_interface_tests_tfm_its_test_2xxx_"),
-                        "its_reliability_tests_tfm_its_test_3xxx_",
-                        ("audit_"
-                         "logging_secure_interface_test_tfm_audit_test_1xxx_"),
-                        "crypto_secure_interface_tests_tfm_crypto_test_5xxx_",
-                        ("initial_attestation_service_"
-                         "secure_interface_tests_tfm_attest_test_1xxx_"),
-                    ]
                 },
                 {
                     'name': 'Non_Secure_Test_Suites_Summary',
@@ -3179,19 +2042,6 @@ musca_b1_bl2 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage"
-                         "_ns_interface_tests_tfm_sst_test_1xxx_"),
-                        ("psa_internal_trusted_storage"
-                         "_ns_interface_tests_tfm_its_test_1xxx_"),
-                        ("auditlog_"
-                         "non_secure_interface_test_tfm_audit_test_1xxx_"),
-                        ("crypto_"
-                         "non_secure_interface_test_tfm_crypto_test_6xxx_"),
-                        ("initial_attestation_service_"
-                         "non_secure_interface_tests_tfm_attest_test_2xxx_"),
-                        "core_non_secure_positive_tests_tfm_core_test_1xxx_"
-                    ]
                 }
             ]  # Monitors
         },
@@ -3208,20 +2058,6 @@ musca_b1_bl2 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage_"
-                         "s_interface_tests_tfm_sst_test_2xxx_"),
-                        "sst_reliability_tests_tfm_sst_test_3xxx_",
-                        "sst_rollback_protection_tests_tfm_sst_test_4xxx_",
-                        ("psa_internal_trusted_storage_"
-                         "s_interface_tests_tfm_its_test_2xxx_"),
-                        "its_reliability_tests_tfm_its_test_3xxx_",
-                        ("audit_"
-                         "logging_secure_interface_test_tfm_audit_test_1xxx_"),
-                        "crypto_secure_interface_tests_tfm_crypto_test_5xxx_",
-                        ("initial_attestation_service_"
-                         "secure_interface_tests_tfm_attest_test_1xxx_"),
-                    ]
                 },
                 {
                     'name': 'Non_Secure_Test_Suites_Summary',
@@ -3231,19 +2067,6 @@ musca_b1_bl2 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage"
-                         "_ns_interface_tests_tfm_sst_test_1xxx_"),
-                        ("psa_internal_trusted_storage"
-                         "_ns_interface_tests_tfm_its_test_1xxx_"),
-                        ("auditlog_"
-                         "non_secure_interface_test_tfm_audit_test_1xxx_"),
-                        ("crypto_"
-                         "non_secure_interface_test_tfm_crypto_test_6xxx_"),
-                        ("initial_attestation_service_"
-                         "non_secure_interface_tests_tfm_attest_test_2xxx_"),
-                        "core_non_secure_positive_tests_tfm_core_test_1xxx_"
-                    ]
                 }
             ]  # Monitors
         },
@@ -3279,20 +2102,6 @@ musca_b1_otp_bl2 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage_"
-                         "s_interface_tests_tfm_sst_test_2xxx_"),
-                        "sst_reliability_tests_tfm_sst_test_3xxx_",
-                        "sst_rollback_protection_tests_tfm_sst_test_4xxx_",
-                        ("psa_internal_trusted_storage_"
-                         "s_interface_tests_tfm_its_test_2xxx_"),
-                        "its_reliability_tests_tfm_its_test_3xxx_",
-                        ("audit_"
-                         "logging_secure_interface_test_tfm_audit_test_1xxx_"),
-                        "crypto_secure_interface_tests_tfm_crypto_test_5xxx_",
-                        ("initial_attestation_service_"
-                         "secure_interface_tests_tfm_attest_test_1xxx_"),
-                    ]
                 },
                 {
                     'name': 'Non_Secure_Test_Suites_Summary',
@@ -3302,19 +2111,6 @@ musca_b1_otp_bl2 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': [
-                        ("psa_protected_storage"
-                         "_ns_interface_tests_tfm_sst_test_1xxx_"),
-                        ("psa_internal_trusted_storage"
-                         "_ns_interface_tests_tfm_its_test_1xxx_"),
-                        ("auditlog_"
-                         "non_secure_interface_test_tfm_audit_test_1xxx_"),
-                        ("crypto_"
-                         "non_secure_interface_test_tfm_crypto_test_6xxx_"),
-                        ("initial_attestation_service_"
-                         "non_secure_interface_tests_tfm_attest_test_2xxx_"),
-                        "core_non_secure_positive_tests_tfm_core_test_1xxx_"
-                    ]
                 }
             ]  # Monitors
         },
@@ -3348,7 +2144,6 @@ stm32l562e_dk = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': ["secure_image_initializing"]
                 },
                 {
                     'name': 'Non_Secure_Test_Suites_Summary',
@@ -3358,7 +2153,6 @@ stm32l562e_dk = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': ["secure_image_initializing"]
                 }
             ]  # Monitors
         },
@@ -3375,7 +2169,6 @@ stm32l562e_dk = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': ["secure_image_initializing"]
                 },
                 {
                     'name': 'Non_Secure_Test_Suites_Summary',
@@ -3385,7 +2178,6 @@ stm32l562e_dk = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': ["secure_image_initializing"]
                 }
             ]  # Monitors
         },
@@ -3402,7 +2194,6 @@ stm32l562e_dk = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': ["secure_image_initializing"]
                 },
                 {
                     'name': 'Non_Secure_Test_Suites_Summary',
@@ -3412,7 +2203,6 @@ stm32l562e_dk = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': ["secure_image_initializing"]
                 }
             ]  # Monitors
         },
@@ -3429,7 +2219,6 @@ stm32l562e_dk = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': ["secure_image_initializing"]
                 },
                 {
                     'name': 'Non_Secure_Test_Suites_Summary',
@@ -3439,7 +2228,6 @@ stm32l562e_dk = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': ["secure_image_initializing"]
                 }
             ]  # Monitors
         },
@@ -3487,7 +2275,6 @@ lpcxpresso55s69 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': ["secure_image_initializing"]
                 },
                 {
                     'name': 'Non_Secure_Test_Suites_Summary',
@@ -3497,7 +2284,6 @@ lpcxpresso55s69 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': ["secure_image_initializing"]
                 }
             ]  # Monitors
         },
@@ -3532,7 +2318,6 @@ psoc64 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': ["secure_image_initializing"]
                 },
                 {
                     'name': 'Non_Secure_Test_Suites_Summary',
@@ -3542,7 +2327,6 @@ psoc64 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': ["secure_image_initializing"]
                 }
             ]  # Monitors
         },
@@ -3560,7 +2344,6 @@ psoc64 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': ["secure_image_initializing"]
                 },
                 {
                     'name': 'Non_Secure_Test_Suites_Summary',
@@ -3570,7 +2353,6 @@ psoc64 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': ["secure_image_initializing"]
                 }
             ]  # Monitors
         },
@@ -3588,7 +2370,6 @@ psoc64 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': ["secure_image_initializing"]
                 },
                 {
                     'name': 'Non_Secure_Test_Suites_Summary',
@@ -3598,7 +2379,6 @@ psoc64 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': ["secure_image_initializing"]
                 }
             ]  # Monitors
         },
@@ -3616,7 +2396,6 @@ psoc64 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': ["secure_image_initializing"]
                 },
                 {
                     'name': 'Non_Secure_Test_Suites_Summary',
@@ -3626,7 +2405,6 @@ psoc64 = {
                                r"test_case_id>[^\n]+)' has(.*) "
                                r"(?P<result>PASSED|FAILED)",
                     'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                    'required': ["secure_image_initializing"]
                 }
             ]  # Monitors
         },
