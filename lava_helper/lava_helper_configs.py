@@ -46,6 +46,41 @@ def lava_gen_get_config_subset(config,
     cfg["tests"] = tests
     return cfg
 
+# LAVA test-monitor definition for configs with regression tests.
+# "Non-Secure system starting..." is expected to indicate
+# that TF-M has been booted successfully.
+monitors_no_reg_tests = [
+    {
+        'name': 'NS_SYSTEM_BOOTING',
+        'start': 'Non-Secure system',
+        'end': r'starting\\.{3}',
+        'pattern': r'Non-Secure system starting\\.{3}',
+        'fixup': {"pass": "!", "fail": ""},
+    }
+]
+
+# LAVA test-monitor definition for configs with regression tests.
+# Results of each test suites are parsed from "PASSED"/"FAILED" in logs.
+monitors_reg_tests = [
+    {
+        'name': 'Secure_Test_Suites_Summary',
+        'start': 'Secure test suites summary',
+        'end': 'End of Secure test suites',
+        'pattern': r"Test suite '(?P<"
+                   r"test_case_id>[^\n]+)' has(.*) "
+                   r"(?P<result>PASSED|FAILED)",
+        'fixup': {"pass": "PASSED", "fail": "FAILED"},
+    },
+    {
+        'name': 'Non_Secure_Test_Suites_Summary',
+        'start': 'Non-secure test suites summary',
+        'end': r'End of Non-secure test suites',
+        'pattern': r"Test suite '(?P<"
+                   r"test_case_id>[^\n]+)' has(.*) "
+                   r"(?P<result>PASSED|FAILED)",
+        'fixup': {"pass": "PASSED", "fail": "FAILED"},
+    }
+]
 
 # LAVA test-monitor definition for PSA API testsuites, testcases identified
 # by "UT" value in output (testcase identifier).
@@ -115,260 +150,62 @@ tfm_mps2_sse_200 = {
     },
     "tests": {
         'Default': {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Non-Secure system',
-                    'end': r'starting\\.{3}',
-                    'pattern': r'Non-Secure system starting\\.{3}',
-                    'fixup': {"pass": "!", "fail": ""},
-                }  # Monitors
-            ]
+            "monitors": monitors_no_reg_tests
         },  # Default
         'DefaultProfileS': {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Non-Secure system',
-                    'end': r'starting\\.{3}',
-                    'pattern': r'Non-Secure system starting\\.{3}',
-                    'fixup': {"pass": "!", "fail": ""},
-                } # Monitors
-            ]
+            "monitors": monitors_no_reg_tests
         },  # DefaultProfileS
         'DefaultProfileM': {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Non-Secure system',
-                    'end': r'starting\\.{3}',
-                    'pattern': r'Non-Secure system starting\\.{3}',
-                    'fixup': {"pass": "!", "fail": ""},
-                } # Monitors
-            ]
+            "monitors": monitors_no_reg_tests
         },  # DefaultProfileM
         'DefaultProfileL': {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Non-Secure system',
-                    'end': r'starting\\.{3}',
-                    'pattern': r'Non-Secure system starting\\.{3}',
-                    'fixup': {"pass": "!", "fail": ""},
-                } # Monitors
-            ]
+            "monitors": monitors_no_reg_tests
         },  # DefaultProfileL
-
         'Regression': {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Secure test suites summary',
-                    'end': 'End of Secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                },
-                {
-                    'name': 'Non_Secure_Test_Suites_Summary',
-                    'start': 'Non-secure test suites summary',
-                    'end': r'End of Non-secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                }
-            ]  # Monitors
+            "monitors": monitors_reg_tests
         },  # Regression
-
         'RegressionProfileM': {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Secure test suites summary',
-                    'end': 'End of Secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                },
-                {
-                    'name': 'Non_Secure_Test_Suites_Summary',
-                    'start': 'Non-secure test suites summary',
-                    'end': r'End of Non-secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                }
-            ]  # Monitors
+            "monitors": monitors_reg_tests
         },  # RegressionProfileM
         'RegressionProfileS': {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Secure test suites summary',
-                    'end': 'End of Secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                },
-                {
-                    'name': 'Non_Secure_Test_Suites_Summary',
-                    'start': 'Non-secure test suites summary',
-                    'end': r'End of Non-secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                }
-            ]  # Monitors
+            "monitors": monitors_reg_tests
         },  # RegressionProfileS
         'RegressionProfileL': {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Secure test suites summary',
-                    'end': 'End of Secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                },
-                {
-                    'name': 'Non_Secure_Test_Suites_Summary',
-                    'start': 'Non-secure test suites summary',
-                    'end': r'End of Non-secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                }
-            ]  # Monitors
+            "monitors": monitors_reg_tests
         },  # RegressionProfileL
-
         'RegressionIPC': {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Secure test suites summary',
-                    'end': 'End of Secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                },
-                {
-                    'name': 'Non_Secure_Test_Suites_Summary',
-                    'start': 'Non-secure test suites summary',
-                    'end': r'End of Non-secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                }
-            ]  # Monitors
+            "monitors": monitors_reg_tests
         },  # Regression
         'RegressionIPCTfmLevel2': {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Secure test suites summary',
-                    'end': 'End of Secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                },
-                {
-                    'name': 'Non_Secure_Test_Suites_Summary',
-                    'start': 'Non-secure test suites summary',
-                    'end': r'End of Non-secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                }
-            ]  # Monitors
+            "monitors": monitors_reg_tests
         },  # Regression
         'RegressionIPCTfmLevel3': {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Secure test suites summary',
-                    'end': 'End of Secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                },
-                {
-                    'name': 'Non_Secure_Test_Suites_Summary',
-                    'start': 'Non-secure test suites summary',
-                    'end': r'End of Non-secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                }
-            ]  # Monitors
+            "monitors": monitors_reg_tests
         },  # Regression
         'CoreIPC': {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Non-Secure system',
-                    'end': r'starting\\.{3}',
-                    'pattern': r'Non-Secure system starting\\.{3}',
-                    'fixup': {"pass": "!", "fail": ""},
-                }  # Monitors
-            ]
+            "monitors": monitors_no_reg_tests
         },  # CoreIPC
         'CoreIPCTfmLevel2': {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Non-Secure system',
-                    'end': r'starting\\.{3}',
-                    'pattern': r'Non-Secure system starting\\.{3}',
-                    'fixup': {"pass": "!", "fail": ""},
-                }  # Monitors
-            ]
+            "monitors": monitors_no_reg_tests
         },  # CoreIPCTfmLevel2
         'CoreIPCTfmLevel3': {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Non-Secure system',
-                    'end': r'starting\\.{3}',
-                    'pattern': r'Non-Secure system starting\\.{3}',
-                    'fixup': {"pass": "!", "fail": ""},
-                }  # Monitors
-            ]
+            "monitors": monitors_no_reg_tests
         },  # CoreIPCTfmLevel3
-
         'PsaApiTest_Crypto': {
             "monitors": monitors_psaapitest_crypto_workaround,
         }, # PsaApiTest_Crypto
-
         'PsaApiTest_STORAGE': {
             "monitors": monitors_psaapitest_by_desc,
         }, # PsaApiTest_Storage
-
         'PsaApiTestIPC_STORAGE': {
             "monitors": monitors_psaapitest_by_desc,
         }, # PsaApiTestIPC_Storage
-
         'PsaApiTest_Attest': {
             "monitors": monitors_psaapitest_by_ut,
         }, # PsaApiTest_Attest
-
         'PsaApiTestIPC_Attest': {
             "monitors": monitors_psaapitest_by_ut,
         }, # PsaApiTestIPC_Attest
-
     }  # Tests
 }
 
@@ -395,244 +232,50 @@ fvp_mps2_an521_bl2 = {
     },
     "tests": {
         'Default': {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Non-Secure system',
-                    'end': r'starting\\.{3}',
-                    'pattern': r'Non-Secure system starting\\.{3}',
-                    'fixup': {"pass": "!", "fail": ""},
-                } # Monitors
-            ]
+            "monitors": monitors_no_reg_tests
         },  # Default
         'DefaultProfileS': {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Non-Secure system',
-                    'end': r'starting\\.{3}',
-                    'pattern': r'Non-Secure system starting\\.{3}',
-                    'fixup': {"pass": "!", "fail": ""},
-                } # Monitors
-            ]
+            "monitors": monitors_no_reg_tests
         },  # DefaultProfileS
         'DefaultProfileM': {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Non-Secure system',
-                    'end': r'starting\\.{3}',
-                    'pattern': r'Non-Secure system starting\\.{3}',
-                    'fixup': {"pass": "!", "fail": ""},
-                } # Monitors
-            ]
+            "monitors": monitors_no_reg_tests
         },  # DefaultProfileM
         'DefaultProfileL': {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Non-Secure system',
-                    'end': r'starting\\.{3}',
-                    'pattern': r'Non-Secure system starting\\.{3}',
-                    'fixup': {"pass": "!", "fail": ""},
-                } # Monitors
-            ]
+            "monitors": monitors_no_reg_tests
         },  # DefaultProfileL
-
         'Regression': {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Secure test suites summary',
-                    'end': 'End of Secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                },
-                {
-                    'name': 'Non_Secure_Test_Suites_Summary',
-                    'start': 'Non-secure test suites summary',
-                    'end': r'End of Non-secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                }
-            ]  # Monitors
+            "monitors": monitors_reg_tests
         },  # Regression
-
         'RegressionProfileM': {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Secure test suites summary',
-                    'end': 'End of Secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                },
-                {
-                    'name': 'Non_Secure_Test_Suites_Summary',
-                    'start': 'Non-secure test suites summary',
-                    'end': r'End of Non-secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                }
-            ]  # Monitors
+            "monitors": monitors_reg_tests
         },  # RegressionProfileM
         'RegressionProfileS': {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Secure test suites summary',
-                    'end': 'End of Secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                },
-                {
-                    'name': 'Non_Secure_Test_Suites_Summary',
-                    'start': 'Non-secure test suites summary',
-                    'end': r'End of Non-secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                }
-            ]  # Monitors
+            "monitors": monitors_reg_tests
         },  # RegressionProfileS
         'RegressionProfileL': {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Secure test suites summary',
-                    'end': 'End of Secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                },
-                {
-                    'name': 'Non_Secure_Test_Suites_Summary',
-                    'start': 'Non-secure test suites summary',
-                    'end': r'End of Non-secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                }
-            ]  # Monitors
+            "monitors": monitors_reg_tests
         },  # RegressionProfileL
-
         'RegressionIPC': {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Secure test suites summary',
-                    'end': 'End of Secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                },
-                {
-                    'name': 'Non_Secure_Test_Suites_Summary',
-                    'start': 'Non-secure test suites summary',
-                    'end': r'End of Non-secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                }
-            ]  # Monitors
+            "monitors": monitors_reg_tests
         },  # Regression
         'RegressionIPCTfmLevel2': {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Secure test suites summary',
-                    'end': 'End of Secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                },
-                {
-                    'name': 'Non_Secure_Test_Suites_Summary',
-                    'start': 'Non-secure test suites summary',
-                    'end': r'End of Non-secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                }
-            ]  # Monitors
+            "monitors": monitors_reg_tests
         },  # Regression
         'RegressionIPCTfmLevel3': {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Secure test suites summary',
-                    'end': 'End of Secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                },
-                {
-                    'name': 'Non_Secure_Test_Suites_Summary',
-                    'start': 'Non-secure test suites summary',
-                    'end': r'End of Non-secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                }
-            ]  # Monitors
+            "monitors": monitors_reg_tests
         },  # Regression
         'CoreIPC': {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Non-Secure system',
-                    'end': r'starting\\.{3}',
-                    'pattern': r'Non-Secure system starting\\.{3}',
-                    'fixup': {"pass": "!", "fail": ""},
-                }  # Monitors
-            ]
+            "monitors": monitors_no_reg_tests
         },  # CoreIPC
         'CoreIPCTfmLevel2': {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Non-Secure system',
-                    'end': r'starting\\.{3}',
-                    'pattern': r'Non-Secure system starting\\.{3}',
-                    'fixup': {"pass": "!", "fail": ""},
-                }  # Monitors
-            ]
+            "monitors": monitors_no_reg_tests
         },  # CoreIPCTfmLevel2
         'CoreIPCTfmLevel3': {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Non-Secure system',
-                    'end': r'starting\\.{3}',
-                    'pattern': r'Non-Secure system starting\\.{3}',
-                    'fixup': {"pass": "!", "fail": ""},
-                }  # Monitors
-            ]
+            "monitors": monitors_no_reg_tests
         },  # CoreIPCTfmLevel3
-
         'PsaApiTest_Crypto': {
             "monitors": monitors_psaapitest_crypto_workaround,
         }, # PsaApiTest_Crypto
-
         'PsaApiTest_STORAGE': {
             "monitors": monitors_psaapitest_by_desc,
         }, # PsaApiTest_Storage
@@ -640,11 +283,9 @@ fvp_mps2_an521_bl2 = {
         'PsaApiTestIPC_STORAGE': {
             "monitors": monitors_psaapitest_by_desc,
         }, # PsaApiTestIPC_Storage
-
         'PsaApiTest_Attest': {
             "monitors": monitors_psaapitest_by_ut,
         }, # PsaApiTest_Attest
-
         'PsaApiTestIPC_Attest': {
             "monitors": monitors_psaapitest_by_ut,
         }, # PsaApiTestIPC_Attest
@@ -676,237 +317,46 @@ fvp_mps2_an521_nobl2 = {
     },
     "tests": {
         'Default': {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Non-Secure system',
-                    'end': r'starting\\.{3}',
-                    'pattern': r'Non-Secure system starting\\.{3}',
-                    'fixup': {"pass": "!", "fail": ""},
-                }
-            ]
+            "monitors": monitors_no_reg_tests
         },  # Default
         'DefaultProfileS': {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Non-Secure system',
-                    'end': r'starting\\.{3}',
-                    'pattern': r'Non-Secure system starting\\.{3}',
-                    'fixup': {"pass": "!", "fail": ""},
-                } # Monitors
-            ]
+            "monitors": monitors_no_reg_tests
         },  # DefaultProfileS
         'DefaultProfileM': {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Non-Secure system',
-                    'end': r'starting\\.{3}',
-                    'pattern': r'Non-Secure system starting\\.{3}',
-                    'fixup': {"pass": "!", "fail": ""},
-                } # Monitors
-            ]
+            "monitors": monitors_no_reg_tests
         },  # DefaultProfileM
         'DefaultProfileL': {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Non-Secure system',
-                    'end': r'starting\\.{3}',
-                    'pattern': r'Non-Secure system starting\\.{3}',
-                    'fixup': {"pass": "!", "fail": ""},
-                } # Monitors
-            ]
+            "monitors": monitors_no_reg_tests
         },  # DefaultProfileL
-
         'Regression': {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Secure test suites summary',
-                    'end': 'End of Secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                },
-                {
-                    'name': 'Non_Secure_Test_Suites_Summary',
-                    'start': 'Non-secure test suites summary',
-                    'end': r'End of Non-secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                }
-            ]  # Monitors
+            "monitors": monitors_reg_tests
         },  # Regression
         'RegressionProfileM': {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Secure test suites summary',
-                    'end': 'End of Secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                },
-                {
-                    'name': 'Non_Secure_Test_Suites_Summary',
-                    'start': 'Non-secure test suites summary',
-                    'end': r'End of Non-secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                }
-            ]  # Monitors
+            "monitors": monitors_reg_tests
         },  # RegressionProfileM
         'RegressionProfileS': {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Secure test suites summary',
-                    'end': 'End of Secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                },
-                {
-                    'name': 'Non_Secure_Test_Suites_Summary',
-                    'start': 'Non-secure test suites summary',
-                    'end': r'End of Non-secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                }
-            ]  # Monitors
+            "monitors": monitors_reg_tests
         },  # RegressionProfileS
         'RegressionProfileL': {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Secure test suites summary',
-                    'end': 'End of Secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                },
-                {
-                    'name': 'Non_Secure_Test_Suites_Summary',
-                    'start': 'Non-secure test suites summary',
-                    'end': r'End of Non-secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                }
-            ]  # Monitors
+            "monitors": monitors_reg_tests
         },  # RegressionProfileL
-
         'RegressionIPC': {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Secure test suites summary',
-                    'end': 'End of Secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                },
-                {
-                    'name': 'Non_Secure_Test_Suites_Summary',
-                    'start': 'Non-secure test suites summary',
-                    'end': r'End of Non-secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                }
-            ]  # Monitors
+            "monitors": monitors_reg_tests
         },  # RegressionIPC
         'RegressionIPCTfmLevel2': {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Secure test suites summary',
-                    'end': 'End of Secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                },
-                {
-                    'name': 'Non_Secure_Test_Suites_Summary',
-                    'start': 'Non-secure test suites summary',
-                    'end': r'End of Non-secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                }
-            ]  # Monitors
+            "monitors": monitors_reg_tests
         },  # RegressionIPCTfmLevel2
         'RegressionIPCTfmLevel3': {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Secure test suites summary',
-                    'end': 'End of Secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                },
-                {
-                    'name': 'Non_Secure_Test_Suites_Summary',
-                    'start': 'Non-secure test suites summary',
-                    'end': r'End of Non-secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                }
-            ]  # Monitors
+            "monitors": monitors_reg_tests
         },  # RegressionIPCTfmLevel3
         'CoreIPC': {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Non-Secure system',
-                    'end': r'starting\\.{3}',
-                    'pattern': r'Non-Secure system starting\\.{3}',
-                    'fixup': {"pass": "!", "fail": ""},
-                }  # Monitors
-            ]
+            "monitors": monitors_no_reg_tests
         },  # CoreIPC
         'CoreIPCTfmLevel2': {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Non-Secure system',
-                    'end': r'starting\\.{3}',
-                    'pattern': r'Non-Secure system starting\\.{3}',
-                    'fixup': {"pass": "!", "fail": ""},
-                }  # Monitors
-            ]
+            "monitors": monitors_no_reg_tests
         },  # CoreIPCTfmLevel2
         'CoreIPCTfmLevel3': {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Non-Secure system',
-                    'end': r'starting\\.{3}',
-                    'pattern': r'Non-Secure system starting\\.{3}',
-                    'fixup': {"pass": "!", "fail": ""},
-                }  # Monitors
-            ]
+            "monitors": monitors_no_reg_tests
         },  # CoreIPCTfmLevel3
     }  # Tests
 }
@@ -935,172 +385,34 @@ fvp_mps2_an519_bl2 = {
     },
     "tests": {
         'Default': {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Non-Secure system',
-                    'end': r'starting\\.{3}',
-                    'pattern': r'Non-Secure system starting\\.{3}',
-                    'fixup': {"pass": "!", "fail": ""},
-                } # Monitors
-            ]
+            "monitors": monitors_no_reg_tests
         },  # Default
         'DefaultProfileS': {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Non-Secure system',
-                    'end': r'starting\\.{3}',
-                    'pattern': r'Non-Secure system starting\\.{3}',
-                    'fixup': {"pass": "!", "fail": ""},
-                } # Monitors
-            ]
+            "monitors": monitors_no_reg_tests
         },  # DefaultProfileS
         'DefaultProfileM': {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Non-Secure system',
-                    'end': r'starting\\.{3}',
-                    'pattern': r'Non-Secure system starting\\.{3}',
-                    'fixup': {"pass": "!", "fail": ""},
-                } # Monitors
-            ]
+            "monitors": monitors_no_reg_tests
         },  # DefaultProfileM
-
         'Regression': {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Secure test suites summary',
-                    'end': 'End of Secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                },
-                {
-                    'name': 'Non_Secure_Test_Suites_Summary',
-                    'start': 'Non-secure test suites summary',
-                    'end': r'End of Non-secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                }
-            ]  # Monitors
+            "monitors": monitors_reg_tests
         },  # Regression
-
         'RegressionProfileM': {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Secure test suites summary',
-                    'end': 'End of Secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                },
-                {
-                    'name': 'Non_Secure_Test_Suites_Summary',
-                    'start': 'Non-secure test suites summary',
-                    'end': r'End of Non-secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                }
-            ]  # Monitors
+            "monitors": monitors_reg_tests
         },  # RegressionProfileM
         'RegressionProfileS': {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Secure test suites summary',
-                    'end': 'End of Secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                },
-                {
-                    'name': 'Non_Secure_Test_Suites_Summary',
-                    'start': 'Non-secure test suites summary',
-                    'end': r'End of Non-secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                }
-            ]  # Monitors
+            "monitors": monitors_reg_tests
         },  # RegressionProfileS
-
         'RegressionIPC': {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Secure test suites summary',
-                    'end': 'End of Secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                },
-                {
-                    'name': 'Non_Secure_Test_Suites_Summary',
-                    'start': 'Non-secure test suites summary',
-                    'end': r'End of Non-secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                }
-            ]  # Monitors
+            "monitors": monitors_reg_tests
         },  # Regression
         'RegressionIPCTfmLevel2': {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Secure test suites summary',
-                    'end': 'End of Secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                },
-                {
-                    'name': 'Non_Secure_Test_Suites_Summary',
-                    'start': 'Non-secure test suites summary',
-                    'end': r'End of Non-secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                }
-            ]  # Monitors
+            "monitors": monitors_reg_tests
         },  # Regression
         'CoreIPC': {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Non-Secure system',
-                    'end': r'starting\\.{3}',
-                    'pattern': r'Non-Secure system starting\\.{3}',
-                    'fixup': {"pass": "!", "fail": ""},
-                }  # Monitors
-            ]
+            "monitors": monitors_no_reg_tests
         },  # CoreIPC
         'CoreIPCTfmLevel2': {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Non-Secure system',
-                    'end': r'starting\\.{3}',
-                    'pattern': r'Non-Secure system starting\\.{3}',
-                    'fixup': {"pass": "!", "fail": ""},
-                }  # Monitors
-            ]
+            "monitors": monitors_no_reg_tests
         },  # CoreIPCTfmLevel2
     }  # Tests
 }
@@ -1129,181 +441,40 @@ fvp_mps2_an519_nobl2 = {
     },
     "tests": {
         'Default': {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Non-Secure system',
-                    'end': r'starting\\.{3}',
-                    'pattern': r'Non-Secure system starting\\.{3}',
-                    'fixup': {"pass": "!", "fail": ""},
-                }
-            ]
+            "monitors": monitors_no_reg_tests
         },  # Default
         'DefaultProfileS': {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Non-Secure system',
-                    'end': r'starting\\.{3}',
-                    'pattern': r'Non-Secure system starting\\.{3}',
-                    'fixup': {"pass": "!", "fail": ""},
-                } # Monitors
-            ]
+            "monitors": monitors_no_reg_tests
         },  # DefaultProfileS
         'DefaultProfileM': {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Non-Secure system',
-                    'end': r'starting\\.{3}',
-                    'pattern': r'Non-Secure system starting\\.{3}',
-                    'fixup': {"pass": "!", "fail": ""},
-                } # Monitors
-            ]
+            "monitors": monitors_no_reg_tests
         },  # DefaultProfileM
-
         'Regression': {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Secure test suites summary',
-                    'end': 'End of Secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                },
-                {
-                    'name': 'Non_Secure_Test_Suites_Summary',
-                    'start': 'Non-secure test suites summary',
-                    'end': r'End of Non-secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                }
-            ]  # Monitors
+            "monitors": monitors_reg_tests
         },  # Regression
         'RegressionProfileM': {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Secure test suites summary',
-                    'end': 'End of Secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                },
-                {
-                    'name': 'Non_Secure_Test_Suites_Summary',
-                    'start': 'Non-secure test suites summary',
-                    'end': r'End of Non-secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                }
-            ]  # Monitors
+            "monitors": monitors_reg_tests
         },  # RegressionProfileM
         'RegressionProfileS': {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Secure test suites summary',
-                    'end': 'End of Secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                },
-                {
-                    'name': 'Non_Secure_Test_Suites_Summary',
-                    'start': 'Non-secure test suites summary',
-                    'end': r'End of Non-secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                }
-            ]  # Monitors
+            "monitors": monitors_reg_tests
         },  # RegressionProfileS
-
         'RegressionIPC': {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Secure test suites summary',
-                    'end': 'End of Secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                },
-                {
-                    'name': 'Non_Secure_Test_Suites_Summary',
-                    'start': 'Non-secure test suites summary',
-                    'end': r'End of Non-secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                }
-            ]  # Monitors
+            "monitors": monitors_reg_tests
         },  # RegressionIPC
         'RegressionIPCTfmLevel2': {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Secure test suites summary',
-                    'end': 'End of Secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                },
-                {
-                    'name': 'Non_Secure_Test_Suites_Summary',
-                    'start': 'Non-secure test suites summary',
-                    'end': r'End of Non-secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                }
-            ]  # Monitors
+            "monitors": monitors_reg_tests
         },  # RegressionIPCTfmLevel2
         'CoreIPC': {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Non-Secure system',
-                    'end': r'starting\\.{3}',
-                    'pattern': r'Non-Secure system starting\\.{3}',
-                    'fixup': {"pass": "!", "fail": ""},
-                }  # Monitors
-            ]
+            "monitors": monitors_no_reg_tests
         },  # CoreIPC
         'CoreIPCTfmLevel2': {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Non-Secure system',
-                    'end': r'starting\\.{3}',
-                    'pattern': r'Non-Secure system starting\\.{3}',
-                    'fixup': {"pass": "!", "fail": ""},
-                }  # Monitors
-            ]
+            "monitors": monitors_no_reg_tests
         },  # CoreIPCTfmLevel2
     }  # Tests
 }
 
 
-# MPS2 with BL2 bootloader
-# IMAGE0ADDRESS: 0x10000000
-# IMAGE0FILE: \Software\bl2.bin  ; BL2 bootloader
-# IMAGE1ADDRESS: 0x10080000
-# IMAGE1FILE: \Software\tfm_s_ns_signed.bin ; TF-M example application binary blob
+# QEMU for MPS2 with BL2 bootloader
 qemu_mps2_bl2 = {
     "templ": "qemu_mps2_bl2.jinja2",
     "job_name": "qemu_mps2_bl2",
@@ -1320,194 +491,21 @@ qemu_mps2_bl2 = {
         "bootloader": "bl2.bin"
     },
     "tests": {
-        # 'Default': {
-        #     "monitors": [
-        #         {
-        #             'name': 'Secure_Test_Suites_Summary',
-        #             'start': r'[Sec Thread]',
-        #             'end': r'system starting',
-        #             'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
-        #                        r'(?P<test_case_id>Secure image '
-        #                        r'initializing)(?P<result>!)',
-        #             'fixup': {"pass": "!", "fail": ""}
-        #         }  # Monitors
-        #     ]
-        # },  # Default
-        # 'DefaultProfileS': {
-        #     "monitors": [
-        #         {
-        #             'name': 'Secure_Test_Suites_Summary',
-        #             'start': r'[Sec Thread]',
-        #             'end': r'system starting',
-        #             'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
-        #                        r'(?P<test_case_id>Secure image '
-        #                        r'initializing)(?P<result>!)',
-        #             'fixup': {"pass": "!", "fail": ""}
-        #         }  # Monitors
-        #     ]
-        # },  # DefaultProfileS
-        # 'DefaultProfileM': {
-        #     "monitors": [
-        #         {
-        #             'name': 'Secure_Test_Suites_Summary',
-        #             'start': r'[Sec Thread]',
-        #             'end': r'system starting',
-        #             'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
-        #                        r'(?P<test_case_id>Secure image '
-        #                        r'initializing)(?P<result>!)',
-        #             'fixup': {"pass": "!", "fail": ""}
-        #         }  # Monitors
-        #     ]
-        # },  # DefaultProfileM
         'Regression': {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Secure test suites summary',
-                    'end': 'End of Secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                },
-                {
-                    'name': 'Non_Secure_Test_Suites_Summary',
-                    'start': 'Non-secure test suites summary',
-                    'end': r'End of Non-secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                }
-            ]  # Monitors
+            "monitors": monitors_reg_tests
         },  # Regression
         'RegressionProfileS': {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Secure test suites summary',
-                    'end': 'End of Secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                },
-                {
-                    'name': 'Non_Secure_Test_Suites_Summary',
-                    'start': 'Non-secure test suites summary',
-                    'end': r'End of Non-secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                }
-            ]  # Monitors
+            "monitors": monitors_reg_tests
         },  # RegressionProfileS
         'RegressionIPC': {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Secure test suites summary',
-                    'end': 'End of Secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                },
-                {
-                    'name': 'Non_Secure_Test_Suites_Summary',
-                    'start': 'Non-secure test suites summary',
-                    'end': r'End of Non-secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                }
-            ]  # Monitors
+            "monitors": monitors_reg_tests
         },  # Regression
         'RegressionIPCTfmLevel2': {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Secure test suites summary',
-                    'end': 'End of Secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                },
-                {
-                    'name': 'Non_Secure_Test_Suites_Summary',
-                    'start': 'Non-secure test suites summary',
-                    'end': r'End of Non-secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                }
-            ]  # Monitors
+            "monitors": monitors_reg_tests
         },  # Regression
         'RegressionIPCTfmLevel3': {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Secure test suites summary',
-                    'end': 'End of Secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                },
-                {
-                    'name': 'Non_Secure_Test_Suites_Summary',
-                    'start': 'Non-secure test suites summary',
-                    'end': r'End of Non-secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has (.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                }
-            ]  # Monitors
+            "monitors": monitors_reg_tests
         },  # Regression
-        # 'CoreIPC': {
-        #     "monitors": [
-        #         {
-        #             'name': 'Secure_Test_Suites_Summary',
-        #             'start': r'[Sec Thread]',
-        #             'end': r'system starting',
-        #             'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
-        #                        r'(?P<test_case_id>Secure image '
-        #                        r'initializing)(?P<result>!)',
-        #             'fixup': {"pass": "!", "fail": ""}
-        #         }  # Monitors
-        #     ]
-        # },  # CoreIPC
-        # 'CoreIPCTfmLevel2': {
-        #     "monitors": [
-        #         {
-        #             'name': 'Secure_Test_Suites_Summary',
-        #             'start': r'[Sec Thread]',
-        #             'end': r'system starting',
-        #             'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
-        #                        r'(?P<test_case_id>Secure image '
-        #                        r'initializing)(?P<result>!)',
-        #             'fixup': {"pass": "!", "fail": ""}
-        #         }  # Monitors
-        #     ]
-        # },  # CoreIPCTfmLevel2
-        # 'CoreIPCTfmLevel3': {
-        #     "monitors": [
-        #         {
-        #             'name': 'Secure_Test_Suites_Summary',
-        #             'start': r'[Sec Thread]',
-        #             'end': r'system starting',
-        #             'pattern': r'\x1b\\[1;34m\\[Sec Thread\\] '
-        #                        r'(?P<test_case_id>Secure image '
-        #                        r'initializing)(?P<result>!)',
-        #             'fixup': {"pass": "!", "fail": ""}
-        #         }  # Monitors
-        #     ]
-        # },  # CoreIPCTfmLevel3
     }
 }
 
@@ -1532,202 +530,40 @@ musca_b1_bl2 = {
     },
     "tests": {
         "Default": {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Non-Secure system',
-                    'end': r'starting\\.{3}',
-                    'pattern': r'Non-Secure system starting\\.{3}',
-                    'fixup': {"pass": "!", "fail": ""},
-                }
-            ]  # Monitors
+            "monitors": monitors_no_reg_tests
         },
         "CoreIPC": {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Non-Secure system',
-                    'end': r'starting\\.{3}',
-                    'pattern': r'Non-Secure system starting\\.{3}',
-                    'fixup': {"pass": "!", "fail": ""},
-                }
-            ]  # Monitors
+            "monitors": monitors_no_reg_tests
         },
         "CoreIPCTfmLevel2": {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Non-Secure system',
-                    'end': r'starting\\.{3}',
-                    'pattern': r'Non-Secure system starting\\.{3}',
-                    'fixup': {"pass": "!", "fail": ""},
-                }
-            ]  # Monitors
+            "monitors": monitors_no_reg_tests
         },
         "CoreIPCTfmLevel3": {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Non-Secure system',
-                    'end': r'starting\\.{3}',
-                    'pattern': r'Non-Secure system starting\\.{3}',
-                    'fixup': {"pass": "!", "fail": ""},
-                }
-            ]  # Monitors
+            "monitors": monitors_no_reg_tests
         },
         "DefaultProfileM": {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Non-Secure system',
-                    'end': r'starting\\.{3}',
-                    'pattern': r'Non-Secure system starting\\.{3}',
-                    'fixup': {"pass": "!", "fail": ""},
-                }
-            ]  # Monitors
+            "monitors": monitors_no_reg_tests
         },
         "DefaultProfileS": {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Non-Secure system',
-                    'end': r'starting\\.{3}',
-                    'pattern': r'Non-Secure system starting\\.{3}',
-                    'fixup': {"pass": "!", "fail": ""},
-                }
-            ]  # Monitors
+            "monitors": monitors_no_reg_tests
         },
         "Regression": {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Secure test suites summary',
-                    'end': 'End of Secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                },
-                {
-                    'name': 'Non_Secure_Test_Suites_Summary',
-                    'start': 'Non-secure test suites summary',
-                    'end': r'End of Non-secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                }
-            ]  # Monitors
+            "monitors": monitors_reg_tests
         },
         "RegressionIPC": {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Secure test suites summary',
-                    'end': 'End of Secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                },
-                {
-                    'name': 'Non_Secure_Test_Suites_Summary',
-                    'start': 'Non-secure test suites summary',
-                    'end': r'End of Non-secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                }
-            ]  # Monitors
+            "monitors": monitors_reg_tests
         },
         "RegressionIPCTfmLevel2": {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Secure test suites summary',
-                    'end': 'End of Secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                },
-                {
-                    'name': 'Non_Secure_Test_Suites_Summary',
-                    'start': 'Non-secure test suites summary',
-                    'end': r'End of Non-secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                }
-            ]  # Monitors
+            "monitors": monitors_reg_tests
         },
         "RegressionIPCTfmLevel3": {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Secure test suites summary',
-                    'end': 'End of Secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                },
-                {
-                    'name': 'Non_Secure_Test_Suites_Summary',
-                    'start': 'Non-secure test suites summary',
-                    'end': r'End of Non-secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                }
-            ]  # Monitors
+            "monitors": monitors_reg_tests
         },
         "RegressionProfileM": {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Secure test suites summary',
-                    'end': 'End of Secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                },
-                {
-                    'name': 'Non_Secure_Test_Suites_Summary',
-                    'start': 'Non-secure test suites summary',
-                    'end': r'End of Non-secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                }
-            ]  # Monitors
+            "monitors": monitors_reg_tests
         },
         "RegressionProfileS": {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Secure test suites summary',
-                    'end': 'End of Secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                },
-                {
-                    'name': 'Non_Secure_Test_Suites_Summary',
-                    'start': 'Non-secure test suites summary',
-                    'end': r'End of Non-secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                }
-            ]  # Monitors
+            "monitors": monitors_reg_tests
         },
     },
 }
@@ -1752,26 +588,7 @@ musca_b1_otp_bl2 = {
     },
     "tests": {
         "RegressionIPCTfmLevel3": {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Secure test suites summary',
-                    'end': 'End of Secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                },
-                {
-                    'name': 'Non_Secure_Test_Suites_Summary',
-                    'start': 'Non-secure test suites summary',
-                    'end': r'End of Non-secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                }
-            ]  # Monitors
+            "monitors": monitors_reg_tests
         },
     },
 }
@@ -1794,92 +611,16 @@ stm32l562e_dk = {
     },
     "tests": {
         "Regression": {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Secure test suites summary',
-                    'end': 'End of Secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                },
-                {
-                    'name': 'Non_Secure_Test_Suites_Summary',
-                    'start': 'Non-secure test suites summary',
-                    'end': 'End of Non-secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                }
-            ]  # Monitors
+            "monitors": monitors_reg_tests
         },
         "RegressionIPC": {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Secure test suites summary',
-                    'end': 'End of Secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                },
-                {
-                    'name': 'Non_Secure_Test_Suites_Summary',
-                    'start': 'Non-secure test suites summary',
-                    'end': 'End of Non-secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                }
-            ]  # Monitors
+            "monitors": monitors_reg_tests
         },
         "RegressionIPCTfmLevel2": {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Secure test suites summary',
-                    'end': 'End of Secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                },
-                {
-                    'name': 'Non_Secure_Test_Suites_Summary',
-                    'start': 'Non-secure test suites summary',
-                    'end': 'End of Non-secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                }
-            ]  # Monitors
+            "monitors": monitors_reg_tests
         },
         "RegressionIPCTfmLevel3": {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Secure test suites summary',
-                    'end': 'End of Secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                },
-                {
-                    'name': 'Non_Secure_Test_Suites_Summary',
-                    'start': 'Non-secure test suites summary',
-                    'end': 'End of Non-secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                }
-            ]  # Monitors
+            "monitors": monitors_reg_tests
         },
     },
 }
@@ -1902,37 +643,10 @@ lpcxpresso55s69 = {
     },
     "tests": {
         "DefaultProfileM": {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Non-Secure system',
-                    'end': r'starting\\.{3}',
-                    'pattern': r'Non-Secure system starting\\.{3}',
-                    'fixup': {"pass": "!", "fail": ""},
-                }
-            ]  # Monitors
+            "monitors": monitors_no_reg_tests
         },
         "RegressionProfileM": {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Secure test suites summary',
-                    'end': 'End of Secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                },
-                {
-                    'name': 'Non_Secure_Test_Suites_Summary',
-                    'start': 'Non-secure test suites summary',
-                    'end': 'End of Non-secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                }
-            ]  # Monitors
+            "monitors": monitors_reg_tests
         },
     }
 }
@@ -1956,92 +670,16 @@ psoc64 = {
     },
     "tests": {
         "Regression": {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Secure test suites summary',
-                    'end': 'End of Secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                },
-                {
-                    'name': 'Non_Secure_Test_Suites_Summary',
-                    'start': 'Non-secure test suites summary',
-                    'end': 'End of Non-secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                }
-            ]  # Monitors
+            "monitors": monitors_reg_tests
         },
         "RegressionIPC": {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Secure test suites summary',
-                    'end': 'End of Secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                },
-                {
-                    'name': 'Non_Secure_Test_Suites_Summary',
-                    'start': 'Non-secure test suites summary',
-                    'end': 'End of Non-secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                }
-            ]  # Monitors
+            "monitors": monitors_reg_tests
         },
         "RegressionIPCTfmLevel2": {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Secure test suites summary',
-                    'end': 'End of Secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                },
-                {
-                    'name': 'Non_Secure_Test_Suites_Summary',
-                    'start': 'Non-secure test suites summary',
-                    'end': 'End of Non-secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                }
-            ]  # Monitors
+            "monitors": monitors_reg_tests
         },
         "RegressionIPCTfmLevel3": {
-            "monitors": [
-                {
-                    'name': 'Secure_Test_Suites_Summary',
-                    'start': 'Secure test suites summary',
-                    'end': 'End of Secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                },
-                {
-                    'name': 'Non_Secure_Test_Suites_Summary',
-                    'start': 'Non-secure test suites summary',
-                    'end': 'End of Non-secure test suites',
-                    'pattern': r"Test suite '(?P<"
-                               r"test_case_id>[^\n]+)' has(.*) "
-                               r"(?P<result>PASSED|FAILED)",
-                    'fixup': {"pass": "PASSED", "fail": "FAILED"},
-                }
-            ]  # Monitors
+            "monitors": monitors_reg_tests
         },
     },
 }
