@@ -60,27 +60,17 @@ monitors_no_reg_tests = [
 ]
 
 # LAVA test-monitor definition for configs with regression tests.
-# Results of each test suites are parsed from "PASSED"/"FAILED" in logs.
+# Results of each test case is parsed separately, capturing test case id.
+# Works across any test suites enabled.
 monitors_reg_tests = [
     {
-        'name': 'Secure_Test_Suites_Summary',
-        'start': 'Secure test suites summary',
-        'end': 'End of Secure test suites',
-        'pattern': r"Test suite '(?P<"
-                   r"test_case_id>[^\n]+)' has(.*) "
-                   r"(?P<result>PASSED|FAILED)",
-        'fixup': {"pass": "PASSED", "fail": "FAILED"},
+        'name': 'regression_suite',
+        'start': 'Starting',
+        'end': 'End of Non-secure test suites',
+        'pattern': r"TEST: (?P<test_case_id>.+?) - (?P<result>(PASSED|FAILED|SKIPPED))",
+        'fixup': {"pass": "PASSED", "fail": "FAILED", "skip": "SKIPPED"},
     },
-    {
-        'name': 'Non_Secure_Test_Suites_Summary',
-        'start': 'Non-secure test suites summary',
-        'end': r'End of Non-secure test suites',
-        'pattern': r"Test suite '(?P<"
-                   r"test_case_id>[^\n]+)' has(.*) "
-                   r"(?P<result>PASSED|FAILED)",
-        'fixup': {"pass": "PASSED", "fail": "FAILED"},
-    }
-]
+]  # Monitors
 
 # LAVA test-monitor definition for PSA API testsuites, testcases identified
 # by "UT" value in output (testcase identifier).
