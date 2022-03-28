@@ -78,7 +78,8 @@ mapExtraParams = {"":              "",
                                     "-DCONFIG_TFM_LAZY_STACKING=OFF "),
                   "FVP":           "-DPLATFORM_IS_FVP=True",
                   "FPGA":          "-DPLATFORM_IS_FVP=False",
-                  "CC_DRIVER_PSA": "-DCC312_LEGACY_DRIVER_API_ENABLED=OFF"
+                  "CC_DRIVER_PSA": "-DCC312_LEGACY_DRIVER_API_ENABLED=OFF",
+                  "SFN_ENABLE":    "-DCONFIG_TFM_SPM_BACKEND=SFN"
                   }
 
 class TFM_Build_Manager(structuredTask):

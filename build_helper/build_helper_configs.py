@@ -613,15 +613,15 @@ config_tfm_profile = {"seed_params": {
                                      "arm/musca_b1/sse_200"],
                 "toolchain_file":   ["toolchain_ARMCLANG.cmake",
                                      "toolchain_GNUARM.cmake"],
-                "lib_model":        [True, False],
-                "isolation_level":  ["1", "2", "3"],
+                "lib_model":        [False],
+                "isolation_level":  ["2", "3"],
                 "test_regression":  [True, False],
                 "test_psa_api":     ["OFF"],
                 "cmake_build_type": ["Debug", "Release", "Minsizerel"],
                 "with_otp":         ["off"],
                 "with_bl2":         [True],
                 "with_ns":          [True],
-                "profile":          ["profile_small", "profile_medium", "profile_large"],
+                "profile":          ["profile_medium", "profile_large"],
                 "partition_ps":     ["ON", "OFF"],
                 "extra_params":     [""]
                 },
@@ -634,6 +634,34 @@ config_tfm_profile = {"seed_params": {
                      "*", "profile_large", "*", "*"),
                     ("arm/musca_b1/sse_200", "*", "*", "*", "*", "*", "*", "*",
                      "*", "*", "profile_large", "*", "*"),
+                ]
+                }
+
+config_tfm_profile_s = {"seed_params": {
+                "tfm_platform":     ["arm/mps2/an519", "arm/mps2/an521"],
+                "toolchain_file":   ["toolchain_ARMCLANG.cmake",
+                                     "toolchain_GNUARM.cmake"],
+                "lib_model":        [True],
+                "isolation_level":  ["1"],
+                "test_regression":  [True, False],
+                "test_psa_api":     ["OFF"],
+                "cmake_build_type": ["Debug", "Release", "Minsizerel"],
+                "with_otp":         ["OFF"],
+                "with_bl2":         [True],
+                "with_ns":          [True],
+                "profile":          ["profile_small"],
+                "partition_ps":     ["OFF"],
+                "extra_params":     [""]
+                },
+                "common_params": _common_tfm_builder_cfg,
+                "valid": [
+                    # Profile Small also supports SFN model
+                    ("*", "*", False, "*", "*", "*", "*", "*", "*", "*", "*",
+                     "*", "SFN_ENABLE")
+                ],
+                "invalid": _common_tfm_invalid_configs + [
+                    ("arm/mps2/an519", "toolchain_GNUARM.cmake", "*", "*", "*",
+                     "*", "Minsizerel", "*", "*", "*", "*", "*", "*")
                 ]
                 }
 
@@ -888,15 +916,15 @@ config_nightly_profile = {"seed_params": {
                                      "arm/musca_b1/sse_200"],
                 "toolchain_file":   ["toolchain_ARMCLANG.cmake",
                                      "toolchain_GNUARM.cmake"],
-                "lib_model":        [True, False],
-                "isolation_level":  ["1", "2", "3"],
+                "lib_model":        [False],
+                "isolation_level":  ["2", "3"],
                 "test_regression":  [True, False],
                 "test_psa_api":     ["OFF"],
                 "cmake_build_type": ["Debug", "Release", "Minsizerel"],
                 "with_otp":         ["off"],
                 "with_bl2":         [True],
                 "with_ns":          [True],
-                "profile":          ["profile_small", "profile_medium", "profile_large"],
+                "profile":          ["profile_medium", "profile_large"],
                 "partition_ps":     ["ON", "OFF"],
                 "extra_params":     [""]
                 },
@@ -1534,6 +1562,7 @@ _builtin_configs = {
                     "tfm_test": config_tfm_test,
                     "tfm_test2": config_tfm_test2,
                     "tfm_profile": config_tfm_profile,
+                    "tfm_profile_s": config_tfm_profile_s,
                     "tfm_test_otp": config_tfm_test_OTP,
                     "tfm_nsce": config_nsce,
                     "tfm_mmio": config_mmio,
@@ -1551,6 +1580,7 @@ _builtin_configs = {
                     "nightly_nsce": config_nsce,
                     "nightly_mmio": config_mmio,
                     "nightly_profile": config_nightly_profile,
+                    "nightly_profile_s": config_tfm_profile_s,
                     "nightly_psa_api": config_nightly_PSA_API,
                     "nightly_ff": config_nightly_PSA_FF,
                     "nightly_otp": config_nightly_OTP,
