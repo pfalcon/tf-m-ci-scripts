@@ -44,6 +44,7 @@ timestamps {
       }
     }
   }
+/*
   stage("Static Checks") {
     def checks = [:]
     checks["cppcheck"] = trigger("tf-m-cppcheck")
@@ -56,8 +57,9 @@ timestamps {
       echo "Failed static checks, continuing with build."
     }
   }
+*/
   stage("Trigger Build") {
-    parallel(["build":trigger("tf-m-build-and-test")])
+    parallel(["build":trigger("pfalcon-tf-m-build-and-test")])
     // If previously failed at static checks, mark this as a failure
     if (status < 0 ) {
       error("Failing due to failed static checks.")
