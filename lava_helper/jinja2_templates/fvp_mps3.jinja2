@@ -1,0 +1,103 @@
+{#------------------------------------------------------------------------------
+# Copyright (c) 2018-2022, Arm Limited and Contributors. All rights reserved.
+#
+# SPDX-License-Identifier: BSD-3-Clause
+#
+#-----------------------------------------------------------------------------#}
+{% extends 'jinja2_templates/base.jinja2' %}
+{% block metadata %}
+{{ super() }}
+{% endblock %}
+{% block base %}
+{{ super() }}
+{% endblock %}
+{% block actions %}
+context:
+  kernel_start_message: ''
+
+actions:
+- deploy:
+    namespace: docker
+    to: fvp
+    images:
+      app:
+        url: {{ application_url }}
+      data:
+        url: {{ data_url }}
+{%- if enable_code_coverage %}
+      cc:
+        url: {{ coverage_trace_plugin }}
+{%- endif %}
+- boot:
+    failure_retry: 3
+    namespace: docker
+    method: fvp
+    docker:
+      name: {{ docker_prefix }}/fvp:fvp_corstone_sse-300_11.16_26
+      local: true
+    prompts:
+    - 'root@lava '
+    image: /opt/model/FVP_Corstone_SSE-300/models/Linux64_GCC-6.4/FVP_Corstone_SSE-300_Ethos-U55
+    timeout:
+      minutes: 5
+    console_string: 'telnetterminal0: Listening for serial connection on port (?P<PORT>\d+)'
+    license_variable: '{{ license_variable }}'
+    use_telnet: False
+    arguments:
+    -  "--application cpu0={APP}"
+    -  "--data cpu0={DATA}@{{ data_bin_offset }}"
+    -  "--parameter mps3_board.platform_type=1"
+    -  "--parameter cpu0.INITSVTOR={{ cpu0_initvtor_s }}"
+    -  "--parameter cpu0.semihosting-enable=0"
+    -  "--parameter mps3_board.DISABLE_GATING=0"
+    -  "--parameter mps3_board.telnetterminal0.start_telnet=1"
+    -  "--parameter mps3_board.telnetterminal1.start_telnet=1"
+    -  "--parameter mps3_board.telnetterminal2.start_telnet=1"
+    -  "--parameter mps3_board.telnetterminal0.quiet=0"
+    -  "--parameter mps3_board.telnetterminal1.quiet=0"
+    -  "--parameter mps3_board.telnetterminal2.quiet=0"
+    -  "--parameter mps3_board.uart0.shutdown_on_eot=1"
+    -  "--parameter 'mps3_board.uart0.out_file=-'"
+    -  "--parameter mps3_board.visualisation.disable-visualisation=1"
+{%- if enable_code_coverage %}
+    -  "--plugin {CC}"
+    -  "--parameter mps3_board.uart0.shutdown_tag=\x04"
+    -  "--cpulimit 130"
+{%- endif %}
+
+    prompts:
+    - '(.*)'
+
+- test:
+    namespace: target
+    monitors:
+    {%- for monitor in test.monitors %}
+    - name: "{{monitor.name}}"
+      start: "{{monitor.start}}"
+      end: "{{monitor.end}}"
+      pattern: "{{monitor.pattern}}"
+      fixupdict:
+         '{{monitor.fixup.pass}}': pass
+         '{{monitor.fixup.fail}}': fail
+         {%- if monitor.fixup.skip %}
+         '{{monitor.fixup.skip}}': skip
+         {%- endif %}
+    {%- endfor %}
+
+{%- if enable_code_coverage %}
+- test:
+    namespace: target
+    interactive:
+    - name: fvp_stopped
+      prompts: ['/OSCI/SystemC: Simulation stopped by user.']
+      script:
+      - name: fvp_stopped_1
+        command:
+    - name: fvp_trace_end
+      prompts: ['Trace path: FVP_Corstone_SSE-300_Ethos-U55.cpu1']
+      script:
+      - name: fvp_trace_end_1
+        command:
+{%- endif %}
+
+{% endblock %}

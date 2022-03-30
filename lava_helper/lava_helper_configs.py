@@ -209,6 +209,54 @@ tfm_mps2_sse_200 = {
     }  # Tests
 }
 
+# FVP with BL2 bootloader
+# firmware <-> ns <-> application: --application cpu0=bl2.axf
+# bootloader <-> s <-> data: --data cpu0=tfm_s_ns_signed.bin@0x01000000
+fvp_mps3_an552_bl2 = {
+    "templ": "fvp_mps3.jinja2",
+    "job_name": "fvp_mps3_an552_bl2",
+    "device_type": "fvp",
+    "job_timeout": 15,
+    "action_timeout": 10,
+    "monitor_timeout": 15,
+    "poweroff_timeout": 1,
+    "platforms": {"AN552": ""},
+    "compilers": ["GCC", "ARMCLANG"],
+    "build_types": ["Debug", "Release"],
+    "boot_types": ["BL2"],
+    "data_bin_offset": "0x01000000",
+    "binaries": {
+        "application": "bl2.axf",
+        "data": "tfm_s_ns_signed.bin"
+    },
+       "tests": {
+        'Default': {
+            "monitors": monitors_no_reg_tests
+        },  # Default
+        'Regression': {
+            "monitors": monitors_reg_tests
+        },  # Regression
+        'RegressionIPC': {
+            "monitors": monitors_reg_tests
+        },  # Regression
+        'RegressionIPCTfmLevel2': {
+            "monitors": monitors_reg_tests
+        },  # Regression
+        'RegressionIPCTfmLevel3': {
+            "monitors": monitors_reg_tests
+        },  # Regression
+        'CoreIPC': {
+            "monitors": monitors_no_reg_tests
+        },  # CoreIPC
+        'CoreIPCTfmLevel2': {
+            "monitors": monitors_no_reg_tests
+        },  # CoreIPCTfmLevel2
+        'CoreIPCTfmLevel3': {
+            "monitors": monitors_no_reg_tests
+        },  # CoreIPCTfmLevel3
+
+    }  # Tests
+}
 
 # FVP with BL2 bootloader
 # application: --application cpu0=bl2.axf
@@ -687,6 +735,7 @@ psoc64 = {
 # All configurations should be mapped here
 lava_gen_config_map = {
     "mps2_an521_bl2": tfm_mps2_sse_200,
+    "fvp_mps3_an552_bl2": fvp_mps3_an552_bl2,
     "fvp_mps2_an521_bl2": fvp_mps2_an521_bl2,
     "fvp_mps2_an521_nobl2": fvp_mps2_an521_nobl2,
     "fvp_mps2_an519_bl2": fvp_mps2_an519_bl2,
