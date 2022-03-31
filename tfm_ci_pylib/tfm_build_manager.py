@@ -451,8 +451,8 @@ class TFM_Build_Manager(structuredTask):
                             "extra_params": mapExtraParams[i.extra_params]}
         if i.test_psa_api == "IPC":
             overwrite_params["test_psa_api"] += " -DINCLUDE_PANIC_TESTS=1"
-            if i.tfm_platform == "arm/musca_b1/sse_200":
-                overwrite_params["test_psa_api"] += " -DITS_RAM_FS=ON -DPS_RAM_FS=ON"
+        if i.tfm_platform == "arm/musca_b1/sse_200":
+            overwrite_params["test_psa_api"] += " -DITS_RAM_FS=ON -DPS_RAM_FS=ON"
         if i.extra_params == "FPHARD" or i.extra_params == "FPHARD_LOFF":
             overwrite_params["test_psa_api"] += " -DTEST_S_FPU=ON -DTEST_NS_FPU=ON"
         build_cfg["config_template"] %= overwrite_params
