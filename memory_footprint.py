@@ -139,7 +139,7 @@ def identify_config():
             cfg.with_bl2 and cfg.with_ns and
             cfg.profile == "profile_large" and cfg.partition_ps == "ON"):
                 name_config = "DefaultProfileL"
-        ret = [cfg.tfm_platform,cfg.toolchain_file, name_config]
+        ret = [cfg.tfm_platform,cfg.compiler, name_config]
     except:
         ret = ["Unknown", "Unknown", "Unknown"]
     return ret

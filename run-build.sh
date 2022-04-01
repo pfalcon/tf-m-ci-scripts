@@ -29,20 +29,10 @@ cmake --version
 python --version
 make --version
 
-# Export specific compiler path to env PATH
-compiler_path="${COMPILER_VERSION}_PATH"
-export PATH=$PATH:"${!compiler_path}"
-# Show compiler version
-if [[ $COMPILER_VERSION =~ "ARMCLANG" ]] ; then
-    armclang --version
-else
-    arm-none-eabi-gcc --version
-fi
-
 set -ex
 build_commands=$(python3 tf-m-ci-scripts/configs.py -b -g all $CONFIG_NAME)
 
-if [ $CODE_COVERAGE_EN = "TRUE" ] && [[ $CONFIG_NAME =~ "GNUARM" ]] ; then
+if [ $CODE_COVERAGE_EN = "TRUE" ] && [[ $CONFIG_NAME =~ "GCC" ]] ; then
     build_commands=${build_commands/toolchain_GNUARM.cmake/toolchain_GNUARM.cmake -DTFM_CODE_COVERAGE=True}
     echo "Flag: Add compiler flag for build with code coverage supported."
     echo $build_commands

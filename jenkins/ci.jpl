@@ -1,6 +1,6 @@
 #!/usr/bin/env groovy
 //-------------------------------------------------------------------------------
-// Copyright (c) 2020-2021, Arm Limited and Contributors. All rights reserved.
+// Copyright (c) 2020-2022, Arm Limited and Contributors. All rights reserved.
 //
 // SPDX-License-Identifier: BSD-3-Clause
 //
@@ -24,9 +24,6 @@ mapPlatform = ["cypress/psoc64":                "psoc64",
                "stm/stm32l562e_dk":             "stm32l562e_dk",
                "arm/corstone1000":              "corstone1000",
                "nxp/lpcxpresso55s69":           "lpcxpresso55s69"]
-
-mapCompiler = ["toolchain_GNUARM.cmake":   "GNUARM",
-               "toolchain_ARMCLANG.cmake": "ARMCLANG"]
 
 mapBL2 = ["True":  "--bl2",
           "False": ""]
@@ -100,7 +97,7 @@ def generateLavaParam(build_params) {
                      value: mapPlatform[build_params["TFM_PLATFORM"]])
   }
   params += string(name: "COMPILER", \
-                   value: mapCompiler[build_params["TOOLCHAIN_FILE"]])
+                   value: build_params["COMPILER"].split('_')[0])
   params += string(name: "PSA_API_SUITE", \
                    value: mapTestPsaApi[build_params["TEST_PSA_API"]])
 
@@ -247,10 +244,10 @@ python3 ./configs.py -g ${filter_group.replace(" ", " -g ")} ${config}
             }
             // Only submit LAVA test for a specified OTP enabled config in nightly or release job
             else if (params_collection["OTP"] == "ENABLED" && \
-                     params_collection["CONFIG_NAME"] != "MUSCA_B1_GNUARM_PSA_3_REG_Debug_OTP_BL2_NS") {
+                     params_collection["CONFIG_NAME"] != "MUSCA_B1_GCC_PSA_3_REG_Debug_OTP_BL2_NS") {
               print("LAVA is not needed for ${build_url}")
             }
-            else if (params_collection["CONFIG_NAME"] == "MUSCA_B1_GNUARM_PSA_3_REG_Debug_OTP_BL2_NS" && \
+            else if (params_collection["CONFIG_NAME"] == "MUSCA_B1_GCC_PSA_3_REG_Debug_OTP_BL2_NS" && \
                      !(env.JOB_NAME.equals("tf-m-nightly") || env.JOB_NAME.equals("tf-m-release"))) {
               print("LAVA is not needed for ${build_url}")
             }
@@ -348,7 +345,7 @@ def generateCsvContent(results) {
       resultsParam.add([result.value[1], \
                         result.value[0].getResult(), \
                         result.value[2]['TFM_PLATFORM'], \
-                        result.value[2]['TOOLCHAIN_FILE'], \
+                        result.value[2]['COMPILER'].split('_')[0], \
                         result.value[2]['CMAKE_BUILD_TYPE'], \
                         result.value[2]['BL2'], \
                         result.value[2]['NS'], \
@@ -367,7 +364,7 @@ def generateCsvContent(results) {
         result[2] = 'arm/musca_b1/sse_200_OTP'
       }
     }
-    result[3] = mapCompiler[result[3]]
+    result[3] = result[3].split('_')[0]
     build_params = result[7..12]
     configName = ""
     for (map_cfg in mapConfigs) {

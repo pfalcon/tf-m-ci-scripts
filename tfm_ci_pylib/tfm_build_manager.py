@@ -5,6 +5,7 @@
     Controlling class managing multiple build configruations for tfm """
 
 from __future__ import print_function
+from json import tool
 
 __copyright__ = """
 /*
@@ -52,9 +53,6 @@ mapPlatform = {"cypress/psoc64":                      "psoc64",
                "nuvoton/m2354":                       "M2354",
                "stm/b_u585i_iot02a":                  "b_u585i_iot02a",
                "stm/nucleo_l552ze_q":                 "nucleo_l552ze_q"}
-
-mapCompiler = {"toolchain_GNUARM.cmake":   "GNUARM",
-               "toolchain_ARMCLANG.cmake": "ARMCLANG"}
 
 mapTestPsaApi = {"IPC":                      "FF",
                  "CRYPTO":                   "CRYPTO",
@@ -125,22 +123,23 @@ class TFM_Build_Manager(structuredTask):
 
         super(TFM_Build_Manager, self).__init__(name="TFM_Build_Manager")
 
-    def set_compiler_version(self, config):
-        compiler_version = ""
-        # Set GCC version
-        if "GNUARM" in config.toolchain_file:
-            if "FPHARD" in config.extra_params:
-                # TF-M FPU feature requires GCC v10.3
-                compiler_version = "GCC_10_3"
-            else:
-                # Use GCC v7.3.1 by default
-                compiler_version = "GCC_7_3_1"
-        # Set ARMClang version
-        elif "ARMCLANG" in config.toolchain_file:
-            # Use ARMClang v6.13 by default
-            compiler_version = "ARMCLANG_6_13"
+    def choose_toolchain(self, compiler):
+        toolchain = ""
+        if "GCC"in compiler:
+            toolchain = "toolchain_GNUARM.cmake"
+        elif "ARMCLANG" in compiler:
+            toolchain = "toolchain_ARMCLANG.cmake"
 
-        return compiler_version
+        return toolchain
+
+    def get_compiler_name(self, compiler):
+        compiler_name = ""
+        if "GCC"in compiler:
+            compiler_name = "arm-none-eabi-gcc"
+        elif "ARMCLANG" in compiler:
+            compiler_name = "armclang"
+
+        return compiler_name
 
     def get_config(self):
             return list(self._tbm_build_cfg.keys())
@@ -158,8 +157,7 @@ class TFM_Build_Manager(structuredTask):
         argument_list = [
             "CONFIG_NAME={}",
             "TFM_PLATFORM={}",
-            "TOOLCHAIN_FILE={}",
-            "COMPILER_VERSION={}",
+            "COMPILER={}",
             "LIB_MODEL={}",
             "ISOLATION_LEVEL={}",
             "TEST_REGRESSION={}",
@@ -177,8 +175,7 @@ class TFM_Build_Manager(structuredTask):
             .format(
                 config,
                 config_details.tfm_platform,
-                config_details.toolchain_file,
-                self.set_compiler_version(config_details),
+                config_details.compiler,
                 config_details.lib_model,
                 config_details.isolation_level,
                 config_details.test_regression,
@@ -198,8 +195,12 @@ class TFM_Build_Manager(structuredTask):
         config_details = self._tbm_build_cfg[config]
         codebase_dir = os.path.join(os.getcwd(),"trusted-firmware-m")
         build_dir=os.path.join(os.getcwd(),"trusted-firmware-m/build")
-        build_config = self.get_build_config(config_details, config, silence=silence_stderr, build_dir=build_dir, codebase_dir=codebase_dir)
-        build_commands = [build_config["config_template"]]
+        build_config = self.get_build_config(config_details, config, \
+                                             silence=silence_stderr, \
+                                             build_dir=build_dir, \
+                                             codebase_dir=codebase_dir)
+        build_commands = [build_config["set_compiler_path"], \
+                          build_config["config_template"]]
         for command in build_config["build_cmds"]:
             build_commands.append(command)
         print(" ;\n".join(build_commands))
@@ -435,9 +436,15 @@ class TFM_Build_Manager(structuredTask):
             #run in a docker, usually docker with CPUs less than 8
             thread_no = " -j " + str(os.cpu_count())
         build_cfg["build_cmds"][0] += thread_no
+
+        # Overwrite command lines to set compiler
+        build_cfg["set_compiler_path"] %= {"compiler": i.compiler}
+        build_cfg["set_compiler_path"] += " ;\n{} --version".format(self.get_compiler_name(i.compiler))
+
+        # Overwrite command lines of cmake
         overwrite_params = {"codebase_root_dir": build_cfg["codebase_root_dir"],
                             "tfm_platform": i.tfm_platform,
-                            "toolchain_file": i.toolchain_file,
+                            "compiler": self.choose_toolchain(i.compiler),
                             "lib_model": i.lib_model,
                             "isolation_level": i.isolation_level,
                             "test_regression": i.test_regression,
@@ -459,6 +466,7 @@ class TFM_Build_Manager(structuredTask):
         if len(build_cfg["build_cmds"]) > 1:
             overwrite_build_dir = {"_tbm_build_dir_": build_dir}
             build_cfg["build_cmds"][1] %= overwrite_build_dir
+
         return build_cfg
 
     def post_eval(self):
@@ -616,7 +624,7 @@ class TFM_Build_Manager(structuredTask):
             # Convert named tuples to string in a brief format
             config_param = []
             config_param.append(mapPlatform[list(i)[0]])
-            config_param.append(mapCompiler[list(i)[1]])
+            config_param.append(list(i)[1].split("_")[0])
             if list(i)[2]:  # LIB_MODEL
                 config_param.append("LIB")
             else:
