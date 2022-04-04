@@ -1245,7 +1245,8 @@ config_doxygen = {"common_params": {
                   "invalid": _common_tfm_invalid_configs + []
                   }
 
-# Configuration used in testing
+# Configurations used in testing
+
 config_debug = {"seed_params": {
                 "tfm_platform":     ["arm/mps2/an521"],
                 "compiler":         ["GCC_7_3_1"],
@@ -1264,6 +1265,11 @@ config_debug = {"seed_params": {
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + []
                 }
+
+
+config_debug_regr = config_debug.copy()
+config_debug_regr["test_regression"] = [True]
+
 
 config_debug_PSA_API = {"seed_params": {
                 "tfm_platform":     ["arm/mps2/an521"],
@@ -1601,6 +1607,7 @@ _builtin_configs = {
                     "ipc": config_IPC,
                     "doxygen": config_doxygen,
                     "debug": config_debug,
+                    "debug_regr": config_debug_regr,
                     "debug_PSA_API": config_debug_PSA_API,
                     "debug_PSA_API_nolib": config_debug_PSA_API_nolib,
                     "release": config_release,
