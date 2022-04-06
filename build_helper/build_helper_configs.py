@@ -599,6 +599,13 @@ config_tfm_test = {"seed_params": {
                 "extra_params":     [""]
                 },
                 "common_params": _common_tfm_builder_cfg,
+                "valid": [
+                    # sanity test for GCC v11.2
+                    # AN521_GCC_IPC_3_REG_Relwithdebinfo_BL2_NS
+                    ("arm/mps2/an521", "GCC_11_2",
+                     False, "3", True, "OFF", "Relwithdebinfo",
+                     "off", True, True, "", "ON", ""),
+                ],
                 "invalid": _common_tfm_invalid_configs + []
                 }
 
