@@ -847,16 +847,6 @@ config_nightly = {"seed_params": {
                 "extra_params":     [""]
                 },
                 "common_params": _common_tfm_builder_cfg,
-                "valid": [
-                    # MUSCA_B1_GCC_IPC_1_REG_Release_BL2_NS_CC_DRIVER_PSA
-                    ("arm/musca_b1/sse_200", "GCC_7_3_1",
-                     False, "1", True, "OFF", "Release",
-                     "off", True, True, "", "ON", "CC_DRIVER_PSA"),
-                    # MUSCA_S1_GCC_IPC_1_REG_Release_BL2_NS_CC_DRIVER_PSA
-                    ("arm/musca_s1", "GCC_7_3_1",
-                     False, "1", True, "OFF", "Release",
-                     "off", True, True, "", "ON", "CC_DRIVER_PSA"),
-                ],
                 "invalid": _common_tfm_invalid_configs + [
                     ("arm/mps2/an519", "GCC_7_3_1", "*", "*", "*",
                      "*", "Minsizerel", "*", "*", "*", "*", "*", "*"),
@@ -910,6 +900,26 @@ config_mmio = {"seed_params": {
                 "profile":          [""],
                 "partition_ps":     ["ON"],
                 "extra_params":     ["MMIO"]
+                },
+                "common_params": _common_tfm_builder_cfg,
+                "invalid": _common_tfm_invalid_configs + []
+                }
+
+config_cc_driver_psa = {"seed_params": {
+               "tfm_platform":      ["arm/musca_b1/sse_200",
+                                     "arm/musca_s1"],
+                "compiler":         ["GCC_7_3_1"],
+                "lib_model":        [False],
+                "isolation_level":  ["1"],
+                "test_regression":  [True],
+                "test_psa_api":     ["OFF"],
+                "cmake_build_type": ["Release"],
+                "with_otp":         ["off"],
+                "with_bl2":         [True],
+                "with_ns":          [True],
+                "profile":          [""],
+                "partition_ps":     ["ON"],
+                "extra_params":     ["CC_DRIVER_PSA"]
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + []
@@ -1585,6 +1595,7 @@ _builtin_configs = {
                     "tfm_stm32l562e_dk": config_STM32L562E_DK,
                     "tfm_lpcxpresso55s69": config_LPCXPRESSO55S69,
                     "tfm_fp": config_FP,
+                    "tfm_cc_driver_psa": config_cc_driver_psa,
 
                     #nightly test group
                     "nightly_test": config_nightly,
@@ -1599,6 +1610,7 @@ _builtin_configs = {
                     "nightly_stm32l562e_dk": config_STM32L562E_DK,
                     "nightly_lpcxpresso55s69": config_nightly_LPCXPRESSO55S69,
                     "nightly_fp":config_nightly_FP,
+                    "nightly_cc_driver_psa": config_cc_driver_psa,
 
                     #per patch test group
                     "pp_test": config_pp_test,
