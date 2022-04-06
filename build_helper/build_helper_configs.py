@@ -19,6 +19,9 @@ __author__ = "tf-m@lists.trustedfirmware.org"
 __project__ = "Trusted Firmware-M Open CI"
 __version__ = "1.4.0"
 
+from copy import deepcopy
+
+
 # common parameters for tf-m build system
 # This configuration template will be passed into the tfm-builder module after
 # the template evaluation is converted to a command
@@ -1319,8 +1322,8 @@ config_debug = {"seed_params": {
                 }
 
 
-config_debug_regr = config_debug.copy()
-config_debug_regr["test_regression"] = [True]
+config_debug_regr = deepcopy(config_debug)
+config_debug_regr["seed_params"]["test_regression"] = [True]
 
 
 config_debug_PSA_API = {"seed_params": {
