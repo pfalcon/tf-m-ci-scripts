@@ -119,7 +119,7 @@ monitors_psaapitest_crypto_workaround = [
     {
         'name': 'psa_api_crypto_workaround',
         'start': 'Running..',
-        'end': r"TOTAL TESTS     : 63\r?\n.*?TOTAL PASSED    : 51\r?\n",
+        'end': r"TOTAL TESTS     : 63\r?\n.*?TOTAL PASSED    : 61\r?\n",
         'pattern': '__ignored__',
         'fixup': {"pass": "PASSED", "fail": "FAILED", "skip": "SKIPPED"},
     },
