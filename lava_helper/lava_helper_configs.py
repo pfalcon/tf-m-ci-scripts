@@ -65,7 +65,7 @@ monitors_no_reg_tests = [
 monitors_reg_tests = [
     {
         'name': 'regression_suite',
-        'start': 'Starting',
+        'start': 'Execute test suites',
         'end': 'End of Non-secure test suites',
         'pattern': r"TEST: (?P<test_case_id>.+?) - (?P<result>(PASSED|FAILED|SKIPPED))",
         'fixup': {"pass": "PASSED", "fail": "FAILED", "skip": "SKIPPED"},
