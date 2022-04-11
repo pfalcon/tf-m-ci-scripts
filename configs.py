@@ -10,13 +10,12 @@ import os
 import sys
 
 from tfm_ci_pylib.tfm_build_manager import TFM_Build_Manager
-from build_helper.build_helper_configs import config_full
 from build_helper.build_helper_configs import _builtin_configs
 
 
 __copyright__ = """
 /*
- * Copyright (c) 2020, Arm Limited. All rights reserved.
+ * Copyright (c) 2020-2022, Arm Limited. All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  *
@@ -26,9 +25,10 @@ __copyright__ = """
 
 def get_build_manager(group=None):
     """Get a TFM_Build_Manager instance, silencing stdout"""
-    config = config_full
-    if group:
-        config = _builtin_configs[group]
+    if not group:
+        print("No config group selected!")
+        return
+    config = _builtin_configs[group]
     _dir = os.getcwd()
     # Block default stdout from __init__
     sys.stdout = open(os.devnull, "w")
@@ -81,13 +81,11 @@ if __name__ == "__main__":
         action="append",
         help="Only list configurations under a certain group. "
         "'all' will look through all configurations. "
-        "Leaving blank will just look at config 'full'.",
+        "Leaving blank will just look at config 'all'.",
         choices=list(_builtin_configs.keys())+['all'],
     )
     ARGS = PARSER.parse_args()
-    if not ARGS.group:
-        ARGS.group = ['full']
-    if ARGS.group == ['all']:
+    if not ARGS.group or ARGS.group == ['all']:
         ARGS.group = list(_builtin_configs.keys())
 
     all_configs = set()
