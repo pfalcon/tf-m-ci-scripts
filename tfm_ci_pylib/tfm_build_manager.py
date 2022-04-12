@@ -459,6 +459,8 @@ class TFM_Build_Manager(structuredTask):
                             "extra_params": mapExtraParams[i.extra_params]}
         if i.test_psa_api == "IPC":
             overwrite_params["test_psa_api"] += " -DINCLUDE_PANIC_TESTS=1"
+        if i.test_psa_api == "CRYPTO" and "musca" in i.tfm_platform:
+            overwrite_params["test_psa_api"] += " -DCC312_LEGACY_DRIVER_API_ENABLED=OFF"
         if i.tfm_platform == "arm/musca_b1/sse_200":
             overwrite_params["test_psa_api"] += " -DITS_RAM_FS=ON -DPS_RAM_FS=ON"
         if i.extra_params == "FPHARD" or i.extra_params == "FPHARD_LOFF":
