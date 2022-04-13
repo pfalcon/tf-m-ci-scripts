@@ -553,11 +553,11 @@ timestamps {
         all_jobs = submitJobsToList(results['lava_jobs'])
         output = ""
         if (all_jobs.size() > 0) {
-          dir("tf-m-ci-scripts") {
+          dir(".") {
             withCredentials([usernamePassword(credentialsId: env.LAVA_CREDENTIALS, passwordVariable: 'LAVA_TOKEN', usernameVariable: 'LAVA_USER')]) {
-              output = sh(script: """./lava_helper/lava_wait_jobs.py --job-ids ${all_jobs.join(",")} \
+              output = sh(script: """./tf-m-ci-scripts/lava_helper/lava_wait_jobs.py --job-ids ${all_jobs.join(",")} \
     --lava-url ${env.LAVA_URL} --lava-user ${LAVA_USER} --lava-token ${LAVA_TOKEN} \
-    --artifacts-path lava_artifacts --lava-timeout 12000 \
+    --artifacts-path cfgs --lava-timeout 12000 \
     """, returnStdout: true).trim()
               showLinks(output)
               archiveArtifacts artifacts: 'test_summary.*', allowEmptyArchive: true
@@ -585,7 +585,7 @@ timestamps {
         print("ERROR: ${e}")
         success = false
       } finally {
-        archiveArtifacts artifacts: 'tf-m-ci-scripts/lava_artifacts/**', allowEmptyArchive: true
+        archiveArtifacts artifacts: 'cfgs/**', allowEmptyArchive: true
         if (all_jobs.size() > 0) {
           emailNotification(success, 'test', filterFailedTest(output))
         }
