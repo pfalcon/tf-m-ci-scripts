@@ -574,6 +574,12 @@ timestamps {
               if (boot_result.toInteger() < 1 || test_result.toInteger() < 1) {
                 error("Marking job as failed due to failed boots: \"${boot_output}\" or tests: \"${test_output}\"")
               }
+
+              if (env.CODE_COVERAGE_EN == "TRUE") {
+                println("Producing merged report")
+                sh(script: """./tf-m-ci-scripts/lava_helper/codecov_merge.sh""")
+                archiveArtifacts artifacts: 'merged_report/**', allowEmptyArchive: true
+              }
             }
           }
         }
