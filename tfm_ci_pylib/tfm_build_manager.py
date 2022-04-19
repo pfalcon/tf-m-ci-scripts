@@ -164,7 +164,6 @@ class TFM_Build_Manager(structuredTask):
             "TEST_REGRESSION={}",
             "TEST_PSA_API={}",
             "CMAKE_BUILD_TYPE={}",
-            "OTP={}",
             "BL2={}",
             "NS={}",
             "PROFILE={}",
@@ -182,7 +181,6 @@ class TFM_Build_Manager(structuredTask):
                 config_details.test_regression,
                 config_details.test_psa_api,
                 config_details.cmake_build_type,
-                config_details.with_otp,
                 config_details.with_bl2,
                 config_details.with_ns,
                 "N.A" if not config_details.profile else config_details.profile,
@@ -451,7 +449,6 @@ class TFM_Build_Manager(structuredTask):
                             "test_regression": i.test_regression,
                             "test_psa_api": i.test_psa_api,
                             "cmake_build_type": i.cmake_build_type,
-                            "with_otp": i.with_otp,
                             "with_bl2": i.with_bl2,
                             "with_ns": i.with_ns,
                             "profile": "" if i.profile=="N.A" else i.profile,
@@ -638,18 +635,16 @@ class TFM_Build_Manager(structuredTask):
             if list(i)[5] != "OFF":    #TEST_PSA_API
                 config_param.append(mapTestPsaApi[list(i)[5]])
             config_param.append(list(i)[6]) # BUILD_TYPE
-            if list(i)[7] == "ENABLED":  # OTP
-                config_param.append("OTP")
-            if list(i)[8]:  # BL2
+            if list(i)[7]:  # BL2
                 config_param.append("BL2")
-            if list(i)[9]:  # NS
+            if list(i)[8]:  # NS
                 config_param.append("NS")
-            if list(i)[10]: # PROFILE
-                config_param.append(mapProfile[list(i)[10]])
-            if list(i)[11] == "OFF":    #PARTITION_PS
+            if list(i)[9]: # PROFILE
+                config_param.append(mapProfile[list(i)[9]])
+            if list(i)[10] == "OFF":    #PARTITION_PS
                 config_param.append("PSOFF")
-            if list(i)[12]: # EXTRA_PARAMS
-                config_param.append(list(i)[12])
+            if list(i)[11]: # EXTRA_PARAMS
+                config_param.append(list(i)[11])
             i_str = "_".join(config_param)
             ret_cfg[i_str] = i
         return ret_cfg

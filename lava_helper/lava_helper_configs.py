@@ -606,31 +606,6 @@ musca_b1_bl2 = {
     },
 }
 
-# Musca-B1 with BL2 bootloader and OTP enabled
-# unified hex file comprising of both bl2.bin and tfm_s_ns_signed.bin
-# srec_cat bin/bl2.bin -Binary -offset 0xA000000 bin/tfm_s_ns_signed.bin -Binary -offset 0xA020000 -o tfm.hex -Intel
-musca_b1_otp_bl2 = {
-    "templ": "musca_b1_otp.jinja2",
-    "job_name": "musca_b1_opt_bl2",
-    "device_type": "musca-b",
-    "job_timeout": 40,
-    "action_timeout": 20,
-    "monitor_timeout": 30,
-    "poweroff_timeout": 40,
-    "platforms": {"MUSCA_B1_OTP": ""},
-    "compilers": ["GCC"],
-    "build_types": ["Debug"],
-    "boot_types": ["BL2"],
-    "binaries": {
-        "firmware": "tfm.hex",
-    },
-    "tests": {
-        "RegressionIPCTfmLevel3": {
-            "monitors": monitors_reg_tests
-        },
-    },
-}
-
 # STM32L562E-DK
 stm32l562e_dk = {
     "templ": "stm32l562e_dk.jinja2",
@@ -732,7 +707,6 @@ lava_gen_config_map = {
     "fvp_mps2_an519_nobl2": fvp_mps2_an519_nobl2,
     "qemu_mps2_bl2": qemu_mps2_bl2,
     "musca_b1": musca_b1_bl2,
-    "musca_b1_otp": musca_b1_otp_bl2,
     "stm32l562e_dk": stm32l562e_dk,
     "lpcxpresso55s69": lpcxpresso55s69,
     "psoc64": psoc64,

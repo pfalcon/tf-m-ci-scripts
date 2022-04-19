@@ -39,7 +39,6 @@ _common_tfm_builder_cfg = {
                    "test_regression",
                    "test_psa_api",
                    "cmake_build_type",
-                   "with_otp",
                    "with_bl2",
                    "with_ns",
                    "profile",
@@ -61,7 +60,6 @@ _common_tfm_builder_cfg = {
         "-DBL2=%(with_bl2)s " + \
         "-DNS=%(with_ns)s " + \
         "-DTFM_PROFILE=%(profile)s " + \
-        "-DCRYPTO_HW_ACCELERATOR_OTP_STATE=%(with_otp)s " + \
         "-DTFM_PARTITION_PROTECTED_STORAGE=%(partition_ps)s " + \
         "%(extra_params)s " + \
         "-DTFM_TEST_REPO_PATH=%(codebase_root_dir)s/../tf-m-tests " + \
@@ -165,25 +163,25 @@ _common_tfm_builder_cfg = {
 # List of all build configs that are impossible under all circumstances
 _common_tfm_invalid_configs = [
     # GCC defect
-    ("arm/mps2/an519", "GCC_7_3_1", "*", "*", "*", "*", "Minsizerel", "*", "*", "*", "*", "*", "*"),
+    ("arm/mps2/an519", "GCC_7_3_1", "*", "*", "*", "*", "Minsizerel", "*", "*", "*", "*", "*"),
     # LR_CODE size exceeds limit on MUSCA_B1 & MUSCA_S1 with regression tests in Debug mode built with ARMCLANG
-    ("arm/musca_b1/sse_200", "ARMCLANG_6_13", "*", "*", True, "OFF", "Debug", "*", "*", "*", "", "*", "*"),
-    ("arm/musca_s1", "ARMCLANG_6_13", "*", "*", True, "OFF", "Debug", "*", "*", "*", "", "*", "*"),
+    ("arm/musca_b1/sse_200", "ARMCLANG_6_13", "*", "*", True, "OFF", "Debug", "*", "*", "", "*", "*"),
+    ("arm/musca_s1", "ARMCLANG_6_13", "*", "*", True, "OFF", "Debug", "*", "*", "", "*", "*"),
     # Load range overlap on Musca for IPC Debug type: T895
-    ("arm/musca_b1/sse_200", "ARMCLANG_6_13", "*", "*", "*", "IPC", "Debug", "*", "*", "*", "*", "*", "*"),
-    ("arm/musca_s1", "ARMCLANG_6_13", "*", "*", "*", "IPC", "Debug", "*", "*", "*", "*", "*", "*"),
+    ("arm/musca_b1/sse_200", "ARMCLANG_6_13", "*", "*", "*", "IPC", "Debug", "*", "*", "*", "*", "*"),
+    ("arm/musca_s1", "ARMCLANG_6_13", "*", "*", "*", "IPC", "Debug", "*", "*", "*", "*", "*"),
     # LVL2 and LVL3 requires IPC model
-    ("*", "*", True, "2", "*", "*", "*", "*", "*", "*", "*", "*", "*"),
-    ("*", "*", True, "3", "*", "*", "*", "*", "*", "*", "*", "*", "*"),
+    ("*", "*", True, "2", "*", "*", "*", "*", "*", "*", "*", "*"),
+    ("*", "*", True, "3", "*", "*", "*", "*", "*", "*", "*", "*"),
     # Regression requires NS
-    ("*", "*", "*", "*", True, "*", "*", "*", "*", False, "*", "*", "*"),
+    ("*", "*", "*", "*", True, "*", "*", "*", False, "*", "*", "*"),
     # Musca requires BL2
-    ("arm/musca_b1/sse_200", "*", "*", "*", "*", "*", "*", "*", False, "*", "*", "*", "*"),
-    ("arm/musca_s1", "*", "*", "*", "*", "*", "*", "*", False, "*", "*", "*", "*"),
+    ("arm/musca_b1/sse_200", "*", "*", "*", "*", "*", "*", False, "*", "*", "*", "*"),
+    ("arm/musca_s1", "*", "*", "*", "*", "*", "*", False, "*", "*", "*", "*"),
     # Only AN521 and MUSCA_B1 support Isolation Level 3
-    ("arm/mps2/an519", "*", "*", "3", "*", "*", "*", "*", "*", "*", "*", "*", "*"),
-    ("arm/mps3/an524", "*", "*", "3", "*", "*", "*", "*", "*", "*", "*", "*", "*"),
-    ("arm/musca_s1", "*", "*", "3", "*", "*", "*", "*", "*", "*", "*", "*", "*"),
+    ("arm/mps2/an519", "*", "*", "3", "*", "*", "*", "*", "*", "*", "*", "*"),
+    ("arm/mps3/an524", "*", "*", "3", "*", "*", "*", "*", "*", "*", "*", "*"),
+    ("arm/musca_s1", "*", "*", "3", "*", "*", "*", "*", "*", "*", "*", "*"),
     ]
 
 # Configure build manager to build several combinations
@@ -197,7 +195,6 @@ config_pp_test = {"seed_params": {
                 "test_regression":  [True],
                 "test_psa_api":     ["OFF"],
                 "cmake_build_type": ["Debug"],
-                "with_otp":         ["off"],
                 "with_bl2":         [True],
                 "with_ns":          [True],
                 "profile":          [""],
@@ -208,98 +205,95 @@ config_pp_test = {"seed_params": {
                 "valid": [
                     # AN519_ARMCLANG_IPC_2_REG_Release_BL2_NS
                     ("arm/mps2/an519", "ARMCLANG_6_13", False, "2", True,
-                     "OFF", "Release", "off", True, True, "", "ON", ""),
+                     "OFF", "Release", True, True, "", "ON", ""),
                     # AN519_GCC_IPC_1_REG_Debug_BL2_NS
                     ("arm/mps2/an519", "GCC_7_3_1", False, "1", True,
-                     "OFF", "Debug", "off", True, True, "", "ON", ""),
+                     "OFF", "Debug", True, True, "", "ON", ""),
                     # AN519_GCC_IPC_2_REG_Release_BL2_NS
                     ("arm/mps2/an519", "GCC_7_3_1", False, "2", True,
-                     "OFF", "Release", "off", True, True, "", "ON", ""),
+                     "OFF", "Release", True, True, "", "ON", ""),
                     # AN519_GCC_LIB_1_REG_Debug_BL2_NS
                     ("arm/mps2/an519", "GCC_7_3_1", True, "1", True,
-                     "OFF", "Debug", "off", True, True, "", "ON", ""),
+                     "OFF", "Debug", True, True, "", "ON", ""),
                     # AN521_ARMCLANG_IPC_1_REG_Debug_BL2_NS
                     ("arm/mps2/an521", "ARMCLANG_6_13", False, "1", True,
-                     "OFF", "Debug", "off", True, True, "", "ON", ""),
+                     "OFF", "Debug", True, True, "", "ON", ""),
                     # AN521_ARMCLANG_IPC_2_Debug_BL2_NS
                     ("arm/mps2/an521", "ARMCLANG_6_13", False, "2", False,
-                     "OFF", "Debug", "off", True, True, "", "ON", ""),
+                     "OFF", "Debug", True, True, "", "ON", ""),
                     # AN521_ARMCLANG_IPC_2_REG_Release_BL2_NS
                     ("arm/mps2/an521", "ARMCLANG_6_13", False, "2", True,
-                     "OFF", "Release", "off", True, True, "", "ON", ""),
+                     "OFF", "Release", True, True, "", "ON", ""),
                     # AN521_ARMCLANG_IPC_3_REG_Minsizerel_BL2_NS
                     ("arm/mps2/an521", "ARMCLANG_6_13", False, "3", True,
-                     "OFF", "Minsizerel", "off", True, True, "", "ON", ""),
+                     "OFF", "Minsizerel", True, True, "", "ON", ""),
                     # AN521_ARMCLANG_IPC_3_Release_BL2_NS
                     ("arm/mps2/an521", "ARMCLANG_6_13", False, "3", False,
-                     "OFF", "Release", "off", True, True, "", "ON", ""),
+                     "OFF", "Release", True, True, "", "ON", ""),
                     # AN521_GCC_IPC_1_REG_Debug_BL2_NS
                     ("arm/mps2/an521", "GCC_7_3_1", False, "1", True,
-                     "OFF", "Debug", "off", True, True, "", "ON", ""),
+                     "OFF", "Debug", True, True, "", "ON", ""),
                     # AN521_GCC_IPC_2_Debug_BL2_NS_MEDIUM
                     ("arm/mps2/an521", "GCC_7_3_1", False, "2", False, "OFF",
-                     "Debug", "off", True, True, "profile_medium", "ON", ""),
+                     "Debug", True, True, "profile_medium", "ON", ""),
                     # AN521_GCC_IPC_2_REG_Release_BL2_NS
                     ("arm/mps2/an521", "GCC_7_3_1", False, "2", True,
-                     "OFF", "Release", "off", True, True, "", "ON", ""),
+                     "OFF", "Release", True, True, "", "ON", ""),
                     # AN521_GCC_IPC_3_Debug_BL2_NS_LARGE
                     ("arm/mps2/an521", "GCC_7_3_1", False, "3", False, "OFF",
-                     "Debug", "off", True, True, "profile_large", "ON", ""),
+                     "Debug", True, True, "profile_large", "ON", ""),
                     # AN521_GCC_IPC_3_REG_Minsizerel_BL2_NS
                     ("arm/mps2/an521", "GCC_7_3_1", False, "3", True,
-                     "OFF", "Minsizerel", "off", True, True, "", "ON", ""),
+                     "OFF", "Minsizerel", True, True, "", "ON", ""),
                     # AN521_GCC_LIB_1_Debug_BL2_NS
                     ("arm/mps2/an521", "GCC_7_3_1", True, "1", False,
-                     "OFF", "Debug", "off", True, True, "", "ON", ""),
+                     "OFF", "Debug", True, True, "", "ON", ""),
                     # AN521_GCC_LIB_1_REG_Debug_BL2_NS
                     ("arm/mps2/an521", "GCC_7_3_1", True, "1", True,
-                     "OFF", "Debug", "off", True, True, "", "ON", ""),
+                     "OFF", "Debug", True, True, "", "ON", ""),
                     # AN521_GCC_IPC_2_REG_Release_BL2_NS_MEDIUM_PSOFF
                     ("arm/mps2/an521", "GCC_7_3_1",
                      False, "2", True, "OFF", "Release",
-                     "off", True, True, "profile_medium", "OFF", ""),
+                     True, True, "profile_medium", "OFF", ""),
                     # AN552_GNUARM_IPC_1_REG_Debug_BL2_NS
                     ("arm/mps3/an552", "GCC_10_3", False, "1", True, "OFF",
-                     "Debug", "off", True, True, "", "ON", ""),
+                     "Debug", True, True, "", "ON", ""),
                     # AN552_GNUARM_IPC_1_REG_Release_BL2_NS
                     ("arm/mps3/an552", "GCC_10_3", False, "1", True, "OFF",
-                     "Release", "off", True, True, "", "ON", ""),
-                    # MUSCA_B1_GCC_IPC_2_REG_Release_OTP_BL2_NS
-                    ("arm/musca_b1/sse_200", "GCC_7_3_1", False, "2", True,
-                     "OFF", "Release", "ENABLED", True, True, "", "ON", ""),
+                     "Release", True, True, "", "ON", ""),
                     # MUSCA_B1_GCC_LIB_1_REG_Minsizerel_BL2_NS
                     ("arm/musca_b1/sse_200", "GCC_7_3_1", True, "1", True,
-                     "OFF", "Minsizerel", "off", True, True, "", "ON", ""),
+                     "OFF", "Minsizerel", True, True, "", "ON", ""),
                     # MUSCA_S1_ARMCLANG_IPC_2_REG_Release_BL2_NS
                     ("arm/musca_s1", "ARMCLANG_6_13", False, "2", True, "OFF",
-                     "Release", "off", True, True, "", "ON", ""),
+                     "Release", True, True, "", "ON", ""),
                     # MUSCA_S1_GCC_IPC_1_REG_Debug_BL2_NS
                     ("arm/musca_s1", "GCC_10_3", False, "1", True, "OFF",
-                     "Debug", "off", True, True, "", "ON", ""),
+                     "Debug", True, True, "", "ON", ""),
                     # MUSCA_S1_GCC_IPC_2_REG_Release_BL2_NS
                     ("arm/musca_s1", "GCC_10_3", False, "2", True, "OFF",
-                     "Release", "off", True, True, "", "ON", ""),
+                     "Release", True, True, "", "ON", ""),
                     # MUSCA_S1_GCC_LIB_1_REG_Debug_BL2_NS
                     ("arm/musca_s1", "GCC_10_3", True, "1", True, "OFF",
-                     "Debug", "off", True, True, "", "ON", ""),
+                     "Debug", True, True, "", "ON", ""),
                     # MUSCA_S1_GCC_IPC_2_REG_Release_BL2_NS_FPHARD
                     ("arm/musca_s1", "GCC_10_3", False, "2", True, "OFF",
-                     "Release", "off", True, True, "", "ON", "FPHARD"),
+                     "Release", True, True, "", "ON", "FPHARD"),
                     # MUSCA_S1_GCC_IPC_1_REG_Release_BL2_NS_CC_DRIVER_PSA
                     ("arm/musca_s1", "GCC_7_3_1", False, "1", True, "OFF",
-                     "Release", "off", True, True, "", "ON", "CC_DRIVER_PSA"),
+                     "Release", True, True, "", "ON", "CC_DRIVER_PSA"),
                     # stm32l562e_dk_ARMCLANG_IPC_1_REG_Release_BL2_NS
                     ("stm/stm32l562e_dk", "ARMCLANG_6_13", False, "1", True,
-                     "OFF", "Release", "off", True, True, "", "ON", "CRYPTO_OFF"),
+                     "OFF", "Release", True, True, "", "ON", "CRYPTO_OFF"),
                     # stm32l562e_dk_GCC_IPC_2_REG_Release_BL2_NS
                     ("stm/stm32l562e_dk", "GCC_7_3_1", False, "2", False, "OFF",
-                     "Release", "off", True, True, "", "ON", "CRYPTO_ON"),
+                     "Release", True, True, "", "ON", "CRYPTO_ON"),
                     # stm32l562e_dk_GCC_IPC_3_REG_Release_BL2_NS
                     ("stm/stm32l562e_dk", "GCC_7_3_1", False, "3", True, "OFF",
-                     "Release", "off", True, True, "", "ON", "CRYPTO_OFF"),
+                     "Release", True, True, "", "ON", "CRYPTO_OFF"),
                     # psoc64_GCC_IPC_2_REG_Release_NS
                     ("cypress/psoc64", "GCC_7_3_1", False, "2", True, "OFF",
-                     "Release", "off", False, True, "", "ON", ""),
+                     "Release", False, True, "", "ON", ""),
                 ],
                 "invalid": _common_tfm_invalid_configs + []
                 }
@@ -317,7 +311,6 @@ config_nightly_test = {"seed_params": {
                 "test_regression":  [True, False],
                 "test_psa_api":     ["OFF"],
                 "cmake_build_type": ["Debug", "Release", "Minsizerel"],
-                "with_otp":         ["off"],
                 "with_bl2":         [True],
                 "with_ns":          [True],
                 "profile":          [""],
@@ -341,7 +334,6 @@ config_release_test = {"seed_params": {
                 "test_regression":  [True, False],
                 "test_psa_api":     ["OFF"],
                 "cmake_build_type": ["Debug", "Release", "Minsizerel"],
-                "with_otp":         ["off"],
                 "with_bl2":         [True],
                 "with_ns":          [True],
                 "profile":          [""],
@@ -354,7 +346,7 @@ config_release_test = {"seed_params": {
                     # AN521_GCC_IPC_3_REG_Relwithdebinfo_BL2_NS
                     ("arm/mps2/an521", "GCC_11_2",
                      False, "3", True, "OFF", "Relwithdebinfo",
-                     "off", True, True, "", "ON", ""),
+                     True, True, "", "ON", ""),
                 ],
                 "invalid": _common_tfm_invalid_configs + []
                 }
@@ -368,7 +360,6 @@ config_profile_s = {"seed_params": {
                 "test_regression":  [True, False],
                 "test_psa_api":     ["OFF"],
                 "cmake_build_type": ["Debug", "Release", "Minsizerel"],
-                "with_otp":         ["OFF"],
                 "with_bl2":         [True],
                 "with_ns":          [True],
                 "profile":          ["profile_small"],
@@ -378,12 +369,12 @@ config_profile_s = {"seed_params": {
                 "common_params": _common_tfm_builder_cfg,
                 "valid": [
                     # Profile Small also supports SFN model
-                    ("*", "*", False, "*", "*", "*", "*", "*", "*", "*", "*",
+                    ("*", "*", False, "*", "*", "*", "*", "*", "*", "*",
                      "*", "SFN_ENABLE")
                 ],
                 "invalid": _common_tfm_invalid_configs + [
                     ("arm/mps2/an519", "GCC_7_3_1", "*", "*", "*",
-                     "*", "Minsizerel", "*", "*", "*", "*", "*", "*")
+                     "*", "Minsizerel", "*", "*", "*", "*", "*")
                 ]
                 }
 
@@ -397,7 +388,6 @@ config_profile_m = {"seed_params": {
                 "test_regression":  [True, False],
                 "test_psa_api":     ["OFF"],
                 "cmake_build_type": ["Debug", "Release", "Minsizerel"],
-                "with_otp":         ["off"],
                 "with_bl2":         [True],
                 "with_ns":          [True],
                 "profile":          ["profile_medium"],
@@ -416,7 +406,6 @@ config_profile_l = {"seed_params": {
                 "test_regression":  [True, False],
                 "test_psa_api":     ["OFF"],
                 "cmake_build_type": ["Debug", "Release", "Minsizerel"],
-                "with_otp":         ["off"],
                 "with_bl2":         [True],
                 "with_ns":          [True],
                 "profile":          ["profile_large"],
@@ -436,7 +425,6 @@ config_cc_driver_psa = {"seed_params": {
                 "test_regression":  [True],
                 "test_psa_api":     ["OFF"],
                 "cmake_build_type": ["Release"],
-                "with_otp":         ["off"],
                 "with_bl2":         [True],
                 "with_ns":          [True],
                 "profile":          [""],
@@ -455,7 +443,6 @@ config_fp = {"seed_params": {
                 "test_regression":  [True],
                 "test_psa_api":     ["OFF"],
                 "cmake_build_type": ["Debug", "Release"],
-                "with_otp":         ["off"],
                 "with_bl2":         [True],
                 "with_ns":          [True],
                 "profile":          [""],
@@ -479,7 +466,6 @@ config_psa_api = {"seed_params": {
                                      "INITIAL_ATTESTATION",
                                      "STORAGE"],
                 "cmake_build_type": ["Debug", "Release", "Minsizerel"],
-                "with_otp":         ["off"],
                 "with_bl2":         [True],
                 "with_ns":          [True],
                 "profile":          [""],
@@ -489,31 +475,12 @@ config_psa_api = {"seed_params": {
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + [
                     # FF does not support library model
-                    ("*", "*", True, "*", "*", "IPC", "*",
+                    ("*", "*", True, "*", "*", "IPC",
                      "*", "*", "*", "*", "*", "*"),
                     # FF does not support L3
-                    ("*", "*", "*", "3", "*", "IPC", "*",
+                    ("*", "*", "*", "3", "*", "IPC",
                      "*", "*", "*", "*", "*", "*"),
                 ]
-                }
-
-config_otp = {"seed_params": {
-                "tfm_platform":     ["arm/musca_b1/sse_200"],
-                "compiler":         ["GCC_7_3_1", "ARMCLANG_6_13"],
-                "lib_model":        [True, False],
-                "isolation_level":  ["1", "2", "3"],
-                "test_regression":  [True],
-                "test_psa_api":     ["OFF"],
-                "cmake_build_type": ["Debug", "Release", "Minsizerel"],
-                "with_otp":         ["ENABLED"],
-                "with_bl2":         [True],
-                "with_ns":          [True],
-                "profile":          [""],
-                "partition_ps":     ["ON"],
-                "extra_params":     [""]
-                },
-                "common_params": _common_tfm_builder_cfg,
-                "invalid": _common_tfm_invalid_configs + []
                 }
 
 config_nsce = {"seed_params": {
@@ -524,7 +491,6 @@ config_nsce = {"seed_params": {
                 "test_regression":  [True],
                 "test_psa_api":     ["OFF"],
                 "cmake_build_type": ["Debug"],
-                "with_otp":         ["off"],
                 "with_bl2":         [True],
                 "with_ns":          [True],
                 "profile":          [""],
@@ -543,7 +509,6 @@ config_mmio = {"seed_params": {
                 "test_regression":  [True],
                 "test_psa_api":     ["OFF"],
                 "cmake_build_type": ["Debug", "Release", "Minsizerel"],
-                "with_otp":         ["off"],
                 "with_bl2":         [True],
                 "with_ns":          [True],
                 "profile":          [""],
@@ -579,7 +544,6 @@ config_an519 = {"seed_params": {
                 "test_regression":  [True, False],
                 "test_psa_api":     ["OFF"],
                 "cmake_build_type": ["Debug", "Release"],
-                "with_otp":         ["off"],
                 "with_bl2":         [True, False],
                 "with_ns":          [True, False],
                 "profile":          [""],
@@ -598,7 +562,6 @@ config_an521 = {"seed_params": {
                 "test_regression":  [True, False],
                 "test_psa_api":     ["OFF"],
                 "cmake_build_type": ["Debug", "Release"],
-                "with_otp":         ["off"],
                 "with_bl2":         [True, False],
                 "with_ns":          [True, False],
                 "profile":          [""],
@@ -617,7 +580,6 @@ config_an524 = {"seed_params": {
                 "test_regression":  [True, False],
                 "test_psa_api":     ["OFF"],
                 "cmake_build_type": ["Debug", "Release"],
-                "with_otp":         ["off"],
                 "with_bl2":         [True, False],
                 "with_ns":          [True, False],
                 "profile":          [""],
@@ -636,7 +598,6 @@ config_an547 = {"seed_params": {
                 "test_regression":  [False],
                 "test_psa_api":     ["OFF"],
                 "cmake_build_type": ["Debug"],
-                "with_otp":         ["off"],
                 "with_bl2":         [True],
                 "with_ns":          [False],
                 "profile":          [""],
@@ -655,7 +616,6 @@ config_an552 = {"seed_params": {
                 "test_regression":  [True, False],
                 "test_psa_api":     ["OFF"],
                 "cmake_build_type": ["Debug", "Release"],
-                "with_otp":         ["off"],
                 "with_bl2":         [True],
                 "with_ns":          [True],
                 "profile":          [""],
@@ -674,7 +634,6 @@ config_musca_b1 = {"seed_params": {
                 "test_regression":  [True, False],
                 "test_psa_api":     ["OFF"],
                 "cmake_build_type": ["Debug", "Release"],
-                "with_otp":         ["off"],
                 "with_bl2":         [True],
                 "with_ns":          [True, False],
                 "profile":          [""],
@@ -693,7 +652,6 @@ config_musca_b1_se = {"seed_params": {
                 "test_regression":  [False],
                 "test_psa_api":     ["OFF"],
                 "cmake_build_type": ["Debug", "Release"],
-                "with_otp":         ["off"],
                 "with_bl2":         [True],
                 "with_ns":          [False],
                 "profile":          [""],
@@ -712,7 +670,6 @@ config_musca_s1 = {"seed_params": {
                 "test_regression":  [True, False],
                 "test_psa_api":     ["OFF"],
                 "cmake_build_type": ["Debug", "Release"],
-                "with_otp":         ["off"],
                 "with_bl2":         [True],
                 "with_ns":          [True, False],
                 "profile":          [""],
@@ -731,7 +688,6 @@ config_corstone_polaris = {"seed_params": {
                 "test_regression":  [False],
                 "test_psa_api":     ["OFF"],
                 "cmake_build_type": ["Debug"],
-                "with_otp":         ["off"],
                 "with_bl2":         [True],
                 "with_ns":          [False],
                 "profile":          [""],
@@ -750,7 +706,6 @@ config_psoc64 = {"seed_params": {
                 "test_regression":  [True],
                 "test_psa_api":     ["OFF"],
                 "cmake_build_type": ["Release"],
-                "with_otp":         ["off"],
                 "with_bl2":         [False],
                 "with_ns":          [True],
                 "profile":          [""],
@@ -769,7 +724,6 @@ config_corstone1000 = {"seed_params": {
                 "test_regression":  [False],
                 "test_psa_api":     ["OFF"],
                 "cmake_build_type": ["Debug"],
-                "with_otp":         ["off"],
                 "with_bl2":         [True],
                 "with_ns":          [False],
                 "profile":          [""],
@@ -788,7 +742,6 @@ config_stm32l562e_dk = {"seed_params": {
                 "test_regression":  [True, False],
                 "test_psa_api":     ["OFF"],
                 "cmake_build_type": ["Release"],
-                "with_otp":         ["off"],
                 "with_bl2":         [True],
                 "with_ns":          [True],
                 "profile":          [""],
@@ -799,12 +752,12 @@ config_stm32l562e_dk = {"seed_params": {
                 "invalid": _common_tfm_invalid_configs + [
                     # Oversize issue on config stm32l562e_dk_ARMCLANG_LIB_1_REG_Release_BL2_NS
                     ("stm/stm32l562e_dk", "ARMCLANG_6_13", True, "1", True,
-                     "OFF", "Release", "off", True, True, "", "ON", "*"),
+                     "OFF", "Release", True, True, "", "ON", "*"),
                     # all other tests are off when CRYPTO is ON
-                    ("stm/stm32l562e_dk", "*", "*", "*", True, "*", "*", "*",
+                    ("stm/stm32l562e_dk", "*", "*", "*", True, "*", "*",
                      "*", "*", "*", "*", "CRYPTO_ON"),
                     # all other tests are ON when CRYPTO is OFF
-                    ("stm/stm32l562e_dk", "*", "*", "*", False, "*", "*", "*",
+                    ("stm/stm32l562e_dk", "*", "*", "*", False, "*", "*",
                      "*", "*", "*", "*", "CRYPTO_OFF"),
                 ]
                 }
@@ -817,7 +770,6 @@ config_b_u585i_iot02a = {"seed_params": {
                 "test_regression":  [False],
                 "test_psa_api":     ["OFF"],
                 "cmake_build_type": ["Release"],
-                "with_otp":         ["off"],
                 "with_bl2":         [True],
                 "with_ns":          [False],
                 "profile":          [""],
@@ -836,7 +788,6 @@ config_nucleo_l552ze_q = {"seed_params": {
                 "test_regression":  [False],
                 "test_psa_api":     ["OFF"],
                 "cmake_build_type": ["Release"],
-                "with_otp":         ["off"],
                 "with_bl2":         [True],
                 "with_ns":          [False],
                 "profile":          [""],
@@ -855,7 +806,6 @@ config_lpcxpresso55s69 = {"seed_params": {
                 "test_regression":  [True, False],
                 "test_psa_api":     ["OFF"],
                 "cmake_build_type": ["Relwithdebinfo"],
-                "with_otp":         ["off"],
                 "with_bl2":         [False],
                 "with_ns":          [True],
                 "profile":          ["profile_medium"],
@@ -874,7 +824,6 @@ config_bl5340 = {"seed_params": {
                 "test_regression":  [False],
                 "test_psa_api":     ["OFF"],
                 "cmake_build_type": ["Debug"],
-                "with_otp":         ["off"],
                 "with_bl2":         [True],
                 "with_ns":          [False],
                 "profile":          [""],
@@ -893,7 +842,6 @@ config_nrf5340dk = {"seed_params": {
                 "test_regression":  [False],
                 "test_psa_api":     ["OFF"],
                 "cmake_build_type": ["Debug"],
-                "with_otp":         ["off"],
                 "with_bl2":         [True],
                 "with_ns":          [False],
                 "profile":          [""],
@@ -912,7 +860,6 @@ config_nrf9160dk = {"seed_params": {
                 "test_regression":  [False],
                 "test_psa_api":     ["OFF"],
                 "cmake_build_type": ["Debug"],
-                "with_otp":         ["off"],
                 "with_bl2":         [True],
                 "with_ns":          [False],
                 "profile":          [""],
@@ -931,7 +878,6 @@ config_m2351 = {"seed_params": {
                 "test_regression":  [False],
                 "test_psa_api":     ["OFF"],
                 "cmake_build_type": ["Release"],
-                "with_otp":         ["off"],
                 "with_bl2":         [True],
                 "with_ns":          [False],
                 "profile":          [""],
@@ -950,7 +896,6 @@ config_m2354 = {"seed_params": {
                 "test_regression":  [False],
                 "test_psa_api":     ["OFF"],
                 "cmake_build_type": ["Debug"],
-                "with_otp":         ["off"],
                 "with_bl2":         [True],
                 "with_ns":          [False],
                 "profile":          [""],
@@ -970,7 +915,6 @@ config_debug = {"seed_params": {
                 "test_regression":  [False],
                 "test_psa_api":     ["OFF"],
                 "cmake_build_type": ["Debug"],
-                "with_otp":         ["off"],
                 "with_bl2":         [True],
                 "with_ns":          [True],
                 "profile":          [""],
@@ -995,7 +939,6 @@ config_debug_PSA_API = {"seed_params": {
                                      "STORAGE",
                                      "IPC"],
                 "cmake_build_type": ["Debug"],
-                "with_otp":         ["off"],
                 "with_bl2":         [True],
                 "with_ns":          [True],
                 "profile":          [""],
@@ -1017,7 +960,6 @@ config_debug_PSA_API_nolib = {"seed_params": {
                                      "STORAGE",
                                      "IPC"],
                 "cmake_build_type": ["Debug"],
-                "with_otp":         ["off"],
                 "with_bl2":         [True],
                 "with_ns":          [True],
                 "profile":          [""],
@@ -1041,7 +983,6 @@ _builtin_configs = {
                     "nightly_cc_driver_psa": config_cc_driver_psa,
                     "nightly_fp":config_fp,
                     "nightly_psa_api": config_psa_api,
-                    "nightly_otp": config_otp,
                     "nightly_nsce": config_nsce,
                     "nightly_mmio": config_mmio,
                     "nightly_an547": config_an547,
@@ -1061,7 +1002,6 @@ _builtin_configs = {
                     "release_cc_driver_psa": config_cc_driver_psa,
                     "release_fp": config_fp,
                     "release_psa_api": config_psa_api,
-                    "release_otp": config_otp,
                     "release_nsce": config_nsce,
                     "release_mmio": config_mmio,
                     "release_an547": config_an547,
