@@ -213,17 +213,17 @@ python3 ./configs.py -g ${filter_group.replace(" ", " -g ")} ${config}
 
     // Filter out configs do not need LAVA tests
 
-    // Job tf-m-extra-build does not need LAVA tests
-    if (env.JOB_NAME.equals("tf-m-extra-build")) {
-      print("LAVA is not needed in tf-m-extra-build job.")
-    }
     // Configs with build failure do not need LAVA tests
-    else if (build_res.result in failure_states) {
+    if (build_res.result in failure_states) {
       error("Build failed at ${build_url}")
     } else {
         // Build successful
+        // Job tf-m-extra-build does not need LAVA tests
+        if (env.JOB_NAME.equals("tf-m-extra-build")) {
+          print("LAVA is not needed in tf-m-extra-build job.")
+        }
         // Submit test job for NXP LPCXpresso55S69 & Cypress PSoC64
-        if (params_collection["TFM_PLATFORM"].contains("lpcxpresso55s69") || params_collection["TFM_PLATFORM"].contains("psoc64")) {
+        else if (params_collection["TFM_PLATFORM"].contains("lpcxpresso55s69") || params_collection["TFM_PLATFORM"].contains("psoc64")) {
           submit_lava_tests(config, results, build_res, params, params_collection)
         } else {
             // Configs without BL2 do not need LAVA tests
