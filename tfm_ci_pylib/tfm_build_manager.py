@@ -25,61 +25,9 @@ import sys
 from .utils import *
 from time import time
 from copy import deepcopy
-from .utils import gen_cfg_combinations, list_chunks, load_json,\
-    save_json, print_test, show_progress, \
-    resolve_rel_path
 from .structured_task import structuredTask
 from .tfm_builder import TFM_Builder
-
-
-mapPlatform = {"cypress/psoc64":                      "psoc64",
-               "arm/mps2/an519":                      "AN519",
-               "arm/mps2/an521":                      "AN521",
-               "arm/mps2/an539":                      "AN539",
-               "arm/mps2/sse-200_aws":                "SSE-200_AWS",
-               "arm/mps3/an524":                      "AN524",
-               "arm/musca_b1/sse_200":                "MUSCA_B1",
-               "arm/musca_b1/secure_enclave":         "MUSCA_B1_SE",
-               "arm/musca_s1":                        "MUSCA_S1",
-               "stm/stm32l562e_dk":                   "stm32l562e_dk",
-               "arm/corstone1000":                    "corstone1000",
-               "nxp/lpcxpresso55s69":                 "lpcxpresso55s69",
-               "arm/mps3/an547":                      "AN547",
-               "arm/mps3/corstone310_fvp" :           "corstone310",
-               "arm/mps3/an552":                      "AN552",
-               "lairdconnectivity/bl5340_dvk_cpuapp": "BL5340",
-               "nordic_nrf/nrf5340dk_nrf5340_cpuapp": "nrf5340dk",
-               "nordic_nrf/nrf9160dk_nrf9160":        "nrf9160dk",
-               "nuvoton/m2351":                       "M2351",
-               "nuvoton/m2354":                       "M2354",
-               "stm/b_u585i_iot02a":                  "b_u585i_iot02a",
-               "stm/nucleo_l552ze_q":                 "nucleo_l552ze_q"}
-
-mapTestPsaApi = {"IPC":                      "FF",
-                 "CRYPTO":                   "CRYPTO",
-                 "INITIAL_ATTESTATION":      "ATTEST",
-                 "STORAGE":                  "STORAGE"}
-
-mapProfile = {"profile_small":  "SMALL",
-              "profile_medium": "MEDIUM",
-              "profile_large":  "LARGE"}
-
-mapExtraParams = {"":              "",
-                  "CRYPTO_OFF":   ("-DTEST_S_CRYPTO=OFF "
-                                   "-DTEST_NS_CRYPTO=OFF "),
-                  "CRYPTO_ON":    ("-DTEST_S_CRYPTO=ON "
-                                   "-DTEST_NS_CRYPTO=ON "),
-                  "NSCE":          "-DTFM_NS_MANAGE_NSID=ON ",
-                  "MMIO":          "-DPSA_FRAMEWORK_HAS_MM_IOVEC=ON ",
-                  "FPSOFT":        "-DCONFIG_TFM_FP=soft ",
-                  "FPHARD":        "-DCONFIG_TFM_FP=hard ",
-                  "FPHARD_LOFF":   ("-DCONFIG_TFM_FP=hard "
-                                    "-DCONFIG_TFM_LAZY_STACKING=OFF "),
-                  "FVP":           "-DPLATFORM_IS_FVP=True",
-                  "FPGA":          "-DPLATFORM_IS_FVP=False",
-                  "CC_DRIVER_PSA": "-DCC312_LEGACY_DRIVER_API_ENABLED=OFF",
-                  "SFN_ENABLE":    "-DCONFIG_TFM_SPM_BACKEND=SFN"
-                  }
+from build_helper.build_helper_config_maps import *
 
 class TFM_Build_Manager(structuredTask):
     """ Class that will load a configuration out of a json file, schedule
@@ -462,8 +410,6 @@ class TFM_Build_Manager(structuredTask):
             overwrite_params["test_psa_api"] += " -DITS_RAM_FS=ON -DPS_RAM_FS=ON"
         if i.tfm_platform == "stm/stm32l562e_dk":
             overwrite_params["test_psa_api"] += " -DITS_RAM_FS=ON -DPS_RAM_FS=ON"
-        if i.extra_params == "FPHARD" or i.extra_params == "FPHARD_LOFF":
-            overwrite_params["test_psa_api"] += " -DTEST_S_FPU=ON -DTEST_NS_FPU=ON"
         build_cfg["config_template"] %= overwrite_params
         if len(build_cfg["build_cmds"]) > 1:
             overwrite_build_dir = {"_tbm_build_dir_": build_dir}

@@ -373,8 +373,8 @@ config_profile_s = {"seed_params": {
                 "common_params": _common_tfm_builder_cfg,
                 "valid": [
                     # Profile Small also supports SFN model
-                    ("*", "*", False, "*", "*", "*", "*", "*", "*", "*",
-                     "*", "SFN_ENABLE")
+                    ("*", "*", False, "*", "*", "*", "*",
+                     "*", "*", "*", "*", "SFN")
                 ],
                 "invalid": _common_tfm_invalid_configs + [
                     ("arm/mps2/an519", "GCC_7_3_1", "*", "*", "*",
