@@ -329,6 +329,9 @@ def filterFailedBuild(results) {
 def filterFailedTest(string) {
   def failed_tests = [:]
   line = lineInString(string, "FAILURE_TESTS:")
+  if (line == null) {
+    return ["???"];
+  }
   a = line.split(' ')
   if (a.size() > 1) {
     a = line.split(' ')[1..-1]
