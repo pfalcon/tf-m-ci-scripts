@@ -41,12 +41,12 @@ timestamps {
       }
     }
     stage("LAVA") {
-      def device_type = ""
+      def device_type = env.DEVICE_FILTER
 
       // For builds running per-patch (started by the tf-m-static job),
       // run tests only on physical boards to improve turnaround/performance.
       def upstream_job = getUpstreamJob()[0]
-      if (upstream_job instanceof hudson.model.Cause.UpstreamCause) {
+      if (device_type == "" && upstream_job instanceof hudson.model.Cause.UpstreamCause) {
         def gp_causes = upstream_job.getUpstreamCauses()
         if (gp_causes.size() > 0 && gp_causes[0] instanceof hudson.model.Cause.UpstreamCause) {
           print("Grand-parent project cause: ")
