@@ -235,6 +235,7 @@ class LAVA_RPC_connector(xmlrpc.client.ServerProxy, object):
         """ Wait for multiple LAVA job ids to finish and return finished list """
 
         start_t = int(time.time())
+        print("0: block_wait_for_jobs started")
         finished_jobs = {}
         while(True):
             cur_t = int(time.time())
@@ -250,12 +251,14 @@ class LAVA_RPC_connector(xmlrpc.client.ServerProxy, object):
                 if cur_status['state'] in ["Canceling","Finished"]:
                     cur_status['error_reason'] = self.get_error_reason(job_id)
                     finished_jobs[job_id] = cur_status
+                    print("%d: job %d finished, remaining: %d" % (cur_t - start_t, job_id, len(job_ids) - len(finished_jobs)))
                 if len(job_ids) == len(finished_jobs):
                     break
                 else:
                     time.sleep(poll_freq)
             if len(job_ids) == len(finished_jobs):
                 break
+        print("%d: block_wait_for_jobs finished" % (cur_t - start_t))
         return finished_jobs
 
     def test_credentials(self):
