@@ -242,6 +242,8 @@ class LAVA_RPC_connector(xmlrpc.client.ServerProxy, object):
                 print("Breaking because of timeout")
                 break
             for job_id in job_ids:
+                if job_id in finished_jobs:
+                    continue
                 # Check if the job is not running
                 cur_status = self.get_job_info(job_id)
                 # If in queue or running wait
