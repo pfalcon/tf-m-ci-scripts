@@ -73,8 +73,10 @@ def wait_for_jobs(user_args):
     lava = test_lava_dispatch_credentials(user_args)
     finished_jobs = get_finished_jobs(job_list, user_args, lava)
     resubmit_jobs = resubmit_failed_jobs(finished_jobs, user_args)
-    finished_resubmit_jobs = get_finished_jobs(resubmit_jobs, user_args, lava)
-    finished_jobs.update(finished_resubmit_jobs)
+    if resubmit_jobs:
+        info_print("Waiting for resubmitted jobs: {}".format(resubmit_jobs))
+        finished_resubmit_jobs = get_finished_jobs(resubmit_jobs, user_args, lava)
+        finished_jobs.update(finished_resubmit_jobs)
     return finished_jobs
 
 
