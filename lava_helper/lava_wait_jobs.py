@@ -1,4 +1,4 @@
-#!/usr/bin/env -S python3 -u
+#!/usr/bin/python3 -u
 
 from __future__ import print_function
 from pprint import pprint
