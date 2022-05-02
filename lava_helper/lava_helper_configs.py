@@ -169,6 +169,9 @@ tfm_mps2_sse_200 = {
         'PsaApiTest_Crypto': {
             "monitors": monitors_psaapitest_by_ut,
         }, # PsaApiTest_Crypto
+        'PsaApiTestIPC_Crypto': {
+            "monitors": monitors_psaapitest_by_ut,
+        },
         'PsaApiTest_STORAGE': {
             "monitors": monitors_psaapitest_by_desc,
         }, # PsaApiTest_Storage
@@ -299,6 +302,9 @@ fvp_mps2_an521_bl2 = {
         'PsaApiTest_Crypto': {
             "monitors": monitors_psaapitest_by_ut,
         }, # PsaApiTest_Crypto
+        'PsaApiTestIPC_Crypto': {
+            "monitors": monitors_psaapitest_by_ut,
+        },
         'PsaApiTest_STORAGE': {
             "monitors": monitors_psaapitest_by_desc,
         }, # PsaApiTest_Storage
