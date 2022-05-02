@@ -173,6 +173,10 @@ _common_tfm_invalid_configs = [
     # LVL2 and LVL3 requires IPC model
     ("*", "*", True, "2", "*", "*", "*", "*", "*", "*", "*", "*"),
     ("*", "*", True, "3", "*", "*", "*", "*", "*", "*", "*", "*"),
+    # FF does not support library model
+    ("*", "*", True, "*", "*", "IPC", "*", "*", "*", "*", "*", "*"),
+    # FF does not support L3
+    ("*", "*", "*", "3", "*", "IPC", "*", "*", "*", "*", "*", "*"),
     # Regression requires NS
     ("*", "*", "*", "*", True, "*", "*", "*", False, "*", "*", "*"),
     # Musca requires BL2
@@ -473,14 +477,7 @@ config_psa_api = {"seed_params": {
                 "extra_params":     [""]
                 },
                 "common_params": _common_tfm_builder_cfg,
-                "invalid": _common_tfm_invalid_configs + [
-                    # FF does not support library model
-                    ("*", "*", True, "*", "*", "IPC",
-                     "*", "*", "*", "*", "*", "*"),
-                    # FF does not support L3
-                    ("*", "*", "*", "3", "*", "IPC",
-                     "*", "*", "*", "*", "*", "*"),
-                ]
+                "invalid": _common_tfm_invalid_configs + []
                 }
 
 config_nsce = {"seed_params": {
