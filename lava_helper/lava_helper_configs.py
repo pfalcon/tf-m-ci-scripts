@@ -100,21 +100,6 @@ monitors_psaapitest_by_desc = [
     },
 ]
 
-# LAVA test-monitor definition for PSA API "crypto" testsuite, which has some
-# failing testcases which we don't want to treat as failures, so can't use
-# normal monitors_psaapitest_by_ut. Note that this is a flaky workaround
-# which will break if e.g. a new testcase is added. This issue should be
-# fixed on TF-M side instead
-monitors_psaapitest_crypto_workaround = [
-    {
-        'name': 'psa_api_crypto_workaround',
-        'start': 'Running..',
-        'end': r"TOTAL TESTS     : 63\r?\n.*?TOTAL PASSED    : 61\r?\n",
-        'pattern': '__ignored__',
-        'fixup': {"pass": "PASSED", "fail": "FAILED", "skip": "SKIPPED"},
-    },
-]
-
 
 # MPS2 with BL2 bootloader
 # IMAGE0ADDRESS: 0x10000000
@@ -182,7 +167,7 @@ tfm_mps2_sse_200 = {
             "monitors": monitors_no_reg_tests
         },  # CoreIPCTfmLevel3
         'PsaApiTest_Crypto': {
-            "monitors": monitors_psaapitest_crypto_workaround,
+            "monitors": monitors_psaapitest_by_ut,
         }, # PsaApiTest_Crypto
         'PsaApiTest_STORAGE': {
             "monitors": monitors_psaapitest_by_desc,
@@ -312,7 +297,7 @@ fvp_mps2_an521_bl2 = {
             "monitors": monitors_no_reg_tests
         },  # CoreIPCTfmLevel3
         'PsaApiTest_Crypto': {
-            "monitors": monitors_psaapitest_crypto_workaround,
+            "monitors": monitors_psaapitest_by_ut,
         }, # PsaApiTest_Crypto
         'PsaApiTest_STORAGE': {
             "monitors": monitors_psaapitest_by_desc,
