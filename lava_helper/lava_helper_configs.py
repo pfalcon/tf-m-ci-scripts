@@ -172,18 +172,36 @@ tfm_mps2_sse_200 = {
         'PsaApiTestIPC_Crypto': {
             "monitors": monitors_psaapitest_by_ut,
         },
+        'PsaApiTestIPCTfmLevel2_Crypto': {
+            "monitors": monitors_psaapitest_by_ut,
+        },
+        'PsaApiTestIPCTfmLevel3_Crypto': {
+            "monitors": monitors_psaapitest_by_ut,
+        },
         'PsaApiTest_STORAGE': {
             "monitors": monitors_psaapitest_by_desc,
         }, # PsaApiTest_Storage
         'PsaApiTestIPC_STORAGE': {
             "monitors": monitors_psaapitest_by_desc,
         }, # PsaApiTestIPC_Storage
+        'PsaApiTestIPCTfmLevel2_STORAGE': {
+            "monitors": monitors_psaapitest_by_desc,
+        },
+        'PsaApiTestIPCTfmLevel3_STORAGE': {
+            "monitors": monitors_psaapitest_by_desc,
+        },
         'PsaApiTest_Attest': {
             "monitors": monitors_psaapitest_by_ut,
         }, # PsaApiTest_Attest
         'PsaApiTestIPC_Attest': {
             "monitors": monitors_psaapitest_by_ut,
         }, # PsaApiTestIPC_Attest
+        'PsaApiTestIPCTfmLevel2_Attest': {
+            "monitors": monitors_psaapitest_by_ut,
+        },
+        'PsaApiTestIPCTfmLevel3_Attest': {
+            "monitors": monitors_psaapitest_by_ut,
+        },
     }  # Tests
 }
 
@@ -305,6 +323,12 @@ fvp_mps2_an521_bl2 = {
         'PsaApiTestIPC_Crypto': {
             "monitors": monitors_psaapitest_by_ut,
         },
+        'PsaApiTestIPCTfmLevel2_Crypto': {
+            "monitors": monitors_psaapitest_by_ut,
+        },
+        'PsaApiTestIPCTfmLevel3_Crypto': {
+            "monitors": monitors_psaapitest_by_ut,
+        },
         'PsaApiTest_STORAGE': {
             "monitors": monitors_psaapitest_by_desc,
         }, # PsaApiTest_Storage
@@ -312,12 +336,24 @@ fvp_mps2_an521_bl2 = {
         'PsaApiTestIPC_STORAGE': {
             "monitors": monitors_psaapitest_by_desc,
         }, # PsaApiTestIPC_Storage
+        'PsaApiTestIPCTfmLevel2_STORAGE': {
+            "monitors": monitors_psaapitest_by_desc,
+        },
+        'PsaApiTestIPCTfmLevel3_STORAGE': {
+            "monitors": monitors_psaapitest_by_desc,
+        },
         'PsaApiTest_Attest': {
             "monitors": monitors_psaapitest_by_ut,
         }, # PsaApiTest_Attest
         'PsaApiTestIPC_Attest': {
             "monitors": monitors_psaapitest_by_ut,
         }, # PsaApiTestIPC_Attest
+        'PsaApiTestIPCTfmLevel2_Attest': {
+            "monitors": monitors_psaapitest_by_ut,
+        },
+        'PsaApiTestIPCTfmLevel3_Attest': {
+            "monitors": monitors_psaapitest_by_ut,
+        },
 
     }  # Tests
 }
