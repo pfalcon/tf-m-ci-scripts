@@ -89,7 +89,7 @@ def process_finished_jobs(finished_jobs, user_args):
 
 
 def get_finished_jobs(job_list, user_args, lava):
-    finished_jobs = lava.block_wait_for_jobs(job_list, user_args.dispatch_timeout, 0.5)
+    finished_jobs = lava.block_wait_for_jobs(job_list, user_args.dispatch_timeout, 5)
     unfinished_jobs = [item for item in job_list if item not in finished_jobs]
     for job in unfinished_jobs:
         info_print("Cancelling unfinished job: {}".format(job))
