@@ -227,12 +227,8 @@ python3 ./configs.py -g ${filter_group.replace(" ", " -g ")} ${config}
         else if (params_collection["TFM_PLATFORM"].contains("lpcxpresso55s69") || params_collection["TFM_PLATFORM"].contains("psoc64")) {
           submit_lava_tests(config, results, build_res, params, params_collection)
         } else {
-            // Configs without BL2 do not need LAVA tests
-            if (params_collection["BL2"] == "False") {
-              print("LAVA is not needed for ${build_url}")
-            }
             // Configs without building NS app do not need LAVA tests
-            else if (params_collection["NS"] == "False") {
+            if (params_collection["NS"] == "False") {
               print("LAVA is not needed for ${build_url}")
             }
             // LAVA tests on MUSCA_B1 are not needed in per-patch job
