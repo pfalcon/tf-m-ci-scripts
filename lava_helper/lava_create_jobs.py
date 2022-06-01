@@ -135,7 +135,8 @@ def generate_test_definitions(config, work_dir, user_args):
                             "coverage_trace_plugin": coverage_trace_plugin,
                             "build_job_url": artifact_store_url,
                             "cpu0_baseline": config.get("cpu0_baseline", 0),
-                            "cpu0_initvtor_s": config.get("cpu0_initvtor_s", "0x10000000")
+                            "cpu0_initvtor_s": config.get("cpu0_initvtor_s", "0x10000000"),
+                            "psa_api_suite": user_args.psa_suite,
                         }
                         for binary_type, binary_name in config["binaries"].items():
                             params.update(

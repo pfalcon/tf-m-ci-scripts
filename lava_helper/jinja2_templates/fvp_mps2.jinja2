@@ -40,9 +40,14 @@ actions:
     image: /opt/model/FVP_MPS2_AEMv8M/models/Linux64_GCC-6.4/FVP_MPS2_AEMv8M
     timeout:
       minutes: 5
+{%- if psa_api_suite == "FF" %}
+    console_string: 'telnetterminal2: Listening for serial connection on port (?P<PORT>\d+)'
+    use_telnet: True
+{%- else %}
     console_string: 'telnetterminal0: Listening for serial connection on port (?P<PORT>\d+)'
-    license_variable: '{{ license_variable }}'
     use_telnet: False
+{%- endif %}
+    license_variable: '{{ license_variable }}'
     arguments:
     -  "--application cpu0={APP}"
     -  "--data cpu0={DATA}@{{ data_bin_offset }}"
