@@ -967,6 +967,24 @@ config_debug_PSA_API_nolib = {"seed_params": {
                 "invalid": _common_tfm_invalid_configs + []
                 }
 
+config_debug_PSA_API_FF = {"seed_params": {
+                "tfm_platform":     ["arm/mps2/an521"],
+                "compiler":         ["ARMCLANG_6_13"],
+                "lib_model":        [False],
+                "isolation_level":  ["1", "2"],
+                "test_regression":  [False],
+                "test_psa_api":     ["IPC"],
+                "cmake_build_type": ["Debug"],
+                "with_bl2":         [False, True],
+                "with_ns":          [True],
+                "profile":          [""],
+                "partition_ps":     ["ON"],
+                "extra_params":     [""]
+                },
+                "common_params": _common_tfm_builder_cfg,
+                "invalid": _common_tfm_invalid_configs + []
+                }
+
 _builtin_configs = {
                     # per-patch test groups
                     "pp_test": config_pp_test,
@@ -1043,6 +1061,7 @@ _builtin_configs = {
                     "debug_regr": config_debug_regr,
                     "debug_PSA_API": config_debug_PSA_API,
                     "debug_PSA_API_nolib": config_debug_PSA_API_nolib,
+                    "debug_PSA_API_FF": config_debug_PSA_API_FF,
                 }
 
 if __name__ == '__main__':
