@@ -100,6 +100,18 @@ monitors_psaapitest_by_desc = [
     },
 ]
 
+monitors_psaapitest_ff = [
+    {
+        'name': 'psa_api_suite',
+        'start': 'Running..',
+        'end': 'Entering standby..',
+        'pattern': r" DESCRIPTION: +(?P<test_case_id>.+?)\r?\n"
+                   r".+"
+                   r"TEST RESULT: (?P<result>(PASSED|FAILED|SKIPPED|SIM ERROR))",
+        'fixup': {"pass": "PASSED", "fail": "FAILED", "skip": "SKIPPED"},
+    },
+]
+
 
 # MPS2 with BL2 bootloader
 # IMAGE0ADDRESS: 0x10000000

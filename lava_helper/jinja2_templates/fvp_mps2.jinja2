@@ -88,6 +88,7 @@ actions:
          {%- if monitor.fixup.skip %}
          '{{monitor.fixup.skip}}': skip
          {%- endif %}
+         'SIM ERROR': fail
     {%- endfor %}
 
 {%- if enable_code_coverage %}
