@@ -10,9 +10,6 @@
 import org.trustedfirmware.Gerrit
 
 def nodeLabel = "docker-amd64-tf-m-bionic"
-if (env.COMPILER == "ARMCLANG") {
-  nodeLabel = "docker-amd64-tf-m-bionic"
-}
 
 @NonCPS
 def getUpstreamJob() {
