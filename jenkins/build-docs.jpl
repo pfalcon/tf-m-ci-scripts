@@ -28,6 +28,9 @@ timestamps {
         archiveArtifacts 'trusted-firmware-m/build/docs/**'
       }
     } catch (Exception e) {
+      stage("Post") {
+        archiveArtifacts 'trusted-firmware-m/build/**'
+      }
       manager.buildFailure()
       verify = -1
     } finally {
