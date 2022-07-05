@@ -214,6 +214,14 @@ tfm_mps2_sse_200 = {
         'PsaApiTestIPCTfmLevel3_Attest': {
             "monitors": monitors_psaapitest_by_ut,
         },
+
+        'PsaApiTestIPC_FF': {
+            "monitors": monitors_psaapitest_ff,
+        },
+        'PsaApiTestIPCTfmLevel2_FF': {
+            "monitors": monitors_psaapitest_ff,
+        },
+
     }  # Tests
 }
 
@@ -367,6 +375,13 @@ fvp_mps2_an521_bl2 = {
             "monitors": monitors_psaapitest_by_ut,
         },
 
+        'PsaApiTestIPC_FF': {
+            "monitors": monitors_psaapitest_ff,
+        },
+        'PsaApiTestIPCTfmLevel2_FF': {
+            "monitors": monitors_psaapitest_ff,
+        },
+
     }  # Tests
 }
 
@@ -435,6 +450,14 @@ fvp_mps2_an521_nobl2 = {
         'CoreIPCTfmLevel3': {
             "monitors": monitors_no_reg_tests
         },  # CoreIPCTfmLevel3
+
+        'PsaApiTestIPC_FF': {
+            "monitors": monitors_psaapitest_ff,
+        },
+        'PsaApiTestIPCTfmLevel2_FF': {
+            "monitors": monitors_psaapitest_ff,
+        },
+
     }  # Tests
 }
 
