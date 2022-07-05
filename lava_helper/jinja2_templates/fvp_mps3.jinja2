@@ -44,6 +44,7 @@ actions:
     license_variable: '{{ license_variable }}'
     use_telnet: False
     arguments:
+    -  "--simlimit 600"
     -  "--application cpu0={APP}"
     -  "--data cpu0={DATA}@{{ data_bin_offset }}"
     -  "--parameter mps3_board.platform_type=1"

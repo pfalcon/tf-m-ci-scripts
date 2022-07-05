@@ -49,6 +49,7 @@ actions:
 {%- endif %}
     license_variable: '{{ license_variable }}'
     arguments:
+    -  "--simlimit 600"
     -  "--application cpu0={APP}"
     -  "--data cpu0={DATA}@{{ data_bin_offset }}"
     -  "--parameter fvp_mps2.platform_type=2"
