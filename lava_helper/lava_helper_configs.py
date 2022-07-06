@@ -214,14 +214,6 @@ tfm_mps2_sse_200 = {
         'PsaApiTestIPCTfmLevel3_Attest': {
             "monitors": monitors_psaapitest_by_ut,
         },
-
-        'PsaApiTestIPC_FF': {
-            "monitors": monitors_psaapitest_ff,
-        },
-        'PsaApiTestIPCTfmLevel2_FF': {
-            "monitors": monitors_psaapitest_ff,
-        },
-
     }  # Tests
 }
 
