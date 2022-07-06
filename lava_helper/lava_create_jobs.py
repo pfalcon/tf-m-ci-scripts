@@ -191,13 +191,10 @@ def main(user_args):
     user_args.template_dir = "jinja2_templates"
     config_keys = list(lava_gen_config_map.keys())
     if user_args.fvp_only:
-        for key in config_keys:
-            if "fvp" not in key:
-                config_keys.remove(key)
+        config_keys = [key for key in config_keys if "fvp" in key]
     if user_args.physical_board_only:
-        for key in config_keys:
-            if "fvp" in key or "qemu" in key:
-                config_keys.remove(key)
+        config_keys = [key for key in config_keys
+                       if "fvp" not in key and "qemu" not in key]
     if user_args.config_key:
         config_keys = [user_args.config_key]
     for config_key in config_keys:
