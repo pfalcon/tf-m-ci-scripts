@@ -88,6 +88,17 @@ cfgs = ["Default", "CoreIPC", "CoreIPCTfmLevel2", "CoreIPCTfmLevel3",
         "PsaApiTestIPCTfmLevel3 (STORAGE)", "PsaApiTestIPCTfmLevel3 (Crypto)",
         "PsaApiTestIPCTfmLevel3 (Attest)", "PsaApiTestIPCTfmLevel3 (FF)"]
 
+cfgSkipFVP = [
+  "AN519_GCC_IPC_2_REG_Debug_BL2_NS",
+  "AN519_GCC_IPC_2_REG_Debug_BL2_NS_MEDIUM",
+  "AN519_GCC_IPC_2_REG_Debug_BL2_NS_MEDIUM_PSOFF",
+  "AN519_ARMCLANG_IPC_2_REG_Debug_BL2_NS",
+  "AN519_ARMCLANG_IPC_2_REG_Debug_BL2_NS_MEDIUM",
+  "AN521_ARMCLANG_IPC_2_REG_Debug_BL2_NS",
+  "AN521_ARMCLANG_IPC_2_REG_Debug_BL2_NS_NSCE",
+  "AN521_ARMCLANG_IPC_2_REG_Debug_BL2_NS_MEDIUM",
+]
+
 @NonCPS
 def generateLavaParam(build_params) {
   def params = []
@@ -131,7 +142,12 @@ def submit_lava_tests(config, results, build_res, params, params_collection) {
   params += string(name: 'CI_SCRIPTS_BRANCH', value: env.CI_SCRIPTS_BRANCH)
   params += string(name: 'LAVA_CREDENTIALS', value: env.LAVA_CREDENTIALS)
   params += string(name: 'CODE_COVERAGE_EN', value: env.CODE_COVERAGE_EN)
-  params += string(name: 'DEVICE_FILTER', value: env.DEVICE_FILTER)
+  // Workaround: Configs in cfgSkipFVP fail on FVP but pass on physical boards
+  if (params_collection['CONFIG_NAME'] in cfgSkipFVP) {
+    params += string(name: 'DEVICE_FILTER', value: "--physical-board-only")
+  } else {
+    params += string(name: 'DEVICE_FILTER', value: env.DEVICE_FILTER)
+  }
   def lava_res = build(job: 'tf-m-lava-submit', parameters: params, propagate: false)
   def lava_resubmitted = false
   if (lava_res.result in failure_states) {
