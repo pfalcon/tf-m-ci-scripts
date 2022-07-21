@@ -43,7 +43,7 @@ actions:
     - 'root@lava '
     image: /opt/model/FVP_MPS2_AEMv8M/models/Linux64_GCC-6.4/FVP_MPS2_AEMv8M
     timeout:
-      minutes: 5
+      minutes: 10
 {%- if psa_api_suite == "FF" %}
     console_string: 'telnetterminal2: Listening for serial connection on port (?P<PORT>\d+)'
     use_telnet: True
