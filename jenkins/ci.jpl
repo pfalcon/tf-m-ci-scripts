@@ -89,14 +89,14 @@ cfgs = ["Default", "CoreIPC", "CoreIPCTfmLevel2", "CoreIPCTfmLevel3",
         "PsaApiTestIPCTfmLevel3 (Attest)", "PsaApiTestIPCTfmLevel3 (FF)"]
 
 cfgSkipFVP = [
-  "AN519_GCC_IPC_2_REG_Debug_BL2_NS",
-  "AN519_GCC_IPC_2_REG_Debug_BL2_NS_MEDIUM",
-  "AN519_GCC_IPC_2_REG_Debug_BL2_NS_MEDIUM_PSOFF",
-  "AN519_ARMCLANG_IPC_2_REG_Debug_BL2_NS",
-  "AN519_ARMCLANG_IPC_2_REG_Debug_BL2_NS_MEDIUM",
-  "AN521_ARMCLANG_IPC_2_REG_Debug_BL2_NS",
-  "AN521_ARMCLANG_IPC_2_REG_Debug_BL2_NS_NSCE",
-  "AN521_ARMCLANG_IPC_2_REG_Debug_BL2_NS_MEDIUM",
+  "AN519_GCC_IPC_2_REG_Debug_BL2",
+  "AN519_GCC_IPC_2_REG_Debug_BL2_MEDIUM",
+  "AN519_GCC_IPC_2_REG_Debug_BL2_MEDIUM_PSOFF",
+  "AN519_ARMCLANG_IPC_2_REG_Debug_BL2",
+  "AN519_ARMCLANG_IPC_2_REG_Debug_BL2_MEDIUM",
+  "AN521_ARMCLANG_IPC_2_REG_Debug_BL2",
+  "AN521_ARMCLANG_IPC_2_REG_Debug_BL2_NSCE",
+  "AN521_ARMCLANG_IPC_2_REG_Debug_BL2_MEDIUM",
 ]
 
 @NonCPS
@@ -247,10 +247,6 @@ python3 ./configs.py -g ${filter_group.replace(" ", " -g ")} ${config}
             if (params_collection["BL2"] == "False") {
               print("LAVA is not needed for ${build_url}")
             }
-            // Configs without building NS app do not need LAVA tests
-            else if (params_collection["NS"] == "False") {
-              print("LAVA is not needed for ${build_url}")
-            }
             // LAVA tests on MUSCA_B1 are not needed in per-patch job
             else if (params_collection["TFM_PLATFORM"].contains("musca_b1") && \
                      env.JOB_NAME.equals("tf-m-build-and-test")) {
@@ -356,7 +352,6 @@ def generateCsvContent(results) {
                         result.value[2]['COMPILER'].split('_')[0], \
                         result.value[2]['CMAKE_BUILD_TYPE'], \
                         result.value[2]['BL2'], \
-                        result.value[2]['NS'], \
                         result.value[2]['LIB_MODEL'], \
                         result.value[2]['ISOLATION_LEVEL'], \
                         result.value[2]['TEST_REGRESSION'], \
@@ -366,7 +361,7 @@ def generateCsvContent(results) {
   }
   resultsParam.each { result ->
     result[3] = result[3].split('_')[0]
-    build_params = result[7..11]
+    build_params = result[6..10]
     configName = ""
     for (map_cfg in mapConfigs) {
       if (build_params[0..4] == map_cfg[0..4]) {
@@ -388,7 +383,7 @@ def generateCsvContent(results) {
   resultsParam.each { result ->
     current_row = result[2..4]
     cfgs.each {cfg ->
-      if (cfg == result[12]) {
+      if (cfg == result[11]) {
         current_row.add(cfg)
         current_row.add(result[1])
       }

@@ -57,6 +57,7 @@ mapProfile = {
 mapExtraParams = {
     # Default
     ""             : "",
+    "NSOFF"        : "-DNS=OFF ",
     # NSCE
     "NSCE"         : "-DTFM_NS_MANAGE_NSID=ON ",
     # MMIO

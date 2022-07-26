@@ -120,7 +120,6 @@ class TFM_Build_Manager(structuredTask):
             "TEST_PSA_API={}",
             "CMAKE_BUILD_TYPE={}",
             "BL2={}",
-            "NS={}",
             "PROFILE={}",
             "PARTITION_PS={}",
             "EXTRA_PARAMS={}"
@@ -137,7 +136,6 @@ class TFM_Build_Manager(structuredTask):
                 config_details.test_psa_api,
                 config_details.cmake_build_type,
                 config_details.with_bl2,
-                config_details.with_ns,
                 "N.A" if not config_details.profile else config_details.profile,
                 config_details.partition_ps,
                 "N.A" if not config_details.extra_params else config_details.extra_params,
@@ -377,7 +375,7 @@ class TFM_Build_Manager(structuredTask):
         # Extract the platform specific elements of config
         for key in ["build_cmds", "required_artefacts"]:
             try:
-                if i.tfm_platform in self.tbm_common_cfg[key].keys() and i.with_ns:
+                if i.tfm_platform in self.tbm_common_cfg[key].keys():
                     build_cfg[key] += deepcopy(self.tbm_common_cfg[key]
                                                [i.tfm_platform])
             except Exception as E:
@@ -405,7 +403,6 @@ class TFM_Build_Manager(structuredTask):
                             "test_psa_api": i.test_psa_api,
                             "cmake_build_type": i.cmake_build_type,
                             "with_bl2": i.with_bl2,
-                            "with_ns": i.with_ns,
                             "profile": "" if i.profile=="N.A" else i.profile,
                             "partition_ps": i.partition_ps,
                             "extra_params": self.map_extra_params(i.extra_params)}
@@ -592,14 +589,12 @@ class TFM_Build_Manager(structuredTask):
             config_param.append(list(i)[6]) # BUILD_TYPE
             if list(i)[7]:  # BL2
                 config_param.append("BL2")
-            if list(i)[8]:  # NS
-                config_param.append("NS")
-            if list(i)[9]: # PROFILE
-                config_param.append(mapProfile[list(i)[9]])
-            if list(i)[10] == "OFF":    #PARTITION_PS
+            if list(i)[8]: # PROFILE
+                config_param.append(mapProfile[list(i)[8]])
+            if list(i)[9] == "OFF":    #PARTITION_PS
                 config_param.append("PSOFF")
-            if list(i)[11]: # EXTRA_PARAMS
-                config_param.append(list(i)[11].replace(", ", "_"))
+            if list(i)[10]: # EXTRA_PARAMS
+                config_param.append(list(i)[10].replace(", ", "_"))
             i_str = "_".join(config_param)
             ret_cfg[i_str] = i
         return ret_cfg
