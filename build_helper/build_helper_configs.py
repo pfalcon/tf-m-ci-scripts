@@ -451,7 +451,7 @@ config_fp = {"seed_params": {
                 "with_ns":          [True],
                 "profile":          [""],
                 "partition_ps":     ["ON"],
-                "extra_params":     ["FPSOFT", "FPHARD", "FPHARD_LOFF"]
+                "extra_params":     ["FPSOFT", "FPHARD", "FPHARD, LZOFF"]
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + []
@@ -725,7 +725,7 @@ config_corstone1000 = {"seed_params": {
                 "with_ns":          [False],
                 "profile":          [""],
                 "partition_ps":     ["ON"],
-                "extra_params":     ["FVP", "FPGA"]
+                "extra_params":     ["S_PS_OFF, FVP", "FPGA"]
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + []

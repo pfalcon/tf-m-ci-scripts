@@ -90,6 +90,13 @@ class TFM_Build_Manager(structuredTask):
 
         return compiler_name
 
+    def map_extra_params(self, params):
+        extra_params = ""
+        param_list = params.split(", ")
+        for param in param_list:
+            extra_params += mapExtraParams[param]
+        return extra_params
+
     def get_config(self):
             return list(self._tbm_build_cfg.keys())
 
@@ -401,7 +408,7 @@ class TFM_Build_Manager(structuredTask):
                             "with_ns": i.with_ns,
                             "profile": "" if i.profile=="N.A" else i.profile,
                             "partition_ps": i.partition_ps,
-                            "extra_params": mapExtraParams[i.extra_params]}
+                            "extra_params": self.map_extra_params(i.extra_params)}
         if i.test_psa_api == "IPC":
             overwrite_params["test_psa_api"] += " -DINCLUDE_PANIC_TESTS=1"
         if i.test_psa_api == "CRYPTO" and "musca" in i.tfm_platform:
@@ -592,7 +599,7 @@ class TFM_Build_Manager(structuredTask):
             if list(i)[10] == "OFF":    #PARTITION_PS
                 config_param.append("PSOFF")
             if list(i)[11]: # EXTRA_PARAMS
-                config_param.append(list(i)[11])
+                config_param.append(list(i)[11].replace(", ", "_"))
             i_str = "_".join(config_param)
             ret_cfg[i_str] = i
         return ret_cfg

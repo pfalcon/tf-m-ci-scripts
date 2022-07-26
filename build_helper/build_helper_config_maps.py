@@ -65,9 +65,7 @@ mapExtraParams = {
     "FPSOFT"       : "-DCONFIG_TFM_FP=soft ",
     "FPHARD"       : ("-DCONFIG_TFM_FP=hard "
                       "-DTEST_S_FPU=ON -DTEST_NS_FPU=ON "),
-    "FPHARD_LOFF"  : ("-DCONFIG_TFM_FP=hard "
-                      "-DCONFIG_TFM_LAZY_STACKING=OFF "
-                      "-DTEST_S_FPU=ON -DTEST_NS_FPU=ON "),
+    "LZOFF"        : "-DCONFIG_TFM_LAZY_STACKING=OFF ",
     # SFN
     "SFN"          : "-DCONFIG_TFM_SPM_BACKEND=SFN ",
     # CC Driver
@@ -80,4 +78,5 @@ mapExtraParams = {
     # Corstone1000 support
     "FVP"          : "-DPLATFORM_IS_FVP=True ",
     "FPGA"         : "-DPLATFORM_IS_FVP=False ",
+    "S_PS_OFF"     : "-DTEST_S_PS=OFF ",
 }
