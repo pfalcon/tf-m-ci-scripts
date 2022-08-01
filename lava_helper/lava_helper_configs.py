@@ -59,14 +59,23 @@ monitors_no_reg_tests = [
     }
 ]
 
-# LAVA test-monitor definition for configs with regression tests.
+# LAVA test-monitor definitions for configs with regression tests.
 # Results of each test case is parsed separately, capturing test case id.
 # Works across any test suites enabled.
-monitors_reg_tests = [
+monitors_ns_reg_tests = [
     {
         'name': 'regression_suite',
         'start': 'Execute test suites',
         'end': 'End of Non-secure test suites',
+        'pattern': r"TEST: (?P<test_case_id>.+?) - (?P<result>(PASSED|FAILED|SKIPPED))",
+        'fixup': {"pass": "PASSED", "fail": "FAILED", "skip": "SKIPPED"},
+    },
+]  # Monitors
+monitors_s_reg_tests = [
+    {
+        'name': 'regression_suite',
+        'start': 'Execute test suites',
+        'end': 'End of Secure test suites',
         'pattern': r"TEST: (?P<test_case_id>.+?) - (?P<result>(PASSED|FAILED|SKIPPED))",
         'fixup': {"pass": "PASSED", "fail": "FAILED", "skip": "SKIPPED"},
     },
@@ -149,25 +158,25 @@ tfm_mps2_sse_200 = {
             "monitors": monitors_no_reg_tests
         },  # DefaultProfileL
         'Regression': {
-            "monitors": monitors_reg_tests
+            "monitors": monitors_ns_reg_tests
         },  # Regression
         'RegressionProfileM': {
-            "monitors": monitors_reg_tests
+            "monitors": monitors_ns_reg_tests
         },  # RegressionProfileM
         'RegressionProfileS': {
-            "monitors": monitors_reg_tests
+            "monitors": monitors_ns_reg_tests
         },  # RegressionProfileS
         'RegressionProfileL': {
-            "monitors": monitors_reg_tests
+            "monitors": monitors_ns_reg_tests
         },  # RegressionProfileL
         'RegressionIPC': {
-            "monitors": monitors_reg_tests
+            "monitors": monitors_ns_reg_tests
         },  # Regression
         'RegressionIPCTfmLevel2': {
-            "monitors": monitors_reg_tests
+            "monitors": monitors_ns_reg_tests
         },  # Regression
         'RegressionIPCTfmLevel3': {
-            "monitors": monitors_reg_tests
+            "monitors": monitors_ns_reg_tests
         },  # Regression
         'CoreIPC': {
             "monitors": monitors_no_reg_tests
@@ -242,16 +251,16 @@ fvp_mps3_an552_bl2 = {
             "monitors": monitors_no_reg_tests
         },  # Default
         'Regression': {
-            "monitors": monitors_reg_tests
+            "monitors": monitors_ns_reg_tests
         },  # Regression
         'RegressionIPC': {
-            "monitors": monitors_reg_tests
+            "monitors": monitors_ns_reg_tests
         },  # Regression
         'RegressionIPCTfmLevel2': {
-            "monitors": monitors_reg_tests
+            "monitors": monitors_ns_reg_tests
         },  # Regression
         'RegressionIPCTfmLevel3': {
-            "monitors": monitors_reg_tests
+            "monitors": monitors_ns_reg_tests
         },  # Regression
         'CoreIPC': {
             "monitors": monitors_no_reg_tests
@@ -262,6 +271,32 @@ fvp_mps3_an552_bl2 = {
         'CoreIPCTfmLevel3': {
             "monitors": monitors_no_reg_tests
         },  # CoreIPCTfmLevel3
+
+    }  # Tests
+}
+
+# FVP with BL1 and BL2 bootloader
+fvp_corstone1000 = {
+    "templ": "fvp_corstone1000.jinja2",
+    "job_name": "fvp_corstone1000",
+    "device_type": "fvp",
+    "job_timeout": 15,
+    "action_timeout": 10,
+    "monitor_timeout": 15,
+    "poweroff_timeout": 1,
+    "platforms": {"corstone1000": ""},
+    "compilers": ["GCC"],
+    "build_types": ["Debug"],
+    "boot_types": ["BL2"],
+    "data_bin_offset": "0x68100000",
+    "binaries": {
+        "application": "bl1.bin",
+        "data": "flash.bin"
+    },
+       "tests": {
+        'RegressionIPC': {
+            "monitors": monitors_s_reg_tests
+        },  # Regression
 
     }  # Tests
 }
@@ -300,25 +335,25 @@ fvp_mps2_an521_bl2 = {
             "monitors": monitors_no_reg_tests
         },  # DefaultProfileL
         'Regression': {
-            "monitors": monitors_reg_tests
+            "monitors": monitors_ns_reg_tests
         },  # Regression
         'RegressionProfileM': {
-            "monitors": monitors_reg_tests
+            "monitors": monitors_ns_reg_tests
         },  # RegressionProfileM
         'RegressionProfileS': {
-            "monitors": monitors_reg_tests
+            "monitors": monitors_ns_reg_tests
         },  # RegressionProfileS
         'RegressionProfileL': {
-            "monitors": monitors_reg_tests
+            "monitors": monitors_ns_reg_tests
         },  # RegressionProfileL
         'RegressionIPC': {
-            "monitors": monitors_reg_tests
+            "monitors": monitors_ns_reg_tests
         },  # Regression
         'RegressionIPCTfmLevel2': {
-            "monitors": monitors_reg_tests
+            "monitors": monitors_ns_reg_tests
         },  # Regression
         'RegressionIPCTfmLevel3': {
-            "monitors": monitors_reg_tests
+            "monitors": monitors_ns_reg_tests
         },  # Regression
         'CoreIPC': {
             "monitors": monitors_no_reg_tests
@@ -413,25 +448,25 @@ fvp_mps2_an521_nobl2 = {
             "monitors": monitors_no_reg_tests
         },  # DefaultProfileL
         'Regression': {
-            "monitors": monitors_reg_tests
+            "monitors": monitors_ns_reg_tests
         },  # Regression
         'RegressionProfileM': {
-            "monitors": monitors_reg_tests
+            "monitors": monitors_ns_reg_tests
         },  # RegressionProfileM
         'RegressionProfileS': {
-            "monitors": monitors_reg_tests
+            "monitors": monitors_ns_reg_tests
         },  # RegressionProfileS
         'RegressionProfileL': {
-            "monitors": monitors_reg_tests
+            "monitors": monitors_ns_reg_tests
         },  # RegressionProfileL
         'RegressionIPC': {
-            "monitors": monitors_reg_tests
+            "monitors": monitors_ns_reg_tests
         },  # RegressionIPC
         'RegressionIPCTfmLevel2': {
-            "monitors": monitors_reg_tests
+            "monitors": monitors_ns_reg_tests
         },  # RegressionIPCTfmLevel2
         'RegressionIPCTfmLevel3': {
-            "monitors": monitors_reg_tests
+            "monitors": monitors_ns_reg_tests
         },  # RegressionIPCTfmLevel3
         'CoreIPC': {
             "monitors": monitors_no_reg_tests
@@ -486,19 +521,19 @@ fvp_mps2_an519_bl2 = {
             "monitors": monitors_no_reg_tests
         },  # DefaultProfileM
         'Regression': {
-            "monitors": monitors_reg_tests
+            "monitors": monitors_ns_reg_tests
         },  # Regression
         'RegressionProfileM': {
-            "monitors": monitors_reg_tests
+            "monitors": monitors_ns_reg_tests
         },  # RegressionProfileM
         'RegressionProfileS': {
-            "monitors": monitors_reg_tests
+            "monitors": monitors_ns_reg_tests
         },  # RegressionProfileS
         'RegressionIPC': {
-            "monitors": monitors_reg_tests
+            "monitors": monitors_ns_reg_tests
         },  # Regression
         'RegressionIPCTfmLevel2': {
-            "monitors": monitors_reg_tests
+            "monitors": monitors_ns_reg_tests
         },  # Regression
         'CoreIPC': {
             "monitors": monitors_no_reg_tests
@@ -542,19 +577,19 @@ fvp_mps2_an519_nobl2 = {
             "monitors": monitors_no_reg_tests
         },  # DefaultProfileM
         'Regression': {
-            "monitors": monitors_reg_tests
+            "monitors": monitors_ns_reg_tests
         },  # Regression
         'RegressionProfileM': {
-            "monitors": monitors_reg_tests
+            "monitors": monitors_ns_reg_tests
         },  # RegressionProfileM
         'RegressionProfileS': {
-            "monitors": monitors_reg_tests
+            "monitors": monitors_ns_reg_tests
         },  # RegressionProfileS
         'RegressionIPC': {
-            "monitors": monitors_reg_tests
+            "monitors": monitors_ns_reg_tests
         },  # RegressionIPC
         'RegressionIPCTfmLevel2': {
-            "monitors": monitors_reg_tests
+            "monitors": monitors_ns_reg_tests
         },  # RegressionIPCTfmLevel2
         'CoreIPC': {
             "monitors": monitors_no_reg_tests
@@ -584,19 +619,19 @@ qemu_mps2_bl2 = {
     },
     "tests": {
         'Regression': {
-            "monitors": monitors_reg_tests
+            "monitors": monitors_ns_reg_tests
         },  # Regression
         'RegressionProfileS': {
-            "monitors": monitors_reg_tests
+            "monitors": monitors_ns_reg_tests
         },  # RegressionProfileS
         'RegressionIPC': {
-            "monitors": monitors_reg_tests
+            "monitors": monitors_ns_reg_tests
         },  # Regression
         'RegressionIPCTfmLevel2': {
-            "monitors": monitors_reg_tests
+            "monitors": monitors_ns_reg_tests
         },  # Regression
         'RegressionIPCTfmLevel3': {
-            "monitors": monitors_reg_tests
+            "monitors": monitors_ns_reg_tests
         },  # Regression
     }
 }
@@ -640,22 +675,22 @@ musca_b1_bl2 = {
             "monitors": monitors_no_reg_tests
         },
         "Regression": {
-            "monitors": monitors_reg_tests
+            "monitors": monitors_ns_reg_tests
         },
         "RegressionIPC": {
-            "monitors": monitors_reg_tests
+            "monitors": monitors_ns_reg_tests
         },
         "RegressionIPCTfmLevel2": {
-            "monitors": monitors_reg_tests
+            "monitors": monitors_ns_reg_tests
         },
         "RegressionIPCTfmLevel3": {
-            "monitors": monitors_reg_tests
+            "monitors": monitors_ns_reg_tests
         },
         "RegressionProfileM": {
-            "monitors": monitors_reg_tests
+            "monitors": monitors_ns_reg_tests
         },
         "RegressionProfileS": {
-            "monitors": monitors_reg_tests
+            "monitors": monitors_ns_reg_tests
         },
     },
 }
@@ -678,16 +713,16 @@ stm32l562e_dk = {
     },
     "tests": {
         "Regression": {
-            "monitors": monitors_reg_tests
+            "monitors": monitors_ns_reg_tests
         },
         "RegressionIPC": {
-            "monitors": monitors_reg_tests
+            "monitors": monitors_ns_reg_tests
         },
         "RegressionIPCTfmLevel2": {
-            "monitors": monitors_reg_tests
+            "monitors": monitors_ns_reg_tests
         },
         "RegressionIPCTfmLevel3": {
-            "monitors": monitors_reg_tests
+            "monitors": monitors_ns_reg_tests
         },
     },
 }
@@ -713,7 +748,7 @@ lpcxpresso55s69 = {
             "monitors": monitors_no_reg_tests
         },
         "RegressionProfileM": {
-            "monitors": monitors_reg_tests
+            "monitors": monitors_ns_reg_tests
         },
     }
 }
@@ -737,16 +772,16 @@ psoc64 = {
     },
     "tests": {
         "Regression": {
-            "monitors": monitors_reg_tests
+            "monitors": monitors_ns_reg_tests
         },
         "RegressionIPC": {
-            "monitors": monitors_reg_tests
+            "monitors": monitors_ns_reg_tests
         },
         "RegressionIPCTfmLevel2": {
-            "monitors": monitors_reg_tests
+            "monitors": monitors_ns_reg_tests
         },
         "RegressionIPCTfmLevel3": {
-            "monitors": monitors_reg_tests
+            "monitors": monitors_ns_reg_tests
         },
     },
 }
@@ -755,6 +790,7 @@ psoc64 = {
 lava_gen_config_map = {
     "mps2_an521_bl2": tfm_mps2_sse_200,
     "fvp_mps3_an552_bl2": fvp_mps3_an552_bl2,
+    "fvp_corstone1000": fvp_corstone1000,
     "fvp_mps2_an521_bl2": fvp_mps2_an521_bl2,
     "fvp_mps2_an521_nobl2": fvp_mps2_an521_nobl2,
     "fvp_mps2_an519_bl2": fvp_mps2_an519_bl2,

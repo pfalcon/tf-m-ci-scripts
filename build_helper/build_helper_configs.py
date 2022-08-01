@@ -89,6 +89,18 @@ _common_tfm_builder_cfg = {
                                          "-fill 0xFF 0xA020000 0xA200000 "
                                          "-o %(_tbm_build_dir_)s/bin/"
                                          "tfm.hex -Intel")],
+                   "arm/corstone1000": [("cat "
+                                         "%(_tbm_build_dir_)s/bin/"
+                                         "bl2_signed.bin "
+                                         "%(_tbm_build_dir_)s/bin/"
+                                         "bl2_signed.bin "
+                                         "%(_tbm_build_dir_)s/bin/"
+                                         "tfm_s_signed.bin "
+                                         "%(_tbm_build_dir_)s/bin/"
+                                         "tfm_s_signed.bin "
+                                         "> "
+                                         "%(_tbm_build_dir_)s/bin/"
+                                         "flash.bin")],
                    "arm/musca_s1": [("srec_cat "
                                  "%(_tbm_build_dir_)s/bin/"
                                  "bl2.bin "
@@ -692,7 +704,7 @@ config_corstone1000 = {"seed_params": {
                 "compiler":         ["GCC_7_3_1"],
                 "lib_model":        [False],
                 "isolation_level":  ["1"],
-                "test_regression":  [False],
+                "test_regression":  [True],
                 "test_psa_api":     ["OFF"],
                 "cmake_build_type": ["Debug"],
                 "with_bl2":         [True],

@@ -252,6 +252,11 @@ python3 ./configs.py -g ${filter_group.replace(" ", " -g ")} ${config}
                      env.JOB_NAME.equals("tf-m-build-and-test")) {
               print("LAVA is not needed for ${build_url}")
             }
+            // LAVA tests on Corstone1000 FPGA config is not supported
+            else if (params_collection["TFM_PLATFORM"].contains("corstone1000") && \
+                     params_collection["EXTRA_PARAMS"].contains("FPGA")) {
+              print("LAVA is not needed for ${build_url}")
+            }
             // Submit LAVA tests
             else {
               submit_lava_tests(config, results, build_res, params, params_collection)
