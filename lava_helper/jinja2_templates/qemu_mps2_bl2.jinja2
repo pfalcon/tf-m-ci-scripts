@@ -9,23 +9,27 @@ actions:
     images:
       mcuboot: {image_arg: '-device loader,file={mcuboot},addr=0x10000000', url: '{{ bootloader_url }}'}
       tfm: {image_arg: '-device loader,file={tfm},addr=0x10080000', url: '{{ firmware_url }}'}
-    timeout: {seconds: 100}
     to: tmpfs
 - boot:
     docker: {binary: /usr/bin/qemu-system-arm, image: 'trustedfirmware/ci-amd64-tf-m-qemu-debian:bullseye'}
     method: qemu
-    timeout: {seconds: 300}
+    timeout:
+      minutes: 10
 - test:
     monitors:
-    - name: wait-finish
-      start: "Non-Secure system starting"
-      end: "End of Non-secure test suites"
-      pattern: "[\x1b]\\[37mTest suite '(?P<test_case_id>.*?)' has [\x1b]\\[32m (?P<result>PASSED|FAILED)"
+    {%- for monitor in test.monitors %}
+    - name: "{{monitor.name}}"
+      start: "{{monitor.start}}"
+      end: "{{monitor.end}}"
+      pattern: "{{monitor.pattern}}"
       fixupdict:
-        PASSED: pass
-        FAILED: fail
-        SKIPPED: skip
-    timeout: {seconds: 300}
+         '{{monitor.fixup.pass}}': pass
+         '{{monitor.fixup.fail}}': fail
+         {%- if monitor.fixup.skip %}
+         '{{monitor.fixup.skip}}': skip
+         {%- endif %}
+         'SIM ERROR': fail
+    {%- endfor %}
 
 context:
   arch: arm
@@ -39,10 +43,19 @@ context:
 device_type: {{ device_type }}
 job_name: {{ job_name }}
 priority: medium
-timeouts:
-  action: {seconds: 300}
-  job: {seconds: 300}
 visibility: public
+
+timeouts:
+  job:
+    minutes: {{ job_timeout }}
+  action:
+    minutes: {{ action_timeout }}
+  actions:
+    power-off:
+      minutes: {{ poweroff_timeout }}
+  connections:
+    lava-test-monitor:
+      minutes: {{ monitor_timeout }}
 
 metadata:
   build_no: {{ build_no }}
