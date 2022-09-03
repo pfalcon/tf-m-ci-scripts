@@ -238,7 +238,7 @@ def test_report(jobs, user_args):
         results = yaml.safe_load(res_data)
         non_lava_results = [x for x in results if x['suite'] != 'lava' or x['name'] == 'lava-test-monitor']
         info['lava_url'] = lava_id_to_url(job, user_args)
-        info['artifacts_dir'] = "tf-m-ci-scripts/{}".format(info['job_dir'])
+        info['artifacts_dir'] = info['job_dir']
         jinja_data.append({job: [info, non_lava_results]})
         for result in non_lava_results:
             if result['result'] == 'fail':
