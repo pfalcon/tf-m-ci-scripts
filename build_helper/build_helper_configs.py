@@ -226,21 +226,21 @@ config_pp_test = {"seed_params": {
                     # AN519_GCC_LIB_1_REG_Debug_BL2
                     ("arm/mps2/an519", "GCC_7_3_1", True, "1",
                      True, "OFF", "Debug", True, "", "ON", ""),
+                    # AN521_ARMCLANG_LIB_1_REG_Debug_BL2_SMALL_PSOFF
+                    ("arm/mps2/an521", "ARMCLANG_6_13", True, "1",
+                     True, "OFF", "Debug", True, "profile_small", "OFF", ""),
                     # AN521_ARMCLANG_IPC_1_REG_Debug_BL2
                     ("arm/mps2/an521", "ARMCLANG_6_13", False, "1",
                      True, "OFF", "Debug", True, "", "ON", ""),
-                    # AN521_ARMCLANG_IPC_2_Debug_BL2
-                    ("arm/mps2/an521", "ARMCLANG_6_13", False, "2",
-                     False, "OFF", "Debug", True, "", "ON", ""),
                     # AN521_ARMCLANG_IPC_2_REG_Release_BL2
                     ("arm/mps2/an521", "ARMCLANG_6_13", False, "2",
                      True, "OFF", "Release", True, "", "ON", ""),
                     # AN521_ARMCLANG_IPC_3_REG_Minsizerel_BL2
                     ("arm/mps2/an521", "ARMCLANG_6_13", False, "3",
                      True, "OFF", "Minsizerel", True, "", "ON", ""),
-                    # AN521_ARMCLANG_IPC_3_Release_BL2
-                    ("arm/mps2/an521", "ARMCLANG_6_13", False, "3",
-                     False, "OFF", "Release", True, "", "ON", ""),
+                    # AN521_ARMCLANG_IPC_1_REG_Debug_BL2_SMALL_PSOFF_SFN
+                    ("arm/mps2/an521", "ARMCLANG_6_13", False, "1",
+                     True, "OFF", "Debug", True, "profile_small", "OFF", "SFN"),
                     # AN521_GCC_IPC_1_REG_Debug_BL2
                     ("arm/mps2/an521", "GCC_7_3_1", False, "1",
                      True, "OFF", "Debug", True, "", "ON", ""),
@@ -250,21 +250,12 @@ config_pp_test = {"seed_params": {
                     # AN521_GCC_IPC_2_REG_Release_BL2
                     ("arm/mps2/an521", "GCC_7_3_1", False, "2",
                      True, "OFF", "Release", True, "", "ON", ""),
-                    # AN521_GCC_IPC_3_Debug_BL2_LARGE
-                    ("arm/mps2/an521", "GCC_7_3_1", False, "3",
-                     False, "OFF", "Debug", True, "profile_large", "ON", ""),
                     # AN521_GCC_IPC_3_REG_Minsizerel_BL2
                     ("arm/mps2/an521", "GCC_7_3_1", False, "3",
                      True, "OFF", "Minsizerel", True, "", "ON", ""),
-                    # AN521_GCC_LIB_1_Debug_BL2
-                    ("arm/mps2/an521", "GCC_7_3_1", True, "1",
-                     False, "OFF", "Debug", True, "", "ON", ""),
                     # AN521_GCC_LIB_1_REG_Debug_BL2
                     ("arm/mps2/an521", "GCC_7_3_1", True, "1",
                      True, "OFF", "Debug", True, "", "ON", ""),
-                    # AN521_GCC_IPC_2_REG_Release_BL2_MEDIUM_PSOFF
-                    ("arm/mps2/an521", "GCC_7_3_1", False, "2",
-                     True, "OFF", "Release", True, "profile_medium", "OFF", ""),
                     # AN552_GNUARM_IPC_1_REG_Debug_BL2
                     ("arm/mps3/an552", "GCC_10_3", False, "1",
                      True, "OFF", "Debug", True, "", "ON", ""),
