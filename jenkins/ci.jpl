@@ -459,13 +459,6 @@ def lineInString(string, match) {
   return result[0]
 }
 
-def showLinks(string) {
-  def lines = string.split("\n")
-  def result = lines.findAll { it.contains("Build Config: ")}
-  links = result.join("\n")
-  print(links)
-}
-
 def getResult(string, match) {
   line = lineInString(string, match)
   a = line.split(match)[1].split(' ')
@@ -559,9 +552,8 @@ timestamps {
     --artifacts-path cfgs --lava-timeout 12000 \
     """, returnStdout: true).trim()
               println("--- output from lava_wait_jobs.py ---")
-              println(output)
+              println(output.replace("<BUILD_ARTIFACT_URL>", "${env.BUILD_URL}artifact/"))
               println("--- end of output from lava_wait_jobs.py ---")
-              showLinks(output)
               archiveArtifacts artifacts: 'test_summary.*', allowEmptyArchive: true
               archiveArtifacts artifacts: 'test_results.csv', allowEmptyArchive: true
               g = new Gerrit()
