@@ -63,8 +63,8 @@ mapExtraParams = {
     # MMIO
     "MMIO"         : "-DPSA_FRAMEWORK_HAS_MM_IOVEC=ON ",
     # FPU support
-    "FPSOFT"       : "-DCONFIG_TFM_FP=soft ",
-    "FPHARD"       : ("-DCONFIG_TFM_FP=hard "
+    "FPOFF"        : "-DCONFIG_TFM_ENABLE_FP=OFF ",
+    "FPON"         : ("-DCONFIG_TFM_ENABLE_FP=ON "
                       "-DTEST_S_FPU=ON -DTEST_NS_FPU=ON "),
     "LZOFF"        : "-DCONFIG_TFM_LAZY_STACKING=OFF ",
     # SFN

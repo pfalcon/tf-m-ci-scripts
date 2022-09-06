@@ -286,9 +286,9 @@ config_pp_test = {"seed_params": {
                     # MUSCA_S1_GCC_LIB_1_REG_Debug_BL2
                     ("arm/musca_s1", "GCC_10_3", True, "1",
                      True, "OFF", "Debug", True, "", "ON", ""),
-                    # MUSCA_S1_GCC_IPC_2_REG_Release_BL2_FPHARD
+                    # MUSCA_S1_GCC_IPC_2_REG_Release_BL2_FPON
                     ("arm/musca_s1", "GCC_10_3", False, "2",
-                     True, "OFF", "Release", True, "", "ON", "FPHARD"),
+                     True, "OFF", "Release", True, "", "ON", "FPON"),
                     # MUSCA_S1_GCC_IPC_1_REG_Release_BL2_CC_DRIVER_PSA
                     ("arm/musca_s1", "GCC_7_3_1", False, "1",
                      True, "OFF", "Release", True, "", "ON", "CC_DRIVER_PSA"),
@@ -450,7 +450,7 @@ config_fp = {"seed_params": {
                 "with_bl2":         [True],
                 "profile":          [""],
                 "partition_ps":     ["ON"],
-                "extra_params":     ["FPSOFT", "FPHARD", "FPHARD, LZOFF"]
+                "extra_params":     ["FPOFF", "FPON", "FPON, LZOFF"]
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + []
