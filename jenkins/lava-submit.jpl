@@ -1,15 +1,43 @@
 #!/usr/bin/env groovy
 //-------------------------------------------------------------------------------
-// Copyright (c) 2020-2021, Arm Limited and Contributors. All rights reserved.
+// Copyright (c) 2020-2022, Arm Limited and Contributors. All rights reserved.
 //
 // SPDX-License-Identifier: BSD-3-Clause
 //
 //-------------------------------------------------------------------------------
 
 @NonCPS
-def getUpstreamJob() {
-  def cause = manager.build.getAction(hudson.model.CauseAction.class).getCauses()
-  return cause
+def isPerPatchJob() {
+  def upstream_job = manager.build.getAction(hudson.model.CauseAction.class).getCauses()[0]
+  if (upstream_job instanceof hudson.model.Cause.UpstreamCause) {
+    def gp_causes = upstream_job.getUpstreamCauses()
+    if (gp_causes.size() > 0 && gp_causes[0] instanceof hudson.model.Cause.UpstreamCause) {
+      print("Grand-parent project cause: ")
+      println(gp_causes[0].upstreamProject)
+      if (gp_causes[0].upstreamProject.endsWith("tf-m-static")) {
+        return true
+      }
+    }
+  }
+  return false
+}
+
+def filterTestDevice() {
+  def device_type = env.DEVICE_FILTER
+
+  if (env.DEVICE_FILTER != "") {
+    return device_type
+  }
+  // For AN521 builds running per-patch (started by the tf-m-static job),
+  // run tests only on FVP to improve turnaround/performance.
+  if (isPerPatchJob()) {
+    if (env.TARGET_PLATFORM == "AN521") {
+      device_type = "--fvp-only "
+      print("Run test cases only on FVP in tf-m-static.")
+    }
+  }
+
+  return device_type
 }
 
 def submitJobs(device_type, bl2_string, psa_string) {
@@ -41,28 +69,11 @@ timestamps {
       }
     }
     stage("LAVA") {
-      def device_type = env.DEVICE_FILTER
-
-      // For builds running per-patch (started by the tf-m-static job),
-      // run tests only on physical boards to improve turnaround/performance.
-      def upstream_job = getUpstreamJob()[0]
-      if (device_type == "" && upstream_job instanceof hudson.model.Cause.UpstreamCause) {
-        def gp_causes = upstream_job.getUpstreamCauses()
-        if (gp_causes.size() > 0 && gp_causes[0] instanceof hudson.model.Cause.UpstreamCause) {
-          print("Grand-parent project cause: ")
-          println(gp_causes[0].upstreamProject)
-          if (gp_causes[0].upstreamProject.endsWith("tf-m-static")) {
-            device_type = "--physical-board-only "
-            print("Run test cases only on physical boards in tf-m-static.")
-          }
-        } else {
-          println("No grand-parent project cause.")
-        }
-      }
       // Workaround for Groovy CPS idiosyncrasies. See e.g.
       // https://blog.thesparktree.com/you-dont-know-jenkins-part-3#solutions
       upstream_job = null
       gp_causes = null
+      def device_type = filterTestDevice()
 
       withCredentials([usernamePassword(credentialsId: env.LAVA_CREDENTIALS, passwordVariable: 'LAVA_TOKEN', usernameVariable: 'LAVA_USER')]) {
         print("Generating LAVA jobs...")
