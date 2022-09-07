@@ -303,7 +303,7 @@ def generateEmailBody(stage, failed_jobs) {
 
 def emailNotification(results, stage, failed_jobs) {
   script {
-   if (env.JOB_NAME.equals("tf-m-nightly") && !env.EMAIL_NOTIFICATION.equals('')) {
+   if (env.EMAIL_NOTIFICATION) {
       def result = "Fail."
       if (results == true) {
         result = "Success."
