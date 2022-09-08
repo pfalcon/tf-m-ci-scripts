@@ -682,6 +682,23 @@ config_corstone310 = {"seed_params": {
                 "invalid": _common_tfm_invalid_configs + []
                 }
 
+config_rss = {"seed_params": {
+                "tfm_platform":     ["arm/rss"],
+                "compiler":         ["GCC_10_3"],
+                "lib_model":        [False],
+                "isolation_level":  ["1", "2"],
+                "test_regression":  [True, False],
+                "test_psa_api":     ["OFF"],
+                "cmake_build_type": ["Debug", "Release"],
+                "with_bl2":         [True],
+                "profile":          [""],
+                "partition_ps":     ["OFF"],
+                "extra_params":     [""]
+                },
+                "common_params": _common_tfm_builder_cfg,
+                "invalid": _common_tfm_invalid_configs + []
+                }
+
 config_psoc64 = {"seed_params": {
                 "tfm_platform":     ["cypress/psoc64"],
                 "compiler":         ["GCC_7_3_1", "ARMCLANG_6_13"],
@@ -960,6 +977,7 @@ _builtin_configs = {
                     "nightly_musca_b1_se": config_musca_b1_se,
                     "nightly_corstone310": config_corstone310,
                     "nightly_corstone1000": config_corstone1000,
+                    "nightly_rss": config_rss,
                     "nightly_psoc64": config_psoc64,
                     "nightly_stm32l562e_dk": config_stm32l562e_dk,
                     "nightly_lpcxpresso55s69": config_lpcxpresso55s69,
@@ -977,6 +995,7 @@ _builtin_configs = {
                     "release_an547": config_an547,
                     "release_an552": config_an552,
                     "release_corstone310": config_corstone310,
+                    "release_rss": config_rss,
                     "release_psoc64": config_psoc64,
                     "release_stm32l562e_dk": config_stm32l562e_dk,
                     "release_lpcxpresso55s69": config_lpcxpresso55s69,
@@ -999,6 +1018,7 @@ _builtin_configs = {
                     "musca_b1_se": config_musca_b1_se,
                     "musca_s1": config_musca_s1,
                     "corstone310": config_corstone310,
+                    "rss": config_rss,
                     "cypress_psoc64": config_psoc64,
                     "corstone1000": config_corstone1000,
                     "stm_stm32l562e_dk": config_stm32l562e_dk,
