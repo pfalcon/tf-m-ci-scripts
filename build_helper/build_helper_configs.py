@@ -78,17 +78,17 @@ _common_tfm_builder_cfg = {
     # ALL commands will be executed for every build.
     # Other keys will append extra commands when matching target_platform
     "build_cmds": {"all": ["cmake --build ./ -- install"],
-                   "arm/musca_b1/sse_200": [("srec_cat "
-                                         "%(_tbm_build_dir_)s/bin/"
-                                         "bl2.bin "
-                                         "-Binary -offset 0xA000000 "
-                                         "-fill 0xFF 0xA000000 0xA020000 "
-                                         "%(_tbm_build_dir_)s/bin/"
-                                         "tfm_s_ns_signed.bin "
-                                         "-Binary -offset 0xA020000 "
-                                         "-fill 0xFF 0xA020000 0xA200000 "
-                                         "-o %(_tbm_build_dir_)s/bin/"
-                                         "tfm.hex -Intel")],
+                   "arm/musca_b1": [("srec_cat "
+                                 "%(_tbm_build_dir_)s/bin/"
+                                 "bl2.bin "
+                                 "-Binary -offset 0xA000000 "
+                                 "-fill 0xFF 0xA000000 0xA020000 "
+                                 "%(_tbm_build_dir_)s/bin/"
+                                 "tfm_s_ns_signed.bin "
+                                 "-Binary -offset 0xA020000 "
+                                 "-fill 0xFF 0xA020000 0xA200000 "
+                                 "-o %(_tbm_build_dir_)s/bin/"
+                                 "tfm.hex -Intel")],
                    "arm/corstone1000": [("cat "
                                          "%(_tbm_build_dir_)s/bin/"
                                          "bl2_signed.bin "
@@ -153,7 +153,7 @@ _common_tfm_builder_cfg = {
                            "tfm_s.bin",
                            "%(_tbm_build_dir_)s/bin/"
                            "tfm_ns.bin"],
-                           "arm/musca_b1/sse_200": [
+                           "arm/musca_b1": [
                            "%(_tbm_build_dir_)s/bin/"
                            "tfm.hex",
                            "%(_tbm_build_dir_)s/bin/"
@@ -175,10 +175,10 @@ _common_tfm_invalid_configs = [
     # GCC defect
     ("arm/mps2/an519", "GCC_7_3_1", "*", "*", "*", "*", "Minsizerel", "*", "*", "*", "*"),
     # LR_CODE size exceeds limit on MUSCA_B1 & MUSCA_S1 with regression tests in Debug mode built with ARMCLANG
-    ("arm/musca_b1/sse_200", "ARMCLANG_6_13", "*", "*", True, "OFF", "Debug", "*", "", "*", "*"),
+    ("arm/musca_b1", "ARMCLANG_6_13", "*", "*", True, "OFF", "Debug", "*", "", "*", "*"),
     ("arm/musca_s1", "ARMCLANG_6_13", "*", "*", True, "OFF", "Debug", "*", "", "*", "*"),
     # Load range overlap on Musca for IPC Debug type: T895
-    ("arm/musca_b1/sse_200", "ARMCLANG_6_13", "*", "*", "*", "IPC", "Debug", "*", "*", "*", "*"),
+    ("arm/musca_b1", "ARMCLANG_6_13", "*", "*", "*", "IPC", "Debug", "*", "*", "*", "*"),
     ("arm/musca_s1", "ARMCLANG_6_13", "*", "*", "*", "IPC", "Debug", "*", "*", "*", "*"),
     # LVL2 and LVL3 requires IPC model
     ("*", "*", True, "2", "*", "*", "*", "*", "*", "*", "*"),
@@ -188,7 +188,7 @@ _common_tfm_invalid_configs = [
     # FF does not support L3
     ("*", "*", "*", "3", "*", "IPC", "*", "*", "*", "*", "*"),
     # Musca requires BL2
-    ("arm/musca_b1/sse_200", "*", "*", "*", "*", "*", "*", False, "*", "*", "*"),
+    ("arm/musca_b1", "*", "*", "*", "*", "*", "*", False, "*", "*", "*"),
     ("arm/musca_s1", "*", "*", "*", "*", "*", "*", False, "*", "*", "*"),
     # Only AN521 and MUSCA_B1 support Isolation Level 3
     ("arm/mps2/an519", "*", "*", "3", "*", "*", "*", "*", "*", "*", "*"),
@@ -263,7 +263,7 @@ config_pp_test = {"seed_params": {
                     ("arm/mps3/an552", "GCC_10_3", False, "1",
                      True, "OFF", "Release", True, "", "ON", ""),
                     # MUSCA_B1_GCC_LIB_1_REG_Minsizerel_BL2
-                    ("arm/musca_b1/sse_200", "GCC_7_3_1", True, "1",
+                    ("arm/musca_b1", "GCC_7_3_1", True, "1",
                      True, "OFF", "Minsizerel", True, "", "ON", ""),
                     # MUSCA_S1_ARMCLANG_IPC_2_REG_Release_BL2
                     ("arm/musca_s1", "ARMCLANG_6_13", False, "2",
@@ -305,7 +305,7 @@ config_nightly_test = {"seed_params": {
                                      "arm/mps2/an521",
                                      "arm/mps3/an524",
                                      "arm/musca_s1",
-                                     "arm/musca_b1/sse_200"],
+                                     "arm/musca_b1"],
                 "compiler":         ["GCC_7_3_1", "ARMCLANG_6_13"],
                 "lib_model":        [True, False],
                 "isolation_level":  ["1", "2", "3"],
@@ -326,7 +326,7 @@ config_release_test = {"seed_params": {
                 "tfm_platform":     ["arm/mps2/an519",
                                      "arm/mps2/an521",
                                      "arm/mps3/an524",
-                                     "arm/musca_b1/sse_200",
+                                     "arm/musca_b1",
                                      "arm/musca_s1"],
                 "compiler":         ["GCC_7_3_1", "ARMCLANG_6_13"],
                 "lib_model":        [True, False],
@@ -379,7 +379,7 @@ config_profile_s = {"seed_params": {
 config_profile_m = {"seed_params": {
                 "tfm_platform":     ["arm/mps2/an519",
                                      "arm/mps2/an521",
-                                     "arm/musca_b1/sse_200"],
+                                     "arm/musca_b1"],
                 "compiler":         ["GCC_7_3_1", "ARMCLANG_6_13"],
                 "lib_model":        [False],
                 "isolation_level":  ["2"],
@@ -413,7 +413,7 @@ config_profile_l = {"seed_params": {
                 }
 
 config_cc_driver_psa = {"seed_params": {
-               "tfm_platform":      ["arm/musca_b1/sse_200",
+               "tfm_platform":      ["arm/musca_b1",
                                      "arm/musca_s1"],
                 "compiler":         ["GCC_7_3_1"],
                 "lib_model":        [False],
@@ -449,7 +449,7 @@ config_fp = {"seed_params": {
 
 config_psa_api = {"seed_params": {
                 "tfm_platform":     ["arm/mps2/an521",
-                                     "arm/musca_b1/sse_200",
+                                     "arm/musca_b1",
                                      "arm/musca_s1"],
                 "compiler":         ["GCC_7_3_1", "ARMCLANG_6_13"],
                 "lib_model":        [True, False],
@@ -606,7 +606,7 @@ config_an552 = {"seed_params": {
                 }
 
 config_musca_b1 = {"seed_params": {
-                "tfm_platform":     ["arm/musca_b1/sse_200"],
+                "tfm_platform":     ["arm/musca_b1"],
                 "compiler":         ["GCC_7_3_1", "ARMCLANG_6_13"],
                 "lib_model":        [True, False],
                 "isolation_level":  ["1", "2", "3"],
@@ -617,23 +617,6 @@ config_musca_b1 = {"seed_params": {
                 "profile":          [""],
                 "partition_ps":     ["ON"],
                 "extra_params":     ["", "NSOFF"]
-                },
-                "common_params": _common_tfm_builder_cfg,
-                "invalid": _common_tfm_invalid_configs + []
-                }
-
-config_musca_b1_se = {"seed_params": {
-                "tfm_platform":     ["arm/musca_b1/secure_enclave"],
-                "compiler":         ["GCC_7_3_1", "ARMCLANG_6_13"],
-                "lib_model":        [False],
-                "isolation_level":  ["1"],
-                "test_regression":  [False],
-                "test_psa_api":     ["OFF"],
-                "cmake_build_type": ["Debug", "Release"],
-                "with_bl2":         [True],
-                "profile":          [""],
-                "partition_ps":     ["ON"],
-                "extra_params":     ["NSOFF"]
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + []
@@ -965,7 +948,6 @@ _builtin_configs = {
                     "nightly_mmio": config_mmio,
                     "nightly_an547": config_an547,
                     "nightly_an552": config_an552,
-                    "nightly_musca_b1_se": config_musca_b1_se,
                     "nightly_corstone310": config_corstone310,
                     "nightly_corstone1000": config_corstone1000,
                     "nightly_rss": config_rss,
@@ -1006,7 +988,6 @@ _builtin_configs = {
                     "an547": config_an547,
                     "an552": config_an552,
                     "musca_b1": config_musca_b1,
-                    "musca_b1_se": config_musca_b1_se,
                     "musca_s1": config_musca_s1,
                     "corstone310": config_corstone310,
                     "rss": config_rss,
