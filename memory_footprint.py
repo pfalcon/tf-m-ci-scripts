@@ -18,19 +18,22 @@ import subprocess
 import configs
 from tfm_ci_pylib import utils
 
-# Arguments/parameters given by CI
-PATH_TO_TFM             = sys.argv[1]
-CI_CONFIG               = sys.argv[2]
-REFERENCE_CONFIGS       = sys.argv[3].split(",")
-SQUAD_TOKEN             = sys.argv[4]
+# SQAUD constant
+SQUAD_TOKEN            = sys.argv[1]
+SQUAD_BASE_PROJECT_URL = ("https://qa-reports.linaro.org/api/submit/tf/tf-m/")
 
-# local constant
-SQUAD_BASE_PROJECT_URL  = ("https://qa-reports.linaro.org/api/submit/tf/tf-m/")
+reference_configs = [
+    # build type, profile
+    ["Release",    "profile_small"],
+    ["Minsizerel", "profile_small"],
+    ["Release",    "profile_medium"],
+    ["Release",    "profile_large"],
+]
 
 # This function uses arm_non_eabi_size to get the sizes of a file
 #  in the build directory of tfm
 def get_file_size(filename):
-    f_path = os.path.join(PATH_TO_TFM, "build", "bin", filename)
+    f_path = os.path.join(os.getenv('WORKSPACE'), "trusted-firmware-m", "build", "bin", filename)
     if os.path.exists(f_path) :
         file_sizes = utils.arm_non_eabi_size(f_path)[0]
         return file_sizes
@@ -64,8 +67,7 @@ def send_file_size(change_id, config_name, bl2_sizes, tfms_sizes):
     except:
         return -1
 
-    with open(os.path.join(PATH_TO_TFM,
-                           "..",
+    with open(os.path.join(os.getenv('WORKSPACE'),
                            "tf-m-ci-scripts",
                            "Memory_footprint",
                            "filesize.json"), "w") as F:
@@ -79,67 +81,9 @@ def send_file_size(change_id, config_name, bl2_sizes, tfms_sizes):
         print ("POST request sent to project " + config_name )
         return 0
 
-#Function used to launch the configs.py script and get the printed output
-def get_configs_by_name(config_names):
-    clist = list(configs._builtin_configs.keys())
-    out_cfg = {}
-    for group in clist:
-        build_manager = configs.get_build_manager(group)
-        for _cfg_name in config_names:
-            if _cfg_name in build_manager._tbm_build_cfg.keys():
-                out_cfg[_cfg_name] = build_manager._tbm_build_cfg[_cfg_name]
-    return out_cfg
-
-# This funcion manipulates the format of the config given
-#  as entry to extract the name of the configuration used
-def identify_config():
-    name_config = "Unknown"
-
-    try :
-        cfg = get_configs_by_name([CI_CONFIG])[CI_CONFIG]
-        if (not cfg.lib_model and cfg.isolation_level == "1" and
-            not cfg.test_regression and cfg.test_psa_api == "OFF" and
-            cfg.cmake_build_type == "Release" and
-            cfg.with_bl2 and cfg.with_ns and cfg.profile == ""):
-                name_config = "CoreIPC"
-        elif (cfg.lib_model and cfg.isolation_level == "1" and
-            not cfg.test_regression and cfg.test_psa_api == "OFF"      and
-            cfg.cmake_build_type == "Release" and
-            cfg.with_bl2 and cfg.with_ns and cfg.profile == ""):
-                name_config = "Default"
-        elif (not cfg.lib_model and cfg.isolation_level == "2"    and
-            not cfg.test_regression and cfg.test_psa_api == "OFF"     and
-            cfg.cmake_build_type == "Release" and
-            cfg.with_bl2 and cfg.with_ns and cfg.profile == ""):
-                name_config = "CoreIPCTfmLevel2"
-        elif (cfg.lib_model and cfg.isolation_level == "1" and
-            not cfg.test_regression and cfg.test_psa_api == "OFF"      and
-            cfg.cmake_build_type == "Release" and
-            cfg.with_bl2 and cfg.with_ns and cfg.profile == "profile_small"):
-                name_config = "DefaultProfileS"
-        elif (cfg.lib_model and cfg.isolation_level == "1" and
-            not cfg.test_regression and cfg.test_psa_api == "OFF"      and
-            cfg.cmake_build_type == "Minsizerel" and
-            cfg.with_bl2 and cfg.with_ns and cfg.profile == "profile_small"):
-                name_config = "MinSizeProfileS"
-        elif (not cfg.lib_model and cfg.isolation_level == "2" and
-            not cfg.test_regression and cfg.test_psa_api == "OFF"     and
-            cfg.cmake_build_type == "Release" and
-            cfg.with_bl2 and cfg.with_ns and cfg.profile == "profile_medium"):
-                name_config = "DefaultProfileM"
-        elif (not cfg.lib_model and cfg.isolation_level == "3" and
-            not cfg.test_regression and cfg.test_psa_api == "OFF"     and
-            cfg.cmake_build_type == "Release" and
-            cfg.with_bl2 and cfg.with_ns and cfg.profile == "profile_large"):
-                name_config = "DefaultProfileL"
-        ret = [cfg.tfm_platform,cfg.compiler, name_config]
-    except:
-        ret = ["Unknown", "Unknown", "Unknown"]
-    return ret
-
 # Function based on get_local_git_info() from utils, getting change id for the tfm repo
-def get_change_id(directory):
-    directory = os.path.abspath(directory)
+def get_change_id(repo='trusted-firmware-m'):
+    directory = os.path.join(os.getenv('WORKSPACE'), repo)
     cur_dir = os.path.abspath(os.getcwd())
     cmd = "git log HEAD -n 1  --pretty=format:'%b'"
 
@@ -171,25 +115,43 @@ def get_change_id(directory):
     os.chdir(cur_dir) #Going back to the initial directory
     return change_id
 
+def is_reference_config() -> bool:
+    # Only push data for AN521 built with GCC
+    if (os.getenv('TFM_PLATFORM') != 'arm/mps2/an521'
+        or os.getenv('COMPILER') != 'GCC_10_3'
+        or os.getenv('TEST_REGRESSION') == "True"):
+        return False
+
+    configs = [os.getenv('CMAKE_BUILD_TYPE'), os.getenv('PROFILE')]
+    if configs in reference_configs:
+        return True
+
+    return False
+
+def print_image_sizes(image_sizes):
+    for sec, size in image_sizes.items():
+        print("{:4}: {}".format(sec, size))
+
 if __name__ == "__main__":
     # Export GCC v10.3 to ENV PATH
     os.environ["PATH"] += os.pathsep + os.getenv('GCC_10_3_PATH')
-    for i in range(len(REFERENCE_CONFIGS)):
-        REFERENCE_CONFIGS[i] = REFERENCE_CONFIGS[i].strip().lower()
-    config = identify_config()
-    if (config[2].lower() in REFERENCE_CONFIGS
-        and config[0] == "arm/mps2/an521"
-        and config[1] == "GCC_10_3"):
-        # Pushing data for AN521 and GNUARM
-        print("Configuration " + config[2] + " is a reference")
+    if is_reference_config():
+        print("Configuration " + os.getenv('CONFIG_NAME') + " is a reference")
         try :
-            change_id = get_change_id(PATH_TO_TFM)
+            change_id = get_change_id("trusted-firmware-m")
         except :
             change_id = -1
+
         bl2_sizes = get_file_size("bl2.axf")
+        print("------ BL2 Memory Footprint ------")
+        print_image_sizes(bl2_sizes)
         tfms_sizes = get_file_size("tfm_s.axf")
+        print("------ TFM Secure Memory Footprint ------")
+        print_image_sizes(tfms_sizes)
+
         if (bl2_sizes != -1 and change_id != -1) :
-            send_file_size(change_id, config[2], bl2_sizes, tfms_sizes)
+            squad_config_name = os.getenv('CMAKE_BUILD_TYPE') + os.getenv('PROFILE')
+            send_file_size(change_id, squad_config_name, bl2_sizes, tfms_sizes)
         else :
             #Directory or file weren't found
             if change_id == -1 :

@@ -40,13 +40,16 @@ timestamps {
         if (upstreamProject == "tf-m-build-and-test") {
           archiveArtifacts 'trusted-firmware-m/build/generated/**'
         }
-        if (env.SQUAD_CONFIGURATIONS != ""){
+        if (env.SQUAD_CONFIGURATIONS == "enabled"){
           //Creating a folder to store memory footprint artifacts and launching the memory footprint script.
           sh "mkdir tf-m-ci-scripts/Memory_footprint/"
           withCredentials([string(credentialsId: 'QA_REPORTS_TOKEN', variable: 'TOKEN')]) {
-            sh(script: "python3 tf-m-ci-scripts/memory_footprint.py ${env.WORKSPACE}/trusted-firmware-m/ ${env.CONFIG_NAME} \'${env.SQUAD_CONFIGURATIONS}\' ${TOKEN}", returnStdout: true)
+            output = sh(script: """python3 tf-m-ci-scripts/memory_footprint.py ${TOKEN}""", returnStdout: true).trim()
           }
           if (fileExists('tf-m-ci-scripts/Memory_footprint/filesize.json')) {
+            println("--- output from memory_footprint.py ---")
+            println(output)
+            println("--- end of output from lava_wait_jobs.py ---")
             archiveArtifacts 'tf-m-ci-scripts/Memory_footprint/filesize.json'
           }
         }
