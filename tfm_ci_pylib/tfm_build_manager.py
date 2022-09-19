@@ -121,7 +121,6 @@ class TFM_Build_Manager(structuredTask):
             "CMAKE_BUILD_TYPE={}",
             "BL2={}",
             "PROFILE={}",
-            "PARTITION_PS={}",
             "EXTRA_PARAMS={}"
         ]
         print(
@@ -137,7 +136,6 @@ class TFM_Build_Manager(structuredTask):
                 config_details.cmake_build_type,
                 config_details.with_bl2,
                 "N.A" if not config_details.profile else config_details.profile,
-                config_details.partition_ps,
                 "N.A" if not config_details.extra_params else config_details.extra_params,
             )
             .strip()
@@ -404,7 +402,6 @@ class TFM_Build_Manager(structuredTask):
                             "cmake_build_type": i.cmake_build_type,
                             "with_bl2": i.with_bl2,
                             "profile": "" if i.profile=="N.A" else i.profile,
-                            "partition_ps": i.partition_ps,
                             "extra_params": self.map_extra_params(i.extra_params)}
         if i.test_psa_api == "IPC":
             overwrite_params["test_psa_api"] += " -DINCLUDE_PANIC_TESTS=1"
@@ -591,10 +588,8 @@ class TFM_Build_Manager(structuredTask):
                 config_param.append("BL2")
             if list(i)[8]: # PROFILE
                 config_param.append(mapProfile[list(i)[8]])
-            if list(i)[9] == "OFF":    #PARTITION_PS
-                config_param.append("PSOFF")
-            if list(i)[10]: # EXTRA_PARAMS
-                config_param.append(list(i)[10].replace(", ", "_"))
+            if list(i)[9]: # EXTRA_PARAMS
+                config_param.append(list(i)[9].replace(", ", "_"))
             i_str = "_".join(config_param)
             ret_cfg[i_str] = i
         return ret_cfg

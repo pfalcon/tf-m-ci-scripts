@@ -65,6 +65,8 @@ mapExtraParams = {
     "FPON"         : ("-DCONFIG_TFM_ENABLE_FP=ON "
                       "-DTEST_S_FPU=ON -DTEST_NS_FPU=ON "),
     "LZOFF"        : "-DCONFIG_TFM_LAZY_STACKING=OFF ",
+    # Partiton
+    "PSOFF"        : "-DTFM_PARTITION_PROTECTED_STORAGE=OFF ",
     # SFN
     "SFN"          : "-DCONFIG_TFM_SPM_BACKEND=SFN ",
     # CC Driver
