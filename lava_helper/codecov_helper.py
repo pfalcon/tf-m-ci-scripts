@@ -56,6 +56,6 @@ def coverage_reports(jobs, user_args):
             dl_artifact("tfm_ns.axf")
             run("python3 $SHARE_FOLDER/qa-tools/coverage-tool/coverage-reporting/intermediate_layer.py --config-json $SHARE_FOLDER/tf-m-ci-scripts/lava_helper/trace2covjson.json --local-workspace $SHARE_FOLDER", cwd=job_dir)
             run("python3 $SHARE_FOLDER/qa-tools/coverage-tool/coverage-reporting/generate_info_file.py --workspace $SHARE_FOLDER --json covjson.json", cwd=job_dir)
-            run("lcov -rc lcov_branch_coverage=1 -r coverage.info '*/trusted-firmware-m/platform/*' '*/tf-m-tests/*' '*/mbedtls/*' '*/mcuboot/*' '*/psa-arch-tests/*' -o coverage.info.tmp", cwd=job_dir)
+            run("lcov -rc lcov_branch_coverage=1 -r coverage.info '*/trusted-firmware-m/platform/*' '*/trusted-firmware-m/lib/ext/*' '*/tf-m-tests/*' '*/mbedtls/*' '*/mcuboot/*' '*/psa-arch-tests/*' -o coverage.info.tmp", cwd=job_dir)
             run("mv coverage.info.tmp coverage.info", cwd=job_dir)
             run("genhtml --branch-coverage coverage.info --output-directory trace_report | grep -v -E '^Processing file '", cwd=job_dir)
