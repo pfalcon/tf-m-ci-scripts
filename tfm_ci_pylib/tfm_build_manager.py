@@ -114,7 +114,6 @@ class TFM_Build_Manager(structuredTask):
             "CONFIG_NAME={}",
             "TFM_PLATFORM={}",
             "COMPILER={}",
-            "LIB_MODEL={}",
             "ISOLATION_LEVEL={}",
             "TEST_REGRESSION={}",
             "TEST_PSA_API={}",
@@ -129,7 +128,6 @@ class TFM_Build_Manager(structuredTask):
                 config,
                 config_details.tfm_platform,
                 config_details.compiler,
-                config_details.lib_model,
                 config_details.isolation_level,
                 config_details.test_regression,
                 config_details.test_psa_api,
@@ -395,7 +393,6 @@ class TFM_Build_Manager(structuredTask):
         overwrite_params = {"codebase_root_dir": build_cfg["codebase_root_dir"],
                             "tfm_platform": i.tfm_platform,
                             "compiler": self.choose_toolchain(i.compiler),
-                            "lib_model": i.lib_model,
                             "isolation_level": i.isolation_level,
                             "test_regression": i.test_regression,
                             "test_psa_api": i.test_psa_api,
@@ -574,22 +571,18 @@ class TFM_Build_Manager(structuredTask):
             config_param = []
             config_param.append(mapPlatform[list(i)[0]])
             config_param.append(list(i)[1].split("_")[0])
-            if list(i)[2]:  # LIB_MODEL
-                config_param.append("LIB")
-            else:
-                config_param.append("IPC")
-            config_param.append(list(i)[3]) # ISOLATION_LEVEL
-            if list(i)[4]:  # TEST_REGRESSION
+            config_param.append(list(i)[2]) # ISOLATION_LEVEL
+            if list(i)[3]:  # TEST_REGRESSION
                 config_param.append("REG")
-            if list(i)[5] != "OFF":    #TEST_PSA_API
-                config_param.append(mapTestPsaApi[list(i)[5]])
-            config_param.append(list(i)[6]) # BUILD_TYPE
-            if list(i)[7]:  # BL2
+            if list(i)[4] != "OFF":    #TEST_PSA_API
+                config_param.append(mapTestPsaApi[list(i)[4]])
+            config_param.append(list(i)[5]) # BUILD_TYPE
+            if list(i)[6]:  # BL2
                 config_param.append("BL2")
-            if list(i)[8]: # PROFILE
-                config_param.append(mapProfile[list(i)[8]])
-            if list(i)[9]: # EXTRA_PARAMS
-                config_param.append(list(i)[9].replace(", ", "_"))
+            if list(i)[7]: # PROFILE
+                config_param.append(mapProfile[list(i)[7]])
+            if list(i)[8]: # EXTRA_PARAMS
+                config_param.append(list(i)[8].replace(", ", "_"))
             i_str = "_".join(config_param)
             ret_cfg[i_str] = i
         return ret_cfg
