@@ -549,7 +549,7 @@ timestamps {
     --artifacts-path cfgs --lava-timeout 12000 \
     """, returnStdout: true).trim()
               println("--- output from lava_wait_jobs.py ---")
-              println(output.replace("<BUILD_ARTIFACT_URL>", "${env.BUILD_URL}artifact/"))
+              println(output)
               println("--- end of output from lava_wait_jobs.py ---")
               archiveArtifacts artifacts: 'test_summary.*', allowEmptyArchive: true
               archiveArtifacts artifacts: 'test_results.csv', allowEmptyArchive: true

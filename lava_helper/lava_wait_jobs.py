@@ -161,7 +161,7 @@ def job_links(jobs, user_args):
         job_links += "Build Config: {}\n".format(info['metadata']['build_name'])
         job_links += "Build link: {}\n".format(info['metadata']['build_job_url'])
         job_links += "LAVA link: {}\n".format(lava_id_to_url(job, user_args))
-        job_links += "TFM LOG: <BUILD_ARTIFACT_URL>{}/target_log.txt\n\n".format(info['job_dir'])
+        job_links += "TFM LOG: {}artifact/{}/target_log.txt\n\n".format(os.getenv("BUILD_URL"), info['job_dir'])
     print(job_links)
 
 def csv_report(jobs):
@@ -211,8 +211,9 @@ def failure_report(jobs, user_args):
     failed_report = "FAILURE_TESTS:"
     for job, info in jobs.items():
         if info['health'] != "Complete" or info['state'] != "Finished":
-            failed_report += " {}:<BUILD_ARTIFACT_URL>{}/target_log.txt\n".format(info['metadata']['build_name'],
-                                                                                  info['job_dir'])
+            failed_report += " {}:{}artifact/{}/target_log.txt\n".format(info['metadata']['build_name'],
+                                                                         os.getenv("BUILD_URL"),
+                                                                         info['job_dir'])
     print(failed_report)
 
 def remove_lava_dupes(results):
