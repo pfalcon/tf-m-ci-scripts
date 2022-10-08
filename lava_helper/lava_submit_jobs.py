@@ -8,72 +8,18 @@ Script for submitting multiple LAVA definitions
 
 __copyright__ = """
 /*
- * Copyright (c) 2020-2021, Arm Limited. All rights reserved.
+ * Copyright (c) 2020-2022, Arm Limited. All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  *
  */
  """
 
-import os
 import glob
-import sys
 import argparse
+from lava_helper import test_lava_dispatch_credentials
 from lava_helper_configs import *
 
-try:
-    from tfm_ci_pylib.utils import (
-        save_json,
-        load_json,
-        sort_dict,
-        load_yaml,
-        test,
-        print_test,
-    )
-    from tfm_ci_pylib.lava_rpc_connector import LAVA_RPC_connector
-except ImportError:
-    dir_path = os.path.dirname(os.path.realpath(__file__))
-    sys.path.append(os.path.join(dir_path, "../"))
-    from tfm_ci_pylib.utils import (
-        save_json,
-        load_json,
-        sort_dict,
-        load_yaml,
-        test,
-        print_test,
-    )
-    from tfm_ci_pylib.lava_rpc_connector import LAVA_RPC_connector
-
-
-def test_lava_dispatch_credentials(user_args):
-    """ Will validate if provided token/credentials are valid. It will return
-    a valid connection or exit program if not"""
-
-    # Collect the authentication tokens
-    try:
-        if user_args.token_from_env:
-            usr = os.environ['LAVA_USER']
-            secret = os.environ['LAVA_TOKEN']
-        elif user_args.lava_token and user_args.lava_user:
-            usr = user_args.lava_user
-            secret = user_args.lava_token
-
-        # Do not submit job without complete credentials
-        if not len(usr) or not len(secret):
-            raise Exception("Credentials not set")
-
-        lava = LAVA_RPC_connector(usr,
-                                  secret,
-                                  user_args.lava_url)
-
-        # Test the credentials againist the backend
-        if not lava.test_credentials():
-            raise Exception("Server rejected user authentication")
-    except Exception as e:
-        print("Credential validation failed with : %s" % e)
-        print("Did you set set --lava-token, --lava-user?")
-        sys.exit(1)
-    return lava
 
 def list_files_from_dir(user_args, job_dir=""):
     if job_dir == "":
@@ -84,7 +30,8 @@ def list_files_from_dir(user_args, job_dir=""):
         print("Found job {}".format(filename))
     return file_list
 
-def lava_dispatch(user_args, job_dir=""):
+
+def submit_lava_jobs(user_args, job_dir=""):
     """ Submit a job to LAVA backend, block untill it is completed, and
     fetch the results files if successful. If not, calls sys exit with 1
     return code """
@@ -107,8 +54,9 @@ def lava_dispatch(user_args, job_dir=""):
 
     return job_id_list
 
+
 def main(user_args):
-    job_id_list = lava_dispatch(user_args)
+    job_id_list = submit_lava_jobs(user_args)
     print("JOBS: {}".format(",".join(str(x) for x in job_id_list)))
 
 

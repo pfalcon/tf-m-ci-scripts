@@ -826,22 +826,3 @@ lava_gen_monitor_sort_order = [
     'pattern',
     'fixup',
 ]
-
-if __name__ == "__main__":
-    import os
-    import sys
-    from lava_helper import sort_lavagen_config
-    try:
-        from tfm_ci_pylib.utils import export_config_map
-    except ImportError:
-        dir_path = os.path.dirname(os.path.realpath(__file__))
-        sys.path.append(os.path.join(dir_path, "../"))
-        from tfm_ci_pylib.utils import export_config_map
-
-    if len(sys.argv) == 2:
-        if sys.argv[1] == "--export":
-            export_config_map(lava_gen_config_map)
-    if len(sys.argv) == 3:
-        if sys.argv[1] == "--export":
-            export_config_map(sort_lavagen_config(lava_gen_config_map),
-                              sys.argv[2])

@@ -21,32 +21,6 @@ import argparse
 from jinja2 import Environment, FileSystemLoader
 from lava_helper_configs import *
 
-try:
-    from tfm_ci_pylib.lava_rpc_connector import LAVA_RPC_connector
-except ImportError:
-    dir_path = os.path.dirname(os.path.realpath(__file__))
-    sys.path.append(os.path.join(dir_path, "../"))
-    from tfm_ci_pylib.lava_rpc_connector import LAVA_RPC_connector
-
-
-def load_config_overrides(user_args, config_key):
-    """Load a configuration from multiple locations and override it with user provided
-    arguments"""
-
-    print("Using built-in config: %s" % config_key)
-    try:
-        config = lava_gen_config_map[config_key]
-    except KeyError:
-        print("No template found for config: %s" % config_key)
-        sys.exit(1)
-
-    config["build_no"] = user_args.build_no
-    config["artifact_store_url"] = user_args.jenkins_build_url
-
-    # Add the template folder
-    config["templ"] = os.path.join(user_args.template_dir, config["templ"])
-    return config
-
 
 def get_artifact_url(artifact_store_url, params, filename):
     platform = params["platform"]
@@ -82,6 +56,25 @@ def get_build_name(params):
         params["build_type"],
         params["boot_type"],
     )
+
+
+def load_config_overrides(user_args, config_key):
+    """Load a configuration from multiple locations and override it with user provided
+    arguments"""
+
+    print("Using built-in config: %s" % config_key)
+    try:
+        config = lava_gen_config_map[config_key]
+    except KeyError:
+        print("No template found for config: %s" % config_key)
+        sys.exit(1)
+
+    config["build_no"] = user_args.build_no
+    config["artifact_store_url"] = user_args.jenkins_build_url
+
+    # Add the template folder
+    config["templ"] = os.path.join(user_args.template_dir, config["templ"])
+    return config
 
 
 def generate_test_definitions(config, work_dir, user_args):

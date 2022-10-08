@@ -25,20 +25,9 @@ import shutil
 from jinja2 import Environment, FileSystemLoader
 from lava_helper_configs import *
 from lava_helper import test_lava_dispatch_credentials
-from lava_submit_jobs import *
+from lava_submit_jobs import submit_lava_jobs
 import codecov_helper
 
-
-try:
-    from tfm_ci_pylib.utils import save_json, load_json, sort_dict,\
-        load_yaml, test, print_test
-    from tfm_ci_pylib.lava_rpc_connector import LAVA_RPC_connector
-except ImportError:
-    dir_path = os.path.dirname(os.path.realpath(__file__))
-    sys.path.append(os.path.join(dir_path, "../"))
-    from tfm_ci_pylib.utils import save_json, load_json, sort_dict,\
-        load_yaml, test, print_test
-    from tfm_ci_pylib.lava_rpc_connector import LAVA_RPC_connector
 
 cfgs = ["Default", "CoreIPC", "CoreIPCTfmLevel2", "CoreIPCTfmLevel3",
         "Regression", "RegressionIPC",
@@ -118,7 +107,7 @@ def resubmit_failed_jobs(jobs, user_args):
             failed_job.append(job_id)
     for failed_job_id in failed_job:
         jobs.pop(failed_job_id)
-    resubmitted_jobs = lava_dispatch(user_args, job_dir='failed_jobs')
+    resubmitted_jobs = submit_lava_jobs(user_args, job_dir='failed_jobs')
     resubmitted_jobs = [int(x) for x in resubmitted_jobs if x != '']
     return resubmitted_jobs
 
@@ -277,7 +266,6 @@ def info_print(line, silent=True):
 
 def main(user_args):
     """ Main logic """
-    user_args.lava_rpc = "RPC2"
     for try_time in range(3):
         try:
             finished_jobs = wait_for_jobs(user_args)
