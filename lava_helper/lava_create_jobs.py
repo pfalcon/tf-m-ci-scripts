@@ -48,16 +48,6 @@ def get_job_name(name, params, job):
     )
 
 
-def get_build_name(params):
-    return "{}_{}_{}_{}_{}".format(
-        params["platform"],
-        params["compiler"],
-        params["name"],
-        params["build_type"],
-        params["boot_type"],
-    )
-
-
 def load_config_overrides(user_args, config_key):
     """Load a configuration from multiple locations and override it with user provided
     arguments"""
@@ -146,7 +136,7 @@ def generate_test_definitions(config, work_dir, user_args):
                                 "job_name": get_job_name(
                                     config["job_name"], params, user_args.jenkins_job,
                                 ),
-                                "build_name": get_build_name(params)
+                                "build_name": os.getenv('CONFIG_NAME')
                             }
                         )
 
