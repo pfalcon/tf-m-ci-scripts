@@ -71,10 +71,9 @@ def wait_for_jobs(user_args):
 
 def process_finished_jobs(finished_jobs, user_args):
     print_lava_urls(finished_jobs, user_args)
-    job_links(finished_jobs, user_args)
-    boot_report(finished_jobs, user_args)
     test_report(finished_jobs, user_args)
     failure_report(finished_jobs, user_args)
+    job_links(finished_jobs, user_args)
     csv_report(finished_jobs)
     codecov_helper.coverage_reports(finished_jobs, user_args)
 
@@ -123,8 +122,8 @@ def fetch_artifacts(jobs, user_args, lava):
         target_log = os.path.join(job_dir, 'target_log.txt')
         config = os.path.join(job_dir, 'config.tar.bz2')
         results_file = os.path.join(job_dir, 'results.yaml')
-        definition, metadata = lava.get_job_definition(job_id, def_path)
-        jobs[job_id]['metadata'] = metadata
+        definition = lava.get_job_definition(job_id, def_path)
+        jobs[job_id]['metadata'] = definition.get('metadata', [])
         time.sleep(0.2) # be friendly to LAVA
         lava.get_job_log(job_id, target_log)
         time.sleep(0.2)
@@ -147,10 +146,13 @@ def generateTestResult(info):
 def job_links(jobs, user_args):
     job_links = ""
     for job, info in jobs.items():
-        job_links += "Build Config: {}\n".format(info['metadata']['build_name'])
+        job_links += "\nLAVA Test Config:\n"
+        job_links += "Config Name: {}\n".format(info['metadata']['build_name'])
+        job_links += "Test Result: {}\n".format(info['result'])
+        job_links += "Device Type: {}\n".format(info['metadata']['device_type'])
         job_links += "Build link: {}\n".format(info['metadata']['build_job_url'])
         job_links += "LAVA link: {}\n".format(lava_id_to_url(job, user_args))
-        job_links += "TFM LOG: {}artifact/{}/target_log.txt\n\n".format(os.getenv("BUILD_URL"), info['job_dir'])
+        job_links += "TFM LOG: {}artifact/{}/target_log.txt\n".format(os.getenv("BUILD_URL"), info['job_dir'])
     print(job_links)
 
 def csv_report(jobs):
@@ -183,18 +185,6 @@ def csv_report(jobs):
         writer.writeheader()
         writer.writerows(lava_jobs)
 
-def boot_report(jobs, user_args):
-    incomplete_jobs = []
-    for job, info in jobs.items():
-        if info['health'] != 'Complete':
-            if info['error_reason'] == 'Infrastructure':
-                info_print("Job {} failed with Infrastructure error".format(job))
-            incomplete_jobs.append(job)
-    incomplete_output = [lava_id_to_url(x, user_args) for x in incomplete_jobs];
-    if len(incomplete_jobs) > 0:
-        print("BOOT_RESULT: -1 Failed: {}".format(incomplete_output))
-    else:
-        print("BOOT_RESULT: +1")
 
 def failure_report(jobs, user_args):
     failed_report = "FAILURE_TESTS:"
@@ -203,6 +193,9 @@ def failure_report(jobs, user_args):
             failed_report += " {}:{}artifact/{}/target_log.txt\n".format(info['metadata']['build_name'],
                                                                          os.getenv("BUILD_URL"),
                                                                          info['job_dir'])
+            info['result'] = 'FAILURE'
+        else:
+            info['result'] = 'SUCCESS'
     print(failed_report)
 
 def remove_lava_dupes(results):
@@ -220,6 +213,9 @@ def test_report(jobs, user_args):
     fail_j = []
     jinja_data = []
     for job, info in jobs.items():
+        if info['health'] != 'Complete':
+            fail_j.append(job)
+            continue
         results_file = os.path.join(info['job_dir'], 'results.yaml')
         if not os.path.exists(results_file) or (os.path.getsize(results_file) == 0):
             fail_j.append(job)
@@ -235,11 +231,6 @@ def test_report(jobs, user_args):
             if result['result'] == 'fail':
                 fail_j.append(job) if job not in fail_j else fail_j
         time.sleep(0.5) # be friendly to LAVA
-    fail_output = [lava_id_to_url(x, user_args) for x in fail_j]
-    if len(fail_j) > 0:
-        print("TEST_RESULT: -1 Failed: {}".format(fail_output))
-    else:
-        print("TEST_RESULT: +1")
     data = {}
     data['jobs'] = jinja_data
     render_jinja(data)

@@ -35,19 +35,6 @@ def get_recovery_url(recovery_store_url, recovery):
     return "{}/{}".format(recovery_store_url.rstrip('/'), recovery)
 
 
-def get_job_name(name, params, job):
-    return "{}_{}_{}_{}_{}_{}_{}_{}".format(
-        name,
-        job,
-        params["platform"],
-        params["build_no"],
-        params["compiler"],
-        params["build_type"],
-        params["boot_type"],
-        params["name"],
-    )
-
-
 def load_config_overrides(user_args, config_key):
     """Load a configuration from multiple locations and override it with user provided
     arguments"""
@@ -133,9 +120,7 @@ def generate_test_definitions(config, work_dir, user_args):
                             )
                         params.update(
                             {
-                                "job_name": get_job_name(
-                                    config["job_name"], params, user_args.jenkins_job,
-                                ),
+                                "job_name": "{}_{}_{}".format(os.getenv('CONFIG_NAME'), params['build_no'], params["device_type"]),
                                 "build_name": os.getenv('CONFIG_NAME')
                             }
                         )

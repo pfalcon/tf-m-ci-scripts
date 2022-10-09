@@ -9,7 +9,7 @@ from __future__ import print_function
 
 __copyright__ = """
 /*
- * Copyright (c) 2018-2021, Arm Limited. All rights reserved.
+ * Copyright (c) 2018-2022, Arm Limited. All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  *
@@ -95,7 +95,7 @@ class LAVA_RPC_connector(xmlrpc.client.ServerProxy, object):
             with open(yaml_out_file, "w") as F:
                 F.write(str(job_def))
         def_o = yaml.safe_load(job_def)
-        return job_def, def_o.get('metadata', [])
+        return def_o
 
     def get_job_log(self, job_id, target_out_file):
         auth_headers = {"Authorization": "Token %s" % self.token}

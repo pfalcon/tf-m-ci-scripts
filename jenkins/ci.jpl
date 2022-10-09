@@ -327,6 +327,41 @@ def filterFailedBuild(results) {
   return failed_builds
 }
 
+def parseTestResults(output) {
+  // Verify test status
+  g = new Gerrit()
+  if (output.contains('FAILURE')) {
+    score = -1
+  } else {
+    score = 1
+  }
+  g.verifyStatus(score, "lava_test", "test")
+  if (score < 0) {
+    error("Marking job as failed due to failed boots: \"${boot_output}\" or tests: \"${test_output}\"")
+  }
+
+  // Generate test results summary
+  def test_results = [:]
+  records = output.split('\nLAVA Test Config:\n')
+  if (records.size() < 2) {
+    return test_results
+  }
+  records[1..-1].each { record ->
+    config_name = ""
+    metadata = [:]
+    record.split('\n').each { line ->
+      record_metadata = line.split(': ')
+      if (record_metadata[0] == 'Config Name') {
+        config_name = record_metadata[1]
+      } else {
+        metadata[record_metadata[0]] = record_metadata[1]
+      }
+    }
+    test_results[config_name] = metadata
+  }
+  return test_results
+}
+
 def filterFailedTest(string) {
   def failed_tests = [:]
   line = lineInString(string, "FAILURE_TESTS:")
@@ -550,20 +585,9 @@ timestamps {
               println("--- output from lava_wait_jobs.py ---")
               println(output)
               println("--- end of output from lava_wait_jobs.py ---")
+              parseTestResults(output)
               archiveArtifacts artifacts: 'test_summary.*', allowEmptyArchive: true
               archiveArtifacts artifacts: 'test_results.csv', allowEmptyArchive: true
-              g = new Gerrit()
-              def (boot_result, boot_output) = getResult(output, 'BOOT_RESULT: ')
-              if (boot_result) {
-                g.verifyStatus(boot_result, "lava_boot", "test")
-              }
-              def (test_result, test_output) = getResult(output, 'TEST_RESULT: ')
-              if (test_result) {
-                g.verifyStatus(test_result, "lava_test", "test")
-              }
-              if (boot_result.toInteger() < 1 || test_result.toInteger() < 1) {
-                error("Marking job as failed due to failed boots: \"${boot_output}\" or tests: \"${test_output}\"")
-              }
 
               if (env.CODE_COVERAGE_EN == "TRUE") {
                 println("Producing merged report")
