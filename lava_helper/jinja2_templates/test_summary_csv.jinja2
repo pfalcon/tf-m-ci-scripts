@@ -1,12 +1,12 @@
-LAVA_JOB_ID,LAVA_HEALTH,LAVA_DEVICE_TYPE,BUILD_FULL_NAME,BUILD_NUMBER,COMPILER,BUILD_TYPE,BOOT_TYPE,PLATFORM,RESULT_SUITE,RESULT_NAME,RESULT
+LAVA_JOB_ID,LAVA_HEALTH,LAVA_DEVICE_TYPE,BUILD_FULL_NAME,BUILD_NUMBER,PLATFORM,RESULT_SUITE,RESULT_NAME,RESULT
 {%- for job in jobs %}
 {%- for job_id, data in job.items() -%}
 {%- if data[1] %}
 {%- for result in data[1] %}
-{{ job_id }},{{ data[0]['health']}},{{ data[0]['device_type']}},{{ data[0]['metadata']['build_name'] }},{{ data[0]['metadata']['build_no'] }},{{ data[0]['metadata']['compiler'] }},{{ data[0]['metadata']['build_type'] }},{{ data[0]['metadata']['boot_type'] }},{{ data[0]['metadata']['platform'] }},{{ result['suite'] }},{{ result['name'] }},{{ result['result'] }}
+{{ job_id }},{{ data[0]['health']}},{{ data[0]['device_type']}},{{ data[0]['metadata']['build_name'] }},{{ data[0]['metadata']['build_no'] }},{{ data[0]['metadata']['platform'] }},{{ result['suite'] }},{{ result['name'] }},{{ result['result'] }}
 {%- endfor %}
 {%- else %}
-{{ job_id }},{{ data[0]['health']}},{{ data[0]['device_type']}},{{ data[0]['metadata']['build_name'] }},{{ data[0]['metadata']['build_no'] }},{{ data[0]['metadata']['compiler'] }},{{ data[0]['metadata']['build_type'] }},{{ data[0]['metadata']['boot_type'] }},{{ data[0]['metadata']['platform'] }},,,
+{{ job_id }},{{ data[0]['health']}},{{ data[0]['device_type']}},{{ data[0]['metadata']['build_name'] }},{{ data[0]['metadata']['build_no'] }},{{ data[0]['metadata']['platform'] }},,,
 {%- endif %}
 {%- endfor %}
 {%- endfor %}

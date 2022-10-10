@@ -12,80 +12,6 @@ import org.trustedfirmware.Summary
 
 failure_states = ["FAILURE", "ABORTED", "UNSTABLE", "NOT_BUILT"]
 
-mapPlatform = ["cypress/psoc64":                "psoc64",
-               "arm/mps2/an519":                "AN519",
-               "arm/mps2/an521":                "AN521",
-               "arm/mps3/an524":                "AN524",
-               "arm/mps3/an547":                "AN547",
-               "arm/mps3/an552":                "AN552",
-               "arm/mps3/corstone310_fvp":      "corstone310",
-               "arm/musca_b1":                  "MUSCA_B1",
-               "arm/musca_s1":                  "MUSCA_S1",
-               "arm/rss":                       "RSS",
-               "stm/stm32l562e_dk":             "stm32l562e_dk",
-               "arm/corstone1000":              "corstone1000",
-               "nxp/lpcxpresso55s69":           "lpcxpresso55s69"]
-
-mapBL2 = ["True":  "--bl2",
-          "False": ""]
-
-mapTestPsaApi = ["OFF":                      "",
-                 "STORAGE":                  "STORAGE",
-                 "CRYPTO":                   "Crypto",
-                 "INITIAL_ATTESTATION":      "Attest",
-                 "IPC":                      "FF"]
-
-// LIB_MODEL, ISOLATION_LEVEL, TEST_REG, TEST_PSA_API, PROFILE, CONFIG_NAME
-mapConfigs = [
-  ["True",  "1", "False", "OFF",                      "N.A",            "Default"],
-  ["False", "1", "False", "OFF",                      "N.A",            "CoreIPC"],
-  ["False", "2", "False", "OFF",                      "N.A",            "CoreIPCTfmLevel2"],
-  ["False", "3", "False", "OFF",                      "N.A",            "CoreIPCTfmLevel3"],
-  ["True",  "1", "False", "OFF",                      "profile_small",  "DefaultProfileS"],
-  ["False", "2", "False", "OFF",                      "profile_medium", "DefaultProfileM"],
-  ["False", "3", "False", "OFF",                      "profile_large",  "DefaultProfileL"],
-  ["True",  "1", "True",  "OFF",                      "N.A",            "Regression"],
-  ["False", "1", "True",  "OFF",                      "N.A",            "RegressionIPC"],
-  ["False", "2", "True",  "OFF",                      "N.A",            "RegressionIPCTfmLevel2"],
-  ["False", "3", "True",  "OFF",                      "N.A",            "RegressionIPCTfmLevel3"],
-  ["True",  "1", "True",  "OFF",                      "profile_small",  "RegressionProfileS"],
-  ["False", "2", "True",  "OFF",                      "profile_medium", "RegressionProfileM"],
-  ["False", "3", "True",  "OFF",                      "profile_large",  "RegressionProfileL"],
-  ["True",  "1", "False", "STORAGE",                  "N.A",            "PsaApiTest (STORAGE)"],
-  ["True",  "1", "False", "CRYPTO",                   "N.A",            "PsaApiTest (Crypto)"],
-  ["True",  "1", "False", "INITIAL_ATTESTATION",      "N.A",            "PsaApiTest (Attest)"],
-  ["True",  "1", "False", "IPC",                      "N.A",            "PsaApiTest (FF)"],
-  ["False", "1", "False", "STORAGE",                  "N.A",            "PsaApiTestIPC (STORAGE)"],
-  ["False", "1", "False", "CRYPTO",                   "N.A",            "PsaApiTestIPC (Crypto)"],
-  ["False", "1", "False", "INITIAL_ATTESTATION",      "N.A",            "PsaApiTestIPC (Attest)"],
-  ["False", "1", "False", "IPC",                      "N.A",            "PsaApiTestIPC (FF)"],
-  ["False", "2", "False", "STORAGE",                  "N.A",            "PsaApiTestIPCTfmLevel2 (STORAGE)"],
-  ["False", "2", "False", "CRYPTO",                   "N.A",            "PsaApiTestIPCTfmLevel2 (Crypto)"],
-  ["False", "2", "False", "INITIAL_ATTESTATION",      "N.A",            "PsaApiTestIPCTfmLevel2 (Attest)"],
-  ["False", "2", "False", "IPC",                      "N.A",            "PsaApiTestIPCTfmLevel2 (FF)"],
-  ["False", "3", "False", "STORAGE",                  "N.A",            "PsaApiTestIPCTfmLevel3 (STORAGE)"],
-  ["False", "3", "False", "CRYPTO",                   "N.A",            "PsaApiTestIPCTfmLevel3 (Crypto)"],
-  ["False", "3", "False", "INITIAL_ATTESTATION",      "N.A",            "PsaApiTestIPCTfmLevel3 (Attest)"],
-  ["False", "3", "False", "IPC",                      "N.A",            "PsaApiTestIPCTfmLevel3 (FF)"],
-]
-
-cfgs = ["Default", "CoreIPC", "CoreIPCTfmLevel2", "CoreIPCTfmLevel3",
-        "Regression", "RegressionIPC",
-        "RegressionIPCTfmLevel2", "RegressionIPCTfmLevel3",
-        "DefaultProfileS", "RegressionProfileS",
-        "DefaultProfileM", "RegressionProfileM", "RegressionProfileM PSOFF",
-        "DefaultProfileL", "RegressionProfileL",
-        "PsaApiTest (Attest)", "PsaApiTestIPC (Attest)",
-        "PsaApiTestIPCTfmLevel2 (Attest)",
-        "PsaApiTest (Crypto)", "PsaApiTestIPC (Crypto)",
-        "PsaApiTestIPCTfmLevel2 (Crypto)",
-        "PsaApiTest (STORAGE)", "PsaApiTestIPC (STORAGE)",
-        "PsaApiTestIPCTfmLevel2 (STORAGE)",
-        "PsaApiTestIPC (FF)",
-        "PsaApiTestIPCTfmLevel2 (FF)",
-        "PsaApiTestIPCTfmLevel3 (STORAGE)", "PsaApiTestIPCTfmLevel3 (Crypto)",
-        "PsaApiTestIPCTfmLevel3 (Attest)", "PsaApiTestIPCTfmLevel3 (FF)"]
-
 cfgSkipFVP = [
   "AN519_GCC_IPC_2_REG_Debug_BL2",
   "AN519_GCC_IPC_2_REG_Debug_BL2_MEDIUM",
@@ -97,42 +23,8 @@ cfgSkipFVP = [
   "AN521_ARMCLANG_IPC_2_REG_Debug_BL2_MEDIUM",
 ]
 
-@NonCPS
-def generateLavaParam(build_params) {
-  def params = []
-  params += string(name: "TARGET_PLATFORM", \
-                   value: mapPlatform[build_params["TFM_PLATFORM"]])
-  params += string(name: "COMPILER", \
-                   value: build_params["COMPILER"].split('_')[0])
-  params += string(name: "PSA_API_SUITE", \
-                   value: mapTestPsaApi[build_params["TEST_PSA_API"]])
-
-  configName = "Config"
-  config_params = [build_params["LIB_MODEL"], build_params["ISOLATION_LEVEL"], \
-                   build_params["TEST_REGRESSION"], build_params["TEST_PSA_API"], \
-                   build_params["PROFILE"]]
-  // Regression Test is enabled if CRYPTO is ON
-  if (build_params["EXTRA_PARAMS"] == "CRYPTO_ON") {
-    config_params[2] = "True"
-  }
-  for (config in mapConfigs) {
-    if (config_params == config[0..4]) {
-      configName += config[5].replace(' (', '_').replace(')', '')
-      break
-    }
-  }
-  if (configName == "Config") {
-    configName = "ConfigDefault"
-  }
-  params += string(name: "PROJ_CONFIG", value: configName)
-  print("Params of ${configName} :")
-  print(config_params)
-  return params
-}
-
 def submit_lava_tests(config, results, build_res, params, params_collection) {
   print("Doing LAVA stuff for ${build_res.getAbsoluteUrl()}")
-  params += generateLavaParam(params_collection)
   params += string(name: 'BUILD_NUMBER', value: "${build_res.number}")
   params += string(name: 'BUILD_URL', value: build_res.getAbsoluteUrl())
   params += string(name: 'LAVA_URL', value: env.LAVA_URL)
@@ -237,28 +129,9 @@ python3 ./configs.py -g ${filter_group.replace(" ", " -g ")} ${config}
         if (env.JOB_NAME.equals("tf-m-extra-build")) {
           print("LAVA is not needed in tf-m-extra-build job.")
         }
-        // Submit test job for NXP LPCXpresso55S69 & Cypress PSoC64
-        else if (params_collection["TFM_PLATFORM"].contains("lpcxpresso55s69") || params_collection["TFM_PLATFORM"].contains("psoc64")) {
+        // Submit LAVA tests
+        else {
           submit_lava_tests(config, results, build_res, params, params_collection)
-        } else {
-            // Configs without BL2 do not need LAVA tests
-            if (params_collection["BL2"] == "False") {
-              print("LAVA is not needed for ${build_url}")
-            }
-            // LAVA tests on MUSCA_B1 are not needed in per-patch job
-            else if (params_collection["TFM_PLATFORM"].contains("musca_b1") && \
-                     env.JOB_NAME.equals("tf-m-build-and-test")) {
-              print("LAVA is not needed for ${build_url}")
-            }
-            // LAVA tests on Corstone1000 FPGA config is not supported
-            else if (params_collection["TFM_PLATFORM"].contains("corstone1000") && \
-                     params_collection["EXTRA_PARAMS"].contains("FPGA")) {
-              print("LAVA is not needed for ${build_url}")
-            }
-            // Submit LAVA tests
-            else {
-              submit_lava_tests(config, results, build_res, params, params_collection)
-            }
         }
     }
   }

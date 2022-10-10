@@ -61,7 +61,7 @@ actions:
 - test:
     namespace: target
     monitors:
-    {%- for monitor in test.monitors %}
+    {%- for monitor in monitors %}
     - name: "{{monitor.name}}"
       start: "{{monitor.start}}"
       end: "{{monitor.end}}"

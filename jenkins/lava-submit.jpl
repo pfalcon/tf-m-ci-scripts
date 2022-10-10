@@ -40,13 +40,11 @@ def filterTestDevice() {
   return device_type
 }
 
-def submitJobs(device_type, bl2_string, psa_string) {
+def submitJobs(device_type) {
   dir("tf-m-ci-scripts") {
     def res = sh(script: """./lava_helper/lava_create_jobs.py \
-      --build-number ${env.BUILD_NUMBER} --output-dir lava_jobs ${device_type}\
-      --compiler ${env.COMPILER} --platform ${env.TARGET_PLATFORM} \
-      ${bl2_string} ${psa_string} --build-type ${env.CMAKE_BUILD_TYPE} \
-      --jenkins-build-url ${env.BUILD_URL} --proj-config ${env.PROJ_CONFIG} \
+      --output-dir lava_jobs ${device_type} \
+      --jenkins-build-url ${env.BUILD_URL} \
       --docker-prefix ${env.DOCKER_PREFIX} --license-variable "${env.LICENSE_VARIABLE}" \
       --enable-code-coverage "${env.CODE_COVERAGE_EN}"
       """, returnStdout: true).trim()
@@ -77,21 +75,12 @@ timestamps {
 
       withCredentials([usernamePassword(credentialsId: env.LAVA_CREDENTIALS, passwordVariable: 'LAVA_TOKEN', usernameVariable: 'LAVA_USER')]) {
         print("Generating LAVA jobs...")
-        def bl2_string = ""
-        def psa_string = ""
-        if (env.BL2.equals("True")) {
-          bl2_string = "--bl2"
-        }
-        // work around this string containing quotes?
-        if (env.PSA_API_SUITE != "") {
-          psa_string = "--psa-api-suite ${env.PSA_API_SUITE}"
-        }
         try {
-          submitJobs(device_type, bl2_string, psa_string)
+          submitJobs(device_type)
         } catch (Exception ex) {
           print("LAVA-Submit failed! Exception: ${ex}")
           print("Try to submit again...")
-          submitJobs(device_type, bl2_string, psa_string)
+          submitJobs(device_type)
           currentBuild.setDescription(currentBuild.getDescription() + " Submitted twice!")
         }
       }

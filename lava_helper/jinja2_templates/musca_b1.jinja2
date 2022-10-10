@@ -20,7 +20,7 @@ actions:
 
     - test:
         monitors:
-        {%- for monitor in test.monitors %}
+        {%- for monitor in monitors %}
         - name: "{{monitor.name}}"
           start: "{{monitor.start}}"
           end: "{{monitor.end}}"
@@ -37,9 +37,6 @@ actions:
 {% block metadata %}
 metadata:
   build_no: {{ build_no }}
-  compiler: {{ compiler }}
-  build_type: {{ build_type }}
-  boot_type: {{ boot_type }}
   name: {{ name }}
   platform: {{ platform }}
   build_name: {{ build_name }}

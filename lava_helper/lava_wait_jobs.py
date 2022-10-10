@@ -16,45 +16,15 @@ Script for waiting for LAVA jobs and parsing the results
 """
 
 import os
-import sys
 import time
 import yaml
 import argparse
-import csv
 import shutil
 from jinja2 import Environment, FileSystemLoader
-from lava_helper_configs import *
 from lava_helper import test_lava_dispatch_credentials
 from lava_submit_jobs import submit_lava_jobs
 import codecov_helper
 
-
-cfgs = ["Default", "CoreIPC", "CoreIPCTfmLevel2", "CoreIPCTfmLevel3",
-        "Regression", "RegressionIPC",
-        "RegressionIPCTfmLevel2", "RegressionIPCTfmLevel3",
-        "DefaultProfileS", "RegressionProfileS",
-        "DefaultProfileM", "RegressionProfileM", "RegressionProfileM PSOFF",
-        "DefaultProfileL", "RegressionProfileL",
-        "PsaApiTest (Attest)", "PsaApiTestIPC (Attest)",
-        "PsaApiTestIPCTfmLevel2 (Attest)",
-        "PsaApiTest (Crypto)", "PsaApiTestIPC (Crypto)",
-        "PsaApiTestIPCTfmLevel2 (Crypto)",
-        "PsaApiTest (PS)", "PsaApiTestIPC (PS)",
-        "PsaApiTestIPCTfmLevel2 (PS)",
-        "PsaApiTest (ITS)", "PsaApiTestIPC (ITS)",
-        "PsaApiTestIPCTfmLevel2 (ITS)",
-        "PsaApiTestIPC (FF)",
-        "PsaApiTestIPCTfmLevel2 (FF)",
-        "PsaApiTest (STORAGE)",
-        "PsaApiTestIPC (STORAGE)",
-        "PsaApiTestIPCTfmLevel2 (STORAGE)",
-        "PsaApiTestIPCTfmLevel3 (STORAGE)",
-        "PsaApiTestIPCTfmLevel3 (ITS)", "PsaApiTestIPCTfmLevel3 (PS)",
-        "PsaApiTestIPCTfmLevel3 (Crypto)", "PsaApiTestIPCTfmLevel3 (Attest)",
-        "PsaApiTestIPCTfmLevel3 (FF)"]
-
-# Convert test config identifiers to LAVA naming convention.
-cfgs = [x.replace(" (", "_").replace(")", "") for x in cfgs]
 
 def wait_for_jobs(user_args):
     job_list = user_args.job_ids.split(",")
@@ -68,7 +38,6 @@ def wait_for_jobs(user_args):
         finished_jobs.update(finished_resubmit_jobs)
     return finished_jobs
 
-
 def process_finished_jobs(finished_jobs, user_args):
     print_lava_urls(finished_jobs, user_args)
     test_report(finished_jobs, user_args)
@@ -76,7 +45,6 @@ def process_finished_jobs(finished_jobs, user_args):
     job_links(finished_jobs, user_args)
     csv_report(finished_jobs)
     codecov_helper.coverage_reports(finished_jobs, user_args)
-
 
 def get_finished_jobs(job_list, user_args, lava):
     finished_jobs = lava.block_wait_for_jobs(job_list, user_args.dispatch_timeout, 5)
@@ -109,7 +77,6 @@ def resubmit_failed_jobs(jobs, user_args):
     resubmitted_jobs = submit_lava_jobs(user_args, job_dir='failed_jobs')
     resubmitted_jobs = [int(x) for x in resubmitted_jobs if x != '']
     return resubmitted_jobs
-
 
 def fetch_artifacts(jobs, user_args, lava):
     if not user_args.artifacts_path:
@@ -163,8 +130,8 @@ def csv_report(jobs):
             if info['metadata']['platform']   == record["Platform"] and \
                info['metadata']['compiler']   == record["Compiler"] and \
                info['metadata']['build_type'] == record["Build Type"]:
-                if record[info['metadata']['name']] != "FAIL":
-                    record[info['metadata']['name']] = generateTestResult(info)
+                if record[info['metadata']['build_name']] != "FAIL":
+                    record[info['metadata']['build_name']] = generateTestResult(info)
                 exist = True
                 break
         if not exist:
@@ -172,14 +139,14 @@ def csv_report(jobs):
             record["Platform"] = info['metadata']['platform']
             record["Compiler"] = info['metadata']['compiler']
             record["Build Type"] = info['metadata']['build_type']
-            record["Config Name"] = info['metadata']['name']
+            record["Config Name"] = info['metadata']['build_name']
             for cfg in cfgs:
                 record[cfg] = "N.A."
             record[info['metadata']['name']] = generateTestResult(info)
             lava_jobs.append(record)
     lava_jobs.sort(key=lambda x: x["Platform"] + x["Compiler"] + x["Build Type"])
     with open("test_results.csv", "w", newline="") as csvfile:
-        fieldnames = ["Platform", "Compiler", "Build Type"] + cfgs
+        fieldnames = ["Platform", "Compiler", "Build Type"] + list(cfgs)
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames, extrasaction='ignore')
 
         writer.writeheader()

@@ -18,7 +18,6 @@ __copyright__ = """
 import glob
 import argparse
 from lava_helper import test_lava_dispatch_credentials
-from lava_helper_configs import *
 
 
 def list_files_from_dir(user_args, job_dir=""):

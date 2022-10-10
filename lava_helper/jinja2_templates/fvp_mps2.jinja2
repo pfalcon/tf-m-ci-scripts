@@ -44,7 +44,7 @@ actions:
     image: /opt/model/FVP_MPS2_AEMv8M/models/Linux64_GCC-6.4/FVP_MPS2_AEMv8M
     timeout:
       minutes: 10
-{%- if psa_api_suite == "FF" %}
+{%- if psa_api_suite == "IPC" %}
     console_string: 'telnetterminal2: Listening for serial connection on port (?P<PORT>\d+)'
     use_telnet: True
 {%- else %}
@@ -82,7 +82,7 @@ actions:
 - test:
     namespace: target
     monitors:
-    {%- for monitor in test.monitors %}
+    {%- for monitor in monitors %}
     - name: "{{monitor.name}}"
       start: "{{monitor.start}}"
       end: "{{monitor.end}}"
@@ -93,7 +93,9 @@ actions:
          {%- if monitor.fixup.skip %}
          '{{monitor.fixup.skip}}': skip
          {%- endif %}
-         'SIM ERROR': fail
+         {%- if monitor.fixup.sim_error %}
+         '{{monitor.fixup.sim_error}}': fail
+         {%- endif %}
     {%- endfor %}
 
 {%- if enable_code_coverage %}
