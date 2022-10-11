@@ -170,8 +170,6 @@ _common_tfm_builder_cfg = {
 
 # List of all build configs that are impossible under all circumstances
 _common_tfm_invalid_configs = [
-    # GCC defect
-    ("arm/mps2/an519", "GCC_7_3_1", "*", "*", "*", "*", "Minsizerel", "*", "*", "*"),
     # LR_CODE size exceeds limit on MUSCA_B1 & MUSCA_S1 with regression tests in Debug mode built with ARMCLANG
     ("arm/musca_b1", "ARMCLANG_6_13", "*", "*", True, "OFF", "Debug", "*", "", "*"),
     ("arm/musca_s1", "ARMCLANG_6_13", "*", "*", True, "OFF", "Debug", "*", "", "*"),
@@ -215,13 +213,13 @@ config_pp_test = {"seed_params": {
                     ("arm/mps2/an519", "ARMCLANG_6_13", False, "2",
                      True, "OFF", "Release", True, "",  ""),
                     # AN519_GCC_IPC_1_REG_Debug_BL2
-                    ("arm/mps2/an519", "GCC_7_3_1", False, "1",
+                    ("arm/mps2/an519", "GCC_10_3", False, "1",
                      True, "OFF", "Debug", True, "",  ""),
                     # AN519_GCC_IPC_2_REG_Release_BL2
-                    ("arm/mps2/an519", "GCC_7_3_1", False, "2",
+                    ("arm/mps2/an519", "GCC_10_3", False, "2",
                      True, "OFF", "Release", True, "", ""),
                     # AN519_GCC_LIB_1_REG_Debug_BL2
-                    ("arm/mps2/an519", "GCC_7_3_1", True, "1",
+                    ("arm/mps2/an519", "GCC_10_3", True, "1",
                      True, "OFF", "Debug", True, "", ""),
                     # AN521_ARMCLANG_LIB_1_REG_Debug_BL2_SMALL_PSOFF
                     ("arm/mps2/an521", "ARMCLANG_6_13", True, "1",
@@ -239,19 +237,19 @@ config_pp_test = {"seed_params": {
                     ("arm/mps2/an521", "ARMCLANG_6_13", False, "1",
                      True, "OFF", "Debug", True, "profile_small", "PSOFF, SFN"),
                     # AN521_GCC_IPC_1_REG_Debug_BL2
-                    ("arm/mps2/an521", "GCC_7_3_1", False, "1",
+                    ("arm/mps2/an521", "GCC_10_3", False, "1",
                      True, "OFF", "Debug", True, "", ""),
                     # AN521_GCC_IPC_2_Debug_BL2_MEDIUM
-                    ("arm/mps2/an521", "GCC_7_3_1", False, "2",
+                    ("arm/mps2/an521", "GCC_10_3", False, "2",
                      False, "OFF", "Debug", True, "profile_medium", ""),
                     # AN521_GCC_IPC_2_REG_Release_BL2
-                    ("arm/mps2/an521", "GCC_7_3_1", False, "2",
+                    ("arm/mps2/an521", "GCC_10_3", False, "2",
                      True, "OFF", "Release", True, "", ""),
                     # AN521_GCC_IPC_3_REG_Minsizerel_BL2
-                    ("arm/mps2/an521", "GCC_7_3_1", False, "3",
+                    ("arm/mps2/an521", "GCC_10_3", False, "3",
                      True, "OFF", "Minsizerel", True, "", ""),
                     # AN521_GCC_LIB_1_REG_Debug_BL2
-                    ("arm/mps2/an521", "GCC_7_3_1", True, "1",
+                    ("arm/mps2/an521", "GCC_10_3", True, "1",
                      True, "OFF", "Debug", True, "", ""),
                     # AN552_GNUARM_IPC_1_REG_Debug_BL2
                     ("arm/mps3/an552", "GCC_10_3", False, "1",
@@ -260,7 +258,7 @@ config_pp_test = {"seed_params": {
                     ("arm/mps3/an552", "GCC_10_3", False, "1",
                      True, "OFF", "Release", True, "", ""),
                     # MUSCA_B1_GCC_LIB_1_REG_Minsizerel_BL2
-                    ("arm/musca_b1", "GCC_7_3_1", True, "1",
+                    ("arm/musca_b1", "GCC_10_3", True, "1",
                      True, "OFF", "Minsizerel", True, "", ""),
                     # MUSCA_S1_ARMCLANG_IPC_2_REG_Release_BL2
                     ("arm/musca_s1", "ARMCLANG_6_13", False, "2",
@@ -278,19 +276,19 @@ config_pp_test = {"seed_params": {
                     ("arm/musca_s1", "GCC_10_3", False, "2",
                      True, "OFF", "Release", True, "", "FPON"),
                     # MUSCA_S1_GCC_IPC_1_REG_Release_BL2_CC_DRIVER_PSA
-                    ("arm/musca_s1", "GCC_7_3_1", False, "1",
+                    ("arm/musca_s1", "GCC_10_3", False, "1",
                      True, "OFF", "Release", True, "", "CC_DRIVER_PSA"),
                     # stm32l562e_dk_ARMCLANG_IPC_1_REG_Release_BL2
                     ("stm/stm32l562e_dk", "ARMCLANG_6_13", False, "1",
                      True, "OFF", "Release", True, "", "CRYPTO_OFF"),
                     # stm32l562e_dk_GCC_IPC_2_REG_Release_BL2
-                    ("stm/stm32l562e_dk", "GCC_7_3_1", False, "2",
+                    ("stm/stm32l562e_dk", "GCC_10_3", False, "2",
                      False, "OFF", "Release", True, "", "CRYPTO_ON"),
                     # stm32l562e_dk_GCC_IPC_3_REG_Release_BL2
-                    ("stm/stm32l562e_dk", "GCC_7_3_1", False, "3",
+                    ("stm/stm32l562e_dk", "GCC_10_3", False, "3",
                      True, "OFF", "Release", True, "", "CRYPTO_OFF"),
                     # psoc64_GCC_IPC_2_REG_Release
-                    ("cypress/psoc64", "GCC_7_3_1", False, "2",
+                    ("cypress/psoc64", "GCC_10_3", False, "2",
                      True, "OFF", "Release", False, "", ""),
                 ],
                 "invalid": _common_tfm_invalid_configs + []
@@ -303,7 +301,7 @@ config_nightly_test = {"seed_params": {
                                      "arm/mps3/an524",
                                      "arm/musca_s1",
                                      "arm/musca_b1"],
-                "compiler":         ["GCC_7_3_1", "ARMCLANG_6_13"],
+                "compiler":         ["GCC_10_3", "ARMCLANG_6_13"],
                 "lib_model":        [True, False],
                 "isolation_level":  ["1", "2", "3"],
                 "test_regression":  [True, False],
@@ -324,7 +322,7 @@ config_release_test = {"seed_params": {
                                      "arm/mps3/an524",
                                      "arm/musca_b1",
                                      "arm/musca_s1"],
-                "compiler":         ["GCC_7_3_1", "ARMCLANG_6_13"],
+                "compiler":         ["GCC_10_3", "ARMCLANG_6_13"],
                 "lib_model":        [True, False],
                 "isolation_level":  ["1", "2", "3"],
                 "test_regression":  [True, False],
@@ -348,7 +346,7 @@ config_release_test = {"seed_params": {
 # Config groups for TF-M features
 config_profile_s = {"seed_params": {
                 "tfm_platform":     ["arm/mps2/an519", "arm/mps2/an521"],
-                "compiler":         ["GCC_7_3_1", "ARMCLANG_6_13"],
+                "compiler":         ["GCC_10_3", "ARMCLANG_6_13"],
                 "lib_model":        [True],
                 "isolation_level":  ["1"],
                 "test_regression":  [True, False],
@@ -365,7 +363,7 @@ config_profile_s = {"seed_params": {
                      "*", "*", "*", "PSOFF, SFN")
                 ],
                 "invalid": _common_tfm_invalid_configs + [
-                    ("arm/mps2/an519", "GCC_7_3_1", "*", "*", "*",
+                    ("arm/mps2/an519", "GCC_10_3", "*", "*", "*",
                      "*", "Minsizerel", "*", "*", "*")
                 ]
                 }
@@ -374,7 +372,7 @@ config_profile_m = {"seed_params": {
                 "tfm_platform":     ["arm/mps2/an519",
                                      "arm/mps2/an521",
                                      "arm/musca_b1"],
-                "compiler":         ["GCC_7_3_1", "ARMCLANG_6_13"],
+                "compiler":         ["GCC_10_3", "ARMCLANG_6_13"],
                 "lib_model":        [False],
                 "isolation_level":  ["2"],
                 "test_regression":  [True, False],
@@ -390,7 +388,7 @@ config_profile_m = {"seed_params": {
 
 config_profile_l = {"seed_params": {
                 "tfm_platform":     ["arm/mps2/an521"],
-                "compiler":         ["GCC_7_3_1", "ARMCLANG_6_13"],
+                "compiler":         ["GCC_10_3", "ARMCLANG_6_13"],
                 "lib_model":        [False],
                 "isolation_level":  ["3"],
                 "test_regression":  [True, False],
@@ -407,7 +405,7 @@ config_profile_l = {"seed_params": {
 config_cc_driver_psa = {"seed_params": {
                "tfm_platform":      ["arm/musca_b1",
                                      "arm/musca_s1"],
-                "compiler":         ["GCC_7_3_1"],
+                "compiler":         ["GCC_10_3"],
                 "lib_model":        [False],
                 "isolation_level":  ["1"],
                 "test_regression":  [True],
@@ -441,7 +439,7 @@ config_psa_api = {"seed_params": {
                 "tfm_platform":     ["arm/mps2/an521",
                                      "arm/musca_b1",
                                      "arm/musca_s1"],
-                "compiler":         ["GCC_7_3_1", "ARMCLANG_6_13"],
+                "compiler":         ["GCC_10_3", "ARMCLANG_6_13"],
                 "lib_model":        [True, False],
                 "isolation_level":  ["1", "2", "3"],
                 "test_regression":  [False],
@@ -460,7 +458,7 @@ config_psa_api = {"seed_params": {
 
 config_nsce = {"seed_params": {
                "tfm_platform":      ["arm/mps2/an521"],
-                "compiler":         ["GCC_7_3_1", "ARMCLANG_6_13"],
+                "compiler":         ["GCC_10_3", "ARMCLANG_6_13"],
                 "lib_model":        [True, False],
                 "isolation_level":  ["1", "2", "3"],
                 "test_regression":  [True],
@@ -476,7 +474,7 @@ config_nsce = {"seed_params": {
 
 config_mmio = {"seed_params": {
                "tfm_platform":      ["arm/mps2/an521"],
-                "compiler":         ["GCC_7_3_1", "ARMCLANG_6_13"],
+                "compiler":         ["GCC_10_3", "ARMCLANG_6_13"],
                 "lib_model":        [False],
                 "isolation_level":  ["1"],
                 "test_regression":  [True],
@@ -492,24 +490,24 @@ config_mmio = {"seed_params": {
 
 # Config groups for code coverage
 config_cov_profile_s = deepcopy(config_profile_s)
-config_cov_profile_s["seed_params"]["compiler"] = ["GCC_7_3_1"]
+config_cov_profile_s["seed_params"]["compiler"] = ["GCC_10_3"]
 
 config_cov_profile_m = deepcopy(config_profile_m)
-config_cov_profile_m["seed_params"]["compiler"] = ["GCC_7_3_1"]
+config_cov_profile_m["seed_params"]["compiler"] = ["GCC_10_3"]
 
 config_cov_profile_l = deepcopy(config_profile_l)
-config_cov_profile_l["seed_params"]["compiler"] = ["GCC_7_3_1"]
+config_cov_profile_l["seed_params"]["compiler"] = ["GCC_10_3"]
 
 config_cov_nsce = deepcopy(config_nsce)
-config_cov_nsce["seed_params"]["compiler"] = ["GCC_7_3_1"]
+config_cov_nsce["seed_params"]["compiler"] = ["GCC_10_3"]
 
 config_cov_mmio = deepcopy(config_mmio)
-config_cov_mmio["seed_params"]["compiler"] = ["GCC_7_3_1"]
+config_cov_mmio["seed_params"]["compiler"] = ["GCC_10_3"]
 
 # Config groups for platforms
 config_an519 = {"seed_params": {
                 "tfm_platform":     ["arm/mps2/an519"],
-                "compiler":         ["GCC_7_3_1", "ARMCLANG_6_13"],
+                "compiler":         ["GCC_10_3", "ARMCLANG_6_13"],
                 "lib_model":        [True, False],
                 "isolation_level":  ["1", "2"],
                 "test_regression":  [True, False],
@@ -525,7 +523,7 @@ config_an519 = {"seed_params": {
 
 config_an521 = {"seed_params": {
                 "tfm_platform":     ["arm/mps2/an521"],
-                "compiler":         ["GCC_7_3_1", "ARMCLANG_6_13"],
+                "compiler":         ["GCC_10_3", "ARMCLANG_6_13"],
                 "lib_model":        [True, False],
                 "isolation_level":  ["1", "2", "3"],
                 "test_regression":  [True, False],
@@ -541,7 +539,7 @@ config_an521 = {"seed_params": {
 
 config_an524 = {"seed_params": {
                 "tfm_platform":     ["arm/mps3/an524"],
-                "compiler":         ["GCC_7_3_1", "ARMCLANG_6_13"],
+                "compiler":         ["GCC_10_3", "ARMCLANG_6_13"],
                 "lib_model":        [True, False],
                 "isolation_level":  ["1", "2"],
                 "test_regression":  [True, False],
@@ -589,7 +587,7 @@ config_an552 = {"seed_params": {
 
 config_musca_b1 = {"seed_params": {
                 "tfm_platform":     ["arm/musca_b1"],
-                "compiler":         ["GCC_7_3_1", "ARMCLANG_6_13"],
+                "compiler":         ["GCC_10_3", "ARMCLANG_6_13"],
                 "lib_model":        [True, False],
                 "isolation_level":  ["1", "2", "3"],
                 "test_regression":  [True, False],
@@ -605,7 +603,7 @@ config_musca_b1 = {"seed_params": {
 
 config_musca_s1 = {"seed_params": {
                 "tfm_platform":     ["arm/musca_s1"],
-                "compiler":         ["GCC_7_3_1", "ARMCLANG_6_13"],
+                "compiler":         ["GCC_10_3", "ARMCLANG_6_13"],
                 "lib_model":        [True, False],
                 "isolation_level":  ["1", "2"],
                 "test_regression":  [True, False],
@@ -653,7 +651,7 @@ config_rss = {"seed_params": {
 
 config_psoc64 = {"seed_params": {
                 "tfm_platform":     ["cypress/psoc64"],
-                "compiler":         ["GCC_7_3_1", "ARMCLANG_6_13"],
+                "compiler":         ["GCC_10_3", "ARMCLANG_6_13"],
                 "lib_model":        [False],
                 "isolation_level":  ["1", "2"],
                 "test_regression":  [True],
@@ -669,7 +667,7 @@ config_psoc64 = {"seed_params": {
 
 config_corstone1000 = {"seed_params": {
                 "tfm_platform":     ["arm/corstone1000"],
-                "compiler":         ["GCC_7_3_1"],
+                "compiler":         ["GCC_10_3"],
                 "lib_model":        [False],
                 "isolation_level":  ["1"],
                 "test_regression":  [True],
@@ -685,7 +683,7 @@ config_corstone1000 = {"seed_params": {
 
 config_stm32l562e_dk = {"seed_params": {
                 "tfm_platform":     ["stm/stm32l562e_dk"],
-                "compiler":         ["GCC_7_3_1", "ARMCLANG_6_13"],
+                "compiler":         ["GCC_10_3", "ARMCLANG_6_13"],
                 "lib_model":        [True, False],
                 "isolation_level":  ["1", "2", "3"],
                 "test_regression":  [True, False],
@@ -711,7 +709,7 @@ config_stm32l562e_dk = {"seed_params": {
 
 config_b_u585i_iot02a = {"seed_params": {
                 "tfm_platform":     ["stm/b_u585i_iot02a"],
-                "compiler":         ["GCC_7_3_1"],
+                "compiler":         ["GCC_10_3"],
                 "lib_model":        [False],
                 "isolation_level":  ["1"],
                 "test_regression":  [False],
@@ -727,7 +725,7 @@ config_b_u585i_iot02a = {"seed_params": {
 
 config_nucleo_l552ze_q = {"seed_params": {
                 "tfm_platform":     ["stm/nucleo_l552ze_q"],
-                "compiler":         ["GCC_7_3_1"],
+                "compiler":         ["GCC_10_3"],
                 "lib_model":        [False],
                 "isolation_level":  ["1"],
                 "test_regression":  [False],
@@ -743,7 +741,7 @@ config_nucleo_l552ze_q = {"seed_params": {
 
 config_lpcxpresso55s69 = {"seed_params": {
                 "tfm_platform":     ["nxp/lpcxpresso55s69"],
-                "compiler":         ["GCC_7_3_1"],
+                "compiler":         ["GCC_10_3"],
                 "lib_model":        [False],
                 "isolation_level":  ["2"],
                 "test_regression":  [True, False],
@@ -759,7 +757,7 @@ config_lpcxpresso55s69 = {"seed_params": {
 
 config_bl5340 = {"seed_params": {
                 "tfm_platform":     ["lairdconnectivity/bl5340_dvk_cpuapp"],
-                "compiler":         ["GCC_7_3_1"],
+                "compiler":         ["GCC_10_3"],
                 "lib_model":        [False],
                 "isolation_level":  ["1"],
                 "test_regression":  [False],
@@ -775,7 +773,7 @@ config_bl5340 = {"seed_params": {
 
 config_nrf5340dk = {"seed_params": {
                 "tfm_platform":     ["nordic_nrf/nrf5340dk_nrf5340_cpuapp"],
-                "compiler":         ["GCC_7_3_1"],
+                "compiler":         ["GCC_10_3"],
                 "lib_model":        [False],
                 "isolation_level":  ["1"],
                 "test_regression":  [False],
@@ -791,7 +789,7 @@ config_nrf5340dk = {"seed_params": {
 
 config_nrf9160dk = {"seed_params": {
                 "tfm_platform":     ["nordic_nrf/nrf9160dk_nrf9160"],
-                "compiler":         ["GCC_7_3_1"],
+                "compiler":         ["GCC_10_3"],
                 "lib_model":        [False],
                 "isolation_level":  ["1"],
                 "test_regression":  [False],
@@ -807,7 +805,7 @@ config_nrf9160dk = {"seed_params": {
 
 config_m2351 = {"seed_params": {
                 "tfm_platform":     ["nuvoton/m2351"],
-                "compiler":         ["GCC_7_3_1"],
+                "compiler":         ["GCC_10_3"],
                 "lib_model":        [False],
                 "isolation_level":  ["1"],
                 "test_regression":  [False],
@@ -823,7 +821,7 @@ config_m2351 = {"seed_params": {
 
 config_m2354 = {"seed_params": {
                 "tfm_platform":     ["nuvoton/m2354"],
-                "compiler":         ["GCC_7_3_1"],
+                "compiler":         ["GCC_10_3"],
                 "lib_model":        [False],
                 "isolation_level":  ["1"],
                 "test_regression":  [False],
@@ -840,7 +838,7 @@ config_m2354 = {"seed_params": {
 # Config groups for debug
 config_debug = {"seed_params": {
                 "tfm_platform":     ["arm/mps2/an521"],
-                "compiler":         ["GCC_7_3_1"],
+                "compiler":         ["GCC_10_3"],
                 "lib_model":        [True],
                 "isolation_level":  ["1"],
                 "test_regression":  [False],

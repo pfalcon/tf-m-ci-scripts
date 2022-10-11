@@ -43,7 +43,7 @@
 #Fail if any command exit with error.
 set -e
 
-export PATH=$PATH:$GCC_7_3_1_PATH
+export PATH=$PATH:$GCC_10_3_PATH
 
 RAW_OUTPUT=0
 

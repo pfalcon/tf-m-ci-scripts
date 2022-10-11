@@ -172,14 +172,14 @@ def get_change_id(directory):
     return change_id
 
 if __name__ == "__main__":
-    # Export GCC v7.3.1 to ENV PATH
-    os.environ["PATH"] += os.pathsep + os.getenv('GCC_7_3_1_PATH')
+    # Export GCC v10.3 to ENV PATH
+    os.environ["PATH"] += os.pathsep + os.getenv('GCC_10_3_PATH')
     for i in range(len(REFERENCE_CONFIGS)):
         REFERENCE_CONFIGS[i] = REFERENCE_CONFIGS[i].strip().lower()
     config = identify_config()
     if (config[2].lower() in REFERENCE_CONFIGS
         and config[0] == "arm/mps2/an521"
-        and config[1] == "GCC_7_3_1"):
+        and config[1] == "GCC_10_3"):
         # Pushing data for AN521 and GNUARM
         print("Configuration " + config[2] + " is a reference")
         try :
