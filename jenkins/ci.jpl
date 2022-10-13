@@ -494,6 +494,7 @@ timestamps {
         sh "./clone.sh"
       }
     }
+
     stage("Configs") {
       // Populate configs
       listConfigs('tf-m-ci-scripts', configs, env.FILTER_GROUP)
@@ -506,31 +507,29 @@ timestamps {
         builds["docs"] = buildDocs(results)
       }
     }
-  }
 
-  stage("Builds") {
-    def verify = 1
-    def success = true
-    try {
-      parallel(builds)
-    } catch (Exception e) {
-      print(e)
-      manager.buildFailure()
-      verify = -1
-      success = false
-    } finally {
-      print("Verifying status")
-      def failed_builds = filterFailedBuild(results['builds'])
-      emailNotification(success, 'build', failed_builds)
-      g = new Gerrit()
-      g.verifyStatus(verify, 'tf-m-build', 'build')
-      print("Building CSV")
-      generateBuildCsv(results['builds'])
-      writeSummary(results['builds'])
+    stage("Builds") {
+      def verify = 1
+      def success = true
+      try {
+        parallel(builds)
+      } catch (Exception e) {
+        print(e)
+        manager.buildFailure()
+        verify = -1
+        success = false
+      } finally {
+        print("Verifying status")
+        def failed_builds = filterFailedBuild(results['builds'])
+        emailNotification(success, 'build', failed_builds)
+        g = new Gerrit()
+        g.verifyStatus(verify, 'tf-m-build', 'build')
+        print("Building CSV")
+        generateBuildCsv(results['builds'])
+        writeSummary(results['builds'])
+      }
     }
-  }
 
-  node("docker-amd64-tf-m-bionic") {
     stage("Tests") {
       dir("tf-m-ci-scripts") {
         checkout([$class: 'GitSCM', branches: [[name: '$CI_SCRIPTS_BRANCH']], userRemoteConfigs: [[credentialsId: 'GIT_SSH_KEY', url: '$CI_SCRIPTS_REPO']]])
@@ -545,9 +544,9 @@ timestamps {
           dir(".") {
             withCredentials([usernamePassword(credentialsId: env.LAVA_CREDENTIALS, passwordVariable: 'LAVA_TOKEN', usernameVariable: 'LAVA_USER')]) {
               output = sh(script: """./tf-m-ci-scripts/lava_helper/lava_wait_jobs.py --job-ids ${all_jobs.join(",")} \
-    --lava-url ${env.LAVA_URL} --lava-user ${LAVA_USER} --lava-token ${LAVA_TOKEN} \
-    --artifacts-path cfgs --lava-timeout 12000 \
-    """, returnStdout: true).trim()
+                          --lava-url ${env.LAVA_URL} --lava-user ${LAVA_USER} --lava-token ${LAVA_TOKEN} \
+                          --artifacts-path cfgs --lava-timeout 12000 \
+                          """, returnStdout: true).trim()
               println("--- output from lava_wait_jobs.py ---")
               println(output)
               println("--- end of output from lava_wait_jobs.py ---")
