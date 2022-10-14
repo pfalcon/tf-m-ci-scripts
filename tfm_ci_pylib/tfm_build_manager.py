@@ -398,8 +398,11 @@ class TFM_Build_Manager(structuredTask):
                             "test_psa_api": i.test_psa_api,
                             "cmake_build_type": i.cmake_build_type,
                             "with_bl2": i.with_bl2,
-                            "profile": "" if i.profile=="N.A" else i.profile,
-                            "extra_params": self.map_extra_params(i.extra_params)}
+                            "profile": "" if i.profile=="N.A" else i.profile}
+        # The extra params can also contain paths with "codebase_root_dir" and
+        # these also need to be substituted
+        overwrite_params["extra_params"] = self.map_extra_params(i.extra_params) % overwrite_params
+
         if i.test_psa_api == "IPC":
             overwrite_params["test_psa_api"] += " -DINCLUDE_PANIC_TESTS=1"
         if i.test_psa_api == "CRYPTO" and "musca" in i.tfm_platform:

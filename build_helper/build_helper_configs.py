@@ -501,6 +501,67 @@ config_mmio = {"seed_params": {
                 "invalid": _common_tfm_invalid_configs + []
                 }
 
+# Config groups for TF-M examples
+config_example_vad = {"seed_params": {
+                "tfm_platform":     ["arm/mps3/an552"],
+                "compiler":         ["GCC_10_3"],
+                "isolation_level":  ["2"],
+                "test_regression":  [False],
+                "test_psa_api":     ["OFF"],
+                "cmake_build_type": ["Release"],
+                "with_bl2":         [True],
+                "profile":          [""],
+                "extra_params":     ["EXAMPLE_VAD"]
+                },
+                "common_params": _common_tfm_builder_cfg,
+                "invalid": _common_tfm_invalid_configs + []
+                }
+
+config_example_dma350_ns = {"seed_params": {
+                "tfm_platform":     ["arm/mps3/corstone310/fvp"],
+                "compiler":         ["GCC_10_3"],
+                "isolation_level":  ["2"],
+                "test_regression":  [False],
+                "test_psa_api":     ["OFF"],
+                "cmake_build_type": ["Release"],
+                "with_bl2":         [True],
+                "profile":          [""],
+                "extra_params":     ["EXAMPLE_DMA350_NS"]
+                },
+                "common_params": _common_tfm_builder_cfg,
+                "invalid": _common_tfm_invalid_configs + []
+                }
+
+config_example_dma350_s = {"seed_params": {
+                "tfm_platform":     ["arm/mps3/corstone310/fvp"],
+                "compiler":         ["GCC_10_3"],
+                "isolation_level":  ["1"],
+                "test_regression":  [False],
+                "test_psa_api":     ["OFF"],
+                "cmake_build_type": ["Release"],
+                "with_bl2":         [True],
+                "profile":          [""],
+                "extra_params":     ["EXAMPLE_DMA350_S"]
+                },
+                "common_params": _common_tfm_builder_cfg,
+                "invalid": _common_tfm_invalid_configs + []
+                }
+
+config_example_dma350_trigger = {"seed_params": {
+                "tfm_platform":     ["arm/mps3/corstone310/fvp"],
+                "compiler":         ["GCC_10_3"],
+                "isolation_level":  ["2"],
+                "test_regression":  [False],
+                "test_psa_api":     ["OFF"],
+                "cmake_build_type": ["Release"],
+                "with_bl2":         [True],
+                "profile":          [""],
+                "extra_params":     ["EXAMPLE_DMA350_TRIGGER"]
+                },
+                "common_params": _common_tfm_builder_cfg,
+                "invalid": _common_tfm_invalid_configs + []
+                }
+
 # Config groups for code coverage
 config_cov_profile_s = deepcopy(config_profile_s)
 config_cov_profile_s["seed_params"]["compiler"] = ["GCC_10_3"]
@@ -949,6 +1010,12 @@ _builtin_configs = {
                     "nordic_nrf9160dk": config_nrf9160dk,
                     "nuvoton_m2351": config_m2351,
                     "nuvoton_m2354": config_m2354,
+
+                    # config groups for tf-m-extras examples
+                    "example_vad": config_example_vad,
+                    "example_dma350_trigger": config_example_dma350_trigger,
+                    "example_dma350_ns": config_example_dma350_ns,
+                    "example_dma350_s": config_example_dma350_s,
 
                     # config groups for debug
                     "debug": config_debug,
