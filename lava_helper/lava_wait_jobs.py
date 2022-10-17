@@ -41,9 +41,7 @@ def wait_for_jobs(user_args):
 def process_finished_jobs(finished_jobs, user_args):
     print_lava_urls(finished_jobs, user_args)
     test_report(finished_jobs, user_args)
-    failure_report(finished_jobs, user_args)
     job_links(finished_jobs, user_args)
-    csv_report(finished_jobs)
     codecov_helper.coverage_reports(finished_jobs, user_args)
 
 def get_finished_jobs(job_list, user_args, lava):
@@ -104,12 +102,6 @@ def fetch_artifacts(jobs, user_args, lava):
 def lava_id_to_url(id, user_args):
     return "{}/scheduler/job/{}".format(user_args.lava_url, id)
 
-def generateTestResult(info):
-    if info['health'] == "Complete" and info['state'] == "Finished":
-        return "PASS"
-    else:
-        return "FAIL"
-
 def job_links(jobs, user_args):
     job_links = ""
     for job, info in jobs.items():
@@ -121,49 +113,6 @@ def job_links(jobs, user_args):
         job_links += "LAVA link: {}\n".format(lava_id_to_url(job, user_args))
         job_links += "TFM LOG: {}artifact/{}/target_log.txt\n".format(os.getenv("BUILD_URL"), info['job_dir'])
     print(job_links)
-
-def csv_report(jobs):
-    lava_jobs = []
-    for job, info in jobs.items():
-        exist = False
-        for record in lava_jobs:
-            if info['metadata']['platform']   == record["Platform"] and \
-               info['metadata']['compiler']   == record["Compiler"] and \
-               info['metadata']['build_type'] == record["Build Type"]:
-                if record[info['metadata']['build_name']] != "FAIL":
-                    record[info['metadata']['build_name']] = generateTestResult(info)
-                exist = True
-                break
-        if not exist:
-            record = {}
-            record["Platform"] = info['metadata']['platform']
-            record["Compiler"] = info['metadata']['compiler']
-            record["Build Type"] = info['metadata']['build_type']
-            record["Config Name"] = info['metadata']['build_name']
-            for cfg in cfgs:
-                record[cfg] = "N.A."
-            record[info['metadata']['name']] = generateTestResult(info)
-            lava_jobs.append(record)
-    lava_jobs.sort(key=lambda x: x["Platform"] + x["Compiler"] + x["Build Type"])
-    with open("test_results.csv", "w", newline="") as csvfile:
-        fieldnames = ["Platform", "Compiler", "Build Type"] + list(cfgs)
-        writer = csv.DictWriter(csvfile, fieldnames=fieldnames, extrasaction='ignore')
-
-        writer.writeheader()
-        writer.writerows(lava_jobs)
-
-
-def failure_report(jobs, user_args):
-    failed_report = "FAILURE_TESTS:"
-    for job, info in jobs.items():
-        if info['health'] != "Complete" or info['state'] != "Finished":
-            failed_report += " {}:{}artifact/{}/target_log.txt\n".format(info['metadata']['build_name'],
-                                                                         os.getenv("BUILD_URL"),
-                                                                         info['job_dir'])
-            info['result'] = 'FAILURE'
-        else:
-            info['result'] = 'SUCCESS'
-    print(failed_report)
 
 def remove_lava_dupes(results):
     for result in results:
@@ -180,11 +129,14 @@ def test_report(jobs, user_args):
     fail_j = []
     jinja_data = []
     for job, info in jobs.items():
+        info['result'] = 'SUCCESS'
         if info['health'] != 'Complete':
+            info['result'] = 'FAILURE'
             fail_j.append(job)
             continue
         results_file = os.path.join(info['job_dir'], 'results.yaml')
         if not os.path.exists(results_file) or (os.path.getsize(results_file) == 0):
+            info['result'] = 'FAILURE'
             fail_j.append(job)
             continue
         with open(results_file, "r") as F:
@@ -196,6 +148,7 @@ def test_report(jobs, user_args):
         jinja_data.append({job: [info, non_lava_results]})
         for result in non_lava_results:
             if result['result'] == 'fail':
+                info['result'] = 'FAILURE'
                 fail_j.append(job) if job not in fail_j else fail_j
         time.sleep(0.5) # be friendly to LAVA
     data = {}

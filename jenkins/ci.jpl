@@ -59,8 +59,8 @@ def submit_lava_tests(config, results, build_res, params, params_collection) {
   print(links)
 }
 
-def listConfigs(ci_scripts_dir, config_list, filter_group) {
-  dir(ci_scripts_dir) {
+def listConfigs(config_list, filter_group) {
+  dir("tf-m-ci-scripts") {
     echo "Obtaining list of configs."
     echo "Running: python3 ./configs.py -g ${filter_group.replace(" ", " -g ")}"
     def build_config_list_raw = sh(script: """\
@@ -71,23 +71,27 @@ python3 ./configs.py -g ${filter_group.replace(" ", " -g ")}
   }
 }
 
-def buildConfig(ci_scripts_dir, config, filter_group, results) {
-  def params = []
-  def params_collection = [:]
-  def build_config_params
-  dir(ci_scripts_dir) {
+def obtainBuildParams(config) {
+  def build_params = [:]
+  dir("tf-m-ci-scripts") {
     echo "Obtaining build configuration for config ${config}"
-    echo "Running: python3 ./configs.py -g ${filter_group.replace(" ", " -g ")} ${config}"
-    build_config_params = sh(script: """\
-python3 ./configs.py -g ${filter_group.replace(" ", " -g ")} ${config}
-""", returnStdout: true).trim()
+    echo "Running: python3 ./configs.py ${config}"
+    build_config_params = sh(script: "python3 ./configs.py ${config}", returnStdout: true).trim()
   }
   def lines = build_config_params.tokenize('\n')
   for (String line : lines) {
     def key, value
     (key, value) = line.tokenize('=')
-    params += string(name: key, value: value)
-    params_collection[key] = value
+    build_params[key] = value
+  }
+  return build_params
+}
+
+def buildConfig(config, results) {
+  def params = []
+  params_collection = obtainBuildParams(config)
+  params_collection.each { param ->
+    params += string(name: param.key, value:param.value)
   }
   params += string(name: 'GERRIT_BRANCH', value: env.GERRIT_BRANCH)
   params += string(name: 'GERRIT_HOST', value: env.GERRIT_HOST)
@@ -114,7 +118,7 @@ python3 ./configs.py -g ${filter_group.replace(" ", " -g ")} ${config}
   return { -> results
     def build_res = build(job: 'tf-m-build-config', parameters: params, propagate: false)
     def build_url = build_res.getAbsoluteUrl()
-    results['builds'][build_res.number] = [build_res, config, params_collection]
+    results['builds'][config] = build_res
 
     print("${build_res.number}: ${config} ${build_res.result} ${build_url}")
 
@@ -158,12 +162,15 @@ def buildDocs(results) {
   }
 }
 
-def generateEmailBody(stage, failed_jobs) {
+def generateEmailBody(stage, results) {
+  // Results format: [CONFIG_NAME: [URL: "", RESULT: "", ...]]
   body = "Check console output at ${env.BUILD_URL} \n\n"
 
   body += "Failed Jobs:\n"
-  failed_jobs.each { job ->
-    body += "${job.key}  ${job.value}\n"
+  results.each { job ->
+    if (job.value['RESULT'] == 'FAILURE') {
+      body += "${job.key}  ${job.value['URL']}\n"
+    }
   }
 
   body += "\nFor detailed ${stage} results please refer to \
@@ -171,33 +178,21 @@ def generateEmailBody(stage, failed_jobs) {
   return body
 }
 
-def emailNotification(results, stage, failed_jobs) {
+def emailNotification(success, stage, results) {
   script {
    if (env.EMAIL_NOTIFICATION) {
-      def result = "Fail."
-      if (results == true) {
-        result = "Success."
-        print("Skip sending as ${result} for ${stage}")
+      if (success == true) {
+        print("Skip sending as Success for ${stage}")
       }
       else {
         emailext (
-            subject: ("Job ${env.JOB_NAME} ${stage} ${env.BUILD_NUMBER} ${result}"),
-            body: generateEmailBody(stage, failed_jobs),
+            subject: ("Job ${env.JOB_NAME} ${stage} ${env.BUILD_NUMBER} fail"),
+            body: generateEmailBody(stage, results),
             to: "${EMAIL_NOTIFICATION}"
         )
       }
     }
   } /* script */
-}
-
-def filterFailedBuild(results) {
-  def failed_builds = [:]
-  results.each { result ->
-    if (result.value[0].getResult() == "FAILURE") {
-      failed_builds[result.value[1]] = result.value[0].getAbsoluteUrl()
-    }
-  }
-  return failed_builds
 }
 
 def parseTestResults(output) {
@@ -230,132 +225,56 @@ def parseTestResults(output) {
         metadata[record_metadata[0]] = record_metadata[1]
       }
     }
-    test_results[config_name] = metadata
+    test_results[config_name] = ['URL': metadata['LAVA link'],
+                                 'RESULT': metadata['Test Result']]
   }
+
+  writeCsv(test_results, "test_results.csv")
+
   return test_results
 }
 
-def filterFailedTest(string) {
-  def failed_tests = [:]
-  line = lineInString(string, "FAILURE_TESTS:")
-  if (line == null) {
-    return ["???"];
-  }
-  a = line.split(' ')
-  if (a.size() > 1) {
-    a = line.split(' ')[1..-1]
-    a.each { fail_test ->
-      config_link = fail_test.split(':')
-      failed_tests[config_link[0]] = config_link[1..-1].join(':')
-  }
-  }
-  return failed_tests
-}
-
-@NonCPS
 def generateCsvContent(results) {
-  def resultsParam = []
+  // Results format: [CONFIG_NAME: [URL: "", RESULT: "", ...]]
+  // CSV format: CONFIG_NAME, RESULT
+  csv_header = obtainBuildParams(results.keySet()[0]).keySet().toList()
+  csv_header.add('RESULT')
+  csv_content = [csv_header]
   results.each { result ->
-    if (result.value[2]['BL2'] == "True") {
-      resultsParam.add([result.value[1], \
-                        result.value[0].getResult(), \
-                        result.value[2]['TFM_PLATFORM'], \
-                        result.value[2]['COMPILER'].split('_')[0], \
-                        result.value[2]['CMAKE_BUILD_TYPE'], \
-                        result.value[2]['BL2'], \
-                        result.value[2]['LIB_MODEL'], \
-                        result.value[2]['ISOLATION_LEVEL'], \
-                        result.value[2]['TEST_REGRESSION'], \
-                        result.value[2]['TEST_PSA_API'], \
-                        result.value[2]['PROFILE']])
+    build_params = []
+    obtainBuildParams(result.key).each { config ->
+      build_params.add(config.value)
     }
+    build_params.add(result.value['RESULT'])
+    csv_content.add(build_params)
   }
-  resultsParam.each { result ->
-    result[3] = result[3].split('_')[0]
-    build_params = result[6..10]
-    configName = ""
-    for (map_cfg in mapConfigs) {
-      if (build_params[0..4] == map_cfg[0..4]) {
-        configName = map_cfg[5]
-        break
-      }
-    }
-    if (configName == "") {
-      configName = "Default"
-    }
-    else if (configName == "RegressionProfileM") {
-      if (build_params[5] == "OFF") {
-        configName = "RegressionProfileM PSOFF"
-      }
-    }
-    result.add(configName)
-  }
-  def csvContent = []
-  resultsParam.each { result ->
-    current_row = result[2..4]
-    cfgs.each {cfg ->
-      if (cfg == result[11]) {
-        current_row.add(cfg)
-        current_row.add(result[1])
-      }
-    }
-    csvContent.add(current_row)
-  }
-  csvContent.sort{a,b -> a[0] <=> b[0] ?: a[1] <=> b[1] ?: a[2] <=> b[2]}
-  build_summary = []
-  current_platform = ""
-  current_compiler = ""
-  current_build_type = ""
-  csvContent.each { build_cfg ->
-    if (current_platform != build_cfg[0] || \
-        current_compiler != build_cfg[1] || \
-        current_build_type != build_cfg[2]) {
-          current_platform = build_cfg[0]
-          current_compiler = build_cfg[1]
-          current_build_type = build_cfg[2]
-          csv_line = [current_platform, current_compiler, current_build_type]
-          cfgs.each {
-            csv_line.add("N.A.")
-          }
-          build_summary.add(csv_line)
-        }
-    i = 0
-    cfgs.each { cfg ->
-      if (cfg == build_cfg[3]) {
-        build_summary[-1][3+i] = build_cfg[4]
-      }
-      i += 1
-    }
-  }
-  build_summary.add(0, ['Platform', 'Compiler', 'Cmake Build Type'])
-  build_summary[0] += cfgs
-  return build_summary
+  return csv_content
 }
 
-def generateBuildCsv(results) {
+def generateHtmlContent(results) {
+  // Results format: [CONFIG_NAME: [URL: "", RESULT: "", ...]]
+  // HTML format: CONFIG_NAME: Job/Logs/Artifacts RESULT
+  htmlContent = []
+  results.each { result ->
+    htmlContent.add("${result.key}: <a href=\"${result.value['URL']}\">Job</a>/<a href=\"${result.value['URL']}/consoleText\">Logs</a>/<a href=\"${result.value['URL']}/artifact/\">Artifacts</a> ${result.value['RESULT']}<br/>")
+  }
+  htmlContent.sort()
+  return htmlContent.join("\n")
+}
+
+def writeCsv(results, file_name) {
   def csvContent = generateCsvContent(results)
-  node("master") {
-    writeCSV file: 'build_results.csv', records: csvContent, format: CSVFormat.EXCEL
-    archiveArtifacts 'build_results.csv'
-  }
+  writeCSV file: file_name, records: csvContent, format: CSVFormat.EXCEL
+  sh(script: """./tf-m-ci-scripts/report_parser/report_csv_helper.py \
+                --input-file ${file_name} --output-file ${file_name} \
+             """, returnStdout: true)
+  archiveArtifacts file_name
 }
 
-def buildCsv(results) {
-  def summary = new Summary();
-  def csvContent = summary.getBuildCsv(results)
-  node("master") {
-    writeCSV file: 'build_results.csv', records: csvContent, format: CSVFormat.EXCEL
-    archiveArtifacts 'build_results.csv'
-  }
-}
-
-def writeSummary(results) {
-  def summary = new Summary();
-  def buildLinks = summary.getLinks(results)
-  node("master") {
-    writeFile file: "build_links.html", text: buildLinks
-    archiveArtifacts 'build_links.html'
-  }
+def writeHTML(results, file_name) {
+def buildLinks = generateHtmlContent(results)
+  writeFile file: file_name, text: buildLinks
+  archiveArtifacts file_name
 }
 
 def lineInString(string, match) {
@@ -405,11 +324,11 @@ timestamps {
 
     stage("Configs") {
       // Populate configs
-      listConfigs('tf-m-ci-scripts', configs, env.FILTER_GROUP)
+      listConfigs(configs, env.FILTER_GROUP)
       results['builds'] = [:]
       results['lava_jobs'] = []
       for (config in configs) {
-        builds[config] = buildConfig("tf-m-ci-scripts", config, env.FILTER_GROUP, results)
+        builds[config] = buildConfig(config, results)
       }
       if (!env.JOB_NAME.equals("tf-m-extra-build")) {
         builds["docs"] = buildDocs(results)
@@ -428,13 +347,16 @@ timestamps {
         success = false
       } finally {
         print("Verifying status")
-        def failed_builds = filterFailedBuild(results['builds'])
-        emailNotification(success, 'build', failed_builds)
         g = new Gerrit()
         g.verifyStatus(verify, 'tf-m-build', 'build')
-        print("Building CSV")
-        generateBuildCsv(results['builds'])
-        writeSummary(results['builds'])
+        print("Generating build results summary.")
+        def build_results_for_summary = [:]
+        results['builds'].each { build ->
+          build_results_for_summary[build.key] = ['URL': '', 'RESULT': build.value.result]
+        }
+        emailNotification(success, 'build', build_results_for_summary)
+        writeCsv(build_results_for_summary, "build_results.csv")
+        writeHTML(build_results_for_summary, "build_links.html")
       }
     }
 
@@ -444,6 +366,7 @@ timestamps {
       }
       def all_jobs = []
       def success = true
+      def test_results = [:]
       print("Wait for LAVA results here...")
       try {
         all_jobs = submitJobsToList(results['lava_jobs'])
@@ -458,10 +381,8 @@ timestamps {
               println("--- output from lava_wait_jobs.py ---")
               println(output)
               println("--- end of output from lava_wait_jobs.py ---")
-              parseTestResults(output)
+              test_results = parseTestResults(output)
               archiveArtifacts artifacts: 'test_summary.*', allowEmptyArchive: true
-              archiveArtifacts artifacts: 'test_results.csv', allowEmptyArchive: true
-
               if (env.CODE_COVERAGE_EN == "TRUE") {
                 println("Producing merged report")
                 sh(script: """./tf-m-ci-scripts/lava_helper/codecov_merge.sh""")
@@ -480,7 +401,7 @@ timestamps {
       } finally {
         archiveArtifacts artifacts: 'cfgs/**', allowEmptyArchive: true
         if (all_jobs.size() > 0) {
-          emailNotification(success, 'test', filterFailedTest(output))
+          emailNotification(success, 'test', test_results)
         }
         cleanWs()
         if (!success) {
