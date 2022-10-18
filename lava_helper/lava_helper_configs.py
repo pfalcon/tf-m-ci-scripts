@@ -278,9 +278,9 @@ psoc64 = {
     "templ": "psoc64.jinja2",
     "job_name": "psoc64",
     "device_type": "cy8ckit-064s0s2-4343w",
-    "job_timeout": 120,
-    "action_timeout": 120,
-    "monitor_timeout": 120,
+    "job_timeout": 30,
+    "action_timeout": 20,
+    "monitor_timeout": 20,
     "poweroff_timeout": 5,
     "platforms": {"cypress/psoc64": ""},
     "binaries": {
