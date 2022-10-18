@@ -60,11 +60,11 @@ def submit_lava_tests(config, results, build_res, params, params_collection) {
 
 def listConfigs(config_list, filter_group) {
   dir("tf-m-ci-scripts") {
-    echo "Obtaining list of configs."
-    echo "Running: python3 ./configs.py -g ${filter_group.replace(" ", " -g ")}"
     def build_config_list_raw = sh(script: """\
-python3 ./configs.py -g ${filter_group.replace(" ", " -g ")}
-""", returnStdout: true).trim()
+      set +x\n
+      python3 ./configs.py -g ${filter_group.replace(" ", " -g ")}\n
+      set -x
+      """, returnStdout: true).trim()
     def build_config_list = build_config_list_raw.tokenize('\n')
     config_list.addAll(build_config_list)
   }
@@ -73,9 +73,7 @@ python3 ./configs.py -g ${filter_group.replace(" ", " -g ")}
 def obtainBuildParams(config) {
   def build_params = [:]
   dir("tf-m-ci-scripts") {
-    echo "Obtaining build configuration for config ${config}"
-    echo "Running: python3 ./configs.py ${config}"
-    build_config_params = sh(script: "python3 ./configs.py ${config}", returnStdout: true).trim()
+    build_config_params = sh(script: "set +x\n python3 ./configs.py ${config}\n set -x", returnStdout: true).trim()
   }
   def lines = build_config_params.tokenize('\n')
   for (String line : lines) {
