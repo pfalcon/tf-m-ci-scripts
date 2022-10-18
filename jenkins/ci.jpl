@@ -8,7 +8,6 @@
 
 @Library('trustedfirmware') _
 import org.trustedfirmware.Gerrit
-import org.trustedfirmware.Summary
 
 failure_states = ["FAILURE", "ABORTED", "UNSTABLE", "NOT_BUILT"]
 
