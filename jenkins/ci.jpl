@@ -59,22 +59,24 @@ def submit_lava_tests(config, results, build_res, params, params_collection) {
 }
 
 def listConfigs(config_list, filter_group) {
-  dir("tf-m-ci-scripts") {
-    def build_config_list_raw = sh(script: """\
-      set +x\n
-      python3 ./configs.py -g ${filter_group.replace(" ", " -g ")}\n
-      set -x
-      """, returnStdout: true).trim()
-    def build_config_list = build_config_list_raw.tokenize('\n')
-    config_list.addAll(build_config_list)
-  }
+  def build_config_list_raw = sh(script:
+    """
+    set +x\n
+    python3 ./tf-m-ci-scripts/configs.py -g ${filter_group.replace(" ", " -g ")}\n
+    set -x
+    """, returnStdout: true).trim()
+  def build_config_list = build_config_list_raw.tokenize('\n')
+  config_list.addAll(build_config_list)
 }
 
 def obtainBuildParams(config) {
   def build_params = [:]
-  dir("tf-m-ci-scripts") {
-    build_config_params = sh(script: "set +x\n python3 ./configs.py ${config}\n set -x", returnStdout: true).trim()
-  }
+  build_config_params = sh(script:
+    """
+    set +x\n
+    python3 ./tf-m-ci-scripts/configs.py ${config}\n
+    set -x
+    """, returnStdout: true).trim()
   def lines = build_config_params.tokenize('\n')
   for (String line : lines) {
     def key, value
@@ -202,7 +204,7 @@ def parseTestResults(output) {
   }
   g.verifyStatus(score, "lava_test", "test")
   if (score < 0) {
-    error("Marking job as failed due to failed boots: \"${boot_output}\" or tests: \"${test_output}\"")
+    error("Marking job as failed due to failed tests.")
   }
 
   // Generate test results summary
@@ -320,40 +322,44 @@ timestamps {
     }
 
     stage("Configs") {
-      // Populate configs
-      listConfigs(configs, env.FILTER_GROUP)
-      results['builds'] = [:]
-      results['lava_jobs'] = []
-      for (config in configs) {
-        builds[config] = buildConfig(config, results)
-      }
-      if (!env.JOB_NAME.equals("tf-m-extra-build")) {
-        builds["docs"] = buildDocs(results)
+      dir(".") {
+        // Populate configs
+        listConfigs(configs, env.FILTER_GROUP)
+        results['builds'] = [:]
+        results['lava_jobs'] = []
+        for (config in configs) {
+          builds[config] = buildConfig(config, results)
+        }
+        if (!env.JOB_NAME.equals("tf-m-extra-build")) {
+          builds["docs"] = buildDocs(results)
+        }
       }
     }
 
     stage("Builds") {
       def verify = 1
       def success = true
-      try {
-        parallel(builds)
-      } catch (Exception e) {
-        print(e)
-        manager.buildFailure()
-        verify = -1
-        success = false
-      } finally {
-        print("Verifying status")
-        g = new Gerrit()
-        g.verifyStatus(verify, 'tf-m-build', 'build')
-        print("Generating build results summary.")
-        def build_results_for_summary = [:]
-        results['builds'].each { build ->
-          build_results_for_summary[build.key] = ['URL': '', 'RESULT': build.value.result]
+      dir(".") {
+        try {
+          parallel(builds)
+        } catch (Exception e) {
+          print(e)
+          manager.buildFailure()
+          verify = -1
+          success = false
+        } finally {
+          print("Verifying status")
+          g = new Gerrit()
+          g.verifyStatus(verify, 'tf-m-build', 'build')
+          print("Generating build results summary.")
+          def build_results_for_summary = [:]
+          results['builds'].each { build ->
+            build_results_for_summary[build.key] = ['URL': '', 'RESULT': build.value.result]
+          }
+          emailNotification(success, 'build', build_results_for_summary)
+          writeCsv(build_results_for_summary, "build_results.csv")
+          writeHTML(build_results_for_summary, "build_links.html")
         }
-        emailNotification(success, 'build', build_results_for_summary)
-        writeCsv(build_results_for_summary, "build_results.csv")
-        writeHTML(build_results_for_summary, "build_links.html")
       }
     }
 
