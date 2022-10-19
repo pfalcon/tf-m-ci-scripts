@@ -11,17 +11,6 @@ import org.trustedfirmware.Gerrit
 
 failure_states = ["FAILURE", "ABORTED", "UNSTABLE", "NOT_BUILT"]
 
-cfgSkipFVP = [
-  "AN519_GCC_IPC_2_REG_Debug_BL2",
-  "AN519_GCC_IPC_2_REG_Debug_BL2_MEDIUM",
-  "AN519_GCC_IPC_2_REG_Debug_BL2_MEDIUM_PSOFF",
-  "AN519_ARMCLANG_IPC_2_REG_Debug_BL2",
-  "AN519_ARMCLANG_IPC_2_REG_Debug_BL2_MEDIUM",
-  "AN521_ARMCLANG_IPC_2_REG_Debug_BL2",
-  "AN521_ARMCLANG_IPC_2_REG_Debug_BL2_NSCE",
-  "AN521_ARMCLANG_IPC_2_REG_Debug_BL2_MEDIUM",
-]
-
 def submit_lava_tests(config, results, build_res, params, params_collection) {
   print("Doing LAVA stuff for ${build_res.getAbsoluteUrl()}")
   params += string(name: 'BUILD_NUMBER', value: "${build_res.number}")
@@ -31,12 +20,7 @@ def submit_lava_tests(config, results, build_res, params, params_collection) {
   params += string(name: 'CI_SCRIPTS_BRANCH', value: env.CI_SCRIPTS_BRANCH)
   params += string(name: 'LAVA_CREDENTIALS', value: env.LAVA_CREDENTIALS)
   params += string(name: 'CODE_COVERAGE_EN', value: env.CODE_COVERAGE_EN)
-  // Workaround: Configs in cfgSkipFVP fail on FVP but pass on physical boards
-  if (params_collection['CONFIG_NAME'] in cfgSkipFVP) {
-    params += string(name: 'DEVICE_FILTER', value: "--physical-board-only")
-  } else {
-    params += string(name: 'DEVICE_FILTER', value: env.DEVICE_FILTER)
-  }
+  params += string(name: 'DEVICE_FILTER', value: env.DEVICE_FILTER)
   def lava_res = build(job: 'tf-m-lava-submit', parameters: params, propagate: false)
   def lava_resubmitted = false
   if (lava_res.result in failure_states) {
