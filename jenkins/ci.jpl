@@ -336,7 +336,8 @@ timestamps {
           print("Generating build results summary.")
           def build_results_for_summary = [:]
           results['builds'].each { build ->
-            build_results_for_summary[build.key] = ['URL': '', 'RESULT': build.value.result]
+            build_results_for_summary[build.key] = ['URL': build.value.getAbsoluteUrl(),
+                                                    'RESULT': build.value.result]
           }
           emailNotification(success, 'build', build_results_for_summary)
           writeCsv(build_results_for_summary, "build_results.csv")
