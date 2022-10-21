@@ -608,7 +608,7 @@ config_corstone310 = {"seed_params": {
                 }
 
 config_rss = {"seed_params": {
-                "tfm_platform":     ["arm/rss"],
+                "tfm_platform":     ["arm/rss/tc"],
                 "compiler":         ["GCC_10_3"],
                 "isolation_level":  ["1", "2"],
                 "test_regression":  [True, False],
