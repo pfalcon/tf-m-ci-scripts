@@ -9,7 +9,7 @@ from __future__ import print_function
 
 __copyright__ = """
 /*
- * Copyright (c) 2018-2020, Arm Limited. All rights reserved.
+ * Copyright (c) 2018-2022, Arm Limited. All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  *
@@ -365,6 +365,28 @@ def arm_non_eabi_size(filename):
              "bss": size_data.group("bss"),
              "dec": size_data.group("dec"),
              "hex": size_data.group("hex")}, eabi_size]
+
+def fromelf(filename):
+    """ Run fromelf command and parse the output using regex. Will
+    return a tuple with the formated data as well as the raw output of the
+    command """
+
+    size_info_rex = re.compile(r'^\s+(?P<Code>[0-9]+)\s+(?P<data>[0-9]+)\s+'
+                               r'(?P<RO>[0-9]+)\s+(?P<RW>[0-9]+)\s+'
+                               r'(?P<ZI>[0-9]+)\s+(?P<Debug>[0-9a-f]+)\s',
+                               re.MULTILINE)
+
+    fromelf_size = check_output(["fromelf", "-z",  filename],
+                                timeout=18).decode('UTF-8').rstrip()
+
+    size_data = re.search(size_info_rex, fromelf_size)
+
+    return [{"Code": size_data.group("Code"),
+             "Inline Data": size_data.group("data"),
+             "RO Data": size_data.group("RO"),
+             "RW Data": size_data.group("RW"),
+             "ZI Data": size_data.group("ZI"),
+             "Debug": size_data.group("Debug")}, fromelf_size]
 
 
 def list_subdirs(directory):

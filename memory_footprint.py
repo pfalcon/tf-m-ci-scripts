@@ -8,14 +8,12 @@
 #SPDX-License-Identifier: BSD-3-Clause
 
 
-import argparse
 import os
 import re
 import sys
 import json
 import requests
 import subprocess
-import configs
 from tfm_ci_pylib import utils
 
 # SQAUD constant
@@ -23,11 +21,10 @@ SQUAD_TOKEN            = sys.argv[1]
 SQUAD_BASE_PROJECT_URL = ("https://qa-reports.linaro.org/api/submit/tf/tf-m/")
 
 reference_configs = [
-    # build type, profile
-    ["Release",    "profile_small"],
-    ["Minsizerel", "profile_small"],
-    ["Release",    "profile_medium"],
-    ["Release",    "profile_large"],
+    'AN521_ARMCLANG_1_Minsizerel_BL2',
+    'AN521_ARMCLANG_1_Minsizerel_BL2_SMALL_PSOFF',
+    'AN521_ARMCLANG_2_Minsizerel_BL2_MEDIUM_PSOFF',
+    'AN521_ARMCLANG_3_Minsizerel_BL2_LARGE_PSOFF'
 ]
 
 # This function uses arm_non_eabi_size to get the sizes of a file
@@ -35,8 +32,9 @@ reference_configs = [
 def get_file_size(filename):
     f_path = os.path.join(os.getenv('WORKSPACE'), "trusted-firmware-m", "build", "bin", filename)
     if os.path.exists(f_path) :
-        file_sizes = utils.arm_non_eabi_size(f_path)[0]
-        return file_sizes
+        data_fromelf = utils.fromelf(f_path)
+        print(data_fromelf[1])  # Output of fromelf
+        return data_fromelf[0]  # Data parsed from output of fromelf
     else :
         print(f_path + "Not found")
         return -1
@@ -47,14 +45,16 @@ def send_file_size(change_id, config_name, bl2_sizes, tfms_sizes):
     url = SQUAD_BASE_PROJECT_URL + change_id + '/' + config_name
 
     try:
-        metrics = json.dumps({ "bl2_size"  : bl2_sizes["dec"],
-                               "bl2_data"  : bl2_sizes["data"],
-                               "bl2_bss"   : bl2_sizes["bss"],
-                               "bl2_text"  : bl2_sizes["text"],
-                               "tfms_size" : tfms_sizes["dec"],
-                               "tfms_data" : tfms_sizes["data"],
-                               "tfms_bss"  : tfms_sizes["bss"],
-                               "tfms_text" : tfms_sizes["text"]})
+        metrics = json.dumps({ "bl2_code_size"    : bl2_sizes["Code"],
+                               "bl2_inline_data"  : bl2_sizes["Inline Data"],
+                               "bl2_ro_data"      : bl2_sizes["RO Data"],
+                               "bl2_rw_data"      : bl2_sizes["RW Data"],
+                               "bl2_zi_data"      : bl2_sizes["ZI Data"],
+                               "tfms_code_size"   : tfms_sizes["Code"],
+                               "tfms_inline_data" : tfms_sizes["Inline Data"],
+                               "tfms_ro_data"     : tfms_sizes["RO Data"],
+                               "tfms_rw_data"     : tfms_sizes["RW Data"],
+                               "tfms_zi_data"     : tfms_sizes["ZI Data"]})
     except:
         return -1
 
@@ -115,42 +115,27 @@ def get_change_id(repo='trusted-firmware-m'):
     os.chdir(cur_dir) #Going back to the initial directory
     return change_id
 
-def is_reference_config() -> bool:
-    # Only push data for AN521 built with GCC
-    if (os.getenv('TFM_PLATFORM') != 'arm/mps2/an521'
-        or os.getenv('COMPILER') != 'GCC_10_3'
-        or os.getenv('TEST_REGRESSION') == "True"):
-        return False
-
-    configs = [os.getenv('CMAKE_BUILD_TYPE'), os.getenv('PROFILE')]
-    if configs in reference_configs:
-        return True
-
-    return False
-
 def print_image_sizes(image_sizes):
     for sec, size in image_sizes.items():
         print("{:4}: {}".format(sec, size))
 
 if __name__ == "__main__":
-    # Export GCC v10.3 to ENV PATH
-    os.environ["PATH"] += os.pathsep + os.getenv('GCC_10_3_PATH')
-    if is_reference_config():
+    # Export ARMClang v6.13 to ENV PATH
+    os.environ["PATH"] += os.pathsep + os.getenv('ARMCLANG_6_13_PATH')
+    if os.getenv('CONFIG_NAME') in reference_configs:
         print("Configuration " + os.getenv('CONFIG_NAME') + " is a reference")
         try :
             change_id = get_change_id("trusted-firmware-m")
         except :
             change_id = -1
 
-        bl2_sizes = get_file_size("bl2.axf")
         print("------ BL2 Memory Footprint ------")
-        print_image_sizes(bl2_sizes)
+        bl2_sizes = get_file_size("bl2.axf")
+        print("\n\n------ TFM Secure Memory Footprint ------")
         tfms_sizes = get_file_size("tfm_s.axf")
-        print("------ TFM Secure Memory Footprint ------")
-        print_image_sizes(tfms_sizes)
 
         if (bl2_sizes != -1 and change_id != -1) :
-            squad_config_name = os.getenv('CMAKE_BUILD_TYPE') + os.getenv('PROFILE')
+            squad_config_name = os.getenv('CONFIG_NAME')
             send_file_size(change_id, squad_config_name, bl2_sizes, tfms_sizes)
         else :
             #Directory or file weren't found
