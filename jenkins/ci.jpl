@@ -177,19 +177,6 @@ def emailNotification(success, stage, results) {
 }
 
 def parseTestResults(output) {
-  // Verify test status
-  g = new Gerrit()
-  if (output.contains('FAILURE')) {
-    score = -1
-  } else {
-    score = 1
-  }
-  g.verifyStatus(score, "lava_test", "test")
-  if (score < 0) {
-    error("Marking job as failed due to failed tests.")
-  }
-
-  // Generate test results summary
   def test_results = [:]
   records = output.split('\nLAVA Test Config:\n')
   if (records.size() < 2) {
@@ -213,6 +200,19 @@ def parseTestResults(output) {
   writeCsv(test_results, "test_results.csv")
 
   return test_results
+}
+
+def verifyTestStatus(output) {
+  g = new Gerrit()
+  if (output.contains('FAILURE')) {
+    score = -1
+  } else {
+    score = 1
+  }
+  g.verifyStatus(score, "lava_test", "test")
+  if (score < 0) {
+    error("Marking job as failed due to failed tests.")
+  }
 }
 
 def generateCsvContent(results) {
@@ -369,6 +369,7 @@ timestamps {
               println("--- end of output from lava_wait_jobs.py ---")
               test_results = parseTestResults(output)
               archiveArtifacts artifacts: 'test_summary.*', allowEmptyArchive: true
+              verifyTestStatus(output)
               if (env.CODE_COVERAGE_EN == "TRUE") {
                 println("Producing merged report")
                 sh(script: """./tf-m-ci-scripts/lava_helper/codecov_merge.sh""")
