@@ -14,7 +14,7 @@ actions:
     docker: {binary: /usr/bin/qemu-system-arm, image: 'trustedfirmware/ci-amd64-tf-m-qemu-debian:bullseye'}
     method: qemu
     timeout:
-      minutes: 10
+      minutes: 25
 - test:
     monitors:
     {%- for monitor in monitors %}

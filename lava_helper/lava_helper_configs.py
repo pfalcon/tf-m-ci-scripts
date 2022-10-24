@@ -200,9 +200,9 @@ qemu_mps2_bl2 = {
     "templ": "qemu_mps2_bl2.jinja2",
     "job_name": "qemu_mps2_bl2",
     "device_type": "qemu",
-    "job_timeout": 15,
-    "action_timeout": 10,
-    "monitor_timeout": 15,
+    "job_timeout": 30,
+    "action_timeout": 20,
+    "monitor_timeout": 20,
     "poweroff_timeout": 1,
     "platforms": {"arm/mps2/an521": ""},
     "binaries": {
