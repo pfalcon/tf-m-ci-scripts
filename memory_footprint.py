@@ -50,11 +50,11 @@ def send_file_size(change_id, config_name, bl2_sizes, tfms_sizes):
                                "bl2_ro_data"      : bl2_sizes["RO Data"],
                                "bl2_rw_data"      : bl2_sizes["RW Data"],
                                "bl2_zi_data"      : bl2_sizes["ZI Data"],
-                               "tfms_code_size"   : tfms_sizes["Code"],
-                               "tfms_inline_data" : tfms_sizes["Inline Data"],
-                               "tfms_ro_data"     : tfms_sizes["RO Data"],
-                               "tfms_rw_data"     : tfms_sizes["RW Data"],
-                               "tfms_zi_data"     : tfms_sizes["ZI Data"]})
+                               "spe_code_size"    : tfms_sizes["Code"],
+                               "spe_inline_data"  : tfms_sizes["Inline Data"],
+                               "spe_ro_data"      : tfms_sizes["RO Data"],
+                               "spe_rw_data"      : tfms_sizes["RW Data"],
+                               "spe_zi_data"      : tfms_sizes["ZI Data"]})
     except:
         return -1
 
