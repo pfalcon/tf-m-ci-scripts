@@ -374,6 +374,21 @@ config_profile_m = {"seed_params": {
                 "invalid": _common_tfm_invalid_configs + []
                 }
 
+config_profile_m_arotless = {"seed_params": {
+                "tfm_platform":     ["arm/musca_b1"],
+                "compiler":         ["GCC_10_3", "ARMCLANG_6_13"],
+                "isolation_level":  ["1"],
+                "test_regression":  [True, False],
+                "test_psa_api":     ["OFF"],
+                "cmake_build_type": ["Debug", "Release", "Minsizerel"],
+                "with_bl2":         [True],
+                "profile":          ["profile_medium_arotless"],
+                "extra_params":     ["", "PSOFF"]
+                },
+                "common_params": _common_tfm_builder_cfg,
+                "invalid": _common_tfm_invalid_configs + []
+                }
+
 config_profile_l = {"seed_params": {
                 "tfm_platform":     ["arm/mps2/an521"],
                 "compiler":         ["GCC_10_3", "ARMCLANG_6_13"],
@@ -476,6 +491,9 @@ config_cov_profile_s["seed_params"]["compiler"] = ["GCC_10_3"]
 
 config_cov_profile_m = deepcopy(config_profile_m)
 config_cov_profile_m["seed_params"]["compiler"] = ["GCC_10_3"]
+
+config_cov_profile_m_arotless = deepcopy(config_profile_m_arotless)
+config_cov_profile_m_arotless["seed_params"]["compiler"] = ["GCC_10_3"]
 
 config_cov_profile_l = deepcopy(config_profile_l)
 config_cov_profile_l["seed_params"]["compiler"] = ["GCC_10_3"]
@@ -843,6 +861,7 @@ _builtin_configs = {
                     "nightly_test": config_nightly_test,
                     "nightly_profile_s": config_profile_s,
                     "nightly_profile_m": config_profile_m,
+                    "nightly_profile_m_arotless": config_profile_m_arotless,
                     "nightly_profile_l": config_profile_l,
                     "nightly_cc_driver_psa": config_cc_driver_psa,
                     "nightly_fp":config_fp,
@@ -862,6 +881,7 @@ _builtin_configs = {
                     "release_test": config_release_test,
                     "release_profile_s": config_profile_s,
                     "release_profile_m": config_profile_m,
+                    "release_profile_m_arotless": config_profile_m_arotless,
                     "release_profile_l": config_profile_l,
                     "release_cc_driver_psa": config_cc_driver_psa,
                     "release_fp": config_fp,
@@ -879,6 +899,7 @@ _builtin_configs = {
                     # code coverage test groups
                     "coverage_profile_s": config_cov_profile_s,
                     "coverage_profile_m": config_cov_profile_m,
+                    "coverage_profile_m_arotless": config_cov_profile_m_arotless,
                     "coverage_profile_l": config_cov_profile_l,
                     "coverage_nsce": config_cov_nsce,
                     "coverage_mmio": config_cov_mmio,

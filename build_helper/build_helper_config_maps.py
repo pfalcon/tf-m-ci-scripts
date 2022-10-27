@@ -48,6 +48,7 @@ mapTestPsaApi = {
 mapProfile = {
     "profile_small" : "SMALL",
     "profile_medium": "MEDIUM",
+    "profile_medium_arotless": "MEDIUM-AROT-LESS",
     "profile_large" : "LARGE",
 }
 
