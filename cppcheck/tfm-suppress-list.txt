@@ -1,5 +1,5 @@
 //-------------------------------------------------------------------------------
-// Copyright (c) 2018-2021, Arm Limited and Contributors. All rights reserved.
+// Copyright (c) 2018-2022, Arm Limited and Contributors. All rights reserved.
 //
 // SPDX-License-Identifier: BSD-3-Clause
 //
@@ -43,14 +43,15 @@ unmatchedSuppression
 missingInclude:*/tfm_core.h:11
 missingInclude:*/tfm_secure_api.h:11
 
-//Exclude external qcbor code which does not comply with guidelines
-*:*/lib/*
+//Exclude external code which does not need to comply with guidelines
+*:*/lib/ext/*
 *:*/docs/*
 *:*/tools/*
 *:*/bl2/ext/*
 *:*/platform/ext/*
 *:*/mcuboot/*
 *:*/mbedtls/*
+*:lib/ext/qcbor-src/*
 
 //cppcheck shouldn't complain about unused function.
 unusedFunction
