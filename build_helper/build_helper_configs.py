@@ -593,7 +593,7 @@ config_musca_s1 = {"seed_params": {
                 }
 
 config_corstone310 = {"seed_params": {
-                "tfm_platform":     ["arm/mps3/corstone310_fvp"],
+                "tfm_platform":     ["arm/mps3/corstone310/fvp"],
                 "compiler":         ["GCC_10_3"],
                 "isolation_level":  ["1"],
                 "test_regression":  [False],
