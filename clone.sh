@@ -27,6 +27,8 @@
 # is triggered manually from the buider job itself.
 #
 
+set -e
+
 # Global defaults
 GIT_CLONE_PARAMS="--no-checkout"
 
