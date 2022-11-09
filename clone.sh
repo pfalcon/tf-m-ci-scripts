@@ -106,7 +106,8 @@ for repo in ${repos[@]}; do
         # fetch and checkout the corresponding refspec
         cd ${SHARE_FOLDER}/${REPO_NAME}
 
-        git fetch ${REPO_URL} ${REPO_REFSPEC} && git checkout FETCH_HEAD
+        git fetch ${REPO_URL} ${REPO_REFSPEC}
+        git checkout FETCH_HEAD
         echo -e "\n\nShare Folder ${SHARE_FOLDER}/${REPO_NAME} $(git rev-parse --short HEAD)\n\n"
         cd $OLDPWD
 
