@@ -399,6 +399,24 @@ config_profile_l = {"seed_params": {
                 "invalid": _common_tfm_invalid_configs + []
                 }
 
+config_ipc_backend = {"seed_params": {
+               "tfm_platform":      ["arm/mps2/an519",
+                                     "arm/mps2/an521",
+                                     "arm/musca_s1",
+                                     "arm/musca_b1"],
+                "compiler":         ["GCC_10_3", "ARMCLANG_6_13"],
+                "isolation_level":  ["1"],
+                "test_regression":  [True, False],
+                "test_psa_api":     ["OFF"],
+                "cmake_build_type": ["Debug", "Release", "Minsizerel"],
+                "with_bl2":         [True],
+                "profile":          [""],
+                "extra_params":     ["IPC"]
+                },
+                "common_params": _common_tfm_builder_cfg,
+                "invalid": _common_tfm_invalid_configs + []
+                }
+
 config_cc_driver_psa = {"seed_params": {
                "tfm_platform":      ["arm/musca_b1",
                                      "arm/musca_s1"],
@@ -492,6 +510,10 @@ config_cov_profile_m_arotless["seed_params"]["compiler"] = ["GCC_10_3"]
 
 config_cov_profile_l = deepcopy(config_profile_l)
 config_cov_profile_l["seed_params"]["compiler"] = ["GCC_10_3"]
+
+config_cov_ipc_backend = deepcopy(config_ipc_backend)
+config_cov_ipc_backend["seed_params"]["tfm_platform"] = ["arm/mps2/an521"]
+config_cov_ipc_backend["seed_params"]["compiler"] = ["GCC_10_3"]
 
 config_cov_nsce = deepcopy(config_nsce)
 config_cov_nsce["seed_params"]["compiler"] = ["GCC_10_3"]
@@ -858,6 +880,7 @@ _builtin_configs = {
                     "nightly_profile_m": config_profile_m,
                     "nightly_profile_m_arotless": config_profile_m_arotless,
                     "nightly_profile_l": config_profile_l,
+                    "nightly_ipc_backend": config_ipc_backend,
                     "nightly_cc_driver_psa": config_cc_driver_psa,
                     "nightly_fp":config_fp,
                     "nightly_psa_api": config_psa_api,
@@ -878,6 +901,7 @@ _builtin_configs = {
                     "release_profile_m": config_profile_m,
                     "release_profile_m_arotless": config_profile_m_arotless,
                     "release_profile_l": config_profile_l,
+                    "release_ipc_backend": config_ipc_backend,
                     "release_cc_driver_psa": config_cc_driver_psa,
                     "release_fp": config_fp,
                     "release_psa_api": config_psa_api,
@@ -896,6 +920,7 @@ _builtin_configs = {
                     "coverage_profile_m": config_cov_profile_m,
                     "coverage_profile_m_arotless": config_cov_profile_m_arotless,
                     "coverage_profile_l": config_cov_profile_l,
+                    "coverage_ipc_backend": config_cov_ipc_backend,
                     "coverage_nsce": config_cov_nsce,
                     "coverage_mmio": config_cov_mmio,
                     "coverage_fp": config_fp,
