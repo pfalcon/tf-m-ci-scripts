@@ -265,9 +265,6 @@ config_pp_test = {"seed_params": {
                     # MUSCA_S1_GCC_1_REG_Debug_BL2
                     ("arm/musca_s1", "GCC_10_3", "1",
                      True, "OFF", "Debug", True, "", ""),
-                    # MUSCA_S1_GCC_2_REG_Release_BL2_FPON
-                    ("arm/musca_s1", "GCC_10_3", "2",
-                     True, "OFF", "Release", True, "", "FPON"),
                     # MUSCA_S1_GCC_1_REG_Release_BL2_CC_DRIVER_PSA
                     ("arm/musca_s1", "GCC_10_3", "1",
                      True, "OFF", "Release", True, "", "CC_DRIVER_PSA"),
@@ -438,7 +435,8 @@ config_cc_driver_psa = {"seed_params": {
                 }
 
 config_fp = {"seed_params": {
-                "tfm_platform":     ["arm/musca_s1"],
+                "tfm_platform":     ["arm/mps2/an521",
+                                     "arm/mps3/an552"],
                 "compiler":         ["GCC_10_3"],
                 "isolation_level":  ["1", "2"],
                 "test_regression":  [True],
