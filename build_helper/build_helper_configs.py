@@ -225,9 +225,9 @@ config_pp_test = {"seed_params": {
                     # AN521_ARMCLANG_3_REG_Minsizerel_BL2
                     ("arm/mps2/an521", "ARMCLANG_6_13", "3",
                      True, "OFF", "Minsizerel", True, "", ""),
-                    # AN521_ARMCLANG_1_REG_Debug_BL2_SMALL_PSOFF_SFN
+                    # AN521_ARMCLANG_1_REG_Debug_BL2_SMALL_PSOFF
                     ("arm/mps2/an521", "ARMCLANG_6_13", "1",
-                     True, "OFF", "Debug", True, "profile_small", "PSOFF, SFN"),
+                     True, "OFF", "Debug", True, "profile_small", "PSOFF"),
                     # AN521_GCC_1_REG_Debug_BL2
                     ("arm/mps2/an521", "GCC_10_3", "1",
                      True, "OFF", "Debug", True, "", ""),
@@ -346,11 +346,6 @@ config_profile_s = {"seed_params": {
                 "extra_params":     ["PSOFF"]
                 },
                 "common_params": _common_tfm_builder_cfg,
-                "valid": [
-                    # Profile Small also supports SFN model
-                    ("*", "*", "*", "*", "*",
-                     "*", "*", "*", "PSOFF, SFN")
-                ],
                 "invalid": _common_tfm_invalid_configs + [
                     ("arm/mps2/an519", "GCC_10_3", "*", "*",
                      "*", "Minsizerel", "*", "*", "*")

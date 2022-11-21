@@ -68,8 +68,6 @@ mapExtraParams = {
     "LZOFF"        : "-DCONFIG_TFM_LAZY_STACKING=OFF ",
     # Partiton
     "PSOFF"        : "-DTFM_PARTITION_PROTECTED_STORAGE=OFF ",
-    # SFN
-    "SFN"          : "-DCONFIG_TFM_SPM_BACKEND=SFN ",
     # CC Driver
     "CC_DRIVER_PSA": "-DCC312_LEGACY_DRIVER_API_ENABLED=OFF ",
     # ST support
