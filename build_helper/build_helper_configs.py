@@ -270,6 +270,9 @@ config_pp_test = {"seed_params": {
                     # MUSCA_S1_GCC_1_REG_Release_BL2_CC_DRIVER_PSA
                     ("arm/musca_s1", "GCC_10_3", "1",
                      True, "OFF", "Release", True, "", "CC_DRIVER_PSA"),
+                    # RSS_TC_GCC_2_Release_BL2_PSOFF
+                    ("arm/rss/tc", "GCC_10_3", "2",
+                     False, "OFF", "Release", True, "", "PSOFF"),
                     # stm32l562e_dk_ARMCLANG_1_REG_Release_BL2
                     ("stm/stm32l562e_dk", "ARMCLANG_6_13", "1",
                      True, "OFF", "Release", True, "", "CRYPTO_OFF"),
