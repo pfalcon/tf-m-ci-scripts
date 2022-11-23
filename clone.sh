@@ -66,9 +66,9 @@ PSA_ARCH_TESTS_PROJECT="${PSA_ARCH_TESTS_URL:-}"
 PSA_ARCH_TESTS_REFSPEC="${PSA_ARCH_TESTS_VERSION:-}"
 PSA_ARCH_TESTS_NAME="psa-arch-tests"
 
-PSA_QCBOR_PROJECT="https://github.com/laurencelundblade/QCBOR.git"
-PSA_QCBOR_REFSPEC="refs/heads/master"
-PSA_QCBOR_NAME="psa_qcbor"
+QCBOR_PROJECT="${QCBOR_URL:-}"
+QCBOR_REFSPEC="${QCBOR_VERSION:-}"
+QCBOR_NAME="QCBOR"
 
 # Array containing "<repo url>;"<repo name>;<refspec>" elements
 repos=(
@@ -78,7 +78,7 @@ repos=(
     "${MBEDTLS_PROJECT};${MBEDTLS_NAME};${MBEDTLS_REFSPEC}"
     "${MCUBOOT_PROJECT};${MCUBOOT_NAME};${MCUBOOT_REFSPEC}"
     "${PSA_ARCH_TESTS_PROJECT};${PSA_ARCH_TESTS_NAME};${PSA_ARCH_TESTS_REFSPEC}"
-    "${PSA_QCBOR_PROJECT};${PSA_QCBOR_NAME};${PSA_QCBOR_REFSPEC}"
+    "${QCBOR_PROJECT};${QCBOR_NAME};${QCBOR_REFSPEC}"
     "${TFM_EXTRAS_PROJECT};${TFM_EXTRAS_NAME};${TFM_EXTRAS_REFSPEC}"
     "${FREERTOS_KERNEL_PROJECT};${FREERTOS_KERNEL_NAME};${FREERTOS_KERNEL_REFSPEC}"
     "https://review.trustedfirmware.org/ci/qa-tools;qa-tools;openci"
