@@ -55,6 +55,7 @@ timestamps {
         }
       }
     } catch (Exception e) {
+      archiveArtifacts artifacts: 'trusted-firmware-m/build/**', allowEmptyArchive: true
       manager.buildFailure()
       verify = -1
     } finally {
