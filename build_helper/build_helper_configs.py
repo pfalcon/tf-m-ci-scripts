@@ -324,7 +324,7 @@ config_release_test = {"seed_params": {
                 "cmake_build_type": ["Debug", "Release", "Minsizerel"],
                 "with_bl2":         [True],
                 "profile":          [""],
-                "extra_params":     [""]
+                "extra_params":     ["TEST_CBOR"]
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "valid": [

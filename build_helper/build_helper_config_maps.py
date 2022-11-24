@@ -82,6 +82,9 @@ mapExtraParams = {
     "FPGA"         : "-DPLATFORM_IS_FVP=False ",
     "S_PS_OFF"     : "-DTEST_S_PS=OFF ",
 
+    # Extra test cases
+    "TEST_CBOR"    : "-DTEST_NS_QCBOR=ON ",
+
     # tf-m-extras example support
     "EXAMPLE_VAD"             : ("-DNS_EVALUATION_APP_PATH=%(codebase_root_dir)s/../tf-m-extras/examples/vad_an552/ns_side "
                                 "-DTFM_EXTRA_PARTITION_PATHS=%(codebase_root_dir)s/../tf-m-extras/partitions/vad_an552_sp/ "
