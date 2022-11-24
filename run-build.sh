@@ -57,11 +57,6 @@ if [ "$cnt" != "0" ] ; then
 	cd -
 fi
 
-psa_qcbor_link="https://github.com/laurencelundblade/QCBOR.git"
-psa_qcbor_path="$(pwd)/psa_qcbor"
-psa_qcbor_cfg_cmake="psa-arch-tests/api-tests/tools/cmake/common/CMakeExternal.cmake"
-sed -i "s#$psa_qcbor_link#$psa_qcbor_path#g" $psa_qcbor_cfg_cmake
-
 rm -rf trusted-firmware-m/build
 mkdir trusted-firmware-m/build
 cd trusted-firmware-m/build
