@@ -41,7 +41,11 @@ actions:
       local: true
     prompts:
     - 'root@lava '
+{%- if enable_code_coverage %}
+    image: /usr/bin/stdout-flush-wrapper.sh
+{%- else %}
     image: /opt/model/FVP_MPS2_AEMv8M/models/Linux64_GCC-6.4/FVP_MPS2_AEMv8M
+{%- endif %}
     timeout:
       minutes: 10
 {%- if psa_api_suite == "IPC" %}
@@ -53,6 +57,9 @@ actions:
 {%- endif %}
     license_variable: '{{ license_variable }}'
     arguments:
+{%- if enable_code_coverage %}
+    -  "/opt/model/FVP_MPS2_AEMv8M/models/Linux64_GCC-6.4/FVP_MPS2_AEMv8M"
+{%- endif %}
     -  "--simlimit 620"
     -  "--application cpu0={APP}"
     -  "--data cpu0={DATA}@{{ data_bin_offset }}"
