@@ -33,11 +33,7 @@ actions:
     namespace: docker
     method: fvp
     docker:
-{%- if enable_code_coverage %}
-      name: {{ docker_prefix }}/fvp:fvp_mps2_aemv8m_11.12_38
-{%- else %}
       name: {{ docker_prefix }}/fvp:fvp_mps2_aemv8m_11.16_16
-{%- endif %}
       local: true
     prompts:
     - 'root@lava '
