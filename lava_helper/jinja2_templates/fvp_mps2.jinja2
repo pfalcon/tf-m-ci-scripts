@@ -53,7 +53,7 @@ actions:
 {%- endif %}
     license_variable: '{{ license_variable }}'
     arguments:
-    -  "--simlimit 600"
+    -  "--simlimit 620"
     -  "--application cpu0={APP}"
     -  "--data cpu0={DATA}@{{ data_bin_offset }}"
     -  "--parameter fvp_mps2.platform_type=2"
@@ -73,7 +73,7 @@ actions:
 {%- if enable_code_coverage %}
     -  "--plugin {CC}"
     -  "--parameter fvp_mps2.UART0.shutdown_tag=\x04"
-    -  "--cpulimit 300"
+    -  "--cpulimit 600"
 {%- endif %}
 
     prompts:
