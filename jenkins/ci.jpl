@@ -193,6 +193,10 @@ def parseTestResults(output) {
     metadata = [:]
     record.split('\n').each { line ->
       record_metadata = line.split(': ')
+      // Skip lines which are not "metadata"
+      if (record_metadata.size() < 2) {
+        return
+      }
       if (record_metadata[0] == 'Config Name') {
         config_name = record_metadata[1]
       } else {
