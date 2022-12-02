@@ -369,6 +369,21 @@ config_profile_m = {"seed_params": {
                 "invalid": _common_tfm_invalid_configs + []
                 }
 
+config_profile_m_debug = {"seed_params": {
+                "tfm_platform":     ["arm/mps2/an519"],
+                "compiler":         ["GCC_10_3"],
+                "isolation_level":  ["2"],
+                "test_regression":  ["Regs, RegNS"],# , "OFF"],
+                "test_psa_api":     ["OFF"],
+                "cmake_build_type": ["Debug"],
+                "with_bl2":         [True],
+                "profile":          ["profile_medium"],
+                "extra_params":     ["PSOFF"]
+                },
+                "common_params": _common_tfm_builder_cfg,
+                "invalid": _common_tfm_invalid_configs + []
+                }
+
 config_profile_m_arotless = {"seed_params": {
                 "tfm_platform":     ["arm/musca_b1"],
                 "compiler":         ["GCC_10_3", "ARMCLANG_6_13"],
@@ -992,6 +1007,7 @@ _builtin_configs = {
                     # code coverage test groups
                     "coverage_profile_s": config_cov_profile_s,
                     "coverage_profile_m": config_cov_profile_m,
+                    "coverage_profile_m_debug": config_profile_m_debug,
                     "coverage_profile_l": config_cov_profile_l,
                     "coverage_ipc_backend": config_cov_ipc_backend,
                     "coverage_nsce": config_cov_nsce,
