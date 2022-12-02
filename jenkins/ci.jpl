@@ -389,7 +389,10 @@ timestamps {
         }
       }
       catch (Exception e) {
-        print("ERROR: ${e}")
+        println("ERROR: ${e}")
+        // We don't print stacktrace, because Jenkins pipeline use CPS conversion
+        // of the Groovy code, which leads to incomprehensible stacktraces.
+        //print(hudson.Functions.printThrowable(org.codehaus.groovy.runtime.StackTraceUtils.sanitize(e)))
         success = false
       } finally {
         archiveArtifacts artifacts: 'cfgs/**', allowEmptyArchive: true
