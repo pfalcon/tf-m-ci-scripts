@@ -347,6 +347,7 @@ timestamps {
       def success = true
       dir(".") {
         try {
+          1/0
           parallel(builds)
         } catch (Exception e) {
           print(e)
