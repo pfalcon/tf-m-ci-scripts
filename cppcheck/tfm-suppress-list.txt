@@ -48,7 +48,10 @@ missingInclude:*/tfm_secure_api.h:11
 *:*/docs/*
 *:*/tools/*
 *:*/bl2/ext/*
-*:*/platform/ext/*
+*:*/platform/ext/accelerator/*
+*:*/platform/ext/cmsis/*
+*:*/platform/ext/driver/*
+*:*/platform/ext/target/*
 *:*/mcuboot/*
 *:*/mbedtls/*
 *:lib/ext/qcbor-src/*
