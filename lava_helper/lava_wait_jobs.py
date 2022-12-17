@@ -20,6 +20,7 @@ import time
 import yaml
 import argparse
 import shutil
+import traceback
 from jinja2 import Environment, FileSystemLoader
 from lava_helper import test_lava_dispatch_credentials
 from lava_submit_jobs import submit_lava_jobs
@@ -184,6 +185,7 @@ def main(user_args):
         except Exception as e:
             if try_time < 2:
                 print("Exception in wait_for_jobs: {!r}".format(e))
+                traceback.print_exception(type(e), e, e.__traceback__)
                 print("Trying to get LAVA jobs again...")
             else:
                 raise e
