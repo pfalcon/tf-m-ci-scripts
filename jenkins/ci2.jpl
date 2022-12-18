@@ -107,7 +107,11 @@ def buildConfig(config, results) {
         // Clone TF-M repositories so share folder can be reused by downstream jobs
         sh "./clone.sh"
       }
-      sh "tf-m-ci-scripts/run-build.sh"
+      sh """
+        export CONFIG_NAME=${config}
+        env | sort
+        tf-m-ci-scripts/run-build.sh
+      """
     }
   }
 }
