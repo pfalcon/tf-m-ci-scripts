@@ -114,16 +114,6 @@ def buildConfig(config, results) {
     // Configs with build failure do not need LAVA tests
     if (build_res.result in failure_states) {
       error("Build failed at ${build_url}")
-    } else {
-        // Build successful
-        // Job tf-m-extra-build does not need LAVA tests
-        if (env.JOB_NAME.equals("tf-m-extra-build")) {
-          print("LAVA is not needed in tf-m-extra-build job.")
-        }
-        // Submit LAVA tests
-        else {
-          submit_lava_tests(config, results, build_res, params, params_collection)
-        }
     }
   }
 }
@@ -322,9 +312,6 @@ timestamps {
         for (config in configs) {
           builds[config] = buildConfig(config, results)
         }
-        if (!env.JOB_NAME.equals("tf-m-extra-build")) {
-          builds["docs"] = buildDocs(results)
-        }
       }
     }
 
@@ -339,75 +326,12 @@ timestamps {
           manager.buildFailure()
           verify = -1
           success = false
-        } finally {
-          print("Verifying status")
-          g = new Gerrit()
-          g.verifyStatus(verify, 'tf-m-build', 'build')
-          print("Generating build results summary.")
-          def build_results_for_summary = [:]
-          results['builds'].each { build ->
-            build_results_for_summary[build.key] = ['URL': build.value.getAbsoluteUrl(),
-                                                    'RESULT': build.value.result]
-          }
-          emailNotification(success, 'build', build_results_for_summary)
-          writeCsv(build_results_for_summary, "build_results.csv")
-          writeHTML(build_results_for_summary, "build_links.html")
         }
       }
     }
 
-    stage("Tests") {
-      dir("tf-m-ci-scripts") {
-        checkout([$class: 'GitSCM', branches: [[name: '$CI_SCRIPTS_BRANCH']], userRemoteConfigs: [[credentialsId: 'GIT_SSH_KEY', url: '$CI_SCRIPTS_REPO']]])
-      }
-      def all_jobs = []
-      def success = true
-      def test_results = [:]
-      print("Wait for LAVA results here...")
-      try {
-        all_jobs = submitJobsToList(results['lava_jobs'])
-        output = ""
-        if (all_jobs.size() > 0) {
-          dir(".") {
-            withCredentials([usernamePassword(credentialsId: env.LAVA_CREDENTIALS, passwordVariable: 'LAVA_TOKEN', usernameVariable: 'LAVA_USER')]) {
-              output = sh(script: """./tf-m-ci-scripts/lava_helper/lava_wait_jobs.py --job-ids ${all_jobs.join(",")} \
-                          --lava-url ${env.LAVA_URL} --lava-user ${LAVA_USER} --lava-token ${LAVA_TOKEN} \
-                          --artifacts-path cfgs --lava-timeout 12000 \
-                          """, returnStdout: true).trim()
-              println("--- output from lava_wait_jobs.py ---")
-              println(output)
-              println("--- end of output from lava_wait_jobs.py ---")
-              test_results = parseTestResults(output)
-              archiveArtifacts artifacts: 'test_summary.*', allowEmptyArchive: true
-              verifyTestStatus(output)
-              if (env.CODE_COVERAGE_EN == "TRUE") {
-                println("Producing merged report")
-                sh(script: """./tf-m-ci-scripts/lava_helper/codecov_merge.sh""")
-                archiveArtifacts artifacts: 'merged_report/**', allowEmptyArchive: true
-              }
-            }
-          }
-        }
-        else {
-          print("There were no LAVA jobs to test.")
-        }
-      }
-      catch (Exception e) {
-        println("ERROR: ${e}")
-        // We don't print stacktrace, because Jenkins pipeline use CPS conversion
-        // of the Groovy code, which leads to incomprehensible stacktraces.
-        //print(hudson.Functions.printThrowable(org.codehaus.groovy.runtime.StackTraceUtils.sanitize(e)))
-        success = false
-      } finally {
-        archiveArtifacts artifacts: 'cfgs/**', allowEmptyArchive: true
-        if (all_jobs.size() > 0) {
-          emailNotification(success, 'test', test_results)
-        }
-        cleanWs()
-        if (!success) {
-          error("There was an Error waiting for LAVA jobs")
-        }
-      }
+    stage("Collect data") {
+      print("Collect data here")
     }
   }
 }
