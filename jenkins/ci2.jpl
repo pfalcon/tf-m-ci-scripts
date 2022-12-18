@@ -99,17 +99,15 @@ def buildConfig(config, results) {
   params += string(name: 'SHARE_FOLDER', value: env.SHARE_FOLDER)
   params += string(name: 'SQUAD_CONFIGURATIONS', value: env.SQUAD_CONFIGURATIONS)
   return { -> results
-    def build_res = build(job: 'tf-m-build-config', parameters: params, propagate: false)
-    def build_url = build_res.getAbsoluteUrl()
-    results['builds'][config] = build_res
-
-    print("${build_res.number}: ${config} ${build_res.result} ${build_url}")
-
-    // Filter out configs do not need LAVA tests
-
-    // Configs with build failure do not need LAVA tests
-    if (build_res.result in failure_states) {
-      error("Build failed at ${build_url}")
+    node("docker-amd64-tf-m-bionic") {
+      cleanWs()
+      dir("tf-m-ci-scripts") {
+        checkout([$class: 'GitSCM', branches: [[name: '$CI_SCRIPTS_BRANCH']], userRemoteConfigs: [[credentialsId: 'GIT_SSH_KEY', url: '$CI_SCRIPTS_REPO']]])
+        sh "git rev-parse --short HEAD"
+        // Clone TF-M repositories so share folder can be reused by downstream jobs
+        sh "./clone.sh"
+      }
+      sh "tf-m-ci-scripts/run-build.sh"
     }
   }
 }
