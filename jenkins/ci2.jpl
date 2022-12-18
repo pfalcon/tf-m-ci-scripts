@@ -1,0 +1,413 @@
+#!/usr/bin/env groovy
+//-------------------------------------------------------------------------------
+// Copyright (c) 2020-2022, Arm Limited and Contributors. All rights reserved.
+//
+// SPDX-License-Identifier: BSD-3-Clause
+//
+//-------------------------------------------------------------------------------
+
+@Library('trustedfirmware') _
+import org.trustedfirmware.Gerrit
+
+failure_states = ["FAILURE", "ABORTED", "UNSTABLE", "NOT_BUILT"]
+
+def submit_lava_tests(config, results, build_res, params, params_collection) {
+  print("Doing LAVA stuff for ${build_res.getAbsoluteUrl()}")
+  params += string(name: 'BUILD_NUMBER', value: "${build_res.number}")
+  params += string(name: 'BUILD_URL', value: build_res.getAbsoluteUrl())
+  params += string(name: 'LAVA_URL', value: env.LAVA_URL)
+  params += string(name: 'CI_SCRIPTS_REPO', value: env.CI_SCRIPTS_REPO)
+  params += string(name: 'CI_SCRIPTS_BRANCH', value: env.CI_SCRIPTS_BRANCH)
+  params += string(name: 'LAVA_CREDENTIALS', value: env.LAVA_CREDENTIALS)
+  params += string(name: 'CODE_COVERAGE_EN', value: env.CODE_COVERAGE_EN)
+  params += string(name: 'DEVICE_FILTER', value: env.DEVICE_FILTER)
+  def lava_res = build(job: 'tf-m-lava-submit', parameters: params, propagate: false)
+  def lava_resubmitted = false
+  if (lava_res.result in failure_states) {
+    error("LAVA Create and Submit failed at ${lava_res.getAbsoluteUrl()}")
+  } else {
+    lava_des = lava_res.getDescription()
+    if (lava_des.contains(" Submitted twice!")) {
+      lava_resubmitted = true
+      lava_des = lava_des - " Submitted twice!"
+    }
+    results['lava_jobs'] += lava_des
+  }
+  links = "Build Config: ${config}\n"
+  links += "Build URL: ${build_res.getAbsoluteUrl()}\n"
+  links += "LAVA Submit: ${lava_res.getAbsoluteUrl()}"
+  if (lava_resubmitted) {
+    links += "\nLAVA Job Re-Submitted!"
+  }
+  print(links)
+}
+
+def listConfigs(config_list, filter_group) {
+  def build_config_list_raw = sh(script:
+    """
+    set +x\n
+    python3 ./tf-m-ci-scripts/configs.py -g ${filter_group.replace(" ", " -g ")}\n
+    set -x
+    """, returnStdout: true).trim()
+  def build_config_list = build_config_list_raw.tokenize('\n')
+  config_list.addAll(build_config_list)
+}
+
+def obtainBuildParams(config) {
+  def build_params = [:]
+  build_config_params = sh(script:
+    """
+    set +x\n
+    python3 ./tf-m-ci-scripts/configs.py ${config}\n
+    set -x
+    """, returnStdout: true).trim()
+  def lines = build_config_params.tokenize('\n')
+  for (String line : lines) {
+    def key, value
+    (key, value) = line.tokenize('=')
+    build_params[key] = value
+  }
+  return build_params
+}
+
+def buildConfig(config, results) {
+  def params = []
+  params_collection = obtainBuildParams(config)
+  params_collection.each { param ->
+    params += string(name: param.key, value:param.value)
+  }
+  params += string(name: 'GERRIT_BRANCH', value: env.GERRIT_BRANCH)
+  params += string(name: 'GERRIT_HOST', value: env.GERRIT_HOST)
+  params += string(name: 'GERRIT_CHANGE_NUMBER', value: env.GERRIT_CHANGE_NUMBER)
+  params += string(name: 'GERRIT_PATCHSET_REVISION', value: env.GERRIT_PATCHSET_REVISION)
+  params += string(name: 'GERRIT_REFSPEC', value: env.GERRIT_REFSPEC)
+  params += string(name: 'MBEDTLS_VERSION', value: env.MBEDTLS_VERSION)
+  params += string(name: 'CODE_REPO', value: env.CODE_REPO)
+  params += string(name: 'CODE_COVERAGE_EN', value: env.CODE_COVERAGE_EN)
+  params += string(name: 'CI_SCRIPTS_REPO', value: env.CI_SCRIPTS_REPO)
+  params += string(name: 'CI_SCRIPTS_BRANCH', value: env.CI_SCRIPTS_BRANCH)
+  params += string(name: 'MCUBOOT_REFSPEC', value: env.MCUBOOT_REFSPEC)
+  params += string(name: 'MCUBOOT_URL', value: env.MCUBOOT_URL)
+  params += string(name: 'MBEDTLS_VERSION', value: env.MBEDTLS_VERSION)
+  params += string(name: 'MBEDTLS_URL', value: env.MBEDTLS_URL)
+  params += string(name: 'TFM_EXTRAS_REFSPEC', value: env.TFM_EXTRAS_REFSPEC)
+  params += string(name: 'TFM_EXTRAS_URL', value: env.TFM_EXTRAS_URL)
+  params += string(name: 'TFM_TESTS_REFSPEC', value: env.TFM_TESTS_REFSPEC)
+  params += string(name: 'TFM_TESTS_URL', value: env.TFM_TESTS_URL)
+  params += string(name: 'PSA_ARCH_TESTS_VERSION', value: env.PSA_ARCH_TESTS_VERSION)
+  params += string(name: 'PSA_ARCH_TESTS_URL', value: env.PSA_ARCH_TESTS_URL)
+  params += string(name: 'QCBOR_VERSION', value: env.QCBOR_VERSION)
+  params += string(name: 'QCBOR_URL', value: env.QCBOR_URL)
+  params += string(name: 'FREERTOS_KERNEL_REFSPEC', value: env.FREERTOS_KERNEL_REFSPEC)
+  params += string(name: 'FREERTOS_KERNEL_URL', value: env.FREERTOS_KERNEL_URL)
+  params += string(name: 'SHARE_FOLDER', value: env.SHARE_FOLDER)
+  params += string(name: 'SQUAD_CONFIGURATIONS', value: env.SQUAD_CONFIGURATIONS)
+  return { -> results
+    def build_res = build(job: 'tf-m-build-config', parameters: params, propagate: false)
+    def build_url = build_res.getAbsoluteUrl()
+    results['builds'][config] = build_res
+
+    print("${build_res.number}: ${config} ${build_res.result} ${build_url}")
+
+    // Filter out configs do not need LAVA tests
+
+    // Configs with build failure do not need LAVA tests
+    if (build_res.result in failure_states) {
+      error("Build failed at ${build_url}")
+    } else {
+        // Build successful
+        // Job tf-m-extra-build does not need LAVA tests
+        if (env.JOB_NAME.equals("tf-m-extra-build")) {
+          print("LAVA is not needed in tf-m-extra-build job.")
+        }
+        // Submit LAVA tests
+        else {
+          submit_lava_tests(config, results, build_res, params, params_collection)
+        }
+    }
+  }
+}
+
+def buildDocs(results) {
+  def params = []
+  params += string(name: 'GERRIT_BRANCH', value: env.GERRIT_BRANCH)
+  params += string(name: 'GERRIT_HOST', value: env.GERRIT_HOST)
+  params += string(name: 'GERRIT_CHANGE_NUMBER', value: env.GERRIT_CHANGE_NUMBER)
+  params += string(name: 'GERRIT_PATCHSET_REVISION', value: env.GERRIT_PATCHSET_REVISION)
+  params += string(name: 'GERRIT_REFSPEC', value: env.GERRIT_REFSPEC)
+  params += string(name: 'CODE_REPO', value: env.CODE_REPO)
+  params += string(name: 'CI_SCRIPTS_REPO', value: env.CI_SCRIPTS_REPO)
+  params += string(name: 'CI_SCRIPTS_BRANCH', value: env.CI_SCRIPTS_BRANCH)
+  params += string(name: 'SHARE_FOLDER', value: env.SHARE_FOLDER)
+  return { -> results
+    def res = build(job: 'tf-m-build-docs', parameters: params, propagate:false)
+    print("${res.number}: Docs ${res.result} ${res.getAbsoluteUrl()}")
+    results['docs'] = [res.number, res.result, params]
+    if (res.result in ["FAILURE", "ABORTED", "UNSTABLE", "NOT_BUILT"]) {
+      error("Build failed at ${res.getAbsoluteUrl()}")
+    }
+  }
+}
+
+def generateEmailBody(stage, results) {
+  // Results format: [CONFIG_NAME: [URL: "", RESULT: "", ...]]
+  body = "Check console output at ${env.BUILD_URL} \n\n"
+
+  body += "Failed Jobs:\n"
+  results.each { job ->
+    if (job.value['RESULT'] == 'FAILURE') {
+      body += "${job.key}  ${job.value['URL']}\n"
+    }
+  }
+
+  body += "\nFor detailed ${stage} results please refer to \
+           ${env.BUILD_URL}artifact/${stage}_results.csv \n"
+  return body
+}
+
+def emailNotification(success, stage, results) {
+  script {
+   if (env.EMAIL_NOTIFICATION) {
+      if (success == true) {
+        print("Skip sending as Success for ${stage}")
+      }
+      else {
+        emailext (
+            subject: ("Job ${env.JOB_NAME} ${stage} ${env.BUILD_NUMBER} fail"),
+            body: generateEmailBody(stage, results),
+            to: "${EMAIL_NOTIFICATION}"
+        )
+      }
+    }
+  } /* script */
+}
+
+def parseTestResults(output) {
+  def test_results = [:]
+  records = output.split('\nLAVA Test Config:\n')
+  if (records.size() < 2) {
+    return test_results
+  }
+  records[1..-1].each { record ->
+    config_name = ""
+    metadata = [:]
+    record.split('\n').each { line ->
+      record_metadata = line.split(': ')
+      // Skip lines which are not "metadata"
+      if (record_metadata.size() < 2) {
+        return
+      }
+      if (record_metadata[0] == 'Config Name') {
+        config_name = record_metadata[1]
+      } else {
+        metadata[record_metadata[0]] = record_metadata[1]
+      }
+    }
+    test_results[config_name] = ['URL': metadata['LAVA link'],
+                                 'RESULT': metadata['Test Result']]
+  }
+
+  writeCsv(test_results, "test_results.csv")
+
+  return test_results
+}
+
+def verifyTestStatus(output) {
+  g = new Gerrit()
+  if (output.contains('FAILURE')) {
+    score = -1
+  } else {
+    score = 1
+  }
+  g.verifyStatus(score, "lava_test", "test")
+  if (score < 0) {
+    error("Marking job as failed due to failed tests.")
+  }
+}
+
+def generateCsvContent(results) {
+  // Results format: [CONFIG_NAME: [URL: "", RESULT: "", ...]]
+  // CSV format: CONFIG_NAME, RESULT
+  csv_header = obtainBuildParams(results.keySet()[0]).keySet().toList()
+  csv_header.add('RESULT')
+  csv_content = [csv_header]
+  results.each { result ->
+    build_params = []
+    obtainBuildParams(result.key).each { config ->
+      build_params.add(config.value)
+    }
+    build_params.add(result.value['RESULT'])
+    csv_content.add(build_params)
+  }
+  return csv_content
+}
+
+def generateHtmlContent(results) {
+  // Results format: [CONFIG_NAME: [URL: "", RESULT: "", ...]]
+  // HTML format: CONFIG_NAME: Job/Logs/Artifacts RESULT
+  htmlContent = []
+  results.each { result ->
+    htmlContent.add("${result.key}: <a href=\"${result.value['URL']}\">Job</a>/<a href=\"${result.value['URL']}/consoleText\">Logs</a>/<a href=\"${result.value['URL']}/artifact/\">Artifacts</a> ${result.value['RESULT']}<br/>")
+  }
+  htmlContent.sort()
+  return htmlContent.join("\n")
+}
+
+def writeCsv(results, file_name) {
+  def csvContent = generateCsvContent(results)
+  writeCSV file: file_name, records: csvContent, format: CSVFormat.EXCEL
+  sh(script: """./tf-m-ci-scripts/report_parser/report_csv_helper.py \
+                --input-file ${file_name} --output-file ${file_name} \
+             """, returnStdout: true)
+  archiveArtifacts file_name
+}
+
+def writeHTML(results, file_name) {
+def buildLinks = generateHtmlContent(results)
+  writeFile file: file_name, text: buildLinks
+  archiveArtifacts file_name
+}
+
+def lineInString(string, match) {
+  def lines = string.split("\n")
+  def result = lines.findAll { it.contains(match) }
+  return result[0]
+}
+
+def getResult(string, match) {
+  line = lineInString(string, match)
+  a = line.split(match)[1].split(' ')
+  score = a[0]
+  if (a.size() > 1)
+  {
+    fail_text = a[1..-1].join(" ")
+    return [score, fail_text]
+  }
+  return [score, ""]
+}
+
+def submitJobsToList(results) {
+  def all_jobs = []
+  for (String result : results){
+    jobs_s = result.split('JOBS: ')
+    if (jobs_s.size() > 1) {
+      all_jobs += jobs_s[1]
+    }
+  }
+  return(all_jobs)
+}
+
+def configs = []
+def builds = [:]
+def results = [:]
+
+timestamps {
+  node("docker-amd64-tf-m-bionic") {
+    stage("Init") {
+      cleanWs()
+      dir("tf-m-ci-scripts") {
+        checkout([$class: 'GitSCM', branches: [[name: '$CI_SCRIPTS_BRANCH']], userRemoteConfigs: [[credentialsId: 'GIT_SSH_KEY', url: '$CI_SCRIPTS_REPO']]])
+        sh "git rev-parse --short HEAD"
+        // Clone TF-M repositories so share folder can be reused by downstream jobs
+        sh "./clone.sh"
+      }
+    }
+
+    stage("Configs") {
+      dir(".") {
+        // Populate configs
+        listConfigs(configs, env.FILTER_GROUP)
+        results['builds'] = [:]
+        results['lava_jobs'] = []
+        for (config in configs) {
+          builds[config] = buildConfig(config, results)
+        }
+        if (!env.JOB_NAME.equals("tf-m-extra-build")) {
+          builds["docs"] = buildDocs(results)
+        }
+      }
+    }
+
+    stage("Builds") {
+      def verify = 1
+      def success = true
+      dir(".") {
+        try {
+          parallel(builds)
+        } catch (Exception e) {
+          print(e)
+          manager.buildFailure()
+          verify = -1
+          success = false
+        } finally {
+          print("Verifying status")
+          g = new Gerrit()
+          g.verifyStatus(verify, 'tf-m-build', 'build')
+          print("Generating build results summary.")
+          def build_results_for_summary = [:]
+          results['builds'].each { build ->
+            build_results_for_summary[build.key] = ['URL': build.value.getAbsoluteUrl(),
+                                                    'RESULT': build.value.result]
+          }
+          emailNotification(success, 'build', build_results_for_summary)
+          writeCsv(build_results_for_summary, "build_results.csv")
+          writeHTML(build_results_for_summary, "build_links.html")
+        }
+      }
+    }
+
+    stage("Tests") {
+      dir("tf-m-ci-scripts") {
+        checkout([$class: 'GitSCM', branches: [[name: '$CI_SCRIPTS_BRANCH']], userRemoteConfigs: [[credentialsId: 'GIT_SSH_KEY', url: '$CI_SCRIPTS_REPO']]])
+      }
+      def all_jobs = []
+      def success = true
+      def test_results = [:]
+      print("Wait for LAVA results here...")
+      try {
+        all_jobs = submitJobsToList(results['lava_jobs'])
+        output = ""
+        if (all_jobs.size() > 0) {
+          dir(".") {
+            withCredentials([usernamePassword(credentialsId: env.LAVA_CREDENTIALS, passwordVariable: 'LAVA_TOKEN', usernameVariable: 'LAVA_USER')]) {
+              output = sh(script: """./tf-m-ci-scripts/lava_helper/lava_wait_jobs.py --job-ids ${all_jobs.join(",")} \
+                          --lava-url ${env.LAVA_URL} --lava-user ${LAVA_USER} --lava-token ${LAVA_TOKEN} \
+                          --artifacts-path cfgs --lava-timeout 12000 \
+                          """, returnStdout: true).trim()
+              println("--- output from lava_wait_jobs.py ---")
+              println(output)
+              println("--- end of output from lava_wait_jobs.py ---")
+              test_results = parseTestResults(output)
+              archiveArtifacts artifacts: 'test_summary.*', allowEmptyArchive: true
+              verifyTestStatus(output)
+              if (env.CODE_COVERAGE_EN == "TRUE") {
+                println("Producing merged report")
+                sh(script: """./tf-m-ci-scripts/lava_helper/codecov_merge.sh""")
+                archiveArtifacts artifacts: 'merged_report/**', allowEmptyArchive: true
+              }
+            }
+          }
+        }
+        else {
+          print("There were no LAVA jobs to test.")
+        }
+      }
+      catch (Exception e) {
+        println("ERROR: ${e}")
+        // We don't print stacktrace, because Jenkins pipeline use CPS conversion
+        // of the Groovy code, which leads to incomprehensible stacktraces.
+        //print(hudson.Functions.printThrowable(org.codehaus.groovy.runtime.StackTraceUtils.sanitize(e)))
+        success = false
+      } finally {
+        archiveArtifacts artifacts: 'cfgs/**', allowEmptyArchive: true
+        if (all_jobs.size() > 0) {
+          emailNotification(success, 'test', test_results)
+        }
+        cleanWs()
+        if (!success) {
+          error("There was an Error waiting for LAVA jobs")
+        }
+      }
+    }
+  }
+}
