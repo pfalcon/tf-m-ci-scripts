@@ -584,6 +584,9 @@ config_cov_nsce["seed_params"]["compiler"] = ["GCC_10_3"]
 config_cov_mmio = deepcopy(config_mmio)
 config_cov_mmio["seed_params"]["compiler"] = ["GCC_10_3"]
 
+config_cov_fp = deepcopy(config_fp)
+config_cov_fp["seed_params"]["tfm_platform"] = ["arm/mps2/an521"]
+
 # Config groups for platforms
 config_an519 = {"seed_params": {
                 "tfm_platform":     ["arm/mps2/an519"],
@@ -986,7 +989,7 @@ _builtin_configs = {
                     "coverage_ipc_backend": config_cov_ipc_backend,
                     "coverage_nsce": config_cov_nsce,
                     "coverage_mmio": config_cov_mmio,
-                    "coverage_fp": config_fp,
+                    "coverage_fp": config_cov_fp,
 
                     # platform groups
                     "an521": config_an521,
