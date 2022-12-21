@@ -99,7 +99,7 @@ def buildConfig(config, results) {
   params += string(name: 'SHARE_FOLDER', value: env.SHARE_FOLDER)
   params += string(name: 'SQUAD_CONFIGURATIONS', value: env.SQUAD_CONFIGURATIONS)
   return { -> results
-    node("docker-amd64-tf-m-bionic") {
+    node("docker-tf-m-eclair") {
       cleanWs()
       dir("tf-m-ci-scripts") {
         checkout([$class: 'GitSCM', branches: [[name: '$CI_SCRIPTS_BRANCH']], userRemoteConfigs: [[credentialsId: 'GIT_SSH_KEY', url: '$CI_SCRIPTS_REPO']]])
@@ -290,7 +290,7 @@ def builds = [:]
 def results = [:]
 
 timestamps {
-  node("docker-amd64-tf-m-bionic") {
+  node("docker-tf-m-eclair") {
     stage("Init") {
       cleanWs()
       dir("tf-m-ci-scripts") {
