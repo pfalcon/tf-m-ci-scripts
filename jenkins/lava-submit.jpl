@@ -30,8 +30,9 @@ def filterTestDevice() {
   }
   // For AN521 builds running per-patch (started by the tf-m-static job),
   // run tests only on FVP to improve turnaround/performance.
+  // Skip tests on MUSCA B1 in per-patch for better performance.
   if (isPerPatchJob()) {
-    if (env.TFM_PLATFORM == "arm/mps2/an521") {
+    if (env.TFM_PLATFORM == "arm/mps2/an521" || env.TFM_PLATFORM == "arm/musca_b1") {
       device_type = "--fvp-only "
       print("Run test cases only on FVP in tf-m-static.")
     }
