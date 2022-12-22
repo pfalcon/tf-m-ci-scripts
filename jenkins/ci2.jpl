@@ -110,7 +110,9 @@ def buildConfig(config, results) {
       sh """
         export CONFIG_NAME=${config}
         env | sort
-        tf-m-ci-scripts/run-build.sh
+        detachLicense 1800
+        eclair_analyze tf-m-ci-scripts/run-build.sh
+        returnLicense
       """
     }
   }
