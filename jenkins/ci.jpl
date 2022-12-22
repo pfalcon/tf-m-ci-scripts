@@ -45,9 +45,7 @@ def submit_lava_tests(config, results, build_res, params, params_collection) {
 def listConfigs(config_list, filter_group) {
   def build_config_list_raw = sh(script:
     """
-    set +x\n
     python3 ./tf-m-ci-scripts/configs.py -g ${filter_group.replace(" ", " -g ")}\n
-    set -x
     """, returnStdout: true).trim()
   def build_config_list = build_config_list_raw.tokenize('\n')
   config_list.addAll(build_config_list)
@@ -57,9 +55,7 @@ def obtainBuildParams(config) {
   def build_params = [:]
   build_config_params = sh(script:
     """
-    set +x\n
     python3 ./tf-m-ci-scripts/configs.py ${config}\n
-    set -x
     """, returnStdout: true).trim()
   def lines = build_config_params.tokenize('\n')
   for (String line : lines) {
