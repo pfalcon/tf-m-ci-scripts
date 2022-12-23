@@ -94,7 +94,11 @@ if [ -z "${SHARE_FOLDER}" ]; then
     SHARE_FOLDER=${SHARE_VOLUME}/${JOB_NAME}/${BUILD_NUMBER}
 fi
 
-echo "Share Folder ${SHARE_FOLDER}"
+echo "Share Folder path: ${SHARE_FOLDER}"
+echo
+
+# Don't print mouthfull "You are in 'detached HEAD' state." messages.
+git config --global advice.detachedHead false
 
 # clone git repos
 for repo in ${repos[@]}; do
@@ -118,13 +122,13 @@ for repo in ${repos[@]}; do
 
         git fetch ${REPO_URL} ${REPO_REFSPEC}
         git checkout FETCH_HEAD
-        echo -e "\n\nShare Folder ${SHARE_FOLDER}/${REPO_NAME} $(git rev-parse --short HEAD)\n\n"
+        echo -e "Share Folder ${SHARE_FOLDER}/${REPO_NAME} $(git rev-parse --short HEAD)\n"
         cd $OLDPWD
 
     else
         # otherwise just show the head's log
         cd ${SHARE_FOLDER}/${REPO_NAME}
-        echo -e "\n\nShare Folder ${SHARE_FOLDER}/${REPO_NAME} $(git rev-parse --short HEAD)\n\n"
+        echo -e "Share Folder ${SHARE_FOLDER}/${REPO_NAME} $(git rev-parse --short HEAD)\n"
         cd $OLDPWD
     fi
 
