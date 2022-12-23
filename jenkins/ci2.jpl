@@ -115,6 +115,7 @@ def buildConfig(config, results) {
         . tf-m-ci-scripts/eclair/utils.sh
         env | sort
         detachLicense 1800
+        export CC_ALIASES="arm-none-eabi-gcc"
         eclair_prepare
         eclair_analyze tf-m-ci-scripts/run-build.sh
         eclair_make_ecd
