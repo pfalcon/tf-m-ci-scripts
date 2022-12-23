@@ -1,0 +1,29 @@
+From 010d998a44e77edfc167e1a10518afb554df8384 Mon Sep 17 00:00:00 2001
+From: Xinyu Zhang <xinyu.zhang@arm.com>
+Date: Fri, 23 Dec 2022 17:20:20 +0800
+Subject: [PATCH 2/2] STM32: Enable emulated RAM FS for ITS & PS
+
+Signed-off-by: Xinyu Zhang <xinyu.zhang@arm.com>
+Change-Id: I25262b1822ff93edb0b54445c6610ee491084294
+---
+ platform/ext/target/stm/stm32l562e_dk/config_tfm_target.h | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/platform/ext/target/stm/stm32l562e_dk/config_tfm_target.h b/platform/ext/target/stm/stm32l562e_dk/config_tfm_target.h
+index f90984a08..69174cef2 100644
+--- a/platform/ext/target/stm/stm32l562e_dk/config_tfm_target.h
++++ b/platform/ext/target/stm/stm32l562e_dk/config_tfm_target.h
+@@ -12,4 +12,10 @@
+ #undef CRYPTO_NV_SEED
+ #define CRYPTO_NV_SEED                         0
+ 
++#undef ITS_RAM_FS
++#define ITS_RAM_FS                             1
++
++#undef PS_RAM_FS
++#define PS_RAM_FS                              1
++
+ #endif /* __CONFIG_TFM_TARGET_H__ */
+-- 
+2.25.1
+

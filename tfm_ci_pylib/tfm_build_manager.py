@@ -408,9 +408,7 @@ class TFM_Build_Manager(structuredTask):
         if i.test_psa_api == "CRYPTO" and "musca" in i.tfm_platform:
             overwrite_params["test_psa_api"] += " -DCC312_LEGACY_DRIVER_API_ENABLED=OFF"
         if i.tfm_platform == "arm/musca_b1":
-            overwrite_params["test_psa_api"] += " -DITS_RAM_FS=ON -DPS_RAM_FS=ON"
-        if i.tfm_platform == "stm/stm32l562e_dk":
-            overwrite_params["test_psa_api"] += " -DITS_RAM_FS=ON -DPS_RAM_FS=ON"
+            overwrite_params["test_psa_api"] += " -DOTP_NV_COUNTERS_RAM_EMULATION=ON"
         build_cfg["config_template"] %= overwrite_params
         if len(build_cfg["build_cmds"]) > 1:
             overwrite_build_dir = {"_tbm_build_dir_": build_dir}

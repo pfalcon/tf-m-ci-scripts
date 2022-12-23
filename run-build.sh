@@ -57,6 +57,10 @@ if [ "$cnt" != "0" ] ; then
 	cd -
 fi
 
+cd trusted-firmware-m
+git apply ../tf-m-ci-scripts/build_helper/platform_settings/*.patch
+cd -
+
 rm -rf trusted-firmware-m/build
 mkdir trusted-firmware-m/build
 cd trusted-firmware-m/build
