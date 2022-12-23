@@ -109,11 +109,20 @@ def buildConfig(config, results) {
       }
       sh """
         export CONFIG_NAME=${config}
+        export SCRIPT_DIR=\$PWD/tf-m-ci-scripts/eclair
+        pwd
+        ls -l tf-m-ci-scripts/eclair/
+        . tf-m-ci-scripts/eclair/utils.sh
         env | sort
         detachLicense 1800
+        eclair_prepare
         eclair_analyze tf-m-ci-scripts/run-build.sh
+        eclair_make_ecd
+        eclair_make_reports
         returnLicense
+        ls -lR ECLAIR
       """
+      archiveArtifacts artifacts: 'ECLAIR/**', allowEmptyArchive: true
     }
   }
 }
