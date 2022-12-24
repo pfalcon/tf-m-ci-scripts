@@ -117,6 +117,7 @@ def buildConfig(config, results) {
         detachLicense 1800
         export CC_ALIASES="arm-none-eabi-gcc"
         eclair_prepare
+        (export PATH="\$GCC_10_3_PATH:\$PATH"; eclair_analyze arm-none-eabi-gcc --version)
         eclair_analyze tf-m-ci-scripts/run-build.sh
         eclair_make_ecd
         eclair_make_reports
