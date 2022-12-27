@@ -20,7 +20,6 @@ import time
 import yaml
 import argparse
 import shutil
-import traceback
 import logging
 from jinja2 import Environment, FileSystemLoader
 from lava_helper import test_lava_dispatch_credentials
@@ -38,7 +37,7 @@ def wait_for_jobs(user_args):
     finished_jobs = get_finished_jobs(job_list, user_args, lava)
     resubmit_jobs = resubmit_failed_jobs(finished_jobs, user_args)
     if resubmit_jobs:
-        info_print("Waiting for resubmitted jobs: {}".format(resubmit_jobs))
+        _log.info("Waiting for resubmitted jobs: %s", resubmit_jobs)
         finished_resubmit_jobs = get_finished_jobs(resubmit_jobs, user_args, lava)
         finished_jobs.update(finished_resubmit_jobs)
     return finished_jobs
@@ -54,7 +53,7 @@ def get_finished_jobs(job_list, user_args, lava):
     finished_jobs = lava.block_wait_for_jobs(job_list, user_args.dispatch_timeout, 5)
     unfinished_jobs = [item for item in job_list if item not in finished_jobs]
     for job in unfinished_jobs:
-        info_print("Cancelling unfinished job: {}".format(job))
+        _log.info("Cancelling unfinished job %d", job)
         lava.cancel_job(job)
     if user_args.artifacts_path:
         for job, info in finished_jobs.items():
@@ -191,9 +190,8 @@ def main(user_args):
             break
         except Exception as e:
             if try_time < 2:
-                print("Exception in wait_for_jobs: {!r}".format(e))
-                traceback.print_exception(type(e), e, e.__traceback__)
-                print("Trying to get LAVA jobs again...")
+                _log.exception("Exception in wait_for_jobs")
+                _log.info("Will try to get LAVA jobs again, this was try: %d", try_time)
             else:
                 raise e
     process_finished_jobs(finished_jobs, user_args)
