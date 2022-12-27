@@ -21,10 +21,14 @@ import yaml
 import argparse
 import shutil
 import traceback
+import logging
 from jinja2 import Environment, FileSystemLoader
 from lava_helper import test_lava_dispatch_credentials
 from lava_submit_jobs import submit_lava_jobs
 import codecov_helper
+
+
+_log = logging.getLogger("lavaci")
 
 
 def wait_for_jobs(user_args):
@@ -46,6 +50,7 @@ def process_finished_jobs(finished_jobs, user_args):
     codecov_helper.coverage_reports(finished_jobs, user_args)
 
 def get_finished_jobs(job_list, user_args, lava):
+    _log.info("Waiting for %d LAVA jobs", len(job_list))
     finished_jobs = lava.block_wait_for_jobs(job_list, user_args.dispatch_timeout, 5)
     unfinished_jobs = [item for item in job_list if item not in finished_jobs]
     for job in unfinished_jobs:
@@ -224,4 +229,5 @@ def get_cmd_args():
 
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO)
     main(get_cmd_args())
