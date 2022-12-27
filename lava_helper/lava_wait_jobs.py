@@ -87,7 +87,8 @@ def fetch_artifacts(jobs, user_args, lava):
         return
     for job_id, info in jobs.items():
         job_dir = info['job_dir']
-        info_print("Fetching artifacts for JOB: {} to {}".format(job_id, job_dir))
+        t = time.time()
+        _log.info("Fetching artifacts for job %d to %s", job_id, job_dir)
         os.makedirs(job_dir, exist_ok=True)
         def_path = os.path.join(job_dir, 'definition.yaml')
         target_log = os.path.join(job_dir, 'target_log.txt')
@@ -101,6 +102,7 @@ def fetch_artifacts(jobs, user_args, lava):
         lava.get_job_config(job_id, config)
         time.sleep(0.2)
         lava.get_job_results(job_id, results_file)
+        _log.info("Fetched artifacts in %ds", time.time() - t)
         codecov_helper.extract_trace_data(target_log, job_dir)
     return(jobs)
 
