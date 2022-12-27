@@ -25,6 +25,11 @@ import time
 import yaml
 import requests
 import shutil
+import logging
+
+
+_log = logging.getLogger("lavaci")
+
 
 class LAVA_RPC_connector(xmlrpc.client.ServerProxy, object):
 
@@ -250,6 +255,11 @@ class LAVA_RPC_connector(xmlrpc.client.ServerProxy, object):
                 if cur_status['state'] in ["Canceling","Finished"]:
                     cur_status['error_reason'] = self.get_error_reason(job_id)
                     finished_jobs[job_id] = cur_status
+                    _log.info(
+                        "Job %d finished in %ds with status: %s. Remaining: %d",
+                        job_id, time.time() - start_t, cur_status['state'],
+                        len(job_ids) - len(finished_jobs)
+                    )
                 if len(job_ids) == len(finished_jobs):
                     break
                 else:
