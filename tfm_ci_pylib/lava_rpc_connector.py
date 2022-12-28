@@ -256,8 +256,10 @@ class LAVA_RPC_connector(xmlrpc.client.ServerProxy, object):
                     cur_status['error_reason'] = self.get_error_reason(job_id)
                     finished_jobs[job_id] = cur_status
                     _log.info(
-                        "Job %d finished in %ds with status: %s. Remaining: %d",
-                        job_id, time.time() - start_t, cur_status['state'],
+                        "Job %d finished in %ds with state: %s, health: %s. Remaining: %d",
+                        job_id, time.time() - start_t,
+                        cur_status['state'],
+                        cur_status['health'],
                         len(job_ids) - len(finished_jobs)
                     )
                 if len(job_ids) == len(finished_jobs):

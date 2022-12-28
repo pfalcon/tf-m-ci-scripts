@@ -70,6 +70,10 @@ def resubmit_failed_jobs(jobs, user_args):
     os.makedirs('failed_jobs', exist_ok=True)
     for job_id, info in jobs.items():
         if not (info['health'] == "Complete" and info['state'] == "Finished"):
+            _log.warning(
+                "Will resubmit job %d because of its state: %s, health: %s",
+                info["state"], info["health"]
+            )
             job_dir = info['job_dir']
             def_path = os.path.join(job_dir, 'definition.yaml')
             os.rename(def_path, 'failed_jobs/{}_definition.yaml'.format(job_id))
