@@ -82,13 +82,11 @@ class LAVA_RPC_connector(xmlrpc.client.ServerProxy, object):
             'user': self.username,
             'token': self.token
         }
-        try:
-            with requests.get(url, stream=True, params=auth_params) as r:
-                with open(out_file, 'wb') as f:
-                    shutil.copyfileobj(r.raw, f)
-            return(out_file)
-        except:
-            return(False)
+        with requests.get(url, stream=True, params=auth_params) as r:
+            r.raise_for_status()
+            with open(out_file, 'wb') as f:
+                shutil.copyfileobj(r.raw, f)
+        return(out_file)
 
     def get_job_results(self, job_id, yaml_out_file):
         results_url = "{}/yaml".format(self.server_results_prefix % job_id)
@@ -108,9 +106,7 @@ class LAVA_RPC_connector(xmlrpc.client.ServerProxy, object):
             server_url=self.server_api, job_id=job_id
         )
         with requests.get(log_url, stream=True, headers=auth_headers) as r:
-            if r.status_code != 200:
-                print("{} - {}".format(log_url, r.status_code))
-                return
+            r.raise_for_status()
             log_list = yaml.load(r.content, Loader=yaml.SafeLoader)
             with open(target_out_file, "w") as target_out:
                 for line in log_list:
