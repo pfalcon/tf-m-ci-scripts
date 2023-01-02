@@ -186,14 +186,20 @@ def info_print(line, silent=True):
     if not silent:
         print("INFO: {}".format(line))
 
+
+# WARNING: Setting this to >1 is a last resort, temporary stop-gap measure,
+# which will overload LAVA and jeopardize stability of the entire TF CI.
+INEFFICIENT_RETRIES = 1
+
+
 def main(user_args):
     """ Main logic """
-    for try_time in range(3):
+    for try_time in range(INEFFICIENT_RETRIES):
         try:
             finished_jobs = wait_for_jobs(user_args)
             break
         except Exception as e:
-            if try_time < 2:
+            if try_time < INEFFICIENT_RETRIES - 1:
                 _log.exception("Exception in wait_for_jobs")
                 _log.info("Will try to get LAVA jobs again, this was try: %d", try_time)
             else:
