@@ -92,19 +92,30 @@ def fetch_artifacts(jobs, user_args, lava):
         job_dir = info['job_dir']
         t = time.time()
         _log.info("Fetching artifacts for job %d to %s", job_id, job_dir)
-        os.makedirs(job_dir, exist_ok=True)
-        def_path = os.path.join(job_dir, 'definition.yaml')
-        target_log = os.path.join(job_dir, 'target_log.txt')
-        config = os.path.join(job_dir, 'config.tar.bz2')
-        results_file = os.path.join(job_dir, 'results.yaml')
-        definition = lava.get_job_definition(job_id, def_path)
-        jobs[job_id]['metadata'] = definition.get('metadata', [])
-        time.sleep(0.2) # be friendly to LAVA
-        lava.get_job_log(job_id, target_log)
-        time.sleep(0.2)
-        lava.get_job_config(job_id, config)
-        time.sleep(0.2)
-        lava.get_job_results(job_id, results_file)
+
+        for retry in range(3, 0, -1):
+            try:
+                os.makedirs(job_dir, exist_ok=True)
+                def_path = os.path.join(job_dir, 'definition.yaml')
+                target_log = os.path.join(job_dir, 'target_log.txt')
+                config = os.path.join(job_dir, 'config.tar.bz2')
+                results_file = os.path.join(job_dir, 'results.yaml')
+                definition = lava.get_job_definition(job_id, def_path)
+                jobs[job_id]['metadata'] = definition.get('metadata', [])
+                time.sleep(0.2) # be friendly to LAVA
+                lava.get_job_log(job_id, target_log)
+                time.sleep(0.2)
+                lava.get_job_config(job_id, config)
+                time.sleep(0.2)
+                lava.get_job_results(job_id, results_file)
+                break
+            except IOError as e:
+                if retry == 1:
+                    raise
+                else:
+                    _log.warning("fetch_artifacts: Error %r occurred, retrying", e)
+                    time.sleep(2)
+
         _log.info("Fetched artifacts in %ds", time.time() - t)
         codecov_helper.extract_trace_data(target_log, job_dir)
     return(jobs)
