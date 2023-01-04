@@ -368,7 +368,7 @@ timestamps {
             withCredentials([usernamePassword(credentialsId: env.LAVA_CREDENTIALS, passwordVariable: 'LAVA_TOKEN', usernameVariable: 'LAVA_USER')]) {
               output = sh(script: """./tf-m-ci-scripts/lava_helper/lava_wait_jobs.py --job-ids ${all_jobs.join(",")} \
                           --lava-url ${env.LAVA_URL} --lava-user ${LAVA_USER} --lava-token ${LAVA_TOKEN} \
-                          --artifacts-path cfgs --lava-timeout 13000 \
+                          --artifacts-path cfgs --lava-timeout 16200 \
                           """, returnStdout: true).trim()
               println("--- output from lava_wait_jobs.py ---")
               println(output)
