@@ -4,7 +4,7 @@ from __future__ import print_function
 
 __copyright__ = """
 /*
- * Copyright (c) 2020-2022, Arm Limited. All rights reserved.
+ * Copyright (c) 2020-2023, Arm Limited. All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  *
@@ -216,6 +216,8 @@ def main(user_args):
             else:
                 raise e
     process_finished_jobs(finished_jobs, user_args)
+    if len(finished_jobs) < len(user_args.job_ids.split(",")):
+        raise Exception("Some LAVA jobs cancelled.")
 
 def get_cmd_args():
     """ Parse command line arguments """
