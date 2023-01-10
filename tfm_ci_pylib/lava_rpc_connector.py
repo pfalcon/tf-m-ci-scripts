@@ -248,11 +248,12 @@ class LAVA_RPC_connector(xmlrpc.client.ServerProxy, object):
                 # Check if the job is not running
                 try:
                     cur_status = self.get_job_info(job_id)
-                except xmlrpc.client.ProtocolError as e:
+                except (xmlrpc.client.ProtocolError, OSError) as e:
                     # There can be transient HTTP errors, e.g. "502 Proxy Error"
+                    # or socket timeout.
                     # Just continue with the next job, the faulted one will be
                     # re-checked on next iteration.
-                    _log.warning("block_wait_for_jobs: xmlrpc.client.ProtocolError %s occurred, ignore and continue", e.errmsg)
+                    _log.warning("block_wait_for_jobs: %r occurred, ignore and continue", e)
                     time.sleep(2)
                     continue
                 # If in queue or running wait
