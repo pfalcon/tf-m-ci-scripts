@@ -21,6 +21,7 @@ import yaml
 import argparse
 import shutil
 import logging
+from xmlrpc.client import ProtocolError
 from jinja2 import Environment, FileSystemLoader
 from lava_helper import test_lava_dispatch_credentials
 from lava_submit_jobs import submit_lava_jobs
@@ -109,7 +110,7 @@ def fetch_artifacts(jobs, user_args, lava):
                 time.sleep(0.2)
                 lava.get_job_results(job_id, results_file)
                 break
-            except IOError as e:
+            except (ProtocolError, IOError) as e:
                 if retry == 1:
                     raise
                 else:
