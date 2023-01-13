@@ -8,7 +8,7 @@ from __future__ import print_function
 
 __copyright__ = """
 /*
- * Copyright (c) 2018-2022, Arm Limited. All rights reserved.
+ * Copyright (c) 2018-2023, Arm Limited. All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  *
@@ -720,7 +720,11 @@ config_rss = {"seed_params": {
                 "extra_params":     ["PSOFF"]
                 },
                 "common_params": _common_tfm_builder_cfg,
-                "invalid": _common_tfm_invalid_configs + []
+                "invalid": _common_tfm_invalid_configs + [
+                    # BL2 is too large for RSS in Debug builds with tests
+                    ("arm/rss/tc", "GCC_10_3", "*", True, "*",
+                     "Debug", True, "*", "*"),
+                ]
                 }
 
 config_psoc64 = {"seed_params": {
