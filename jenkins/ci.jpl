@@ -1,6 +1,6 @@
 #!/usr/bin/env groovy
 //-------------------------------------------------------------------------------
-// Copyright (c) 2020-2022, Arm Limited and Contributors. All rights reserved.
+// Copyright (c) 2020-2023, Arm Limited and Contributors. All rights reserved.
 //
 // SPDX-License-Identifier: BSD-3-Clause
 //
@@ -10,6 +10,19 @@
 import org.trustedfirmware.Gerrit
 
 failure_states = ["FAILURE", "ABORTED", "UNSTABLE", "NOT_BUILT"]
+
+@NonCPS
+def isPerPatchJob() {
+  def upstream_jobs = manager.build.getAction(hudson.model.CauseAction.class).getCauses()
+  if (upstream_jobs.size() > 0 && upstream_jobs[0] instanceof hudson.model.Cause.UpstreamCause) {
+    print("Parent project cause: ")
+    println(upstream_jobs[0].upstreamProject)
+    if (upstream_jobs[0].upstreamProject.endsWith("tf-m-static")) {
+      return true
+    }
+  }
+  return false
+}
 
 def submit_lava_tests(config, results, build_res, params, params_collection) {
   print("Doing LAVA stuff for ${build_res.getAbsoluteUrl()}")
@@ -365,10 +378,15 @@ timestamps {
         output = ""
         if (all_jobs.size() > 0) {
           dir(".") {
+            if (isPerPatchJob()) {
+              lava_timeout = 2700     // 45min
+            } else {
+              lava_timeout = 18000    // 5h
+            }
             withCredentials([usernamePassword(credentialsId: env.LAVA_CREDENTIALS, passwordVariable: 'LAVA_TOKEN', usernameVariable: 'LAVA_USER')]) {
               output = sh(script: """./tf-m-ci-scripts/lava_helper/lava_wait_jobs.py --job-ids ${all_jobs.join(",")} \
                           --lava-url ${env.LAVA_URL} --lava-user ${LAVA_USER} --lava-token ${LAVA_TOKEN} \
-                          --artifacts-path cfgs --lava-timeout 16200 \
+                          --artifacts-path cfgs --lava-timeout ${lava_timeout} \
                           """, returnStdout: true).trim()
               println("--- output from lava_wait_jobs.py ---")
               println(output)
