@@ -17,16 +17,23 @@ __copyright__ = """
 
 import glob
 import argparse
+import logging
 from lava_helper import test_lava_dispatch_credentials
+
+
+_log = logging.getLogger("lavaci")
 
 
 def list_files_from_dir(user_args, job_dir=""):
     if job_dir == "":
         job_dir = user_args.job_dir
     file_list = []
+    resubmit_log = ""
+    if job_dir == "failed_jobs":
+        resubmit_log = "Resubmit for double check."
     for filename in glob.iglob(job_dir + '**/*.yaml', recursive=True):
         file_list.append(filename)
-        print("Found job {}".format(filename))
+        _log.info("Found job {file}. {extra_log}".format(file=filename, extra_log=resubmit_log))
     return file_list
 
 
@@ -46,9 +53,9 @@ def submit_lava_jobs(user_args, job_dir=""):
 
         # The reason of failure will be reported to user by LAVA_RPC_connector
         if job_id is None and job_url is None:
-            print("Job failed")
+            _log.info("Job failed")
         else:
-            print("Job submitted at: " + job_url)
+            _log.info("Job submitted at: " + job_url)
             job_id_list.append(job_id)
 
     return job_id_list
