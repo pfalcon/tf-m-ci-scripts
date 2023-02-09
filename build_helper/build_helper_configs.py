@@ -115,7 +115,13 @@ _common_tfm_builder_cfg = {
                                           "BIN_FILES=$(grep -o '\/.*\.bin' TFM_UPDATE.sh | sed 's/^/bin/');"
                                           "tar jcf ./bin/stm32l562e-dk-tfm.tar.bz2 regression.sh TFM_UPDATE.sh ${BIN_FILES};"
                                           "popd")],
-                   "nxp/lpcxpresso55s69": [("echo 'LPCXpresso55S69 board post process\n';"
+                   "stm/b_u585i_iot02a": [("echo 'STM32U5 board post process';"
+                                          "%(_tbm_build_dir_)s/postbuild.sh;"
+                                          "pushd %(_tbm_build_dir_)s;"
+                                          "BIN_FILES=$(grep -o '\/.*\.bin' TFM_UPDATE.sh | sed 's/^/bin/');"
+                                          "tar jcf ./bin/b_u585i_iot02a-tfm.tar.bz2 regression.sh TFM_UPDATE.sh ${BIN_FILES};"
+                                          "popd")],
+                  "nxp/lpcxpresso55s69": [("echo 'LPCXpresso55S69 board post process\n';"
                                             "if [ -f \"%(_tbm_build_dir_)s/bin/bl2.hex\" ]; then FLASH_FILE='flash_bl2_JLink.py'; else FLASH_FILE='flash_JLink.py'; fi;"
                                             "pushd %(_tbm_build_dir_)s/../platform/ext/target/nxp/lpcxpresso55s69/scripts;"
                                             "LN=$(grep -n 'JLinkExe' ${FLASH_FILE}|awk -F: '{print $1}');"
@@ -784,14 +790,14 @@ config_stm32l562e_dk = {"seed_params": {
 
 config_b_u585i_iot02a = {"seed_params": {
                 "tfm_platform":     ["stm/b_u585i_iot02a"],
-                "compiler":         ["GCC_10_3"],
-                "isolation_level":  ["1"],
-                "test_regression":  [False],
+                "compiler":         ["GCC_10_3", "ARMCLANG_6_13"],
+                "isolation_level":  ["1", "2"],
+                "test_regression":  [True, False],
                 "test_psa_api":     ["OFF"],
                 "cmake_build_type": ["Release"],
                 "with_bl2":         [True],
                 "profile":          [""],
-                "extra_params":     ["NSOFF"]
+                "extra_params":     [""]
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + []
@@ -963,6 +969,7 @@ _builtin_configs = {
                     "nightly_rss": config_rss,
                     "nightly_psoc64": config_psoc64,
                     "nightly_stm32l562e_dk": config_stm32l562e_dk,
+                    "nightly_b_u585i_iot02a": config_b_u585i_iot02a,
                     "nightly_lpcxpresso55s69": config_lpcxpresso55s69,
 
                     # release test groups
@@ -983,6 +990,7 @@ _builtin_configs = {
                     "release_rss": config_rss,
                     "release_psoc64": config_psoc64,
                     "release_stm32l562e_dk": config_stm32l562e_dk,
+                    "release_b_u585i_iot02a": config_b_u585i_iot02a,
                     "release_lpcxpresso55s69": config_lpcxpresso55s69,
 
                     # code coverage test groups
