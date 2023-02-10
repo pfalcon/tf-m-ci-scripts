@@ -1,6 +1,6 @@
 #!/bin/bash
 #-------------------------------------------------------------------------------
-# Copyright (c) 2018-2019, Arm Limited and Contributors. All rights reserved.
+# Copyright (c) 2018-2023, Arm Limited and Contributors. All rights reserved.
 #
 # SPDX-License-Identifier: BSD-3-Clause
 #
@@ -296,4 +296,19 @@ function build_proj_set {
 		build_project "$proj" "$build_base_dir" "$bcfg_name_ext" "$cm_params" || error=1
 	done
 	return $error
+}
+
+# Get CMake variable value from cache
+function get_cmake_cache {
+    local build_dir=$1
+    local cmake_var=$2
+
+    if [ ! -d ${REPO_PATH} ]; then
+        return
+    fi
+
+    cd $build_dir
+    cache_value="$(cmake -L 2> /dev/null | grep $cmake_var | awk -F '=' '{print $2}')"
+    echo $cache_value
+    cd $OLDPWD
 }

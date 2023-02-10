@@ -1,6 +1,6 @@
 #!/bin/bash
 #-------------------------------------------------------------------------------
-# Copyright (c) 2020-2022, Arm Limited and Contributors. All rights reserved.
+# Copyright (c) 2020-2023, Arm Limited and Contributors. All rights reserved.
 #
 # SPDX-License-Identifier: BSD-3-Clause
 #
@@ -12,6 +12,31 @@
 # These variables can be obtained using configs.py.
 # Expected to have trusted-firmware-m cloned to same level as this git tree
 #
+
+. $(dirname $0)/util_cmake.sh
+. $(dirname $0)/util_git.sh
+
+# For dependency that differs from platforms, the versions need to be checkded
+# in each single build job.
+function check_dependency_version() {
+    TFM_EXTRAS_PATH="${WORKSPACE}/tf-m-extras"
+    TFM_EXTRAS_REFSPEC="$(get_cmake_cache ${WORKSPACE}/trusted-firmware-m/build TFM_EXTRAS_REPO_VERSION)"
+
+    # Array containing "<repo path>;<refspec>" elements
+    dependency_repos=(
+        "${TFM_EXTRAS_PATH};${TFM_EXTRAS_REFSPEC}"
+    )
+
+    for repo in ${dependency_repos[@]}; do
+        # Parse the repo elements
+        REPO_PATH="$(echo "${repo}" | awk -F ';' '{print $1}')"
+        REPO_REFSPEC="$(echo "${repo}" | awk -F ';' '{print $2}')"
+
+        if [ ! -z "$REPO_REFSPEC" ] ; then
+            git_checkout $REPO_PATH $REPO_REFSPEC
+        fi
+    done
+}
 
 set -ex
 
@@ -49,12 +74,12 @@ if [ $CODE_COVERAGE_EN = "TRUE" ] && [[ $CONFIG_NAME =~ "GCC" ]] ; then
 fi
 
 if [ -z "$cmake_config_cmd" ] ; then
-    echo "No CMake config commands found."
+    echo "No CMake config command found."
     exit 1
 fi
 
 if [ -z "$cmake_build_cmd" ] ; then
-    echo "No build image commands found."
+    echo "No CMake build command found."
     exit 1
 fi
 
@@ -80,4 +105,16 @@ rm -rf trusted-firmware-m/build
 mkdir trusted-firmware-m/build
 cd trusted-firmware-m/build
 
-eval "set -ex ; $cmake_config_cmd; $cmake_build_cmd; $post_build_cmd"
+set +e
+eval $cmake_config_cmd
+cmake_cfg_error=$?
+set -e
+
+check_dependency_version
+
+if [ $cmake_cfg_error != 0 ] ; then
+    rm -rf trusted-firmware-m/build/*
+    eval $cmake_config_cmd
+fi
+
+eval "$cmake_build_cmd; $post_build_cmd"
