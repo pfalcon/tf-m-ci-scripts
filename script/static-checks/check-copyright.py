@@ -86,9 +86,6 @@ def check_copyright(path, args, encoding='utf-8'):
     if not copyright_line:
         print("ERROR: Missing copyright in " + file_.name)
         result = COPYRIGHT_ERROR
-    elif CURRENT_YEAR not in copyright_line.group():
-        print("WARNING: Copyright is out of date in " + file_.name + ": '" +
-              copyright_line.group() + "'")
 
     if not LICENSE_ID_PATTERN.search(file_content):
         print("ERROR: License ID error in " + file_.name)
