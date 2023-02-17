@@ -43,9 +43,15 @@ timestamps {
   }
   node("master") {
     if (env.JOB_NAME.equals("tf-m-build-docs-nightly")) {
+      // Copy, then as atomically as possible replace previous docs with new.
       sh """
-         cp -a /var/jenkins_home/jobs/$JOB_NAME/builds/$BUILD_NUMBER/archive/trusted-firmware-m/build/docs/reference_manual /var/jenkins_home/docs/
-         cp -a /var/jenkins_home/jobs/$JOB_NAME/builds/$BUILD_NUMBER/archive/trusted-firmware-m/build/docs/user_guide /var/jenkins_home/docs/
+         cp -a /var/jenkins_home/jobs/$JOB_NAME/builds/$BUILD_NUMBER/archive/trusted-firmware-m/build/docs/reference_manual /var/jenkins_home/docs/reference_manual.new
+         cp -a /var/jenkins_home/jobs/$JOB_NAME/builds/$BUILD_NUMBER/archive/trusted-firmware-m/build/docs/user_guide /var/jenkins_home/docs/user_guide.new
+         rm -rf /var/jenkins_home/docs/reference_manual.old /var/jenkins_home/docs/user_guide.old
+         mv /var/jenkins_home/docs/reference_manual /var/jenkins_home/docs/reference_manual.old
+         mv /var/jenkins_home/docs/user_guide /var/jenkins_home/docs/user_guide.old
+         mv /var/jenkins_home/docs/reference_manual.new /var/jenkins_home/docs/reference_manual
+         mv /var/jenkins_home/docs/user_guide.new /var/jenkins_home/docs/user_guide
          """
     }
   }
