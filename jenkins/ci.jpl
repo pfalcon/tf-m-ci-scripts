@@ -407,17 +407,19 @@ timestamps {
         //print(hudson.Functions.printThrowable(org.codehaus.groovy.runtime.StackTraceUtils.sanitize(e)))
         success = false
       } finally {
-        output = readFile("output.log")
-        println("--- output from lava_wait_jobs.py ---")
-        println(output)
-        println("--- end of output from lava_wait_jobs.py ---")
-        test_results = parseTestResults(output)
-        archiveArtifacts artifacts: 'test_summary.*', allowEmptyArchive: true
-        archiveArtifacts artifacts: 'cfgs/**', allowEmptyArchive: true
         if (all_jobs.size() > 0) {
-          emailNotification(success, 'test', test_results)
+          output = readFile("output.log")
+          println("--- output from lava_wait_jobs.py ---")
+          println(output)
+          println("--- end of output from lava_wait_jobs.py ---")
+          test_results = parseTestResults(output)
+          archiveArtifacts artifacts: 'test_summary.*', allowEmptyArchive: true
+          archiveArtifacts artifacts: 'cfgs/**', allowEmptyArchive: true
+          if (all_jobs.size() > 0) {
+            emailNotification(success, 'test', test_results)
+          }
+          verifyTestStatus(output)
         }
-        verifyTestStatus(output)
         cleanWs()
         if (!success) {
           error("There was an Error waiting for LAVA jobs")
