@@ -86,18 +86,7 @@ _common_tfm_builder_cfg = {
                                  "-fill 0xFF 0xA020000 0xA200000 "
                                  "-o %(_tbm_build_dir_)s/bin/"
                                  "tfm.hex -Intel")],
-                   "arm/corstone1000": [("cat "
-                                         "%(_tbm_build_dir_)s/bin/"
-                                         "bl2_signed.bin "
-                                         "%(_tbm_build_dir_)s/bin/"
-                                         "bl2_signed.bin "
-                                         "%(_tbm_build_dir_)s/bin/"
-                                         "tfm_s_signed.bin "
-                                         "%(_tbm_build_dir_)s/bin/"
-                                         "tfm_s_signed.bin "
-                                         "> "
-                                         "%(_tbm_build_dir_)s/bin/"
-                                         "flash.bin")],
+                   "arm/corstone1000": [("%(_tbm_build_dir_)s/../platform/ext/target/arm/corstone1000/create-flash-image.sh %(_tbm_build_dir_)s/bin flash.bin")],
                    "arm/musca_s1": [("srec_cat "
                                  "%(_tbm_build_dir_)s/bin/"
                                  "bl2.bin "
