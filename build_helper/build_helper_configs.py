@@ -569,15 +569,19 @@ config_example_dma350_trigger = {"seed_params": {
 
 # Config groups for code coverage
 config_cov_profile_s = deepcopy(config_profile_s)
+config_cov_profile_s["seed_params"]["tfm_platform"] = ["arm/mps2/an521"]
 config_cov_profile_s["seed_params"]["compiler"] = ["GCC_10_3"]
 
 config_cov_profile_m = deepcopy(config_profile_m)
+config_cov_profile_m["seed_params"]["tfm_platform"] = ["arm/mps2/an521"]
 config_cov_profile_m["seed_params"]["compiler"] = ["GCC_10_3"]
 
 config_cov_profile_m_arotless = deepcopy(config_profile_m_arotless)
+config_cov_profile_m_arotless["seed_params"]["tfm_platform"] = ["arm/mps2/an521"]
 config_cov_profile_m_arotless["seed_params"]["compiler"] = ["GCC_10_3"]
 
 config_cov_profile_l = deepcopy(config_profile_l)
+config_cov_profile_l["seed_params"]["tfm_platform"] = ["arm/mps2/an521"]
 config_cov_profile_l["seed_params"]["compiler"] = ["GCC_10_3"]
 
 config_cov_ipc_backend = deepcopy(config_ipc_backend)
@@ -585,13 +589,16 @@ config_cov_ipc_backend["seed_params"]["tfm_platform"] = ["arm/mps2/an521"]
 config_cov_ipc_backend["seed_params"]["compiler"] = ["GCC_10_3"]
 
 config_cov_nsce = deepcopy(config_nsce)
+config_cov_nsce["seed_params"]["tfm_platform"] = ["arm/mps2/an521"]
 config_cov_nsce["seed_params"]["compiler"] = ["GCC_10_3"]
 
 config_cov_mmio = deepcopy(config_mmio)
+config_cov_mmio["seed_params"]["tfm_platform"] = ["arm/mps2/an521"]
 config_cov_mmio["seed_params"]["compiler"] = ["GCC_10_3"]
 
 config_cov_fp = deepcopy(config_fp)
 config_cov_fp["seed_params"]["tfm_platform"] = ["arm/mps2/an521"]
+config_cov_fp["seed_params"]["compiler"] = ["GCC_10_3"]
 
 # Config groups for platforms
 config_an519 = {"seed_params": {
