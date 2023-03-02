@@ -565,10 +565,6 @@ config_cov_profile_m = deepcopy(config_profile_m)
 config_cov_profile_m["seed_params"]["tfm_platform"] = ["arm/mps2/an521"]
 config_cov_profile_m["seed_params"]["compiler"] = ["GCC_10_3"]
 
-config_cov_profile_m_arotless = deepcopy(config_profile_m_arotless)
-config_cov_profile_m_arotless["seed_params"]["tfm_platform"] = ["arm/mps2/an521"]
-config_cov_profile_m_arotless["seed_params"]["compiler"] = ["GCC_10_3"]
-
 config_cov_profile_l = deepcopy(config_profile_l)
 config_cov_profile_l["seed_params"]["tfm_platform"] = ["arm/mps2/an521"]
 config_cov_profile_l["seed_params"]["compiler"] = ["GCC_10_3"]
@@ -992,7 +988,6 @@ _builtin_configs = {
                     # code coverage test groups
                     "coverage_profile_s": config_cov_profile_s,
                     "coverage_profile_m": config_cov_profile_m,
-                    "coverage_profile_m_arotless": config_cov_profile_m_arotless,
                     "coverage_profile_l": config_cov_profile_l,
                     "coverage_ipc_backend": config_cov_ipc_backend,
                     "coverage_nsce": config_cov_nsce,
