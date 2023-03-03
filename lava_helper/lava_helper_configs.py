@@ -137,6 +137,25 @@ fvp_mps3_an552_bl2 = {
     }
 }
 
+# FVP with BL1 and BL2 bootloader for Corstone1000
+fvp_corstone1000 = {
+    "templ": "fvp_corstone1000.jinja2",
+    "job_name": "fvp_corstone1000",
+    "device_type": "fvp",
+    "job_timeout": 15,
+    "action_timeout": 10,
+    "monitor_timeout": 15,
+    "poweroff_timeout": 1,
+    "platforms": {"arm/corstone1000": ""},
+    "data_bin_offset": "0x68000000",
+    "binaries": {
+        "application": "bl1.bin",
+        "data": "cs1000.bin"
+    },
+    "monitors": {
+        'reg_tests': reg_tests_monitors if "FVP" in os.getenv('EXTRA_PARAMS') else [],
+    }
+}
 
 # FVP with BL2 bootloader for AN521
 # application: --application cpu0=bl2.axf
@@ -310,6 +329,7 @@ lava_gen_config_map = {
     "fvp_mps3_an552_bl2": fvp_mps3_an552_bl2,
     "fvp_mps2_an521_bl2": fvp_mps2_an521_bl2,
     "fvp_mps2_an519_bl2": fvp_mps2_an519_bl2,
+    "fvp_corstone1000": fvp_corstone1000,
     "qemu_mps2_bl2": qemu_mps2_bl2,
     "musca_b1": musca_b1_bl2,
     "stm32l562e_dk": stm32l562e_dk,
