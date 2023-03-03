@@ -160,30 +160,35 @@ def buildDocs(results) {
 
 def generateEmailBody(stage, results) {
   // Results format: [CONFIG_NAME: [URL: "", RESULT: "", ...]]
-  body = "Check console output at ${env.BUILD_URL} \n\n"
-
-  body += "Failed Jobs:\n"
+  failed_jobs = ""
   results.each { job ->
     if (job.value['RESULT'] == 'FAILURE') {
-      body += "${job.key}  ${job.value['URL']}\n"
+      failed_jobs += "${job.key}  ${job.value['URL']}\n"
     }
   }
 
+  if (failed_jobs == "") {
+    return ""
+  }
+
+  body = "Check console output at ${env.BUILD_URL} \n\n"
+  body += "Failed Jobs:\n${failed_jobs}"
   body += "\nFor detailed ${stage} results please refer to \
            ${env.BUILD_URL}artifact/${stage}_results.csv \n"
   return body
 }
 
-def emailNotification(success, stage, results) {
+def emailNotification(stage, results) {
   script {
    if (env.EMAIL_NOTIFICATION) {
-      if (success == true) {
-        print("Skip sending as Success for ${stage}")
+      email_body = generateEmailBody(stage, results)
+      if (email_body == "") {
+        print("Skip sending email notification as no failed jobs for ${stage}")
       }
       else {
         emailext (
             subject: ("Job ${env.JOB_NAME} ${stage} ${env.BUILD_NUMBER} fail"),
-            body: generateEmailBody(stage, results),
+            body: email_body,
             to: "${EMAIL_NOTIFICATION}"
         )
       }
@@ -358,7 +363,7 @@ timestamps {
             build_results_for_summary[build.key] = ['URL': build.value.getAbsoluteUrl(),
                                                     'RESULT': build.value.result]
           }
-          emailNotification(success, 'build', build_results_for_summary)
+          emailNotification('build', build_results_for_summary)
           writeCsv(build_results_for_summary, "build_results.csv")
           writeHTML(build_results_for_summary, "build_links.html")
         }
@@ -416,7 +421,7 @@ timestamps {
           archiveArtifacts artifacts: 'test_summary.*', allowEmptyArchive: true
           archiveArtifacts artifacts: 'cfgs/**', allowEmptyArchive: true
           if (all_jobs.size() > 0) {
-            emailNotification(success, 'test', test_results)
+            emailNotification('test', test_results)
           }
           verifyTestStatus(output)
         }
