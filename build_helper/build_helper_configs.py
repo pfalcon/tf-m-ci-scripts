@@ -50,7 +50,6 @@ _common_tfm_builder_cfg = {
         "-DTFM_TOOLCHAIN_FILE=%(codebase_root_dir)s/%(compiler)s " + \
         "-DTFM_ISOLATION_LEVEL=%(isolation_level)s " + \
         "-DTEST_NS=%(test_regression)s -DTEST_S=%(test_regression)s -DTEST_NS_FLIH_IRQ=OFF " + \
-        "-DTEST_BL2=%(test_regression)s " + \
         "-DCMAKE_BUILD_TYPE=%(cmake_build_type)s " + \
         "-DTEST_PSA_API=%(test_psa_api)s " + \
         "-DBL2=%(with_bl2)s " + \

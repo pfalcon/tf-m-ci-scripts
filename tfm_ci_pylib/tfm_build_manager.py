@@ -409,6 +409,8 @@ class TFM_Build_Manager(structuredTask):
             overwrite_params["test_psa_api"] += " -DCC312_LEGACY_DRIVER_API_ENABLED=OFF"
         if i.tfm_platform == "arm/musca_b1":
             overwrite_params["test_psa_api"] += " -DOTP_NV_COUNTERS_RAM_EMULATION=ON"
+        if i.test_regression:
+            overwrite_params["extra_params"] += " -DTEST_BL2=False" if not i.with_bl2 else " -DTEST_BL2=True"
         build_cfg["config_template"] %= overwrite_params
         if len(build_cfg["build_cmds"]) > 1:
             overwrite_build_dir = {"_tbm_build_dir_": build_dir}

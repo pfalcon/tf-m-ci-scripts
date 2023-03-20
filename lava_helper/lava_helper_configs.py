@@ -98,7 +98,7 @@ tfm_mps2_sse_200 = {
     "monitors": {
         'no_reg_tests': [monitors_no_reg_tests],
         # FPU test on FPGA not supported yet
-        'reg_tests': [monitors_mcuboot_tests, monitors_s_reg_tests, monitors_ns_reg_tests] if 'FPON' not in os.getenv("EXTRA_PARAMS") else [],
+        'reg_tests': ([monitors_s_reg_tests, monitors_ns_reg_tests] if 'FPON' not in os.getenv("EXTRA_PARAMS") else []) + ([monitors_mcuboot_tests] if os.getenv("BL2") == "Ture" else []),
         'arch_tests': [monitors_arch_tests] if os.getenv("TEST_PSA_API") != "IPC" else [], # FF test on FPGA not supported in LAVA yet
     }
 }
@@ -122,7 +122,7 @@ fvp_mps3_an552_bl2 = {
     },
     "monitors": {
         'no_reg_tests': [monitors_no_reg_tests],
-        'reg_tests': [monitors_mcuboot_tests, monitors_s_reg_tests, monitors_ns_reg_tests],
+        'reg_tests': [monitors_s_reg_tests, monitors_ns_reg_tests] + ([monitors_mcuboot_tests] if os.getenv("BL2") == "Ture" else []),
     }
 }
 
@@ -146,7 +146,7 @@ fvp_mps2_an521_bl2 = {
     },
     "monitors": {
         'no_reg_tests': [monitors_no_reg_tests],
-        'reg_tests': [monitors_mcuboot_tests, monitors_s_reg_tests, monitors_ns_reg_tests],
+        'reg_tests': [monitors_s_reg_tests, monitors_ns_reg_tests] + ([monitors_mcuboot_tests] if os.getenv("BL2") == "Ture" else []),
         'arch_tests': [monitors_arch_tests],
     }
 }
@@ -172,7 +172,7 @@ fvp_mps2_an519_bl2 = {
     },
     "monitors": {
         'no_reg_tests': [monitors_no_reg_tests],
-        'reg_tests': [monitors_mcuboot_tests, monitors_s_reg_tests, monitors_ns_reg_tests],
+        'reg_tests': [monitors_s_reg_tests, monitors_ns_reg_tests] + ([monitors_mcuboot_tests] if os.getenv("BL2") == "Ture" else []),
     }
 }
 
@@ -193,7 +193,7 @@ qemu_mps2_bl2 = {
     },
     "monitors": {
         # FPU test on AN521 qemu not supported yet
-        'reg_tests': [monitors_mcuboot_tests, monitors_s_reg_tests, monitors_ns_reg_tests] if 'FPON' not in os.getenv("EXTRA_PARAMS") else [],
+        'reg_tests': ([monitors_s_reg_tests, monitors_ns_reg_tests] if 'FPON' not in os.getenv("EXTRA_PARAMS") else []) + ([monitors_mcuboot_tests] if os.getenv("BL2") == "Ture" else []),
     }
 }
 
@@ -215,7 +215,7 @@ musca_b1_bl2 = {
     },
     "monitors": {
         'no_reg_tests': [monitors_no_reg_tests],
-        'reg_tests': [monitors_mcuboot_tests, monitors_s_reg_tests, monitors_ns_reg_tests],
+        'reg_tests': [monitors_s_reg_tests, monitors_ns_reg_tests] + ([monitors_mcuboot_tests] if os.getenv("BL2") == "Ture" else []),
     }
 }
 
@@ -233,7 +233,7 @@ stm32l562e_dk = {
         "tarball": "stm32l562e-dk-tfm.tar.bz2",
     },
     "monitors": {
-        'reg_tests': [monitors_mcuboot_tests, monitors_s_reg_tests, monitors_ns_reg_tests],
+        'reg_tests': [monitors_s_reg_tests, monitors_ns_reg_tests] + ([monitors_mcuboot_tests] if os.getenv("BL2") == "Ture" else []),
     }
 }
 
