@@ -386,7 +386,7 @@ timestamps {
             if (isPerPatchJob()) {
               lava_timeout = 2700     // 45min
             } else {
-              lava_timeout = 18000    // 5h
+              lava_timeout = 19800    // 5.5h
             }
             withCredentials([usernamePassword(credentialsId: env.LAVA_CREDENTIALS, passwordVariable: 'LAVA_TOKEN', usernameVariable: 'LAVA_USER')]) {
               sh(script: """./tf-m-ci-scripts/lava_helper/lava_wait_jobs.py --job-ids ${all_jobs.join(",")} \
