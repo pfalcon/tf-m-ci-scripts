@@ -56,7 +56,7 @@ actions:
 {%- if enable_code_coverage %}
     -  "/opt/model/FVP_MPS2_AEMv8M/models/Linux64_GCC-6.4/FVP_MPS2_AEMv8M"
 {%- endif %}
-    -  "--simlimit 620"
+    -  "--simlimit 900"
     -  "--application cpu0={APP}"
     -  "--data cpu0={DATA}@{{ data_bin_offset }}"
     -  "--parameter fvp_mps2.platform_type=2"
