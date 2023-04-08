@@ -125,8 +125,10 @@ def buildConfig(config, results) {
         eclair_make_reports
         returnLicense
         ls -lR ECLAIR
+        mkdir ${config}
+        cp -a ECLAIR/* ${config}
       """
-      archiveArtifacts artifacts: 'ECLAIR/**', allowEmptyArchive: true
+      archiveArtifacts artifacts: "${config}/**", allowEmptyArchive: true
     }
   }
 }
