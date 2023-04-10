@@ -13,8 +13,12 @@ Module with helper functions for code coverage reports.
 
 import os
 import subprocess
+import logging
 
 from lava_helper import test_lava_dispatch_credentials
+
+
+_log = logging.getLogger(__name__)
 
 
 def run(cmd, cwd=None):
@@ -51,6 +55,7 @@ def coverage_reports(jobs, user_args):
                     os.path.join(job_dir, fname)
                 )
 
+            _log.info("Producing coverage report for job %d", job_id)
             dl_artifact("bl2.axf")
             dl_artifact("tfm_s.axf")
             dl_artifact("tfm_ns.axf")
