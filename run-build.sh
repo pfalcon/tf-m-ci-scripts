@@ -32,6 +32,11 @@ make --version
 set -ex
 build_commands=$(python3 tf-m-ci-scripts/configs.py -b -g all -j ${BUILD_JOBS:-2} $CONFIG_NAME)
 
+if [ -n "$BUILD_TARGET" ]; then
+    build_commands=$(echo "$build_commands" | head -4)
+    build_commands=${build_commands/-- install/-- $BUILD_TARGET}
+fi
+
 if [ $CODE_COVERAGE_EN = "TRUE" ] && [[ $CONFIG_NAME =~ "GCC" ]] ; then
     build_commands=${build_commands/toolchain_GNUARM.cmake/toolchain_GNUARM.cmake -DTFM_CODE_COVERAGE=True}
     echo "Flag: Add compiler flag for build with code coverage supported."
