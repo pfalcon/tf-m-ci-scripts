@@ -284,6 +284,7 @@ lava_gen_config_map = {
     "qemu_mps2_bl2": qemu_mps2_bl2,
     "musca_b1": musca_b1_bl2,
     "stm32l562e_dk": stm32l562e_dk,
+    "lpcxpresso55s69": lpcxpresso55s69,
     "psoc64": psoc64,
 }
 
