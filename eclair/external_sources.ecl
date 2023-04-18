@@ -11,3 +11,6 @@
 -file_tag+={external, "^trusted-firmware-m/platform/ext/cmsis/.*$"}
 -file_tag+={external, "^trusted-firmware-m/lib/ext/mbedcrypto/.*$"}
 
+# Ignore any auto-generated source files in build dir.
+-file_tag+={external, "^trusted-firmware-m/build/.*$"}
+
