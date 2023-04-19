@@ -30,7 +30,7 @@ python --version
 make --version
 
 set -ex
-build_commands=$(python3 tf-m-ci-scripts/configs.py -b -g all $CONFIG_NAME)
+build_commands=$(python3 tf-m-ci-scripts/configs.py -b -g all -j ${BUILD_JOBS:-2} $CONFIG_NAME)
 
 if [ -n "$BUILD_TARGET" ]; then
     build_commands=$(echo "$build_commands" | head -4)
