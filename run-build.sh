@@ -30,7 +30,7 @@ python --version
 make --version
 
 set -ex
-build_commands=$(python3 tf-m-ci-scripts/configs.py -b -g all $CONFIG_NAME)
+build_commands=$(python3 tf-m-ci-scripts/configs.py -b -g all -j ${BUILD_JOBS:-2} $CONFIG_NAME)
 
 if [ $CODE_COVERAGE_EN = "TRUE" ] && [[ $CONFIG_NAME =~ "GCC" ]] ; then
     build_commands=${build_commands/toolchain_GNUARM.cmake/toolchain_GNUARM.cmake -DTFM_CODE_COVERAGE=True}
