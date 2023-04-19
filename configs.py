@@ -50,10 +50,10 @@ def print_config_environment(config, group=None, silence_stderr=False):
     build_manager.print_config_environment(config, silence_stderr=silence_stderr)
 
 
-def print_build_commands(config, group=None):
+def print_build_commands(config, group=None, jobs=None):
     """Prints particular configuration environment variables"""
     build_manager = get_build_manager(group)
-    build_manager.print_build_commands(config, silence_stderr=True)
+    build_manager.print_build_commands(config, silence_stderr=True, jobs=jobs)
 
 
 if __name__ == "__main__":
@@ -84,6 +84,11 @@ if __name__ == "__main__":
         "Leaving blank will just look at config 'all'.",
         choices=list(_builtin_configs.keys())+['all'],
     )
+    PARSER.add_argument(
+        "-j",
+        "--jobs",
+        help="Pass -j option down to the build system (# of parallel jobs)."
+    )
     ARGS = PARSER.parse_args()
     if not ARGS.group or ARGS.group == ['all']:
         ARGS.group = list(_builtin_configs.keys())
@@ -98,7 +103,7 @@ if __name__ == "__main__":
                 if not ARGS.build_commands:
                     print_config_environment(ARGS.config, group=group, silence_stderr=True)
                 else:
-                    print_build_commands(ARGS.config, group=group)
+                    print_build_commands(ARGS.config, group=group, jobs=ARGS.jobs)
                 break
             except (SystemExit, KeyError):
                 if group == ARGS.group[-1] or ARGS.group == []:
