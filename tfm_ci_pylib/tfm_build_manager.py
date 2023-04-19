@@ -139,14 +139,15 @@ class TFM_Build_Manager(structuredTask):
             .strip()
         )
 
-    def print_build_commands(self, config, silence_stderr=False):
+    def print_build_commands(self, config, silence_stderr=False, jobs=None):
         config_details = self._tbm_build_cfg[config]
         codebase_dir = os.path.join(os.getcwd(),"trusted-firmware-m")
         build_dir=os.path.join(os.getcwd(),"trusted-firmware-m/build")
         build_config = self.get_build_config(config_details, config, \
                                              silence=silence_stderr, \
                                              build_dir=build_dir, \
-                                             codebase_dir=codebase_dir)
+                                             codebase_dir=codebase_dir, \
+                                             jobs=jobs)
         build_commands = [build_config["set_compiler_path"], \
                           build_config["config_template"]]
         for command in build_config["build_cmds"]:
@@ -348,7 +349,7 @@ class TFM_Build_Manager(structuredTask):
             print("Exported build report to file:", self._tbm_report)
             save_json(self._tbm_report, full_rep)
 
-    def get_build_config(self, i, name, silence=False, build_dir=None, codebase_dir=None):
+    def get_build_config(self, i, name, silence=False, build_dir=None, codebase_dir=None, jobs=None):
         psa_build_dir = self._tbm_work_dir + "/" + name + "/BUILD"
         if not build_dir:
             build_dir = os.path.join(self._tbm_work_dir, name)
@@ -377,12 +378,15 @@ class TFM_Build_Manager(structuredTask):
             except Exception as E:
                 pass
 
-        if os.cpu_count() >= 8:
-            #run in a serviver with scripts, parallel build will use CPU numbers
-            thread_no = " -j 2"
-        else:
-            #run in a docker, usually docker with CPUs less than 8
-            thread_no = " -j " + str(os.cpu_count())
+        if jobs is None:
+            if os.cpu_count() >= 8:
+                #run in a serviver with scripts, parallel build will use CPU numbers
+                jobs = 2
+            else:
+                #run in a docker, usually docker with CPUs less than 8
+                jobs = os.cpu_count()
+
+        thread_no = " -j {} ".format(jobs)
         build_cfg["build_cmds"][0] += thread_no
 
         # Overwrite command lines to set compiler
