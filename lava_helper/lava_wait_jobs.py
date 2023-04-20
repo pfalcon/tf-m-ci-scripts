@@ -112,7 +112,7 @@ def fetch_artifacts(jobs, user_args, lava):
                 time.sleep(0.2)
                 lava.get_job_results(job_id, results_file)
                 break
-            except (ProtocolError, IOError) as e:
+            except (ProtocolError, IOError, yaml.error.YAMLError) as e:
                 if retry == 1:
                     raise
                 else:
