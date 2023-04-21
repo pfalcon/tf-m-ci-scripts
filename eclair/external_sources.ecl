@@ -17,3 +17,5 @@
 # Ignore any auto-generated source files in build dir.
 -file_tag+={external, "^trusted-firmware-m/build/.*$"}
 
+# Ignore compiler internal headers.
+-file_tag+={external, "^/.+/compiler/gcc-.*$"}
