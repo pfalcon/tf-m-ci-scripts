@@ -8,6 +8,9 @@
 # control over them, can't easily fix issues in them, and generally that's
 # normally out of scope of the project).
 
+-file_tag+={external, "^mbedtls/.*$"}
+-file_tag+={external, "^mcuboot/.*$"}
+-file_tag+={external, "^QCBOR/.*$"}
 -file_tag+={external, "^trusted-firmware-m/platform/ext/cmsis/.*$"}
 -file_tag+={external, "^trusted-firmware-m/lib/ext/mbedcrypto/.*$"}
 
