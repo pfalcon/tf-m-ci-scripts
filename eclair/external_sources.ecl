@@ -14,7 +14,6 @@
 -file_tag+={external, "^trusted-firmware-m/platform/ext/cmsis/.*$"}
 -file_tag+={external, "^trusted-firmware-m/lib/ext/mbedcrypto/.*$"}
 
-# Files uses by CMake for compiler feature checks, not related to the
-# project in any way.
--file_tag+={external, "^trusted-firmware-m/build/CMakeFiles/.*$"}
+# Ignore any auto-generated source files in build dir.
+-file_tag+={external, "^trusted-firmware-m/build/.*$"}
 
