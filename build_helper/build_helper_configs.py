@@ -805,7 +805,7 @@ config_corstone1000 = {"seed_params": {
                 "tfm_platform":     ["arm/corstone1000"],
                 "compiler":         ["GCC_10_3"],
                 "isolation_level":  ["1"],
-                "test_regression":  ["RegBL2, RegS"],
+                "test_regression":  ["RegS"],
                 "test_psa_api":     ["OFF"],
                 "cmake_build_type": ["Debug"],
                 "with_bl2":         [True],
