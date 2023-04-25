@@ -742,12 +742,12 @@ config_corstone1000 = {"seed_params": {
                 "tfm_platform":     ["arm/corstone1000"],
                 "compiler":         ["GCC_10_3"],
                 "isolation_level":  ["1"],
-                "test_regression":  [True],
+                "test_regression":  [False],
                 "test_psa_api":     ["OFF"],
                 "cmake_build_type": ["Debug"],
                 "with_bl2":         [True],
                 "profile":          [""],
-                "extra_params":     ["S_PS_OFF, FVP", "FPGA"]
+                "extra_params":     ["CS1K_TEST, FVP", "CS1K_TEST, FPGA"]
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + []

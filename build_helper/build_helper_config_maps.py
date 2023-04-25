@@ -79,8 +79,9 @@ mapExtraParams = {
                       "-DTEST_NS_CRYPTO=ON "),
     # Corstone1000 support
     "FVP"          : "-DPLATFORM_IS_FVP=True ",
-    "FPGA"         : "-DPLATFORM_IS_FVP=False ",
-    "S_PS_OFF"     : "-DTEST_S_PS=OFF ",
+    "FPGA"         : "-DPLATFORM_IS_FVP=False -DTEST_S_PS=OFF -DTEST_S_PLATFORM=OFF ",
+    "CS1K_TEST"    : ("-DTEST_BL2=ON -DTEST_S=ON -DTEST_S_IPC=OFF "
+                      "-DEXTRA_S_TEST_SUITE_PATH=%(codebase_root_dir)s/platform/ext/target/arm/corstone1000/ci_regression_tests/ "),
 
     # Extra test cases
     "TEST_CBOR"    : "-DTEST_NS_QCBOR=ON ",
