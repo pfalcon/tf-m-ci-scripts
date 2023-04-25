@@ -40,7 +40,7 @@ mapPlatform = {
 mapRegTest = {
     "OFF"       : "-DTEST_S=OFF -DTEST_NS=OFF ",
     "RegS"      : "-DTEST_S=ON ",
-    "RegNS"     : "-DTEST_NS=ON ",
+    "RegNS"     : "-DTEST_NS=ON -DTEST_NS_FLIH_IRQ=OFF ",
 }
 
 # Map PSA Arch Tests to short format
