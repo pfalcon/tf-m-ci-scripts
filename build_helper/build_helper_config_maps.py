@@ -36,6 +36,13 @@ mapPlatform = {
     "stm/nucleo_l552ze_q"                : "nucleo_l552ze_q",
 }
 
+# Map regression test parameters to short format
+mapRegTest = {
+    "OFF"       : "-DTEST_S=OFF -DTEST_NS=OFF ",
+    "RegS"      : "-DTEST_S=ON ",
+    "RegNS"     : "-DTEST_NS=ON ",
+}
+
 # Map PSA Arch Tests to short format
 mapTestPsaApi = {
     "IPC"                : "FF",
@@ -80,7 +87,7 @@ mapExtraParams = {
     # Corstone1000 support
     "FVP"          : "-DPLATFORM_IS_FVP=True ",
     "FPGA"         : "-DPLATFORM_IS_FVP=False -DTEST_S_PS=OFF -DTEST_S_PLATFORM=OFF ",
-    "CS1K_TEST"    : ("-DTEST_BL2=ON -DTEST_S=ON -DTEST_S_IPC=OFF "
+    "CS1K_TEST"    : ("-DTEST_S_IPC=OFF "
                       "-DEXTRA_S_TEST_SUITE_PATH=%(codebase_root_dir)s/platform/ext/target/arm/corstone1000/ci_regression_tests/ "),
 
     # Extra test cases

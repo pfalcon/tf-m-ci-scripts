@@ -57,7 +57,7 @@ def generate_test_definitions(config, work_dir, user_args):
         if platform != os.getenv('TFM_PLATFORM'):
             continue
         recovery_image_url = get_recovery_url(recovery_store_url, recovery)
-        if os.getenv("TEST_REGRESSION") == "True":
+        if os.getenv("TEST_REGRESSION") != "OFF":
             monitor_name = "reg_tests"
         elif os.getenv("TEST_PSA_API") != "OFF":
             monitor_name = "arch_tests"

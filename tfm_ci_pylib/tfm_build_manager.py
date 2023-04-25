@@ -90,12 +90,12 @@ class TFM_Build_Manager(structuredTask):
 
         return compiler_name
 
-    def map_extra_params(self, params):
-        extra_params = ""
+    def map_params(self, params, maps):
+        build_configs = ""
         param_list = params.split(", ")
         for param in param_list:
-            extra_params += mapExtraParams[param]
-        return extra_params
+            build_configs += maps[param]
+        return build_configs
 
     def get_config(self):
             return list(self._tbm_build_cfg.keys())
@@ -394,14 +394,14 @@ class TFM_Build_Manager(structuredTask):
                             "tfm_platform": i.tfm_platform,
                             "compiler": self.choose_toolchain(i.compiler),
                             "isolation_level": i.isolation_level,
-                            "test_regression": i.test_regression,
+                            "test_regression": self.map_params(i.test_regression, mapRegTest),
                             "test_psa_api": i.test_psa_api,
                             "cmake_build_type": i.cmake_build_type,
                             "with_bl2": i.with_bl2,
                             "profile": "" if i.profile=="N.A" else i.profile}
         # The extra params can also contain paths with "codebase_root_dir" and
         # these also need to be substituted
-        overwrite_params["extra_params"] = self.map_extra_params(i.extra_params) % overwrite_params
+        overwrite_params["extra_params"] = self.map_params(i.extra_params, mapExtraParams) % overwrite_params
 
         if i.test_psa_api == "IPC":
             overwrite_params["test_psa_api"] += " -DINCLUDE_PANIC_TESTS=1"
@@ -409,7 +409,7 @@ class TFM_Build_Manager(structuredTask):
             overwrite_params["test_psa_api"] += " -DCC312_LEGACY_DRIVER_API_ENABLED=OFF"
         if i.tfm_platform == "arm/musca_b1":
             overwrite_params["test_psa_api"] += " -DOTP_NV_COUNTERS_RAM_EMULATION=ON"
-        if i.test_regression:
+        if i.test_regression != "OFF":
             overwrite_params["extra_params"] += " -DTEST_BL2=False" if not i.with_bl2 else " -DTEST_BL2=True"
         build_cfg["config_template"] %= overwrite_params
         if len(build_cfg["build_cmds"]) > 1:
@@ -575,8 +575,8 @@ class TFM_Build_Manager(structuredTask):
             config_param.append(mapPlatform[list(i)[0]])
             config_param.append(list(i)[1].split("_")[0])
             config_param.append(list(i)[2]) # ISOLATION_LEVEL
-            if list(i)[3]:  # TEST_REGRESSION
-                config_param.append("REG")
+            if list(i)[3] != "OFF":  # TEST_REGRESSION
+                config_param.append(list(i)[3].replace(", ", "_"))
             if list(i)[4] != "OFF":    #TEST_PSA_API
                 config_param.append(mapTestPsaApi[list(i)[4]])
             config_param.append(list(i)[5]) # BUILD_TYPE
