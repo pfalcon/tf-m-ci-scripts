@@ -57,12 +57,12 @@ def generate_test_definitions(config, work_dir, user_args):
         if platform != os.getenv('TFM_PLATFORM'):
             continue
         recovery_image_url = get_recovery_url(recovery_store_url, recovery)
-        if os.getenv("TEST_REGRESSION") != "OFF":
-            monitor_name = "reg_tests"
-        elif os.getenv("TEST_PSA_API") != "OFF":
+        if os.getenv("TEST_PSA_API") != "OFF":
             monitor_name = "arch_tests"
-        else:
+        elif os.getenv("TEST_REGRESSION") == "OFF":
             monitor_name = "no_reg_tests"
+        else:
+            monitor_name = "reg_tests"
         params = {
             "job_name": "{}_{}_{}".format(os.getenv('CONFIG_NAME'), os.getenv("BUILD_NUMBER"), config["device_type"]),
             "build_name": os.getenv('CONFIG_NAME'),

@@ -30,7 +30,7 @@ coverage_trace_plugin=tf_downloads + "/coverage-plugin/qa-tools/coverage-tool/co
 # LAVA test-monitor definition for configs without regression tests.
 # "Non-Secure system starting..." is expected to indicate
 # that TF-M has been booted successfully.
-monitors_no_reg_tests = {
+no_reg_tests_monitors_cfg = {
     'name': 'NS_SYSTEM_BOOTING',
     'start': 'Non-Secure system',
     'end': r'starting\\.{3}',
@@ -41,7 +41,7 @@ monitors_no_reg_tests = {
 # LAVA test-monitor definitions for configs with tests.
 # Results of each test case is parsed separately, capturing test case id.
 # Works across any test suites enabled.
-monitors_mcuboot_tests = {
+mcuboot_tests_monitor_cfg = {
     'name': 'mcuboot_suite',
     'start': 'Execute test suites for the MCUBOOT area',
     'end': 'End of MCUBOOT test suites',
@@ -49,7 +49,7 @@ monitors_mcuboot_tests = {
     'fixup': {"pass": "PASSED", "fail": "FAILED", "skip": "SKIPPED"},
 }
 
-monitors_s_reg_tests = {
+s_reg_tests_monitors_cfg = {
     'name': 'secure_regression_suite',
     'start': 'Execute test suites for the Secure area',
     'end': 'End of Secure test suites',
@@ -57,7 +57,7 @@ monitors_s_reg_tests = {
     'fixup': {"pass": "PASSED", "fail": "FAILED", "skip": "SKIPPED"},
 }
 
-monitors_ns_reg_tests = {
+ns_reg_tests_monitors_cfg = {
     'name': 'non_secure_regression_suite',
     'start': 'Execute test suites for the Non-secure area',
     'end': 'End of Non-secure test suites',
@@ -65,7 +65,7 @@ monitors_ns_reg_tests = {
     'fixup': {"pass": "PASSED", "fail": "FAILED", "skip": "SKIPPED"},
 }
 
-monitors_arch_tests = {
+arch_tests_monitors_cfg = {
     'name': 'psa_api_suite',
     'start': 'Running..',
     'end': 'Entering standby..',
@@ -74,6 +74,16 @@ monitors_arch_tests = {
                 r"TEST RESULT: (?P<result>(PASSED|FAILED|SKIPPED|SIM ERROR))",
     'fixup': {"pass": "PASSED", "fail": "FAILED", "skip": "SKIPPED", "sim_error": "SIM ERROR"},
 }
+
+# Group related monitors into same list to simplify the code
+no_reg_tests_monitors = [no_reg_tests_monitors_cfg]
+
+reg_tests_monitors = [] + \
+                     ([mcuboot_tests_monitor_cfg] if "RegBL2" in os.getenv("TEST_REGRESSION") and os.getenv("BL2") == "True" else []) + \
+                     ([s_reg_tests_monitors_cfg] if "RegS" in os.getenv("TEST_REGRESSION") else []) + \
+                     ([ns_reg_tests_monitors_cfg] if "RegNS" in os.getenv("TEST_REGRESSION") else [])
+
+arch_tests_monitors = [arch_tests_monitors_cfg]
 
 
 # MPS2 with BL2 bootloader for AN521
@@ -96,10 +106,11 @@ tfm_mps2_sse_200 = {
         "bootloader": "bl2.bin"
     },
     "monitors": {
-        'no_reg_tests': [monitors_no_reg_tests],
+        'no_reg_tests': no_reg_tests_monitors,
         # FPU test on FPGA not supported yet
-        'reg_tests': ([monitors_s_reg_tests, monitors_ns_reg_tests] if 'FPON' not in os.getenv("EXTRA_PARAMS") else []) + ([monitors_mcuboot_tests] if os.getenv("BL2") == "Ture" else []),
-        'arch_tests': [monitors_arch_tests] if os.getenv("TEST_PSA_API") != "IPC" else [], # FF test on FPGA not supported in LAVA yet
+        'reg_tests': (reg_tests_monitors if 'FPON' not in os.getenv("EXTRA_PARAMS") else [mcuboot_tests_monitor_cfg]),
+        # FF test on FPGA not supported in LAVA yet
+        'arch_tests': (arch_tests_monitors if os.getenv("TEST_PSA_API") != "IPC" else []),
     }
 }
 
@@ -121,8 +132,8 @@ fvp_mps3_an552_bl2 = {
         "data": "tfm_s_ns_signed.bin"
     },
     "monitors": {
-        'no_reg_tests': [monitors_no_reg_tests],
-        'reg_tests': [monitors_s_reg_tests, monitors_ns_reg_tests] + ([monitors_mcuboot_tests] if os.getenv("BL2") == "Ture" else []),
+        'no_reg_tests': no_reg_tests_monitors,
+        'reg_tests': reg_tests_monitors,
     }
 }
 
@@ -145,9 +156,9 @@ fvp_mps2_an521_bl2 = {
         "data": "tfm_s_ns_signed.bin"
     },
     "monitors": {
-        'no_reg_tests': [monitors_no_reg_tests],
-        'reg_tests': [monitors_s_reg_tests, monitors_ns_reg_tests] + ([monitors_mcuboot_tests] if os.getenv("BL2") == "Ture" else []),
-        'arch_tests': [monitors_arch_tests],
+        'no_reg_tests': no_reg_tests_monitors,
+        'reg_tests': reg_tests_monitors,
+        'arch_tests': arch_tests_monitors,
     }
 }
 
@@ -171,8 +182,8 @@ fvp_mps2_an519_bl2 = {
         "data": "tfm_s_ns_signed.bin"
     },
     "monitors": {
-        'no_reg_tests': [monitors_no_reg_tests],
-        'reg_tests': [monitors_s_reg_tests, monitors_ns_reg_tests] + ([monitors_mcuboot_tests] if os.getenv("BL2") == "Ture" else []),
+        'no_reg_tests': no_reg_tests_monitors,
+        'reg_tests': reg_tests_monitors,
     }
 }
 
@@ -193,7 +204,7 @@ qemu_mps2_bl2 = {
     },
     "monitors": {
         # FPU test on AN521 qemu not supported yet
-        'reg_tests': ([monitors_s_reg_tests, monitors_ns_reg_tests] if 'FPON' not in os.getenv("EXTRA_PARAMS") else []) + ([monitors_mcuboot_tests] if os.getenv("BL2") == "Ture" else []),
+        'reg_tests': (reg_tests_monitors if 'FPON' not in os.getenv("EXTRA_PARAMS") else [mcuboot_tests_monitor_cfg]),
     }
 }
 
@@ -214,8 +225,8 @@ musca_b1_bl2 = {
         "firmware": "tfm.hex",
     },
     "monitors": {
-        'no_reg_tests': [monitors_no_reg_tests],
-        'reg_tests': [monitors_s_reg_tests, monitors_ns_reg_tests] + ([monitors_mcuboot_tests] if os.getenv("BL2") == "Ture" else []),
+        'no_reg_tests': no_reg_tests_monitors,
+        'reg_tests': reg_tests_monitors,
     }
 }
 
@@ -233,7 +244,7 @@ stm32l562e_dk = {
         "tarball": "stm32l562e-dk-tfm.tar.bz2",
     },
     "monitors": {
-        'reg_tests': [monitors_s_reg_tests, monitors_ns_reg_tests] + ([monitors_mcuboot_tests] if os.getenv("BL2") == "Ture" else []),
+        'reg_tests': reg_tests_monitors,
     }
 }
 
@@ -251,8 +262,8 @@ lpcxpresso55s69 = {
         "tarball": "lpcxpresso55s69-tfm.tar.bz2",
     },
     "monitors": {
-        'no_reg_tests': [monitors_no_reg_tests],
-        'reg_tests': [monitors_s_reg_tests, monitors_ns_reg_tests],
+        'no_reg_tests': no_reg_tests_monitors,
+        'reg_tests': reg_tests_monitors,
     }
 }
 
@@ -271,7 +282,7 @@ psoc64 = {
         "nspe": "tfm_ns_signed.hex",
     },
     "monitors": {
-        'reg_tests': [monitors_s_reg_tests, monitors_ns_reg_tests],
+        'reg_tests': reg_tests_monitors,
     }
 }
 
