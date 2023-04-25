@@ -38,7 +38,8 @@ mapPlatform = {
 
 # Map regression test parameters to short format
 mapRegTest = {
-    "OFF"       : "-DTEST_S=OFF -DTEST_NS=OFF ",
+    "OFF"       : "-DTEST_BL2=OFF -DTEST_S=OFF -DTEST_NS=OFF ",
+    "RegBL2"    : "-DTEST_BL2=ON ",
     "RegS"      : "-DTEST_S=ON ",
     "RegNS"     : "-DTEST_NS=ON -DTEST_NS_FLIH_IRQ=OFF ",
 }
