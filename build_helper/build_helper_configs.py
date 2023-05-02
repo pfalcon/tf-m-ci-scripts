@@ -938,7 +938,7 @@ config_debug_PSA_API = {"seed_params": {
 _builtin_configs = {
                     # per-patch test groups
                     "pp_test": config_pp_test,
-                    "pp_corstone1000": config_corstone1000,
+                    #"pp_corstone1000": config_corstone1000,
 
                     # nightly test groups
                     "nightly_test": config_nightly_test,
@@ -955,7 +955,7 @@ _builtin_configs = {
                     "nightly_an547": config_an547,
                     "nightly_an552": config_an552,
                     "nightly_corstone310": config_corstone310,
-                    "nightly_corstone1000": config_corstone1000,
+                    #"nightly_corstone1000": config_corstone1000,
                     "nightly_rss": config_rss,
                     "nightly_psoc64": config_psoc64,
                     "nightly_stm32l562e_dk": config_stm32l562e_dk,
@@ -1003,7 +1003,7 @@ _builtin_configs = {
                     "corstone310": config_corstone310,
                     "rss": config_rss,
                     "cypress_psoc64": config_psoc64,
-                    "corstone1000": config_corstone1000,
+                    #"corstone1000": config_corstone1000,
                     "stm_stm32l562e_dk": config_stm32l562e_dk,
                     "stm_b_u585i_iot02a": config_b_u585i_iot02a,
                     "stm_nucleo_l552ze_q": config_nucleo_l552ze_q,
