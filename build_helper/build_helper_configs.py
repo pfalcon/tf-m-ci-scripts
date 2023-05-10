@@ -782,7 +782,7 @@ config_b_u585i_iot02a = {"seed_params": {
                 "tfm_platform":     ["stm/b_u585i_iot02a"],
                 "compiler":         ["GCC_10_3", "ARMCLANG_6_13"],
                 "isolation_level":  ["1", "2"],
-                "test_regression":  ["OFF", "RegBL2, RegS, RegNS"],
+                "test_regression":  ["OFF", "RegS, RegNS"],
                 "test_psa_api":     ["OFF"],
                 "cmake_build_type": ["Release"],
                 "with_bl2":         [True],

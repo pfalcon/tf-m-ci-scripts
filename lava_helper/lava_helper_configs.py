@@ -248,6 +248,24 @@ stm32l562e_dk = {
     }
 }
 
+# STM32U5 B-U585I-IOT02A
+b_u585i_iot02a = {
+    "templ": "b_u585i_iot02a.jinja2",
+    "job_name": "b_u585i_iot02a",
+    "device_type": "b-u585i-iot02a",
+    "job_timeout": 5,
+    "action_timeout": 3,
+    "monitor_timeout": 3,
+    "poweroff_timeout": 2,
+    "platforms": {"stm/b_u585i_iot02a": ""},
+    "binaries": {
+        "tarball": "b_u585i_iot02a-tfm.tar.bz2",
+    },
+    "monitors": {
+        'reg_tests': reg_tests_monitors,
+    }
+}
+
 # LPCxpresso55S69
 lpcxpresso55s69 = {
     "templ": "lpcxpresso55s69.jinja2",
@@ -296,6 +314,7 @@ lava_gen_config_map = {
     "musca_b1": musca_b1_bl2,
     "stm32l562e_dk": stm32l562e_dk,
     "lpcxpresso55s69": lpcxpresso55s69,
+    "b_u585i_iot02a": b_u585i_iot02a,
     "psoc64": psoc64,
 }
 
