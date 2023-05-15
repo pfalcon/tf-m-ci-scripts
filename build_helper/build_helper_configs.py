@@ -273,6 +273,12 @@ config_pp_test = {"seed_params": {
                     # stm32l562e_dk_GCC_3_RegS_RegNS_Release_BL2_CRYPTO_OFF
                     ("stm/stm32l562e_dk", "GCC_10_3", "3",
                      "RegBL2, RegS, RegNS", "OFF", "Release", True, "", "CRYPTO_OFF"),
+                    # b_u585i_iot02a_GCC_1_RegS_RegNS_Release_BL2
+                    ("stm/b_u585i_iot02a", "GCC_10_3", "1",
+                     "RegS, RegNS", "OFF", "Release", True, "", ""),
+                    # b_u585i_iot02a_ARMCLANG_2_RegS_RegNS_Release_BL2
+                    ("stm/b_u585i_iot02a", "ARMCLANG_6_13", "2",
+                     "RegS, RegNS", "OFF", "Release", True, "", ""),
                     # psoc64_GCC_2_RegS_RegNS_Release
                     ("cypress/psoc64", "GCC_10_3", "2",
                      "RegS, RegNS", "OFF", "Release", False, "", ""),
