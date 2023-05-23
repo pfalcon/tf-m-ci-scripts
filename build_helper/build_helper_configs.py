@@ -576,7 +576,7 @@ config_example_dma350_trigger = {"seed_params": {
                 }
 
 config_misra = {"seed_params": {
-                "tfm_platform":     ["arm/mps2/an519"],
+                "tfm_platform":     ["arm/mps2/an521"],
                 "compiler":         ["GCC_10_3"],
                 "isolation_level":  ["1"],
                 "test_regression":  ["OFF"],
