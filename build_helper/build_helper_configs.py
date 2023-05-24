@@ -576,14 +576,14 @@ config_example_dma350_trigger = {"seed_params": {
                 }
 
 config_misra = {"seed_params": {
-                "tfm_platform":     ["arm/mps2/an521"],
+                "tfm_platform":     ["arm/musca_b1"],
                 "compiler":         ["GCC_10_3"],
                 "isolation_level":  ["1"],
                 "test_regression":  ["OFF"],
                 "test_psa_api":     ["OFF"],
                 "cmake_build_type": ["Debug"],
                 "with_bl2":         [True],
-                "profile":          ["profile_small", "profile_medium", "profile_large"],
+                "profile":          ["profile_small", "profile_medium_arotless", "profile_medium", "profile_large"],
                 "extra_params":     ["PSOFF"]
                 },
                 "common_params": _common_tfm_builder_cfg,
