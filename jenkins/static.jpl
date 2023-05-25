@@ -21,7 +21,7 @@ def trigger(job_name) {
     params += string(name: 'MCUBOOT_REFSPEC', value: env.MCUBOOT_REFSPEC)
     params += string(name: 'MCUBOOT_URL', value: env.MCUBOOT_URL)
     params += string(name: 'MBEDTLS_VERSION', value: env.MBEDTLS_VERSION)
-    params += string(name: 'MCUBOOT_URL', value: env.MBEDTLS_URL)
+    params += string(name: 'MBEDTLS_URL', value: env.MBEDTLS_URL)
     params += string(name: 'TFM_TESTS_REFSPEC', value: env.TFM_TESTS_REFSPEC)
     params += string(name: 'TFM_TESTS_URL', value: env.TFM_TESTS_URL)
     params += string(name: 'PSA_ARCH_TESTS_VERSION', value: env.PSA_ARCH_TESTS_VERSION)
