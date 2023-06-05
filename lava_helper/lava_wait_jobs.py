@@ -96,6 +96,7 @@ def fetch_artifacts(jobs, user_args, lava):
         t = time.time()
         _log.info("Fetching artifacts for job %d to %s", job_id, job_dir)
 
+        retry_delay = 3
         for retry in range(3, 0, -1):
             try:
                 os.makedirs(job_dir, exist_ok=True)
@@ -117,7 +118,8 @@ def fetch_artifacts(jobs, user_args, lava):
                     raise
                 else:
                     _log.warning("fetch_artifacts: Error %r occurred, retrying", e)
-                    time.sleep(2)
+                    time.sleep(retry_delay)
+                    retry_delay *= 2
 
         _log.info("Fetched artifacts in %ds", time.time() - t)
         codecov_helper.extract_trace_data(target_log, job_dir)
