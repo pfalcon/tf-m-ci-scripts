@@ -2,7 +2,7 @@
 
 set -ex
 
-. tf-m-ci-scripts/eclair/utils.sh
+. tf-ci-scripts/eclair/utils.sh
 . tf-m-ci-scripts/eclair/utils_tfm.sh
 
 num_configs=$(python3 ./tf-m-ci-scripts/configs.py -g "$FILTER_GROUP" | wc -l)
