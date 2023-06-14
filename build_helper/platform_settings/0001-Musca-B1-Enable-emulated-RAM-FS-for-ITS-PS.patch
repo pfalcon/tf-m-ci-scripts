@@ -1,26 +1,24 @@
-From b217e083ecfd7cc5bbdfa59ef238fc53adae4282 Mon Sep 17 00:00:00 2001
+From 51a134bfa1a083556dd29bf2325d53363764f8e2 Mon Sep 17 00:00:00 2001
 From: Xinyu Zhang <xinyu.zhang@arm.com>
-Date: Fri, 23 Dec 2022 15:25:03 +0800
+Date: Wed, 14 Jun 2023 18:45:20 +0800
 Subject: [PATCH 1/2] Musca B1: Enable emulated RAM FS for ITS & PS
 
 Signed-off-by: Xinyu Zhang <xinyu.zhang@arm.com>
-Change-Id: I48e14a91e9428fd77250d959f306f6ae2113784c
+Change-Id: I213e338d4116f296a3b49c0d15f12334022b2cdd
 ---
- platform/ext/target/arm/musca_b1/config_tfm_target.h | 6 ++++++
- 1 file changed, 6 insertions(+)
+ platform/ext/target/arm/musca_b1/config_tfm_target.h | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/platform/ext/target/arm/musca_b1/config_tfm_target.h b/platform/ext/target/arm/musca_b1/config_tfm_target.h
-index f90984a08..69174cef2 100644
+index 599db967d..2681f068d 100644
 --- a/platform/ext/target/arm/musca_b1/config_tfm_target.h
 +++ b/platform/ext/target/arm/musca_b1/config_tfm_target.h
-@@ -12,4 +12,10 @@
- #undef CRYPTO_NV_SEED
+@@ -11,4 +11,8 @@
+ /* Use stored NV seed to provide entropy */
  #define CRYPTO_NV_SEED                         0
  
-+#undef ITS_RAM_FS
 +#define ITS_RAM_FS                             1
 +
-+#undef PS_RAM_FS
 +#define PS_RAM_FS                              1
 +
  #endif /* __CONFIG_TFM_TARGET_H__ */
