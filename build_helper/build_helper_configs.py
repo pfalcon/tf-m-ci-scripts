@@ -575,6 +575,21 @@ config_misra = {"seed_params": {
                 "invalid": _common_tfm_invalid_configs + []
                 }
 
+config_misra_debug = {"seed_params": {
+                "tfm_platform":     ["arm/musca_b1"],
+                "compiler":         ["GCC_10_3"],
+                "isolation_level":  ["1"],
+                "test_regression":  ["OFF"],
+                "test_psa_api":     ["OFF"],
+                "cmake_build_type": ["Debug"],
+                "with_bl2":         [True],
+                "profile":          ["profile_small"],
+                "extra_params":     ["PSOFF"]
+                },
+                "common_params": _common_tfm_builder_cfg,
+                "invalid": _common_tfm_invalid_configs + []
+                }
+
 # Config groups for code coverage
 config_cov_profile_s = deepcopy(config_profile_s)
 config_cov_profile_s["seed_params"]["tfm_platform"] = ["arm/mps2/an521"]
@@ -1015,6 +1030,7 @@ _builtin_configs = {
 
                     # MISRA analysis
                     "misra": config_misra,
+                    "misra_debug": config_misra_debug,
 
                     # platform groups
                     "an521": config_an521,
