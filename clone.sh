@@ -60,7 +60,12 @@ function parse_version() {
 }
 
 # Must projects
-TFM_PROJECT="${CODE_REPO:?}"
+if [ -n "${GERRIT_EVENT_HASH}" ]; then
+    # If triggered by Gerrit, use its variables
+    TFM_PROJECT="https://${GERRIT_HOST}/${GERRIT_PROJECT}"
+else
+    TFM_PROJECT="${CODE_REPO:?}"
+fi
 TFM_REFSPEC="${GERRIT_REFSPEC:?}"
 TFM_NAME="trusted-firmware-m"
 
