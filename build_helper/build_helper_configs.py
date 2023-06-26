@@ -59,7 +59,8 @@ _common_tfm_builder_cfg = {
         "-DMBEDCRYPTO_PATH=%(codebase_root_dir)s/../mbedtls " + \
         "-DPSA_ARCH_TESTS_PATH=%(codebase_root_dir)s/../psa-arch-tests " + \
         "-DMCUBOOT_PATH=%(codebase_root_dir)s/../mcuboot " + \
-        "-DQCBOR_PATH=%(codebase_root_dir)s/../QCBOR " + \
+        "-DQCBOR_PATH=%(codebase_root_dir)s/../qcbor " + \
+        "-DTFM_EXTRAS_REPO_PATH=%(codebase_root_dir)s/../tf-m-extras " + \
         "%(codebase_root_dir)s",
 
     "set_compiler_path": "export PATH=$PATH:$%(compiler)s_PATH",

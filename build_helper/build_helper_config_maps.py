@@ -105,13 +105,9 @@ mapExtraParams = {
                                 "-DCONFIG_TFM_ENABLE_MVE=ON -DCONFIG_TFM_SPM_BACKEND=IPC "
                                 "-DPLATFORM_HAS_FIRMWARE_UPDATE_SUPPORT=ON -DTFM_PARTITION_PLATFORM=ON "
                                 "-DTFM_PARTITION_CRYPTO=ON -DTFM_PARTITION_INTERNAL_TRUSTED_STORAGE=ON "
-                                "-DTFM_PARTITION_PROTECTED_STORAGE=ON  -DMCUBOOT_CONFIRM_IMAGE=ON "
-                                "-DFREERTOS_KERNEL_SRC_PATH=%(codebase_root_dir)s/../freertos-kernel"),
-    "EXAMPLE_DMA350_TRIGGER"  : ("-DNS_EVALUATION_APP_PATH=%(codebase_root_dir)s/../tf-m-extras/examples/corstone310_fvp_dma/triggering_example "
-                                "-DFREERTOS_KERNEL_SRC_PATH=%(codebase_root_dir)s/../freertos-kernel"),
+                                "-DTFM_PARTITION_PROTECTED_STORAGE=ON  -DMCUBOOT_CONFIRM_IMAGE=ON "),
+    "EXAMPLE_DMA350_TRIGGER"  : ("-DNS_EVALUATION_APP_PATH=%(codebase_root_dir)s/../tf-m-extras/examples/corstone310_fvp_dma/triggering_example "),
     "EXAMPLE_DMA350_NS"       : ("-DDEFAULT_NS_SCATTER=OFF -DPLATFORM_SVC_HANDLERS=ON "
-                                "-DNS_EVALUATION_APP_PATH=%(codebase_root_dir)s/../tf-m-extras/examples/corstone310_fvp_dma/dma350_ns "
-                                "-DFREERTOS_KERNEL_SRC_PATH=%(codebase_root_dir)s/../freertos-kernel"),
+                                "-DNS_EVALUATION_APP_PATH=%(codebase_root_dir)s/../tf-m-extras/examples/corstone310_fvp_dma/dma350_ns "),
     "EXAMPLE_DMA350_S"        : "-DEXTRA_S_TEST_SUITE_PATH=%(codebase_root_dir)s/../tf-m-extras/examples/corstone310_fvp_dma/dma350_s"
-
 }

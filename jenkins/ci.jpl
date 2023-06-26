@@ -107,8 +107,6 @@ def buildConfig(config, results) {
   params += string(name: 'PSA_ARCH_TESTS_URL', value: env.PSA_ARCH_TESTS_URL)
   params += string(name: 'QCBOR_VERSION', value: env.QCBOR_VERSION)
   params += string(name: 'QCBOR_URL', value: env.QCBOR_URL)
-  params += string(name: 'FREERTOS_KERNEL_REFSPEC', value: env.FREERTOS_KERNEL_REFSPEC)
-  params += string(name: 'FREERTOS_KERNEL_URL', value: env.FREERTOS_KERNEL_URL)
   params += string(name: 'SHARE_FOLDER', value: env.SHARE_FOLDER)
   params += string(name: 'SQUAD_CONFIGURATIONS', value: env.SQUAD_CONFIGURATIONS)
   return { -> results
