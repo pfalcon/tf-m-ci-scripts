@@ -71,10 +71,10 @@ _common_tfm_builder_cfg = {
     "artifact_capture_rex": (r'%(_tbm_build_dir_)s/bin'
                              r'/(\w+\.(?:axf|bin|hex))$'),
 
-    # ALL commands will be executed for every build.
-    # Other keys will append extra commands when matching target_platform
-    "build_cmds": {"all": ["cmake --build ./ -- install"],
-                   "arm/musca_b1": [("srec_cat "
+    # CMake build commands will be executed for every build.
+    "cmake_build": "cmake --build ./ -- install",
+    # Keys will append extra commands when matching target_platform
+    "post_build": {"arm/musca_b1": ("srec_cat "
                                  "%(_tbm_build_dir_)s/bin/"
                                  "bl2.bin "
                                  "-Binary -offset 0xA000000 "
@@ -84,8 +84,8 @@ _common_tfm_builder_cfg = {
                                  "-Binary -offset 0xA020000 "
                                  "-fill 0xFF 0xA020000 0xA200000 "
                                  "-o %(_tbm_build_dir_)s/bin/"
-                                 "tfm.hex -Intel")],
-                   "arm/musca_s1": [("srec_cat "
+                                 "tfm.hex -Intel"),
+                   "arm/musca_s1": ("srec_cat "
                                  "%(_tbm_build_dir_)s/bin/"
                                  "bl2.bin "
                                  "-Binary -offset 0xA000000 "
@@ -95,20 +95,20 @@ _common_tfm_builder_cfg = {
                                  "-Binary -offset 0xA020000 "
                                  "-fill 0xFF 0xA020000 0xA200000 "
                                  "-o %(_tbm_build_dir_)s/bin/"
-                                 "tfm.hex -Intel")],
-                   "stm/stm32l562e_dk": [("echo 'STM32L562E-DK board post process';"
+                                 "tfm.hex -Intel"),
+                   "stm/stm32l562e_dk": ("echo 'STM32L562E-DK board post process';"
                                           "%(_tbm_build_dir_)s/postbuild.sh;"
                                           "pushd %(_tbm_build_dir_)s;"
                                           "BIN_FILES=$(grep -o '\/.*\.bin' TFM_UPDATE.sh | sed 's/^/bin/');"
                                           "tar jcf ./bin/stm32l562e-dk-tfm.tar.bz2 regression.sh TFM_UPDATE.sh ${BIN_FILES};"
-                                          "popd")],
-                   "stm/b_u585i_iot02a": [("echo 'STM32U5 board post process';"
+                                          "popd"),
+                   "stm/b_u585i_iot02a": ("echo 'STM32U5 board post process';"
                                           "%(_tbm_build_dir_)s/postbuild.sh;"
                                           "pushd %(_tbm_build_dir_)s;"
                                           "BIN_FILES=$(grep -o '\/.*\.bin' TFM_UPDATE.sh | sed 's/^/bin/');"
                                           "tar jcf ./bin/b_u585i_iot02a-tfm.tar.bz2 regression.sh TFM_UPDATE.sh ${BIN_FILES};"
-                                          "popd")],
-                  "nxp/lpcxpresso55s69": [("echo 'LPCXpresso55S69 board post process\n';"
+                                          "popd"),
+                  "nxp/lpcxpresso55s69": ("echo 'LPCXpresso55S69 board post process\n';"
                                             "if [ -f \"%(_tbm_build_dir_)s/bin/bl2.hex\" ]; then FLASH_FILE='flash_bl2_JLink.py'; else FLASH_FILE='flash_JLink.py'; fi;"
                                             "pushd %(_tbm_build_dir_)s/../platform/ext/target/nxp/lpcxpresso55s69/scripts;"
                                             "LN=$(grep -n 'JLinkExe' ${FLASH_FILE}|awk -F: '{print $1}');"
@@ -117,8 +117,8 @@ _common_tfm_builder_cfg = {
                                             "cd %(_tbm_build_dir_)s/bin;"
                                             "BIN_FILES=$(grep loadfile flash.jlink | awk '{print $2}');"
                                             "tar jcf lpcxpresso55s69-tfm.tar.bz2 flash.jlink ${BIN_FILES};"
-                                            "popd")],
-                   "cypress/psoc64": [("echo 'Sign binaries for Cypress PSoC64 platform';"
+                                            "popd"),
+                   "cypress/psoc64": ("echo 'Sign binaries for Cypress PSoC64 platform';"
                                        "pushd %(_tbm_build_dir_)s/..;"
                                        "sudo /usr/local/bin/cysecuretools "
                                        "--policy platform/ext/target/cypress/psoc64/security/policy/policy_multi_CM0_CM4_tfm.json "
@@ -134,7 +134,7 @@ _common_tfm_builder_cfg = {
                                        "--image-type BOOT --image-id 16;"
                                        "mv %(_tbm_build_dir_)s/bin/tfm_s.hex %(_tbm_build_dir_)s/bin/tfm_s_signed.hex;"
                                        "mv %(_tbm_build_dir_)s/bin/tfm_ns.hex %(_tbm_build_dir_)s/bin/tfm_ns_signed.hex;"
-                                       "popd")]
+                                       "popd")
                    },
 
     # (Optional) If set will fail if those artefacts are missing post build

@@ -16,9 +16,14 @@
 set -ex
 
 if [ -z "$CONFIG_NAME" ] ; then
-	echo "Set CONFIG_NAME to run a build."
-	exit 1
+    echo "Set CONFIG_NAME to run a build."
+    exit 1
 fi
+
+set_compiler_cmd=$(python3 tf-m-ci-scripts/configs.py -b set_compiler $CONFIG_NAME)
+cmake_config_cmd=$(python3 tf-m-ci-scripts/configs.py -b cmake_config $CONFIG_NAME)
+cmake_build_cmd=$(python3 tf-m-ci-scripts/configs.py -b cmake_build -j ${BUILD_JOBS:-2} $CONFIG_NAME)
+post_build_cmd=$(python3 tf-m-ci-scripts/configs.py -b post_build $CONFIG_NAME)
 
 set +e
 echo "output current build environment"
@@ -30,36 +35,41 @@ python --version
 make --version
 
 set -ex
-build_commands=$(python3 tf-m-ci-scripts/configs.py -b -g all -j ${BUILD_JOBS:-2} $CONFIG_NAME)
+eval $set_compiler_cmd
 
 if [ -n "$BUILD_TARGET" ]; then
-    build_commands=$(echo "$build_commands" | head -4)
-    build_commands=${build_commands/-- install/-- $BUILD_TARGET}
+    cmake_build_cmd=$(echo "$cmake_build_cmd" | head -4)
+    cmake_build_cmd=${cmake_build_cmd/-- install/-- $BUILD_TARGET}
 fi
 
 if [ $CODE_COVERAGE_EN = "TRUE" ] && [[ $CONFIG_NAME =~ "GCC" ]] ; then
-    build_commands=${build_commands/toolchain_GNUARM.cmake/toolchain_GNUARM.cmake -DTFM_CODE_COVERAGE=True}
+    cmake_config_cmd=${cmake_config_cmd/toolchain_GNUARM.cmake/toolchain_GNUARM.cmake -DTFM_CODE_COVERAGE=True}
     echo "Flag: Add compiler flag for build with code coverage supported."
-    echo $build_commands
+    echo $cmake_config_cmd
 fi
 
-if [ -z "$build_commands" ] ; then
-	echo "No build commands found."
-	exit 1
+if [ -z "$cmake_config_cmd" ] ; then
+    echo "No CMake config commands found."
+    exit 1
+fi
+
+if [ -z "$cmake_build_cmd" ] ; then
+    echo "No build image commands found."
+    exit 1
 fi
 
 cnt=$(ls trusted-firmware-m/lib/ext/mbedcrypto/*.patch 2> /dev/null | wc -l)
 if [ "$cnt" != "0" ] ; then
-	cd mbedtls
-	git apply ../trusted-firmware-m/lib/ext/mbedcrypto/*.patch
-	cd -
+    cd mbedtls
+    git apply ../trusted-firmware-m/lib/ext/mbedcrypto/*.patch
+    cd -
 fi
 
 cnt=$(ls trusted-firmware-m/lib/ext/psa_arch_tests/*.patch 2> /dev/null | wc -l)
 if [ "$cnt" != "0" ] ; then
-	cd psa-arch-tests
-	git apply ../trusted-firmware-m/lib/ext/psa_arch_tests/*.patch
-	cd -
+    cd psa-arch-tests
+    git apply ../trusted-firmware-m/lib/ext/psa_arch_tests/*.patch
+    cd -
 fi
 
 cd trusted-firmware-m
@@ -70,4 +80,4 @@ rm -rf trusted-firmware-m/build
 mkdir trusted-firmware-m/build
 cd trusted-firmware-m/build
 
-eval "set -ex ; $build_commands"
+eval "set -ex ; $cmake_config_cmd; $cmake_build_cmd; $post_build_cmd"

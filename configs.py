@@ -44,16 +44,19 @@ def list_configs(group):
     return build_manager.get_config()
 
 
-def print_config_environment(config, group=None, silence_stderr=False):
+def print_build_configs(config, group=None, silence_stderr=False):
     """Prints particular configuration environment variables"""
     build_manager = get_build_manager(group)
-    build_manager.print_config_environment(config, silence_stderr=silence_stderr)
+    params = build_manager.get_build_configs(config, silence_stderr=silence_stderr)
+    for name in params:
+        print("{}={}".format(name, params[name]))
 
 
-def print_build_commands(config, group=None, jobs=None):
-    """Prints particular configuration environment variables"""
+def print_build_commands(config, cmd_type, group=None, jobs=None):
+    """Prints particular commands to be run"""
     build_manager = get_build_manager(group)
-    build_manager.print_build_commands(config, silence_stderr=True, jobs=jobs)
+    cmd = build_manager.get_build_commands(config, silence_stderr=True, jobs=jobs)
+    print(cmd[cmd_type])
 
 
 if __name__ == "__main__":
@@ -70,9 +73,14 @@ if __name__ == "__main__":
         "-b",
         "--build_commands",
         default=None,
+        choices=['set_compiler', 'cmake_config', 'cmake_build', 'post_build'],
+        help="Print selected type of build commands to be run for current configuration."
+    )
+    PARSER.add_argument(
+        "--config_params",
+        default=None,
         action='store_true',
-        help="Instead of printing environment variables, print raw "
-        "build commands to be run."
+        help="List config parameters of current configuration."
     )
     PARSER.add_argument(
         "-g",
@@ -100,11 +108,12 @@ if __name__ == "__main__":
             all_configs.update(list_configs(group))
         else:
             try:
-                if not ARGS.build_commands:
-                    print_config_environment(ARGS.config, group=group, silence_stderr=True)
-                else:
-                    print_build_commands(ARGS.config, group=group, jobs=ARGS.jobs)
-                break
+                if ARGS.config_params:
+                    print_build_configs(ARGS.config, group=group, silence_stderr=True)
+                    break
+                if ARGS.build_commands:
+                    print_build_commands(ARGS.config, ARGS.build_commands, group=group, jobs=ARGS.jobs)
+                    break
             except (SystemExit, KeyError):
                 if group == ARGS.group[-1] or ARGS.group == []:
                     print(

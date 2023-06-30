@@ -68,7 +68,7 @@ def obtainBuildParams(config) {
   def build_params = [:]
   build_config_params = sh(script:
     """
-    python3 ./tf-m-ci-scripts/configs.py ${config}\n
+    python3 ./tf-m-ci-scripts/configs.py --config_params ${config}\n
     """, returnStdout: true).trim()
   def lines = build_config_params.tokenize('\n')
   for (String line : lines) {

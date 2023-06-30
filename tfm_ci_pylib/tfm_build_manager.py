@@ -100,46 +100,33 @@ class TFM_Build_Manager(structuredTask):
     def get_config(self):
             return list(self._tbm_build_cfg.keys())
 
-    def print_config_environment(self, config, silence_stderr=False):
+    def get_build_configs(self, config, silence_stderr=False):
         """
-        For a given build configuration from output of print_config
-        method, print environment variables to build.
+        Return build config variables needed by the input config.
         """
         if config not in self._tbm_build_cfg:
             if not silence_stderr:
                 print("Error: no such config {}".format(config), file=sys.stderr)
             sys.exit(1)
         config_details = self._tbm_build_cfg[config]
-        argument_list = [
-            "CONFIG_NAME={}",
-            "TFM_PLATFORM={}",
-            "COMPILER={}",
-            "ISOLATION_LEVEL={}",
-            "TEST_REGRESSION={}",
-            "TEST_PSA_API={}",
-            "CMAKE_BUILD_TYPE={}",
-            "BL2={}",
-            "PROFILE={}",
-            "EXTRA_PARAMS={}"
-        ]
-        print(
-            "\n".join(argument_list)
-            .format(
-                config,
-                config_details.tfm_platform,
-                config_details.compiler,
-                config_details.isolation_level,
-                config_details.test_regression,
-                config_details.test_psa_api,
-                config_details.cmake_build_type,
-                config_details.with_bl2,
-                "N.A" if not config_details.profile else config_details.profile,
-                "N.A" if not config_details.extra_params else config_details.extra_params,
-            )
-            .strip()
-        )
+        config_params = {
+            "CONFIG_NAME":      config,
+            "TFM_PLATFORM":     config_details.tfm_platform,
+            "COMPILER":         config_details.compiler,
+            "ISOLATION_LEVEL":  config_details.isolation_level,
+            "TEST_REGRESSION":  config_details.test_regression,
+            "TEST_PSA_API":     config_details.test_psa_api,
+            "CMAKE_BUILD_TYPE": config_details.cmake_build_type,
+            "BL2":              config_details.with_bl2,
+            "PROFILE":          "N.A" if not config_details.profile else config_details.profile,
+            "EXTRA_PARAMS":     "N.A" if not config_details.extra_params else config_details.extra_params,
+        }
+        return config_params
 
-    def print_build_commands(self, config, silence_stderr=False, jobs=None):
+    def get_build_commands(self, config, silence_stderr=False, jobs=None):
+        """
+        Return selected type of commands to be run to build the input config.
+        """
         config_details = self._tbm_build_cfg[config]
         codebase_dir = os.path.join(os.getcwd(),"trusted-firmware-m")
         build_dir=os.path.join(os.getcwd(),"trusted-firmware-m/build")
@@ -148,11 +135,13 @@ class TFM_Build_Manager(structuredTask):
                                              build_dir=build_dir, \
                                              codebase_dir=codebase_dir, \
                                              jobs=jobs)
-        build_commands = [build_config["set_compiler_path"], \
-                          build_config["config_template"]]
-        for command in build_config["build_cmds"]:
-            build_commands.append(command)
-        print(" ;\n".join(build_commands))
+        build_commands = {
+            'set_compiler': build_config['set_compiler_path'],
+            'cmake_config': build_config['config_template'],
+            'cmake_build':  build_config['cmake_build'],
+            'post_build':   build_config['post_build']
+        }
+        return build_commands
 
     def pre_eval(self):
         """ Tests that need to be run in set-up state """
@@ -248,11 +237,10 @@ class TFM_Build_Manager(structuredTask):
             build_cfg = deepcopy(self.tbm_common_cfg)
 
             # Extract the common for all elements of config
-            for key in ["build_cmds", "required_artefacts"]:
-                try:
-                    build_cfg[key] = build_cfg[key]["all"]
-                except KeyError:
-                    build_cfg[key] = []
+            try:
+                build_cfg["required_artefacts"] = build_cfg["required_artefacts"]["all"]
+            except KeyError:
+                build_cfg["required_artefacts"] = []
             name = build_cfg["config_type"]
 
             # Override _tbm_xxx paths in commands
@@ -263,7 +251,7 @@ class TFM_Build_Manager(structuredTask):
                          "_tbm_code_dir_": build_cfg["codebase_root_dir"]}
 
             build_cfg = self.override_tbm_cfg_params(build_cfg,
-                                                     ["build_cmds",
+                                                     ["post_build",
                                                       "required_artefacts",
                                                       "artifact_capture_rex"],
                                                      **over_dict)
@@ -363,14 +351,13 @@ class TFM_Build_Manager(structuredTask):
             # However, many things use this from build_cfg elsewhere
             build_cfg["codebase_root_dir"] = codebase_dir
         # Extract the common for all elements of config
-        for key in ["build_cmds", "required_artefacts"]:
-            try:
-                build_cfg[key] = deepcopy(self.tbm_common_cfg[key]
-                                          ["all"])
-            except KeyError as E:
-                build_cfg[key] = []
+        try:
+            build_cfg["required_artefacts"] = deepcopy(self.tbm_common_cfg["required_artefacts"]["all"])
+        except KeyError as E:
+            build_cfg["required_artefacts"] = []
+        build_cfg["post_build"] = ""
         # Extract the platform specific elements of config
-        for key in ["build_cmds", "required_artefacts"]:
+        for key in ["post_build", "required_artefacts"]:
             try:
                 if i.tfm_platform in self.tbm_common_cfg[key].keys():
                     build_cfg[key] += deepcopy(self.tbm_common_cfg[key]
@@ -387,7 +374,7 @@ class TFM_Build_Manager(structuredTask):
                 jobs = os.cpu_count()
 
         thread_no = " -j {} ".format(jobs)
-        build_cfg["build_cmds"][0] += thread_no
+        build_cfg["cmake_build"] += thread_no
 
         # Overwrite command lines to set compiler
         build_cfg["set_compiler_path"] %= {"compiler": i.compiler}
@@ -414,9 +401,7 @@ class TFM_Build_Manager(structuredTask):
         if i.tfm_platform == "arm/musca_b1":
             overwrite_params["test_psa_api"] += " -DOTP_NV_COUNTERS_RAM_EMULATION=ON"
         build_cfg["config_template"] %= overwrite_params
-        if len(build_cfg["build_cmds"]) > 1:
-            overwrite_build_dir = {"_tbm_build_dir_": build_dir}
-            build_cfg["build_cmds"][1] %= overwrite_build_dir
+        build_cfg["post_build"] %= {"_tbm_build_dir_": build_dir}
 
         return build_cfg
 
