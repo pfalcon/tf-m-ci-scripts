@@ -46,7 +46,13 @@ function git_checkout() {
         fi
 
         # Checkout to specified refspec
-        git checkout ${REPO_REFSPEC}
+        if [[ "${REPO_REFSPEC}" =~ "refs/changes" ]]; then
+            # Refspec in "refs/changes" format cannot be directly used to checkout
+            git checkout ${REPO_FETCH_HEAD}
+        else
+            git checkout ${REPO_REFSPEC}
+        fi
+
         echo -e "Share Folder ${REPO_PATH} $(git rev-parse --short HEAD)\n"
         cd $OLDPWD
     fi
