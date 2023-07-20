@@ -67,7 +67,7 @@ if [ -n "$BUILD_TARGET" ]; then
     cmake_build_cmd=${cmake_build_cmd/-- install/-- $BUILD_TARGET}
 fi
 
-if [ $CODE_COVERAGE_EN = "TRUE" ] && [[ $CONFIG_NAME =~ "GCC" ]] ; then
+if [ "$CODE_COVERAGE_EN" = "TRUE" ] && [[ $CONFIG_NAME =~ "GCC" ]] ; then
     cmake_config_cmd=${cmake_config_cmd/toolchain_GNUARM.cmake/toolchain_GNUARM.cmake -DTFM_CODE_COVERAGE=True}
     echo "Flag: Add compiler flag for build with code coverage supported."
     echo $cmake_config_cmd
