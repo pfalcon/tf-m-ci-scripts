@@ -63,7 +63,6 @@ set -ex
 eval $set_compiler_cmd
 
 if [ -n "$BUILD_TARGET" ]; then
-    cmake_build_cmd=$(echo "$cmake_build_cmd" | head -4)
     cmake_build_cmd=${cmake_build_cmd/-- install/-- $BUILD_TARGET}
 fi
 
