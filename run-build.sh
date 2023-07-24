@@ -64,6 +64,8 @@ eval $set_compiler_cmd
 
 if [ -n "$BUILD_TARGET" ]; then
     cmake_build_cmd=${cmake_build_cmd/-- install/-- $BUILD_TARGET}
+    echo "Warning: BUILD_TARGET is set, will not run post_build_cmd"
+    post_build_cmd=""
 fi
 
 if [ "$CODE_COVERAGE_EN" = "TRUE" ] && [[ $CONFIG_NAME =~ "GCC" ]] ; then
