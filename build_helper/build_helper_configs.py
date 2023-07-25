@@ -214,6 +214,9 @@ config_pp_test = {"seed_params": {
                     # AN521_ARMCLANG_1_RegBL2_RegS_RegNS_Debug_BL2
                     ("arm/mps2/an521", "ARMCLANG_6_13", "1",
                      "RegBL2, RegS, RegNS", "OFF", "Debug", True, "", ""),
+                    # AN521_ARMCLANG_1_RegBL2_RegS_RegNS_Debug_BL2_IPC
+                    ("arm/mps2/an521", "ARMCLANG_6_13", "1",
+                     "RegBL2, RegS, RegNS", "OFF", "Debug", True, "", "IPC"),
                     # AN521_ARMCLANG_2_RegBL2_RegS_RegNS_Release_BL2
                     ("arm/mps2/an521", "ARMCLANG_6_13", "2",
                      "RegBL2, RegS, RegNS", "OFF", "Release", True, "", ""),
