@@ -108,6 +108,8 @@ def buildConfig(config, results) {
   params += string(name: 'MBEDTLS_URL', value: env.MBEDTLS_URL)
   params += string(name: 'TFM_EXTRAS_REFSPEC', value: env.TFM_EXTRAS_REFSPEC)
   params += string(name: 'TFM_EXTRAS_URL', value: env.TFM_EXTRAS_URL)
+  params += string(name: 'TFM_TOOLS_REFSPEC', value: env.TFM_TOOLS_REFSPEC)
+  params += string(name: 'TFM_TOOLS_URL', value: env.TFM_TOOLS_URL)
   params += string(name: 'TFM_TESTS_REFSPEC', value: env.TFM_TESTS_REFSPEC)
   params += string(name: 'TFM_TESTS_URL', value: env.TFM_TESTS_URL)
   params += string(name: 'PSA_ARCH_TESTS_VERSION', value: env.PSA_ARCH_TESTS_VERSION)

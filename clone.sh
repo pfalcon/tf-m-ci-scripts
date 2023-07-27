@@ -125,6 +125,10 @@ TFM_EXTRAS_PROJECT="${TFM_EXTRAS_URL:-}"
 TFM_EXTRAS_REFSPEC="${TFM_EXTRAS_REFSPEC:-"$(parse_version lib/ext/tf-m-extras/CMakeLists.txt TFM_EXTRAS_REPO_VERSION)"}"
 TFM_EXTRAS_NAME="tf-m-extras"
 
+TFM_TOOLS_PROJECT="${TFM_TOOLS_URL:-}"
+TFM_TOOLS_REFSPEC="${TFM_TOOLS_REFSPEC:-"$(parse_version lib/ext/tf-m-tools/CMakeLists.txt TFM_TOOLS_VERSION)"}"
+TFM_TOOLS_NAME="tf-m-tools"
+
 QA_TOOLS_PROJECT="https://review.trustedfirmware.org/ci/qa-tools"
 QA_TOOLS_REFSPEC="openci"
 QA_TOOLS_NAME="qa-tools"
@@ -137,6 +141,7 @@ dependency_repos=(
     "${PSA_ARCH_TESTS_PROJECT};${PSA_ARCH_TESTS_NAME};${PSA_ARCH_TESTS_REFSPEC}"
     "${QCBOR_PROJECT};${QCBOR_NAME};${QCBOR_REFSPEC}"
     "${TFM_EXTRAS_PROJECT};${TFM_EXTRAS_NAME};${TFM_EXTRAS_REFSPEC}"
+    "${TFM_TOOLS_PROJECT};${TFM_TOOLS_NAME};${TFM_TOOLS_REFSPEC}"
     "${QA_TOOLS_PROJECT};${QA_TOOLS_NAME};${QA_TOOLS_REFSPEC}"
 )
 

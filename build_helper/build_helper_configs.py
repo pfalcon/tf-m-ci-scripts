@@ -980,6 +980,32 @@ config_m2354 = {"seed_params": {
                 "invalid": _common_tfm_invalid_configs + []
                 }
 
+config_prof = {"seed_params": {
+               "tfm_platform":      ["arm/mps2/an521"],
+                "compiler":         ["GCC_10_3"],
+                "isolation_level":  ["1"],
+                "test_regression":  ["OFF"],
+                "test_psa_api":     ["OFF"],
+                "cmake_build_type": ["Release"],
+                "with_bl2":         [True],
+                "profile":          [""],
+                "extra_params":     ["PROF"]
+                },
+                "common_params": _common_tfm_builder_cfg,
+                "valid": [
+                    # AN521_GNUARM_1_Release_BL2_IPC_PROF
+                    ("arm/mps2/an521", "GCC_10_3", "1",
+                     "OFF", "OFF", "Release", True, "", "IPC, PROF"),
+                    # AN521_GNUARM_2_Release_BL2_PROF
+                    ("arm/mps2/an521", "GCC_10_3", "2",
+                     "OFF", "OFF", "Release", True, "", "PROF"),
+                    # AN521_GNUARM_3_Release_BL2_PROF
+                    ("arm/mps2/an521", "GCC_10_3", "3",
+                     "OFF", "OFF", "Release", True, "", "PROF"),
+                ],
+                "invalid": _common_tfm_invalid_configs + []
+                }
+
 # Config groups for debug
 config_debug = {"seed_params": {
                 "tfm_platform":     ["arm/mps2/an521"],
@@ -1109,6 +1135,9 @@ _builtin_configs = {
                     "example_dma350_clcd": config_example_dma350_clcd,
                     "example_dma350_s": config_example_dma350_s,
                     "example_dma350_ns": config_example_dma350_ns,
+
+                    # profiling
+                    "profiling": config_prof,
 
                     # config groups for debug
                     "debug": config_debug,
