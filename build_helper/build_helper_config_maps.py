@@ -109,5 +109,6 @@ mapExtraParams = {
     "EXAMPLE_DMA350_TRIGGER"  : ("-DNS_EVALUATION_APP_PATH=%(codebase_root_dir)s/../tf-m-extras/examples/corstone310_fvp_dma/triggering_example "),
     "EXAMPLE_DMA350_CLCD"     : ("-DDEFAULT_NS_SCATTER=OFF -DPLATFORM_SVC_HANDLERS=ON "
                                 "-DNS_EVALUATION_APP_PATH=%(codebase_root_dir)s/../tf-m-extras/examples/corstone310_fvp_dma/clcd_example "),
-    "EXAMPLE_DMA350_S"        : "-DEXTRA_S_TEST_SUITE_PATH=%(codebase_root_dir)s/../tf-m-extras/examples/corstone310_fvp_dma/dma350_s"
+    "EXAMPLE_DMA350_S"        : "-DEXTRA_S_TEST_SUITE_PATH=%(codebase_root_dir)s/../tf-m-extras/examples/corstone310_fvp_dma/dma350_s",
+    "EXAMPLE_DMA350_NS"       : "-DEXTRA_NS_TEST_SUITE_PATH=%(codebase_root_dir)s/../tf-m-extras/examples/corstone310_fvp_dma/dma350_ns"
 }

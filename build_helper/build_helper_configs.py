@@ -549,6 +549,21 @@ config_example_dma350_s = {"seed_params": {
                 "invalid": _common_tfm_invalid_configs + []
                 }
 
+config_example_dma350_ns = {"seed_params": {
+                "tfm_platform":     ["arm/mps3/corstone310/fvp"],
+                "compiler":         ["GCC_10_3"],
+                "isolation_level":  ["1"],
+                "test_regression":  ["OFF"],
+                "test_psa_api":     ["OFF"],
+                "cmake_build_type": ["Release"],
+                "with_bl2":         [True],
+                "profile":          [""],
+                "extra_params":     ["EXAMPLE_DMA350_NS"]
+                },
+                "common_params": _common_tfm_builder_cfg,
+                "invalid": _common_tfm_invalid_configs + []
+                }
+
 config_example_dma350_trigger = {"seed_params": {
                 "tfm_platform":     ["arm/mps3/corstone310/fvp"],
                 "compiler":         ["GCC_10_3"],
@@ -1063,6 +1078,7 @@ _builtin_configs = {
                     "example_dma350_trigger": config_example_dma350_trigger,
                     "example_dma350_clcd": config_example_dma350_clcd,
                     "example_dma350_s": config_example_dma350_s,
+                    "example_dma350_ns": config_example_dma350_ns,
 
                     # config groups for debug
                     "debug": config_debug,
