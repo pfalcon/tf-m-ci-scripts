@@ -5,7 +5,7 @@
 
 __copyright__ = """
 /*
- * Copyright (c) 2022, Arm Limited. All rights reserved.
+ * Copyright (c) 2022-2023, Arm Limited. All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  *
@@ -107,7 +107,7 @@ mapExtraParams = {
                                 "-DTFM_PARTITION_CRYPTO=ON -DTFM_PARTITION_INTERNAL_TRUSTED_STORAGE=ON "
                                 "-DTFM_PARTITION_PROTECTED_STORAGE=ON  -DMCUBOOT_CONFIRM_IMAGE=ON "),
     "EXAMPLE_DMA350_TRIGGER"  : ("-DNS_EVALUATION_APP_PATH=%(codebase_root_dir)s/../tf-m-extras/examples/corstone310_fvp_dma/triggering_example "),
-    "EXAMPLE_DMA350_NS"       : ("-DDEFAULT_NS_SCATTER=OFF -DPLATFORM_SVC_HANDLERS=ON "
-                                "-DNS_EVALUATION_APP_PATH=%(codebase_root_dir)s/../tf-m-extras/examples/corstone310_fvp_dma/dma350_ns "),
+    "EXAMPLE_DMA350_CLCD"     : ("-DDEFAULT_NS_SCATTER=OFF -DPLATFORM_SVC_HANDLERS=ON "
+                                "-DNS_EVALUATION_APP_PATH=%(codebase_root_dir)s/../tf-m-extras/examples/corstone310_fvp_dma/clcd_example "),
     "EXAMPLE_DMA350_S"        : "-DEXTRA_S_TEST_SUITE_PATH=%(codebase_root_dir)s/../tf-m-extras/examples/corstone310_fvp_dma/dma350_s"
 }
