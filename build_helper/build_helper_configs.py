@@ -587,10 +587,18 @@ config_misra = {"seed_params": {
                 "test_psa_api":     ["OFF"],
                 "cmake_build_type": ["Debug"],
                 "with_bl2":         [True],
-                "profile":          ["profile_small", "profile_medium_arotless", "profile_medium", "profile_large"],
+                "profile":          ["profile_small", "profile_medium_arotless"],
                 "extra_params":     ["PSOFF"]
                 },
                 "common_params": _common_tfm_builder_cfg,
+                "valid": [
+                    # MUSCA_B1_GCC_2_Debug_BL2_MEDIUM_PSOFF
+                    ("arm/musca_b1", "GCC_10_3", "2", "OFF",
+                     "OFF", "Debug", True, "profile_medium", "PSOFF"),
+                    # MUSCA_B1_GCC_3_Debug_BL2_LARGE_PSOFF
+                    ("arm/musca_b1", "GCC_10_3", "3", "OFF",
+                     "OFF", "Debug", True, "profile_large", "PSOFF"),
+                ],
                 "invalid": _common_tfm_invalid_configs + []
                 }
 
