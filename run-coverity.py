@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 #
-# Copyright (c) 2019-2020, Arm Limited. All rights reserved.
+# Copyright (c) 2019-2023, Arm Limited. All rights reserved.
 #
 # SPDX-License-Identifier: BSD-3-Clause
 #
@@ -36,36 +36,6 @@ def tarball_name(filename):
 assert tarball_name("foo.gz") == "foo"
 assert tarball_name("bar.tar.gz") == "bar"
 assert tarball_name("baz.tar.bz2") == "baz"
-
-
-def get_coverity_tool():
-    coverity_tarball = "cov-analysis-linux64-2019.03.tar.gz"
-    url = "http://files.oss.arm.com/downloads/tf-a/" + coverity_tarball
-    print("Downloading Coverity Build tool from %s..." % url)
-    file_handle = urllib.request.urlopen(url)
-    output = open(coverity_tarball, "wb")
-    output.write(file_handle.read())
-    output.close()
-    print("Download complete.")
-
-    print("\nUnpacking tarball %s..." % coverity_tarball)
-    tarfile.open(coverity_tarball).extractall()
-    print("Tarball unpacked.")
-
-    print("\nNow please load the Coverity tool in your PATH...")
-    print("E.g.:")
-    cov_dir_name = tarball_name(coverity_tarball)
-    cov_dir_path = os.path.abspath(os.path.join(cov_dir_name, "bin"))
-    print("  export PATH=%s$PATH" % (cov_dir_path + os.pathsep))
-
-    # Patch is needed for coverity version 2019.03
-    patch_file = os.path.abspath(os.path.join(__file__, os.pardir, "cov-2019.03-fix.patch"))
-    cov_file = os.path.abspath(os.path.join(cov_dir_name, "config",
-                               "templates", "gnu", "compiler-compat-arm-intrin.h"))
-    print("Patching file")
-    print(cov_file)
-    utils.exec_prog("patch", [cov_file, "-i", patch_file],
-                            out=subprocess.PIPE, out_text_mode=True)
 
 def print_coverage(coverity_dir, tf_dir, exclude_paths=[], log_filename=None):
     analyzed = []
@@ -140,8 +110,6 @@ def print_coverage(coverity_dir, tf_dir, exclude_paths=[], log_filename=None):
     #
     # Print a report
     #
-    log_file.write("Files coverage: %d%%\n\n" % percentage)
-    log_file.write("Analyzed %d files\n" % len(analyzed))
 
     if len(excluded) > 0:
         log_file.write("\n%d files were ignored on purpose:\n" % len(excluded))
@@ -171,24 +139,24 @@ There are 2 possible reasons:
    indicate the reason why it is safe to ignore it.
 ===============================================================================
 """)
+
+    log_file.write("\n\n\nFiles coverage: %d%%\n\n" % percentage)
+    log_file.write("Analyzed %d files\n\n\n" % len(analyzed))
+
     log_file.close()
 
 
 def parse_cmd_line(argv, prog_name):
     parser = argparse.ArgumentParser(
         prog=prog_name,
-        description="Run Coverity on Trusted Firmware",
+        description="Run Coverity on Trusted Firmware M",
         epilog="""
-        Please ensure the AArch64 & AArch32 cross-toolchains are loaded in your
-        PATH. Ditto for the Coverity tools. If you don't have the latter then
-        you can use the --get-coverity-tool to download them for you.
+        Please ensure the GNU toolchains are loaded in your PATH.
+        Ditto for the Coverity tools.
         """)
     parser.add_argument("--tf", default=None,
-                        metavar="<Trusted Firmware source dir>",
-                        help="Specify the location of ARM Trusted Firmware sources to analyze")
-    parser.add_argument("--get-coverity-tool", default=False,
-                        help="Download the Coverity build tool and exit",
-                        action="store_true")
+                        metavar="<Trusted Firmware M source dir>",
+                        help="Specify the location of Trusted Firmware M sources to analyze")
     parser.add_argument("--mode", choices=["offline", "online"], default="online",
                         help="Choose between online or offline mode for the analysis")
     parser.add_argument("--output", "-o",
@@ -216,20 +184,8 @@ if __name__ == "__main__":
     prog_name = sys.argv[0]
     args = parse_cmd_line(sys.argv[1:], prog_name)
 
-    # If the user asked to download the Coverity build tool then just do that
-    # and exit.
-    if args.get_coverity_tool:
-        # If running locally, use the commercial version of Coverity from the
-        # EUHPC cluster.
-        if args.mode == "offline":
-            print("To load the Coverity tools, use the following command:")
-            print("export PATH=/arm/tools/coverity/static-analysis/8.7.1/bin/:$PATH")
-        else:
-            get_coverity_tool()
-        sys.exit(0)
-
     if args.tf is None:
-        print("ERROR: Please specify the Trusted Firmware sources using the --tf option.",
+        print("ERROR: Please specify the Trusted Firmware M sources using the --tf option.",
               file=sys.stderr)
         sys.exit(1)
 
@@ -267,14 +223,14 @@ if __name__ == "__main__":
         print("An error occured (%d)." % ret, file=sys.stderr)
         sys.exit(ret)
 
-    print("-----------------------------------------------------------------")
-    print("Results can be found in file '%s'" % args.output)
-    if args.mode == "online":
-        print("This tarball can be uploaded at Coverity Scan Online:" )
-        print("https://scan.coverity.com/projects/arm-software-arm-trusted-firmware/builds/new?tab=upload")
-    print("-----------------------------------------------------------------")
-
     print_coverage("cov-int", args.tf, coverity_tf_conf.exclude_paths, "tf_coverage.log")
     with open("tf_coverage.log") as log_file:
         for line in log_file:
             print(line, end="")
+
+    print("-----------------------------------------------------------------")
+    print("Results can be found in file '%s'" % args.output)
+    if args.mode == "online":
+        print("This tarball can be uploaded at Coverity Scan Online:" )
+        print("https://scan.coverity.com/builds?project=Trusted+Firmware-M")
+    print("-----------------------------------------------------------------")
