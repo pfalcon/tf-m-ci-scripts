@@ -29,7 +29,7 @@ actions:
     namespace: docker
     method: fvp
     docker:
-      name: {{ docker_prefix }}/fvp:fvp_corstone_1000_11.17_23
+      name: {{ docker_prefix }}/fvp:fvp_corstone_1000_11.19_21_linux64
       local: true
     prompts:
     - 'root@lava '
@@ -55,6 +55,7 @@ actions:
     -  "-C extsys0.extsys_terminal.start_telnet=0"
     -  "-C host.host_terminal_0.start_telnet=1"
     -  "-C host.host_terminal_1.start_telnet=1"
+    -  "-C se.cryptocell.USER_OTP_FILTERING_DISABLE=1"
     prompts:
     - '(.*)'
 
