@@ -18,9 +18,9 @@
 -file_tag+={external, "^trusted-firmware-m/lib/ext/t_cose/.*$"}
 
 # Ignore any auto-generated source files in build dir.
-# TODO make an exception for build/generated, in which source code is
+# TODO make an exception for ci_build/spe/build-spe/generated in which source code is
 # built in TF-M binaries.
--file_tag+={external, "^trusted-firmware-m/build/.*$"}
+-file_tag+={external, "^ci_build/.*$"}
 
 # Ignore compiler internal headers.
 -file_tag+={external, "^/.+/compiler/gcc-.*$"}

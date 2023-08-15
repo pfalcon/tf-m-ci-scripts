@@ -73,7 +73,7 @@ if __name__ == "__main__":
         "-b",
         "--build_commands",
         default=None,
-        choices=['set_compiler', 'cmake_config', 'cmake_build', 'post_build'],
+        choices=['set_compiler', 'spe_cmake_config', 'nspe_cmake_config', 'spe_cmake_build', 'nspe_cmake_build', 'post_build'],
         help="Print selected type of build commands to be run for current configuration."
     )
     PARSER.add_argument(

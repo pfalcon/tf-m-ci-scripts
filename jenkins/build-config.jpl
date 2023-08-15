@@ -34,11 +34,14 @@ timestamps {
         sh "tf-m-ci-scripts/run-build.sh"
       }
       stage("Post") {
-        archiveArtifacts 'trusted-firmware-m/build/bin/**'
-        archiveArtifacts 'trusted-firmware-m/build/install/interface/**'
+        archiveArtifacts 'ci_build/spe/bin/**'
+        archiveArtifacts 'ci_build/nspe/bin/**'
+        archiveArtifacts 'ci_build/nspe/*.bin'
+        archiveArtifacts 'ci_build/spe/api_ns/bin/**'
+        archiveArtifacts 'ci_build/spe/api_ns/interface/**'
         def upstreamProject = getUpstreamJob()[0].upstreamProject
         if (upstreamProject == "tf-m-build-and-test") {
-          archiveArtifacts 'trusted-firmware-m/build/generated/**'
+          archiveArtifacts 'ci_build/spe/build-spe/generated/**'
         }
         if (upstreamProject == "tf-m-nightly-performance"){
           //Creating a folder to store memory footprint artifacts and launching the memory footprint script.
@@ -48,7 +51,7 @@ timestamps {
         }
       }
     } catch (Exception e) {
-      archiveArtifacts artifacts: 'trusted-firmware-m/build/**', allowEmptyArchive: true
+      archiveArtifacts artifacts: 'ci_build/**', allowEmptyArchive: true
       manager.buildFailure()
       verify = -1
     } finally {

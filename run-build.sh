@@ -20,7 +20,7 @@
 # in each single build job.
 function check_dependency_version() {
     TFM_EXTRAS_PATH="${WORKSPACE}/tf-m-extras"
-    TFM_EXTRAS_REFSPEC="$(get_cmake_cache ${WORKSPACE}/trusted-firmware-m/build TFM_EXTRAS_REPO_VERSION)"
+    TFM_EXTRAS_REFSPEC="$(get_cmake_cache ${WORKSPACE}/ci_build TFM_EXTRAS_REPO_VERSION)"
 
     # Array containing "<repo path>;<refspec>" elements
     dependency_repos=(
@@ -46,8 +46,10 @@ if [ -z "$CONFIG_NAME" ] ; then
 fi
 
 set_compiler_cmd=$(python3 tf-m-ci-scripts/configs.py -b set_compiler $CONFIG_NAME)
-cmake_config_cmd=$(python3 tf-m-ci-scripts/configs.py -b cmake_config $CONFIG_NAME)
-cmake_build_cmd=$(python3 tf-m-ci-scripts/configs.py -b cmake_build -j ${BUILD_JOBS:-2} $CONFIG_NAME)
+spe_cmake_config_cmd=$(python3 tf-m-ci-scripts/configs.py -b spe_cmake_config $CONFIG_NAME)
+spe_cmake_build_cmd=$(python3 tf-m-ci-scripts/configs.py -b spe_cmake_build -j ${BUILD_JOBS:-2} $CONFIG_NAME)
+nspe_cmake_config_cmd=$(python3 tf-m-ci-scripts/configs.py -b nspe_cmake_config $CONFIG_NAME)
+nspe_cmake_build_cmd=$(python3 tf-m-ci-scripts/configs.py -b nspe_cmake_build -j ${BUILD_JOBS:-2} $CONFIG_NAME)
 post_build_cmd=$(python3 tf-m-ci-scripts/configs.py -b post_build $CONFIG_NAME)
 
 set +e
@@ -63,23 +65,23 @@ set -ex
 eval $set_compiler_cmd
 
 if [ -n "$BUILD_TARGET" ]; then
-    cmake_build_cmd=${cmake_build_cmd/-- install/-- $BUILD_TARGET}
+    spe_cmake_config_cmd=${spe_cmake_config_cmd/-- install/-- $BUILD_TARGET}
     echo "Warning: BUILD_TARGET is set, will not run post_build_cmd"
     post_build_cmd=""
 fi
 
 if [ "$CODE_COVERAGE_EN" = "TRUE" ] && [[ $CONFIG_NAME =~ "GCC" ]] ; then
-    cmake_config_cmd=${cmake_config_cmd/toolchain_GNUARM.cmake/toolchain_GNUARM.cmake -DTFM_CODE_COVERAGE=True}
+    spe_cmake_config_cmd=${spe_cmake_config_cmd/toolchain_GNUARM.cmake/toolchain_GNUARM.cmake -DTFM_CODE_COVERAGE=True}
     echo "Flag: Add compiler flag for build with code coverage supported."
     echo $cmake_config_cmd
 fi
 
-if [ -z "$cmake_config_cmd" ] ; then
+if [ -z "$spe_cmake_config_cmd" ] ; then
     echo "No CMake config command found."
     exit 1
 fi
 
-if [ -z "$cmake_build_cmd" ] ; then
+if [ -z "$spe_cmake_build_cmd" ] ; then
     echo "No CMake build command found."
     exit 1
 fi
@@ -102,20 +104,20 @@ cd trusted-firmware-m
 git apply ../tf-m-ci-scripts/build_helper/platform_settings/*.patch
 cd -
 
-rm -rf trusted-firmware-m/build
-mkdir trusted-firmware-m/build
-cd trusted-firmware-m/build
+rm -rf ci_build
+mkdir ci_build
+cd ci_build
 
 set +e
-eval $cmake_config_cmd
+eval $spe_cmake_config_cmd
 cmake_cfg_error=$?
 set -e
 
 check_dependency_version
 
-if [ $cmake_cfg_error != 0 ] ; then
-    rm -rf trusted-firmware-m/build/*
-    eval $cmake_config_cmd
+if [ "$spe_cmake_config_cmd" != 0 ] ; then
+    rm -rf ci_build/*
+    eval $spe_cmake_config_cmd
 fi
 
-eval "$cmake_build_cmd; $post_build_cmd"
+eval "$spe_cmake_build_cmd; $nspe_cmake_config_cmd; $nspe_cmake_build_cmd; $post_build_cmd"

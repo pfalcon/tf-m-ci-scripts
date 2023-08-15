@@ -129,17 +129,17 @@ class TFM_Build_Manager(structuredTask):
         """
         config_details = self._tbm_build_cfg[config]
         codebase_dir = os.path.join(os.getcwd(),"trusted-firmware-m")
-        build_dir=os.path.join(os.getcwd(),"trusted-firmware-m/build")
         build_config = self.get_build_config(config_details, config, \
                                              silence=silence_stderr, \
-                                             build_dir=build_dir, \
                                              codebase_dir=codebase_dir, \
                                              jobs=jobs)
         build_commands = {
-            'set_compiler': build_config['set_compiler_path'],
-            'cmake_config': build_config['config_template'],
-            'cmake_build':  build_config['cmake_build'],
-            'post_build':   build_config['post_build']
+            'set_compiler':      build_config['set_compiler_path'],
+            'spe_cmake_config':  build_config['spe_config_template'],
+            'nspe_cmake_config': build_config['nspe_config_template'],
+            'spe_cmake_build':   build_config['spe_cmake_build'],
+            'nspe_cmake_build':  build_config['nspe_cmake_build'],
+            'post_build':        build_config['post_build']
         }
         return build_commands
 
@@ -252,7 +252,6 @@ class TFM_Build_Manager(structuredTask):
 
             build_cfg = self.override_tbm_cfg_params(build_cfg,
                                                      ["post_build",
-                                                      "required_artefacts",
                                                       "artifact_capture_rex"],
                                                      **over_dict)
 
@@ -337,12 +336,7 @@ class TFM_Build_Manager(structuredTask):
             print("Exported build report to file:", self._tbm_report)
             save_json(self._tbm_report, full_rep)
 
-    def get_build_config(self, i, name, silence=False, build_dir=None, codebase_dir=None, jobs=None):
-        psa_build_dir = self._tbm_work_dir + "/" + name + "/BUILD"
-        if not build_dir:
-            build_dir = os.path.join(self._tbm_work_dir, name)
-        else:
-            psa_build_dir = os.path.join(build_dir, "../../psa-arch-tests/api-tests/build")
+    def get_build_config(self, i, name, silence=False, codebase_dir=None, jobs=None):
         build_cfg = deepcopy(self.tbm_common_cfg)
         if not codebase_dir:
             codebase_dir = build_cfg["codebase_root_dir"]
@@ -374,14 +368,17 @@ class TFM_Build_Manager(structuredTask):
                 jobs = os.cpu_count()
 
         thread_no = " -j {} ".format(jobs)
-        build_cfg["cmake_build"] += thread_no
+        build_cfg["spe_cmake_build"] += thread_no
+        build_cfg["nspe_cmake_build"] += thread_no
 
         # Overwrite command lines to set compiler
         build_cfg["set_compiler_path"] %= {"compiler": i.compiler}
         build_cfg["set_compiler_path"] += " ;\n{} --version".format(self.get_compiler_name(i.compiler))
 
-        # Overwrite command lines of cmake
-        overwrite_params = {"codebase_root_dir": build_cfg["codebase_root_dir"],
+        # Overwrite parameters of build configs
+        overwrite_params = {"codebase_root_dir":   build_cfg["codebase_root_dir"],
+                            "tfm_tests_root_dir":  build_cfg["codebase_root_dir"] + "/../tf-m-tests",
+                            "ci_build_root_dir":  build_cfg["codebase_root_dir"] + "/../ci_build",
                             "tfm_platform": i.tfm_platform,
                             "compiler": self.choose_toolchain(i.compiler),
                             "isolation_level": i.isolation_level,
@@ -400,8 +397,19 @@ class TFM_Build_Manager(structuredTask):
             overwrite_params["test_psa_api"] += " -DCC312_LEGACY_DRIVER_API_ENABLED=OFF"
         if i.tfm_platform == "arm/musca_b1":
             overwrite_params["test_psa_api"] += " -DOTP_NV_COUNTERS_RAM_EMULATION=ON"
-        build_cfg["config_template"] %= overwrite_params
-        build_cfg["post_build"] %= {"_tbm_build_dir_": build_dir}
+
+        # Test root dir
+        if i.test_psa_api != "OFF":
+            overwrite_params["test_root_dir"] = "tests_psa_arch"
+        else:
+            overwrite_params["test_root_dir"] = "tests_reg"
+
+        # Overwrite commands for building TF-M image
+        build_cfg["spe_config_template"] %= overwrite_params
+        build_cfg["nspe_config_template"] %= overwrite_params
+        build_cfg["spe_cmake_build"] %= overwrite_params
+        build_cfg["nspe_cmake_build"] %= overwrite_params
+        build_cfg["post_build"] %= overwrite_params
 
         return build_cfg
 

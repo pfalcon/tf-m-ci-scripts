@@ -51,7 +51,7 @@ def coverage_reports(jobs, user_args):
 
             def dl_artifact(fname):
                 lava.fetch_file(
-                    metadata["build_job_url"] + "artifact/trusted-firmware-m/build/bin/" + fname,
+                    metadata["build_job_url"] + "artifact/ci_build/spe/bin/" + fname,
                     os.path.join(job_dir, fname)
                 )
 

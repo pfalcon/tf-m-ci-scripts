@@ -90,7 +90,7 @@ def generate_test_definitions(config, work_dir, user_args):
         for binary_type, binary_name in config["binaries"].items():
             params.update(
                 {
-                    "{}_url".format(binary_type): "{}/artifact/trusted-firmware-m/build/bin/{}".format(params["build_job_url"], binary_name)
+                    "{}_url".format(binary_type): "{}/artifact/ci_build/{}".format(params["build_job_url"], binary_name)
                 }
             )
 

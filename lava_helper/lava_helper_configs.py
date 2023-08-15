@@ -102,8 +102,8 @@ tfm_mps2_sse_200 = {
     "recovery_store_url": "https://ci.trustedfirmware.org/userContent/",
     "platforms": {"arm/mps2/an521": "mps2_sse200_an512_new.tar.gz"},
     "binaries": {
-        "firmware": "tfm_s_ns_signed.bin",
-        "bootloader": "bl2.bin"
+        "firmware": "nspe/tfm_s_ns_signed.bin",
+        "bootloader": "spe/bin/bl2.bin"
     },
     "monitors": {
         'no_reg_tests': no_reg_tests_monitors,
@@ -128,8 +128,8 @@ fvp_mps3_cs300_bl2 = {
     "platforms": {"arm/mps3/corstone300/fvp": ""},
     "data_bin_offset": "0x38000000",
     "binaries": {
-        "application": "bl2.axf",
-        "data": "tfm_s_ns_signed.bin"
+        "application": "spe/bin/bl2.axf",
+        "data": "nspe/tfm_s_ns_signed.bin"
     },
     "monitors": {
         'no_reg_tests': no_reg_tests_monitors,
@@ -171,8 +171,8 @@ fvp_mps2_an521_bl2 = {
     "platforms": {"arm/mps2/an521": ""},
     "data_bin_offset": "0x10080000",
     "binaries": {
-        "application": "bl2.axf",
-        "data": "tfm_s_ns_signed.bin"
+        "application": "spe/bin/bl2.axf",
+        "data": "nspe/tfm_s_ns_signed.bin"
     },
     "monitors": {
         'no_reg_tests': no_reg_tests_monitors,
@@ -197,8 +197,8 @@ fvp_mps2_an519_bl2 = {
     "data_bin_offset": "0x10080000",
     "cpu0_baseline": 1,
     "binaries": {
-        "application": "bl2.axf",
-        "data": "tfm_s_ns_signed.bin"
+        "application": "spe/bin/bl2.axf",
+        "data": "nspe/tfm_s_ns_signed.bin"
     },
     "monitors": {
         'no_reg_tests': no_reg_tests_monitors,
@@ -218,8 +218,8 @@ qemu_mps2_bl2 = {
     "poweroff_timeout": 1,
     "platforms": {"arm/mps2/an521": ""},
     "binaries": {
-        "firmware": "tfm_s_ns_signed.bin",
-        "bootloader": "bl2.bin"
+        "firmware": "nspe/tfm_s_ns_signed.bin",
+        "bootloader": "spe/bin/bl2.bin"
     },
     "monitors": {
         # FPU test on AN521 qemu not supported yet
@@ -241,7 +241,7 @@ musca_b1_bl2 = {
     "poweroff_timeout": 40,
     "platforms": {"arm/musca_b1": ""},
     "binaries": {
-        "firmware": "tfm.hex",
+        "firmware": "spe/bin/tfm.hex",
     },
     "monitors": {
         'no_reg_tests': no_reg_tests_monitors,
@@ -260,7 +260,7 @@ stm32l562e_dk = {
     "poweroff_timeout": 5,
     "platforms": {"stm/stm32l562e_dk": ""},
     "binaries": {
-        "tarball": "stm32l562e-dk-tfm.tar.bz2",
+        "tarball": "spe/api_ns/bin/stm32l562e-dk-tfm.tar.bz2",
     },
     "monitors": {
         'reg_tests': reg_tests_monitors,
@@ -278,7 +278,7 @@ b_u585i_iot02a = {
     "poweroff_timeout": 2,
     "platforms": {"stm/b_u585i_iot02a": ""},
     "binaries": {
-        "tarball": "b_u585i_iot02a-tfm.tar.bz2",
+        "tarball": "spe/api_ns/bin/b_u585i_iot02a-tfm.tar.bz2",
     },
     "monitors": {
         'reg_tests': reg_tests_monitors,
@@ -296,7 +296,7 @@ lpcxpresso55s69 = {
     "poweroff_timeout": 5,
     "platforms": {"nxp/lpcxpresso55s69": ""},
     "binaries": {
-        "tarball": "lpcxpresso55s69-tfm.tar.bz2",
+        "tarball": "nspe/bin/lpcxpresso55s69-tfm.tar.bz2",
     },
     "monitors": {
         'no_reg_tests': no_reg_tests_monitors,
@@ -315,8 +315,8 @@ psoc64 = {
     "poweroff_timeout": 5,
     "platforms": {"cypress/psoc64": ""},
     "binaries": {
-        "spe": "tfm_s_signed.hex",
-        "nspe": "tfm_ns_signed.hex",
+        "spe": "spe/bin/tfm_s_signed.hex",
+        "nspe": "nspe/tfm_ns_signed.hex",
     },
     "monitors": {
         'reg_tests': reg_tests_monitors,

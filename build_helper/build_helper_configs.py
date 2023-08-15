@@ -45,7 +45,9 @@ _common_tfm_builder_cfg = {
     # Keys for the templace will come from the combinations of parameters
     # provided in the seed dictionary.
 
-    "config_template": "cmake -G Ninja " + \
+    "spe_config_template": "cmake -G Ninja " + \
+        "-S %(tfm_tests_root_dir)s/%(test_root_dir)s/spe " + \
+        "-B %(ci_build_root_dir)s/spe " + \
         "-DTFM_PLATFORM=%(tfm_platform)s " + \
         "-DTFM_TOOLCHAIN_FILE=%(codebase_root_dir)s/%(compiler)s " + \
         "-DTFM_ISOLATION_LEVEL=%(isolation_level)s " + \
@@ -55,13 +57,23 @@ _common_tfm_builder_cfg = {
         "-DBL2=%(with_bl2)s " + \
         "-DTFM_PROFILE=%(profile)s " + \
         "%(extra_params)s " + \
-        "-DTFM_TEST_REPO_PATH=%(codebase_root_dir)s/../tf-m-tests " + \
+        "-DCONFIG_TFM_SOURCE_PATH=%(codebase_root_dir)s " + \
         "-DMBEDCRYPTO_PATH=%(codebase_root_dir)s/../mbedtls " + \
         "-DPSA_ARCH_TESTS_PATH=%(codebase_root_dir)s/../psa-arch-tests " + \
         "-DMCUBOOT_PATH=%(codebase_root_dir)s/../mcuboot " + \
         "-DQCBOR_PATH=%(codebase_root_dir)s/../qcbor " + \
-        "-DTFM_EXTRAS_REPO_PATH=%(codebase_root_dir)s/../tf-m-extras " + \
-        "%(codebase_root_dir)s",
+        "-DTFM_EXTRAS_REPO_PATH=%(codebase_root_dir)s/../tf-m-extras ",
+
+    "nspe_config_template": "cmake -G Ninja " + \
+        "-S %(tfm_tests_root_dir)s/%(test_root_dir)s " + \
+        "-B %(ci_build_root_dir)s/nspe " + \
+        "-DCONFIG_SPE_PATH=%(ci_build_root_dir)s/spe/api_ns " + \
+        "%(extra_params)s " + \
+        "-DQCBOR_PATH=%(codebase_root_dir)s/../qcbor ",
+
+    # CMake build commands will be executed for every build.
+    "spe_cmake_build":  "cmake --build %(ci_build_root_dir)s/spe -- install",
+    "nspe_cmake_build": "cmake --build %(ci_build_root_dir)s/nspe --",
 
     "set_compiler_path": "export PATH=$PATH:$%(compiler)s_PATH",
 
@@ -69,97 +81,106 @@ _common_tfm_builder_cfg = {
     # tfm_build_manager will replace %(_tbm_build_dir_)s,  %(_tbm_code_dir_)s,
     # _tbm_target_platform_ with the  paths set when building
 
-    "artifact_capture_rex": (r'%(_tbm_build_dir_)s/bin'
+    "artifact_capture_rex": (r'%(ci_build_root_dir)s/nspe'
                              r'/(\w+\.(?:axf|bin|hex))$'),
 
-    # CMake build commands will be executed for every build.
-    "cmake_build": "cmake --build ./ -- install",
     # Keys will append extra commands when matching target_platform
-    "post_build": {"arm/corstone1000": ("dd conv=notrunc bs=1 if=%(_tbm_build_dir_)s/bin/bl1_1.bin of=%(_tbm_build_dir_)s/bin/bl1.bin seek=0;"
-                                        "dd conv=notrunc bs=1 if=%(_tbm_build_dir_)s/bin/bl1_provisioning_bundle.bin of=%(_tbm_build_dir_)s/bin/bl1.bin seek=40960;"
-                                        "../platform/ext/target/arm/corstone1000/create-flash-image.sh %(_tbm_build_dir_)s/bin/ cs1000.bin;"),
+    "post_build": {"arm/corstone1000": ("dd conv=notrunc bs=1 if=%(ci_build_root_dir)s/spe/bin/bl1_1.bin of=%(ci_build_root_dir)s/spe/bin/bl1.bin seek=0;"
+                                        "dd conv=notrunc bs=1 if=%(ci_build_root_dir)s/spe/bin/bl1_provisioning_bundle.bin of=%(ci_build_root_dir)s/spe/bin/bl1.bin seek=40960;"
+                                        "../platform/ext/target/arm/corstone1000/create-flash-image.sh %(ci_build_root_dir)s/spe/bin/ cs1000.bin;"),
                     "arm/musca_b1": ("srec_cat "
-                                 "%(_tbm_build_dir_)s/bin/"
-                                 "bl2.bin "
-                                 "-Binary -offset 0xA000000 "
-                                 "-fill 0xFF 0xA000000 0xA020000 "
-                                 "%(_tbm_build_dir_)s/bin/"
-                                 "tfm_s_ns_signed.bin "
-                                 "-Binary -offset 0xA020000 "
-                                 "-fill 0xFF 0xA020000 0xA200000 "
-                                 "-o %(_tbm_build_dir_)s/bin/"
-                                 "tfm.hex -Intel"),
+                                     "%(ci_build_root_dir)s/spe/bin/"
+                                     "bl2.bin "
+                                     "-Binary -offset 0xA000000 "
+                                     "-fill 0xFF 0xA000000 0xA020000 "
+                                     "%(ci_build_root_dir)s/nspe/"
+                                     "tfm_s_ns_signed.bin "
+                                     "-Binary -offset 0xA020000 "
+                                     "-fill 0xFF 0xA020000 0xA200000 "
+                                     "-o %(ci_build_root_dir)s/"
+                                     "spe/bin/tfm.hex -Intel"),
                    "arm/musca_s1": ("srec_cat "
-                                 "%(_tbm_build_dir_)s/bin/"
-                                 "bl2.bin "
-                                 "-Binary -offset 0xA000000 "
-                                 "-fill 0xFF 0xA000000 0xA020000 "
-                                 "%(_tbm_build_dir_)s/bin/"
-                                 "tfm_s_ns_signed.bin "
-                                 "-Binary -offset 0xA020000 "
-                                 "-fill 0xFF 0xA020000 0xA200000 "
-                                 "-o %(_tbm_build_dir_)s/bin/"
-                                 "tfm.hex -Intel"),
+                                    "%(ci_build_root_dir)s/spe/bin/"
+                                    "bl2.bin "
+                                    "-Binary -offset 0xA000000 "
+                                    "-fill 0xFF 0xA000000 0xA020000 "
+                                    "%(ci_build_root_dir)s/nspe/"
+                                    "tfm_s_ns_signed.bin "
+                                    "-Binary -offset 0xA020000 "
+                                    "-fill 0xFF 0xA020000 0xA200000 "
+                                    "-o %(ci_build_root_dir)s/"
+                                    "spe/bin/tfm.hex -Intel"),
                    "stm/stm32l562e_dk": ("echo 'STM32L562E-DK board post process';"
-                                          "%(_tbm_build_dir_)s/postbuild.sh;"
-                                          "pushd %(_tbm_build_dir_)s;"
-                                          "BIN_FILES=$(grep -o '\/.*\.bin' TFM_UPDATE.sh | sed 's/^/bin/');"
-                                          "tar jcf ./bin/stm32l562e-dk-tfm.tar.bz2 regression.sh TFM_UPDATE.sh ${BIN_FILES};"
+                                          "%(ci_build_root_dir)s/spe/api_ns/postbuild.sh;"
+                                          "pushd %(ci_build_root_dir)s/spe/api_ns;"
+                                          "mkdir -p image_signing/scripts ;"
+                                          "cp %(ci_build_root_dir)s/nspe/bin/tfm_ns_signed.bin image_signing/scripts ;"
+                                          "tar jcf ./bin/stm32l562e-dk-tfm.tar.bz2 regression.sh TFM_UPDATE.sh "
+                                          "bin/bl2.bin "
+                                          "bin/tfm_s_signed.bin "
+                                          "image_signing/scripts/tfm_ns_signed.bin ;"
                                           "popd"),
                    "stm/b_u585i_iot02a": ("echo 'STM32U5 board post process';"
-                                          "%(_tbm_build_dir_)s/postbuild.sh;"
-                                          "pushd %(_tbm_build_dir_)s;"
-                                          "BIN_FILES=$(grep -o '\/.*\.bin' TFM_UPDATE.sh | sed 's/^/bin/');"
-                                          "tar jcf ./bin/b_u585i_iot02a-tfm.tar.bz2 regression.sh TFM_UPDATE.sh ${BIN_FILES};"
+                                          "%(ci_build_root_dir)s/spe/api_ns/postbuild.sh;"
+                                          "pushd %(ci_build_root_dir)s/spe/api_ns;"
+                                          "mkdir -p image_signing/scripts ;"
+                                          "cp %(ci_build_root_dir)s/nspe/bin/tfm_ns_signed.bin image_signing/scripts ;"
+                                          "tar jcf ./bin/b_u585i_iot02a-tfm.tar.bz2 regression.sh TFM_UPDATE.sh "
+                                          "bin/bl2.bin "
+                                          "bin/tfm_s_signed.bin "
+                                          "image_signing/scripts/tfm_ns_signed.bin ;"
                                           "popd"),
                   "nxp/lpcxpresso55s69": ("echo 'LPCXpresso55S69 board post process\n';"
-                                            "if [ -f \"%(_tbm_build_dir_)s/bin/bl2.hex\" ]; then FLASH_FILE='flash_bl2_JLink.py'; else FLASH_FILE='flash_JLink.py'; fi;"
-                                            "pushd %(_tbm_build_dir_)s/../platform/ext/target/nxp/lpcxpresso55s69/scripts;"
+                                            "if [ -f \"%(ci_build_root_dir)s/spe/bin/bl2.hex\" ]; then FLASH_FILE='flash_bl2_JLink.py'; else FLASH_FILE='flash_JLink.py'; fi;"
+                                            "mkdir -p %(codebase_root_dir)s/build/bin ;"
+                                            # Workaround for flash_JLink.py
+                                            "cp %(ci_build_root_dir)s/spe/bin/tfm_s.hex %(codebase_root_dir)s/build/bin ;"
+                                            "cp %(ci_build_root_dir)s/nspe/bin/tfm_ns.hex %(codebase_root_dir)s/build/bin ;"
+                                            "pushd %(codebase_root_dir)s/platform/ext/target/nxp/lpcxpresso55s69/scripts;"
                                             "LN=$(grep -n 'JLinkExe' ${FLASH_FILE}|awk -F: '{print $1}');"
                                             "sed -i \"${LN}s/.*/    print('flash.jlink generated')/\" ${FLASH_FILE};"
                                             "python3 ./${FLASH_FILE};"
-                                            "cd %(_tbm_build_dir_)s/bin;"
+                                            "cd %(codebase_root_dir)s/build/bin;"
                                             "BIN_FILES=$(grep loadfile flash.jlink | awk '{print $2}');"
                                             "tar jcf lpcxpresso55s69-tfm.tar.bz2 flash.jlink ${BIN_FILES};"
+                                            "mv lpcxpresso55s69-tfm.tar.bz2 %(ci_build_root_dir)s/nspe/bin ;"
                                             "popd"),
                    "cypress/psoc64": ("echo 'Sign binaries for Cypress PSoC64 platform';"
-                                       "pushd %(_tbm_build_dir_)s/..;"
+                                       "pushd %(codebase_root_dir)s/;"
                                        "sudo /usr/local/bin/cysecuretools "
                                        "--policy platform/ext/target/cypress/psoc64/security/policy/policy_multi_CM0_CM4_tfm.json "
                                        "--target cy8ckit-064s0s2-4343w "
                                        "sign-image "
-                                       "--hex %(_tbm_build_dir_)s/bin/tfm_s.hex "
+                                       "--hex %(ci_build_root_dir)s/spe/bin/tfm_s.hex "
                                        "--image-type BOOT --image-id 1;"
                                        "sudo /usr/local/bin/cysecuretools "
                                        "--policy platform/ext/target/cypress/psoc64/security/policy/policy_multi_CM0_CM4_tfm.json "
                                        "--target cy8ckit-064s0s2-4343w "
                                        "sign-image "
-                                       "--hex %(_tbm_build_dir_)s/bin/tfm_ns.hex "
+                                       "--hex %(ci_build_root_dir)s/nspe/bin/tfm_ns.hex "
                                        "--image-type BOOT --image-id 16;"
-                                       "mv %(_tbm_build_dir_)s/bin/tfm_s.hex %(_tbm_build_dir_)s/bin/tfm_s_signed.hex;"
-                                       "mv %(_tbm_build_dir_)s/bin/tfm_ns.hex %(_tbm_build_dir_)s/bin/tfm_ns_signed.hex;"
+                                       "mv %(ci_build_root_dir)s/spe/bin/tfm_s.hex %(ci_build_root_dir)s/spe/bin/tfm_s_signed.hex;"
+                                       "mv %(ci_build_root_dir)s/nspe/bin/tfm_ns.hex %(ci_build_root_dir)s/nspe/bin/tfm_ns_signed.hex;"
                                        "popd")
                    },
 
     # (Optional) If set will fail if those artefacts are missing post build
     "required_artefacts": {"all": [
-                           "%(_tbm_build_dir_)s/bin/"
+                           "%(ci_build_root_dir)s/spe/bin/"
                            "tfm_s.bin",
-                           "%(_tbm_build_dir_)s/bin/"
+                           "%(ci_build_root_dir)s/nspe/"
                            "tfm_ns.bin"],
                            "arm/musca_b1": [
-                           "%(_tbm_build_dir_)s/bin/"
-                           "tfm.hex",
-                           "%(_tbm_build_dir_)s/bin/"
+                           "%(ci_build_root_dir)s/tfm.hex",
+                           "%(ci_build_root_dir)s/spe/bin/"
                            "bl2.bin",
-                           "%(_tbm_build_dir_)s/bin/"
+                           "%(ci_build_root_dir)s/spe/bin/"
                            "tfm_sign.bin"],
                            "arm/musca_s1": [
-                           "%(_tbm_build_dir_)s/bin/"
-                           "tfm.hex",
-                           "%(_tbm_build_dir_)s/bin/"
+                           "%(ci_build_root_dir)s/tfm.hex",
+                           "%(ci_build_root_dir)s/spe/bin/"
                            "bl2.bin",
-                           "%(_tbm_build_dir_)s/bin/"
+                           "%(ci_build_root_dir)s/spe/bin/"
                            "tfm_sign.bin"]
                            }
 }
