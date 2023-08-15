@@ -75,7 +75,10 @@ _common_tfm_builder_cfg = {
     # CMake build commands will be executed for every build.
     "cmake_build": "cmake --build ./ -- install",
     # Keys will append extra commands when matching target_platform
-    "post_build": {"arm/musca_b1": ("srec_cat "
+    "post_build": {"arm/corstone1000": ("dd conv=notrunc bs=1 if=%(_tbm_build_dir_)s/bin/bl1_1.bin of=%(_tbm_build_dir_)s/bin/bl1.bin seek=0;"
+                                        "dd conv=notrunc bs=1 if=%(_tbm_build_dir_)s/bin/bl1_provisioning_bundle.bin of=%(_tbm_build_dir_)s/bin/bl1.bin seek=40960;"
+                                        "../platform/ext/target/arm/corstone1000/create-flash-image.sh %(_tbm_build_dir_)s/bin/ cs1000.bin;"),
+                    "arm/musca_b1": ("srec_cat "
                                  "%(_tbm_build_dir_)s/bin/"
                                  "bl2.bin "
                                  "-Binary -offset 0xA000000 "
