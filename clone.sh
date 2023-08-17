@@ -79,6 +79,7 @@ for repo in ${must_repos[@]}; do
     REPO_URL="$(echo "${repo}" | awk -F ';' '{print $1}')"
     REPO_NAME="$(echo "${repo}" | awk -F ';' '{print $2}')"
     REPO_REFSPEC="$(echo "${repo}" | awk -F ';' '{print $3}')"
+    echo "Repo: $REPO_URL $REPO_NAME $REPO_REFSPEC"
 
     if [ ! -d "${SHARE_FOLDER}/${REPO_NAME}" ]; then
         git_clone $REPO_URL "${SHARE_FOLDER}/${REPO_NAME}"
@@ -139,6 +140,7 @@ for repo in ${dependency_repos[@]}; do
     REPO_URL="$(echo "${repo}" | awk -F ';' '{print $1}')"
     REPO_NAME="$(echo "${repo}" | awk -F ';' '{print $2}')"
     REPO_REFSPEC="$(echo "${repo}" | awk -F ';' '{print $3}')"
+    echo "Repo: $REPO_URL $REPO_NAME $REPO_REFSPEC"
 
     # In case repository is not defined, just skip it
     if [ -z "${REPO_URL}" ]; then
