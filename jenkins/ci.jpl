@@ -118,6 +118,7 @@ def buildConfig(config, results) {
   params += string(name: 'QCBOR_URL', value: env.QCBOR_URL)
   params += string(name: 'SHARE_FOLDER', value: env.SHARE_FOLDER)
   params += string(name: 'SQUAD_CONFIGURATIONS', value: env.SQUAD_CONFIGURATIONS)
+  params += string(name: 'SQUAD_PROFILING', value: env.SQUAD_PROFILING)
   return { -> results
     def build_res = build(job: 'tf-m-build-config', parameters: params, propagate: false)
     def build_url = build_res.getAbsoluteUrl()
