@@ -244,11 +244,11 @@ config_pp_test = {"seed_params": {
                     # AN521_GCC_1_RegBL2_RegS_RegNS_Debug_BL2
                     ("arm/mps2/an521", "GCC_10_3", "1",
                      "RegBL2, RegS, RegNS", "OFF", "Debug", True, "", ""),
-                    # AN552_GNUARM_2_RegBL2_RegS_RegNS_Debug_BL2
-                    ("arm/mps3/an552", "GCC_10_3", "2",
+                    # CS300_FVP_GNUARM_2_RegBL2_RegS_RegNS_Debug_BL2
+                    ("arm/mps3/corstone300/fvp", "GCC_10_3", "2",
                      "RegBL2, RegS, RegNS", "OFF", "Debug", True, "", ""),
-                    # AN552_GNUARM_2_RegBL2_RegS_RegNS_Release_BL2
-                    ("arm/mps3/an552", "GCC_10_3", "2",
+                    # CS300_FVP_GNUARM_2_RegBL2_RegS_RegNS_Release_BL2
+                    ("arm/mps3/corstone300/fvp", "GCC_10_3", "2",
                      "RegBL2, RegS, RegNS", "OFF", "Release", True, "", ""),
                     # MUSCA_B1_GCC_1_RegBL2_RegS_RegNS_Minsizerel_BL2
                     ("arm/musca_b1", "GCC_10_3", "1",
@@ -442,7 +442,8 @@ config_cc_driver_psa = {"seed_params": {
 
 config_fp = {"seed_params": {
                 "tfm_platform":     ["arm/mps2/an521",
-                                     "arm/mps3/an552"],
+                                     "arm/mps3/corstone300/an552",
+                                     "arm/mps3/corstone300/fvp"],
                 "compiler":         ["GCC_10_3"],
                 "isolation_level":  ["1", "2"],
                 "test_regression":  ["RegBL2, RegS, RegNS"],
@@ -508,7 +509,7 @@ config_mmio = {"seed_params": {
 
 # Config groups for TF-M examples
 config_example_vad = {"seed_params": {
-                "tfm_platform":     ["arm/mps3/an552"],
+                "tfm_platform":     ["arm/mps3/corstone300/an552"],
                 "compiler":         ["GCC_10_3"],
                 "isolation_level":  ["2"],
                 "test_regression":  ["OFF"],
@@ -695,35 +696,50 @@ config_an524 = {"seed_params": {
                 "invalid": _common_tfm_invalid_configs + []
                 }
 
-config_an547 = {"seed_params": {
-                "tfm_platform":     ["arm/mps3/an547"],
-                "compiler":         ["GCC_10_3"],
-                "isolation_level":  ["1"],
-                "test_regression":  ["OFF"],
-                "test_psa_api":     ["OFF"],
-                "cmake_build_type": ["Debug"],
-                "with_bl2":         [True],
-                "profile":          [""],
-                "extra_params":     [""]
-                },
-                "common_params": _common_tfm_builder_cfg,
-                "invalid": _common_tfm_invalid_configs + []
-                }
+config_cs300_an547 = {"seed_params": {
+                      "tfm_platform":     ["arm/mps3/corstone300/an547"],
+                      "compiler":         ["GCC_10_3"],
+                      "isolation_level":  ["1"],
+                      "test_regression":  ["OFF"],
+                      "test_psa_api":     ["OFF"],
+                      "cmake_build_type": ["Debug"],
+                      "with_bl2":         [True],
+                      "profile":          [""],
+                      "extra_params":     [""]
+                      },
+                      "common_params": _common_tfm_builder_cfg,
+                      "invalid": _common_tfm_invalid_configs + []
+                      }
 
-config_an552 = {"seed_params": {
-                "tfm_platform":     ["arm/mps3/an552"],
-                "compiler":         ["GCC_10_3"],
-                "isolation_level":  ["1", "2"],
-                "test_regression":  ["OFF", "RegBL2, RegS, RegNS"],
-                "test_psa_api":     ["OFF"],
-                "cmake_build_type": ["Debug", "Release"],
-                "with_bl2":         [True],
-                "profile":          [""],
-                "extra_params":     [""]
-                },
-                "common_params": _common_tfm_builder_cfg,
-                "invalid": _common_tfm_invalid_configs + []
-                }
+config_cs300_an552 = {"seed_params": {
+                      "tfm_platform":     ["arm/mps3/corstone300/an552"],
+                      "compiler":         ["GCC_10_3"],
+                      "isolation_level":  ["1", "2"],
+                      "test_regression":  ["OFF", "RegBL2, RegS, RegNS"],
+                      "test_psa_api":     ["OFF"],
+                      "cmake_build_type": ["Debug", "Release"],
+                      "with_bl2":         [True],
+                      "profile":          [""],
+                      "extra_params":     [""]
+                      },
+                      "common_params": _common_tfm_builder_cfg,
+                      "invalid": _common_tfm_invalid_configs + []
+                      }
+
+config_cs300_fvp = {"seed_params": {
+                    "tfm_platform":     ["arm/mps3/corstone300/fvp"],
+                    "compiler":         ["GCC_10_3"],
+                    "isolation_level":  ["1", "2"],
+                    "test_regression":  ["OFF", "RegBL2, RegS, RegNS"],
+                    "test_psa_api":     ["OFF"],
+                    "cmake_build_type": ["Debug", "Release"],
+                    "with_bl2":         [True],
+                    "profile":          [""],
+                    "extra_params":     [""]
+                    },
+                    "common_params": _common_tfm_builder_cfg,
+                    "invalid": _common_tfm_invalid_configs + []
+                    }
 
 config_musca_b1 = {"seed_params": {
                 "tfm_platform":     ["arm/musca_b1"],
@@ -1018,8 +1034,9 @@ _builtin_configs = {
                     "nightly_psa_api": config_psa_api,
                     "nightly_nsce": config_nsce,
                     "nightly_mmio": config_mmio,
-                    "nightly_an547": config_an547,
-                    "nightly_an552": config_an552,
+                    "nightly_cs300_an547": config_cs300_an547,
+                    "nightly_cs300_an552": config_cs300_an552,
+                    "nightly_cs300_fvp": config_cs300_fvp,
                     "nightly_corstone310": config_corstone310,
                     "nightly_corstone1000": config_corstone1000,
                     "nightly_rss": config_rss,
@@ -1040,8 +1057,9 @@ _builtin_configs = {
                     "release_psa_api": config_psa_api,
                     "release_nsce": config_nsce,
                     "release_mmio": config_mmio,
-                    "release_an547": config_an547,
-                    "release_an552": config_an552,
+                    "release_cs300_an547": config_cs300_an547,
+                    "release_cs300_an552": config_cs300_an552,
+                    "release_cs300_fvp": config_cs300_fvp,
                     "release_corstone310": config_corstone310,
                     "release_rss": config_rss,
                     "release_psoc64": config_psoc64,
@@ -1066,8 +1084,9 @@ _builtin_configs = {
                     "an521": config_an521,
                     "an519": config_an519,
                     "an524": config_an524,
-                    "an547": config_an547,
-                    "an552": config_an552,
+                    "cs300_an547": config_cs300_an547,
+                    "cs300_an552": config_cs300_an552,
+                    "cs300_fvp": config_cs300_fvp,
                     "musca_b1": config_musca_b1,
                     "musca_s1": config_musca_s1,
                     "corstone310": config_corstone310,

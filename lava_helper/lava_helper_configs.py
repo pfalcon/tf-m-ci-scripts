@@ -8,7 +8,7 @@ from __future__ import print_function
 
 __copyright__ = """
 /*
- * Copyright (c) 2018-2022, Arm Limited. All rights reserved.
+ * Copyright (c) 2018-2023, Arm Limited. All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  *
@@ -114,19 +114,19 @@ tfm_mps2_sse_200 = {
     }
 }
 
-# FVP with BL2 bootloader for AN552
+# FVP with BL2 bootloader for Corstone300
 # firmware <-> ns <-> application: --application cpu0=bl2.axf
 # bootloader <-> s <-> data: --data cpu0=tfm_s_ns_signed.bin@0x01000000
-fvp_mps3_an552_bl2 = {
+fvp_mps3_cs300_bl2 = {
     "templ": "fvp_mps3.jinja2",
-    "job_name": "fvp_mps3_an552_bl2",
+    "job_name": "fvp_mps3_cs300_bl2",
     "device_type": "fvp",
     "job_timeout": 15,
     "action_timeout": 10,
     "monitor_timeout": 15,
     "poweroff_timeout": 1,
-    "platforms": {"arm/mps3/an552": ""},
-    "data_bin_offset": "0x01000000",
+    "platforms": {"arm/mps3/corstone300/fvp": ""},
+    "data_bin_offset": "0x38000000",
     "binaries": {
         "application": "bl2.axf",
         "data": "tfm_s_ns_signed.bin"
@@ -326,7 +326,7 @@ psoc64 = {
 # All configurations should be mapped here
 lava_gen_config_map = {
     "mps2_an521_bl2": tfm_mps2_sse_200,
-    "fvp_mps3_an552_bl2": fvp_mps3_an552_bl2,
+    "fvp_mps3_cs300_bl2": fvp_mps3_cs300_bl2,
     "fvp_mps2_an521_bl2": fvp_mps2_an521_bl2,
     "fvp_mps2_an519_bl2": fvp_mps2_an519_bl2,
     "fvp_corstone1000": fvp_corstone1000,
