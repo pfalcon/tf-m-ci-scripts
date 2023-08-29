@@ -1,5 +1,5 @@
 {#------------------------------------------------------------------------------
-# Copyright (c) 2018-2022, Arm Limited and Contributors. All rights reserved.
+# Copyright (c) 2018-2023, Arm Limited and Contributors. All rights reserved.
 #
 # SPDX-License-Identifier: BSD-3-Clause
 #
@@ -33,11 +33,11 @@ actions:
     namespace: docker
     method: fvp
     docker:
-      name: {{ docker_prefix }}/fvp:fvp_corstone_sse-300_11.16_26
+      name: {{ docker_prefix }}/fvp:fvp_corstone_sse-300_11.22_20_linux64
       local: true
     prompts:
     - 'root@lava '
-    image: /opt/model/FVP_Corstone_SSE-300/models/Linux64_GCC-6.4/FVP_Corstone_SSE-300_Ethos-U55
+    image: /opt/model/FVP_Corstone_SSE-300/models/Linux64_GCC-9.3/FVP_Corstone_SSE-300_Ethos-U55
     timeout:
       minutes: 5
     console_string: 'telnetterminal0: Listening for serial connection on port (?P<PORT>\d+)'
