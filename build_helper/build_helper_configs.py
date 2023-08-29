@@ -244,11 +244,11 @@ config_pp_test = {"seed_params": {
                     # AN521_GCC_1_RegBL2_RegS_RegNS_Debug_BL2
                     ("arm/mps2/an521", "GCC_10_3", "1",
                      "RegBL2, RegS, RegNS", "OFF", "Debug", True, "", ""),
-                    # AN552_GNUARM_1_RegBL2_RegS_RegNS_Debug_BL2
-                    ("arm/mps3/an552", "GCC_10_3", "1",
+                    # AN552_GNUARM_2_RegBL2_RegS_RegNS_Debug_BL2
+                    ("arm/mps3/an552", "GCC_10_3", "2",
                      "RegBL2, RegS, RegNS", "OFF", "Debug", True, "", ""),
-                    # AN552_GNUARM_1_RegBL2_RegS_RegNS_Release_BL2
-                    ("arm/mps3/an552", "GCC_10_3", "1",
+                    # AN552_GNUARM_2_RegBL2_RegS_RegNS_Release_BL2
+                    ("arm/mps3/an552", "GCC_10_3", "2",
                      "RegBL2, RegS, RegNS", "OFF", "Release", True, "", ""),
                     # MUSCA_B1_GCC_1_RegBL2_RegS_RegNS_Minsizerel_BL2
                     ("arm/musca_b1", "GCC_10_3", "1",
