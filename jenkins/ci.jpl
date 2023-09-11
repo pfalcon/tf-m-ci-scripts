@@ -56,9 +56,16 @@ def submit_lava_tests(config, results, build_res, params, params_collection) {
 }
 
 def listConfigs(config_list, filter_group) {
+  // In case filter group starts with spaces
+  config_groups = filter_group.replaceAll(/^\s+/, '')
+  // In case filter group ends with spaces
+  config_groups = config_groups.replaceAll(/\s+$/, '')
+  // Replace spaces between config group names with ' -g '
+  config_groups = config_groups.replaceAll(/\s+/, " -g ")
+
   def build_config_list_raw = sh(script:
     """
-    python3 ./tf-m-ci-scripts/configs.py -g ${filter_group.replace(" ", " -g ")}\n
+    python3 ./tf-m-ci-scripts/configs.py -g ${config_groups}\n
     """, returnStdout: true).trim()
   def build_config_list = build_config_list_raw.tokenize('\n')
   config_list.addAll(build_config_list)
