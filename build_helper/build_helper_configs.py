@@ -441,7 +441,9 @@ config_cc_driver_psa = {"seed_params": {
                 }
 
 config_fp = {"seed_params": {
-                "tfm_platform":     ["arm/mps2/an521"],
+                "tfm_platform":     ["arm/mps2/an521",
+                                     "arm/mps3/corstone300/an552",
+                                     "arm/mps3/corstone300/fvp"],
                 "compiler":         ["GCC_10_3"],
                 "isolation_level":  ["1", "2"],
                 "test_regression":  ["RegBL2, RegS, RegNS"],
