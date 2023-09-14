@@ -41,8 +41,8 @@ def get_file_size(filename):
 
 # This function creates a json file containing all the data about
 #  memory footprint and sends this data to SQUAD
-def send_file_size(change_id, config_name, bl2_sizes, tfms_sizes):
-    url = SQUAD_BASE_PROJECT_URL + change_id + '/' + config_name
+def send_file_size(git_commit, config_name, bl2_sizes, tfms_sizes):
+    url = SQUAD_BASE_PROJECT_URL + git_commit + '/' + config_name
 
     try:
         metrics = json.dumps({ "bl2_code_size"    : bl2_sizes["Code"],
@@ -81,39 +81,14 @@ def send_file_size(change_id, config_name, bl2_sizes, tfms_sizes):
         print ("POST request sent to project " + config_name )
         return 0
 
-# Function based on get_local_git_info() from utils, getting change id for the tfm repo
-def get_change_id(repo='trusted-firmware-m'):
-    directory = os.path.join(os.getenv('WORKSPACE'), repo)
+def get_git_commit_hash(repo='trusted-firmware-m'):
     cur_dir = os.path.abspath(os.getcwd())
-    cmd = "git log HEAD -n 1  --pretty=format:'%b'"
 
-    os.chdir(directory) # Going to the repo's directory
+    os.chdir(os.path.join(os.getenv('WORKSPACE'), repo)) # Going to the repo's directory
+    git_commit = os.popen('git rev-parse --short HEAD').read()[:-1]
+    os.chdir(cur_dir) # Going back to the initial directory
 
-    git_info_rex = re.compile(r'(?P<body>^[\s\S]*?)((?:Change-Id:\s)'
-                              r'(?P<change_id>.*)\n?)', re.MULTILINE)
-
-    r, e = subprocess.Popen(cmd,
-                            shell=True,
-                            stdout=subprocess.PIPE,
-                            stderr=subprocess.PIPE).communicate()
-
-    if e:
-        print("Error", e)
-        return -1
-    else:
-        try:
-            txt_body = r.decode('ascii')
-        except UnicodeDecodeError as E:
-            txt_body = r.decode('utf-8')
-        result = txt_body.rstrip()
-
-    try:
-        change_id = git_info_rex.search(result).groupdict()["change_id"].strip()
-    except:
-        return -1
-
-    os.chdir(cur_dir) #Going back to the initial directory
-    return change_id
+    return git_commit
 
 def print_image_sizes(image_sizes):
     for sec, size in image_sizes.items():
@@ -125,21 +100,21 @@ if __name__ == "__main__":
     if os.getenv('CONFIG_NAME') in reference_configs:
         print("Configuration " + os.getenv('CONFIG_NAME') + " is a reference")
         try :
-            change_id = get_change_id("trusted-firmware-m")
+            git_commit = get_git_commit_hash("trusted-firmware-m")
         except :
-            change_id = -1
+            git_commit = -1
 
         print("------ BL2 Memory Footprint ------")
         bl2_sizes = get_file_size("bl2.axf")
         print("\n\n------ TFM Secure Memory Footprint ------")
         tfms_sizes = get_file_size("tfm_s.axf")
 
-        if (bl2_sizes != -1 and change_id != -1) :
+        if (bl2_sizes != -1 and git_commit != -1) :
             squad_config_name = os.getenv('CONFIG_NAME')
-            send_file_size(change_id, squad_config_name, bl2_sizes, tfms_sizes)
+            send_file_size(git_commit, squad_config_name, bl2_sizes, tfms_sizes)
         else :
             #Directory or file weren't found
-            if change_id == -1 :
+            if git_commit == -1 :
                 print("Error : trusted-firmware-m repo not found")
             else :
                 print("Error : file not found")

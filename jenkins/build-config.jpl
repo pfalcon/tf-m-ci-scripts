@@ -49,7 +49,7 @@ timestamps {
           if (fileExists('tf-m-ci-scripts/Memory_footprint/filesize.json')) {
             println("--- output from memory_footprint.py ---")
             println(output)
-            println("--- end of output from lava_wait_jobs.py ---")
+            println("--- end of output from memory_footprint.py ---")
             archiveArtifacts 'tf-m-ci-scripts/Memory_footprint/filesize.json'
           }
         }
