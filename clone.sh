@@ -53,7 +53,7 @@ function parse_version() {
     VERSION="$(grep "set(${DEPENDENCY_NAME}" ${CONFIG_FILE_PATH} | cut -d\" -f2)"
 
     if [ -z "${VERSION}" ]; then
-        VERSION="refs/heads/master"
+        VERSION="refs/heads/main"
     fi
 
     echo "${VERSION}"
