@@ -30,4 +30,4 @@
 -file_tag+={external, "^tf-m-tests/.*$"}
 
 # Ignore vendor platform specific soure code
--file_tag+={external, "^trusted-firmware-m/platform/ext/platform/.*$"}
+-file_tag+={external, "^trusted-firmware-m/platform/ext/target/.*$"}
