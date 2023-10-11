@@ -30,6 +30,7 @@
 set -ex
 
 . $(dirname $0)/utils/util_git.sh
+. $(dirname $0)/utils/util_parse_version.sh
 
 function clone_repo_to_share_folder() {
     REPO_URL=$1
@@ -71,21 +72,6 @@ fi
 echo "Share Folder path: ${SHARE_FOLDER}"
 echo
 
-# Parse dependency version specified in TF-M CMake configs
-function parse_version() {
-    CONFIG_FILE_NAME=$1
-    DEPENDENCY_NAME=$2
-    CONFIG_FILE_PATH="${SHARE_FOLDER}/${TFM_NAME}/${CONFIG_FILE_NAME}"
-
-    VERSION="$(grep "set(${DEPENDENCY_NAME}" ${CONFIG_FILE_PATH} | cut -d\" -f2)"
-
-    if [ -z "${VERSION}" ]; then
-        VERSION="refs/heads/main"
-    fi
-
-    echo "${VERSION}"
-}
-
 # TF-M project
 if [ -n "${GERRIT_EVENT_HASH}" ]; then
     # If triggered by Gerrit, use its variables
@@ -104,27 +90,27 @@ fi
 
 # Dependency projects
 TFM_TESTS_PROJECT="${TFM_TESTS_URL:-}"
-TFM_TESTS_REFSPEC="${TFM_TESTS_REFSPEC:-"$(parse_version lib/ext/tf-m-tests/repo_config_default.cmake TFM_TEST_REPO_VERSION)"}"
+TFM_TESTS_REFSPEC="${TFM_TESTS_REFSPEC:-"$(parse_version lib/ext/tf-m-tests/version.txt version= = 2)"}"
 TFM_TESTS_NAME="tf-m-tests"
 
 MBEDTLS_PROJECT="${MBEDTLS_URL:-}"
-MBEDTLS_REFSPEC="${MBEDTLS_VERSION:-"$(parse_version config/config_base.cmake MBEDCRYPTO_VERSION)"}"
+MBEDTLS_REFSPEC="${MBEDTLS_VERSION:-"$(parse_version config/config_base.cmake set\(MBEDCRYPTO_VERSION \" 2)"}"
 MBEDTLS_NAME="mbedtls"
 
 MCUBOOT_PROJECT="${MCUBOOT_URL:-}"
-MCUBOOT_REFSPEC="${MCUBOOT_REFSPEC:-"$(parse_version config/config_base.cmake MCUBOOT_VERSION)"}"
+MCUBOOT_REFSPEC="${MCUBOOT_REFSPEC:-"$(parse_version config/config_base.cmake set\(MCUBOOT_VERSION \" 2)"}"
 MCUBOOT_NAME="mcuboot"
 
 QCBOR_PROJECT="${QCBOR_URL:-}"
-QCBOR_REFSPEC="${QCBOR_VERSION:-"$(parse_version lib/ext/qcbor/CMakeLists.txt QCBOR_VERSION)"}"
+QCBOR_REFSPEC="${QCBOR_VERSION:-"$(parse_version lib/ext/qcbor/CMakeLists.txt set\(QCBOR_VERSION \" 2)"}"
 QCBOR_NAME="qcbor"
 
 TFM_EXTRAS_PROJECT="${TFM_EXTRAS_URL:-}"
-TFM_EXTRAS_REFSPEC="${TFM_EXTRAS_REFSPEC:-"$(parse_version lib/ext/tf-m-extras/CMakeLists.txt TFM_EXTRAS_REPO_VERSION)"}"
+TFM_EXTRAS_REFSPEC="${TFM_EXTRAS_REFSPEC:-"$(parse_version lib/ext/tf-m-extras/CMakeLists.txt set\(TFM_EXTRAS_REPO_VERSION \" 2)"}"
 TFM_EXTRAS_NAME="tf-m-extras"
 
 TFM_TOOLS_PROJECT="${TFM_TOOLS_URL:-}"
-TFM_TOOLS_REFSPEC="${TFM_TOOLS_REFSPEC:-"$(parse_version lib/ext/tf-m-tools/CMakeLists.txt TFM_TOOLS_VERSION)"}"
+TFM_TOOLS_REFSPEC="${TFM_TOOLS_REFSPEC:-"$(parse_version lib/ext/tf-m-tools/CMakeLists.txt set\(TFM_TOOLS_VERSION \" 2)"}"
 TFM_TOOLS_NAME="tf-m-tools"
 
 QA_TOOLS_PROJECT="https://review.trustedfirmware.org/ci/qa-tools"
@@ -152,7 +138,7 @@ for repo in ${dependency_repos[@]}; do
 done
 
 PSA_ARCH_TESTS_PROJECT="${PSA_ARCH_TESTS_URL:-}"
-PSA_ARCH_TESTS_REFSPEC="${PSA_ARCH_TESTS_VERSION:-"$(parse_version ../tf-m-tests/tests_psa_arch/fetch_repo/CMakeLists.txt PSA_ARCH_TESTS_VERSION)"}"
+PSA_ARCH_TESTS_REFSPEC="${PSA_ARCH_TESTS_VERSION:-"$(parse_version ../tf-m-tests/tests_psa_arch/fetch_repo/CMakeLists.txt set\(PSA_ARCH_TESTS_VERSION \" 2)"}"
 PSA_ARCH_TESTS_NAME="psa-arch-tests"
 
 clone_repo_to_share_folder "${PSA_ARCH_TESTS_PROJECT}" "${PSA_ARCH_TESTS_NAME}" "${PSA_ARCH_TESTS_REFSPEC}"
