@@ -46,8 +46,8 @@ function git_checkout() {
         fi
 
         # Checkout to specified refspec
-        if [[ "${REPO_REFSPEC}" =~ "refs/changes" ]]; then
-            # Refspec in "refs/changes" format cannot be directly used to checkout
+        if [[ "${REPO_REFSPEC}" =~ "refs/" ]]; then
+            # Refspec in "refs/" format cannot be directly used to checkout
             git checkout ${REPO_FETCH_HEAD}
         else
             git checkout ${REPO_REFSPEC}
