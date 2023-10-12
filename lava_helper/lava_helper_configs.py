@@ -324,7 +324,8 @@ psoc64 = {
 }
 
 # All configurations should be mapped here
-lava_gen_config_map = {
+# Configs need bl2
+lava_gen_config_map_bl2 = {
     "mps2_an521_bl2": tfm_mps2_sse_200,
     "fvp_mps3_cs300_bl2": fvp_mps3_cs300_bl2,
     "fvp_mps2_an521_bl2": fvp_mps2_an521_bl2,
@@ -333,8 +334,12 @@ lava_gen_config_map = {
     "qemu_mps2_bl2": qemu_mps2_bl2,
     "musca_b1": musca_b1_bl2,
     "stm32l562e_dk": stm32l562e_dk,
-    "lpcxpresso55s69": lpcxpresso55s69,
     "b_u585i_iot02a": b_u585i_iot02a,
+}
+
+# Configs without bl2
+lava_gen_config_map_nobl2 = {
+    "lpcxpresso55s69": lpcxpresso55s69,
     "psoc64": psoc64,
 }
 

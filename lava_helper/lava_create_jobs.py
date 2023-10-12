@@ -32,7 +32,8 @@ def load_config_overrides(user_args, config_key):
 
     print("Using built-in config: %s" % config_key)
     try:
-        config = lava_gen_config_map[config_key]
+        config = lava_gen_config_map_bl2[config_key] if os.getenv("BL2") == "True" \
+                 else lava_gen_config_map_nobl2[config_key]
     except KeyError:
         print("No template found for config: %s" % config_key)
         sys.exit(1)
@@ -129,7 +130,8 @@ def generate_lava_job_defs(user_args, config):
 
 def main(user_args):
     user_args.template_dir = "jinja2_templates"
-    config_keys = list(lava_gen_config_map.keys())
+    config_keys = list(lava_gen_config_map_bl2.keys()) if os.getenv("BL2") == "True" \
+                  else list(lava_gen_config_map_nobl2.keys())
     if user_args.fvp_only:
         config_keys = [key for key in config_keys if "fvp" in key]
     if user_args.physical_board_only:
