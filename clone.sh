@@ -27,7 +27,7 @@
 # is triggered manually from the buider job itself.
 #
 
-set -e
+set -ex
 
 . $(dirname $0)/util_git.sh
 
