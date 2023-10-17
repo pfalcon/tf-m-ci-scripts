@@ -40,18 +40,11 @@ timestamps {
         if (upstreamProject == "tf-m-build-and-test") {
           archiveArtifacts 'trusted-firmware-m/build/generated/**'
         }
-        if (env.SQUAD_CONFIGURATIONS == "enabled"){
+        if (upstreamProject == "tf-m-nightly-performance"){
           //Creating a folder to store memory footprint artifacts and launching the memory footprint script.
-          sh "mkdir tf-m-ci-scripts/Memory_footprint/"
-          withCredentials([string(credentialsId: 'QA_REPORTS_TOKEN', variable: 'TOKEN')]) {
-            output = sh(script: """python3 tf-m-ci-scripts/memory_footprint.py ${TOKEN}""", returnStdout: true).trim()
-          }
-          if (fileExists('tf-m-ci-scripts/Memory_footprint/filesize.json')) {
-            println("--- output from memory_footprint.py ---")
-            println(output)
-            println("--- end of output from memory_footprint.py ---")
-            archiveArtifacts 'tf-m-ci-scripts/Memory_footprint/filesize.json'
-          }
+          sh "mkdir -p ${SHARE_FOLDER}/Memory_footprint/"
+          output = sh(script: """python3 tf-m-ci-scripts/performance.py --generate-memory""", returnStdout: true).trim()
+          println(output)
         }
       }
     } catch (Exception e) {

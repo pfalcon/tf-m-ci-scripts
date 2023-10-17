@@ -22,7 +22,6 @@ import argparse
 import shutil
 import logging
 import json
-import re
 from xmlrpc.client import ProtocolError
 from jinja2 import Environment, FileSystemLoader
 from lava_helper import test_lava_dispatch_credentials
@@ -141,12 +140,12 @@ def job_links(jobs, user_args):
         job_links += "Build link: {}\n".format(info['metadata']['build_job_url'])
         job_links += "LAVA link: {}\n".format(lava_id_to_url(job, user_args))
         job_links += "TFM LOG: {}artifact/{}/target_log.txt\n".format(os.getenv("BUILD_URL"), info['job_dir'])
-        if os.getenv('SQUAD_PROFILING') == 'enabled':
-            prof_json = os.path.join(info['job_dir'], 'prof.json')
-            target_log = os.path.join(info['job_dir'], 'target_log.txt')
-            prof_report = get_prof_psa_client_api_data(target_log, prof_json)
-            job_links += "Profiling Data: {}artifact/{}/prof.json\n".format(os.getenv("BUILD_URL"), info['job_dir'])
-            job_links += "Profiling Report:\n{}".format(prof_report)
+
+        # Save job information to share folder.
+        if os.getenv('JOB_NAME') == 'tf-m-nightly-performance':
+            with open(os.path.join(os.getenv('SHARE_FOLDER'), 'performance_config.txt'), 'a') as f:
+                f.write(info['metadata']['build_name'] + ' ' + info['job_dir'] + '\n')
+
     print(job_links)
 
 def remove_lava_dupes(results):
@@ -209,35 +208,6 @@ def print_lava_urls(jobs, user_args):
 def info_print(line, silent=True):
     if not silent:
         print("INFO: {}".format(line))
-
-def get_prof_psa_client_api_data(f_log_path, f_json_path):
-    """
-    Get PSA Client API profiling data report from target log, print and write it
-    to prof.json under job directory.
-    """
-
-    prof_report = '---------- TF-M PSA Client API Profiling Data ----------\n'
-    prof_data = {}
-
-    with open(f_log_path,'r') as f_log:
-        tfm_log = f_log.read()
-
-        # Extract TF-M PSA Client API profiling data
-        pattern = r'(secure|non-secure) ([^\n]+) average is (\d+) CPU cycles'
-        matches = re.findall(pattern, tfm_log)
-        for match in matches:
-            type, api, cpu_cycles = match
-            prof_report += '{:<15}{:<25}{:5} CPU cycles\n'.format(type, api, cpu_cycles)
-            prof_data[('s_' if type == 'secure' else 'ns_') + api.replace(' ', '_')] = cpu_cycles
-
-        try:
-            # Write result to JSON file
-            metrics = json.dumps(prof_data)
-            with open(f_json_path, 'w') as f_json:
-                f_json.write(metrics)
-        except:
-            return -1
-    return prof_report
 
 # WARNING: Setting this to >1 is a last resort, temporary stop-gap measure,
 # which will overload LAVA and jeopardize stability of the entire TF CI.

@@ -117,8 +117,6 @@ def buildConfig(config, results) {
   params += string(name: 'QCBOR_VERSION', value: env.QCBOR_VERSION)
   params += string(name: 'QCBOR_URL', value: env.QCBOR_URL)
   params += string(name: 'SHARE_FOLDER', value: env.SHARE_FOLDER)
-  params += string(name: 'SQUAD_CONFIGURATIONS', value: env.SQUAD_CONFIGURATIONS)
-  params += string(name: 'SQUAD_PROFILING', value: env.SQUAD_PROFILING)
   return { -> results
     def build_res = build(job: 'tf-m-build-config', parameters: params, propagate: false)
     def build_url = build_res.getAbsoluteUrl()
@@ -407,6 +405,9 @@ timestamps {
                 archiveArtifacts artifacts: 'merged_report/**', allowEmptyArchive: true
               }
             }
+            withCredentials([string(credentialsId: 'QA_REPORTS_TOKEN', variable: 'TOKEN')]) {
+              sh(script: """./tf-m-ci-scripts/performance.py --send-squad --squad-token ${TOKEN} > SQUAD.log""")
+            }
           }
         }
         else {
@@ -422,10 +423,14 @@ timestamps {
       } finally {
         if (all_jobs.size() > 0) {
           output = readFile("output.log")
+          performance_output = readFile("SQUAD.log")
           println("--- output from lava_wait_jobs.py ---")
           println(output)
           println("--- end of output from lava_wait_jobs.py ---")
-          test_results = parseTestResults(output)
+          println("--- output from performance.py ---")
+          println(performance_output)
+          println("--- end of output from performance.py ---")
+          test_results = parseTestResults(output + performance_output)
           archiveArtifacts artifacts: 'test_summary.*', allowEmptyArchive: true
           archiveArtifacts artifacts: 'cfgs/**', allowEmptyArchive: true
           if (all_jobs.size() > 0) {

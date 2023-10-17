@@ -980,6 +980,32 @@ config_m2354 = {"seed_params": {
                 "invalid": _common_tfm_invalid_configs + []
                 }
 
+config_mem_footprint = {"seed_params": {
+               "tfm_platform":      ["arm/mps2/an521"],
+                "compiler":         ["ARMCLANG_6_13"],
+                "isolation_level":  ["1"],
+                "test_regression":  ["OFF"],
+                "test_psa_api":     ["OFF"],
+                "cmake_build_type": ["Minsizerel"],
+                "with_bl2":         [True],
+                "profile":          [""],
+                "extra_params":     [""]
+                },
+                "common_params": _common_tfm_builder_cfg,
+                "valid": [
+                    # AN521_ARMCLANG_1_Minsizerel_BL2_SMALL_PSOFF
+                    ("arm/mps2/an521", "ARMCLANG_6_13", "1",
+                     "OFF", "OFF", "Minsizerel", True, "profile_small", "PSOFF"),
+                    # AN521_ARMCLANG_2_Minsizerel_BL2_MEDIUM_PSOFF
+                    ("arm/mps2/an521", "ARMCLANG_6_13", "2",
+                     "OFF", "OFF", "Minsizerel", True, "profile_medium", "PSOFF"),
+                    # AN521_ARMCLANG_3_Minsizerel_BL2_LARGE_PSOFF
+                    ("arm/mps2/an521", "ARMCLANG_6_13", "3",
+                     "OFF", "OFF", "Minsizerel", True, "profile_large", "PSOFF"),
+                ],
+                "invalid": _common_tfm_invalid_configs + []
+                }
+
 config_prof = {"seed_params": {
                "tfm_platform":      ["arm/mps2/an521"],
                 "compiler":         ["GCC_10_3"],
@@ -1136,7 +1162,8 @@ _builtin_configs = {
                     "example_dma350_s": config_example_dma350_s,
                     "example_dma350_ns": config_example_dma350_ns,
 
-                    # profiling
+                    # config groups for tf-m performance monitor
+                    "mem_footprint": config_mem_footprint,
                     "profiling": config_prof,
 
                     # config groups for debug
