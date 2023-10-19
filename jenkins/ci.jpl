@@ -405,8 +405,10 @@ timestamps {
                 archiveArtifacts artifacts: 'merged_report/**', allowEmptyArchive: true
               }
             }
-            withCredentials([string(credentialsId: 'QA_REPORTS_TOKEN', variable: 'TOKEN')]) {
-              sh(script: """./tf-m-ci-scripts/performance.py --send-squad --squad-token ${TOKEN} > SQUAD.log""")
+            if (env.JOB_NAME.equals("tf-m-nightly-performance")) {
+              withCredentials([string(credentialsId: 'QA_REPORTS_TOKEN', variable: 'TOKEN')]) {
+                sh(script: """./tf-m-ci-scripts/performance.py --send-squad --squad-token ${TOKEN} > SQUAD.log""")
+              }
             }
           }
         }
