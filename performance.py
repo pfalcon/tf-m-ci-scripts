@@ -18,17 +18,17 @@ import requests
 from tfm_ci_pylib import utils
 
 mem_configs = {
-    'AN521_ARMCLANG_1_Minsizerel_BL2':              'AN521-ARMCC-Default-Minsizerel-BL2',
-    'AN521_ARMCLANG_1_Minsizerel_BL2_SMALL_PSOFF':  'AN521-ARMCC-Small-Minsizerel-BL2',
-    'AN521_ARMCLANG_2_Minsizerel_BL2_MEDIUM_PSOFF': 'AN521-ARMCC-Medium-Minsizerel-BL2',
-    'AN521_ARMCLANG_3_Minsizerel_BL2_LARGE_PSOFF':  'AN521-ARMCC-Large-Minsizerel-BL2'
+    'AN521_ARMCLANG_1_Minsizerel_BL2':              'MEMORY-AN521-ARMCC-Default-Minsizerel',
+    'AN521_ARMCLANG_1_Minsizerel_BL2_SMALL_PSOFF':  'MEMORY-AN521-ARMCC-Small-Minsizerel',
+    'AN521_ARMCLANG_2_Minsizerel_BL2_MEDIUM_PSOFF': 'MEMORY-AN521-ARMCC-Medium-Minsizerel',
+    'AN521_ARMCLANG_3_Minsizerel_BL2_LARGE_PSOFF':  'MEMORY-AN521-ARMCC-Large-Minsizerel'
 }
 
 profiling_configs = {
-    'AN521_GCC_1_Release_BL2_PROF':     'AN521-GCC-Level1-SFN-Release-BL2',
-    'AN521_GCC_1_Release_BL2_IPC_PROF': 'AN521-GCC-Level1-IPC-Release-BL2',
-    'AN521_GCC_2_Release_BL2_PROF':     'AN521-GCC-Level2-IPC-Release-BL2',
-    'AN521_GCC_3_Release_BL2_PROF':     'AN521-GCC-Level3-IPC-Release-BL2'
+    'AN521_GCC_1_Release_BL2_PROF':     'PERF-AN521-GCC-Level1-SFN-Release',
+    'AN521_GCC_1_Release_BL2_IPC_PROF': 'PERF-AN521-GCC-Level1-IPC-Release',
+    'AN521_GCC_2_Release_BL2_PROF':     'PERF-AN521-GCC-Level2-IPC-Release',
+    'AN521_GCC_3_Release_BL2_PROF':     'PERF-AN521-GCC-Level3-IPC-Release'
 }
 
 def get_git_commit_hash(repo='trusted-firmware-m'):
