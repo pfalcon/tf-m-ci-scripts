@@ -425,14 +425,18 @@ timestamps {
       } finally {
         if (all_jobs.size() > 0) {
           output = readFile("output.log")
-          performance_output = readFile("SQUAD.log")
           println("--- output from lava_wait_jobs.py ---")
           println(output)
           println("--- end of output from lava_wait_jobs.py ---")
-          println("--- output from performance.py ---")
-          println(performance_output)
-          println("--- end of output from performance.py ---")
-          test_results = parseTestResults(output + performance_output)
+          test_results = parseTestResults(output)
+
+          if (env.JOB_NAME.equals("tf-m-nightly-performance")) {
+            performance_output = readFile("SQUAD.log")
+            println("--- output from performance.py ---")
+            println(performance_output)
+            println("--- end of output from performance.py ---")
+          }
+
           archiveArtifacts artifacts: 'test_summary.*', allowEmptyArchive: true
           archiveArtifacts artifacts: 'cfgs/**', allowEmptyArchive: true
           if (all_jobs.size() > 0) {
