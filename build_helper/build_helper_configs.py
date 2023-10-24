@@ -167,11 +167,11 @@ _common_tfm_builder_cfg = {
 # List of all build configs that are impossible under all circumstances
 _common_tfm_invalid_configs = [
     # LR_CODE size exceeds limit on MUSCA_B1 & MUSCA_S1 with regression tests in Debug mode built with ARMCLANG
-    ("arm/musca_b1", "ARMCLANG_6_13", "*", "RegBL2, RegS, RegNS", "OFF", "Debug", "*", "", "*"),
-    ("arm/musca_s1", "ARMCLANG_6_13", "*", "RegBL2, RegS, RegNS", "OFF", "Debug", "*", "", "*"),
+    ("arm/musca_b1", "ARMCLANG_6_18", "*", "RegBL2, RegS, RegNS", "OFF", "Debug", "*", "", "*"),
+    ("arm/musca_s1", "ARMCLANG_6_18", "*", "RegBL2, RegS, RegNS", "OFF", "Debug", "*", "", "*"),
     # Load range overlap on Musca for IPC Debug type: T895
-    ("arm/musca_b1", "ARMCLANG_6_13", "*", "*", "IPC", "Debug", "*", "*", "*"),
-    ("arm/musca_s1", "ARMCLANG_6_13", "*", "*", "IPC", "Debug", "*", "*", "*"),
+    ("arm/musca_b1", "ARMCLANG_6_18", "*", "*", "IPC", "Debug", "*", "*", "*"),
+    ("arm/musca_s1", "ARMCLANG_6_18", "*", "*", "IPC", "Debug", "*", "*", "*"),
     # FF does not support L3
     ("*", "*", "3", "*", "IPC", "*", "*", "*", "*"),
     # Musca requires BL2
@@ -188,7 +188,7 @@ _common_tfm_invalid_configs = [
 config_pp_test = {"seed_params": {
                 # AN519_ARMCLANG_IPC_1_RegBL2_RegS_RegNS_Debug_BL2
                 "tfm_platform":     ["arm/mps2/an519"],
-                "compiler":         ["ARMCLANG_6_13"],
+                "compiler":         ["ARMCLANG_6_18"],
                 "isolation_level":  ["1"],
                 "test_regression":  ["RegBL2, RegS, RegNS"],
                 "test_psa_api":     ["OFF"],
@@ -200,7 +200,7 @@ config_pp_test = {"seed_params": {
                 "common_params": _common_tfm_builder_cfg,
                 "valid": [
                     # AN519_ARMCLANG_2_RegBL2_RegS_RegNS_Release_BL2
-                    ("arm/mps2/an519", "ARMCLANG_6_13", "2",
+                    ("arm/mps2/an519", "ARMCLANG_6_18", "2",
                      "RegBL2, RegS, RegNS", "OFF", "Release", True, "",  ""),
                     # AN519_GCC_1_RegBL2_RegS_RegNS_Debug_BL2
                     ("arm/mps2/an519", "GCC_10_3", "1",
@@ -212,22 +212,22 @@ config_pp_test = {"seed_params": {
                     ("arm/mps2/an519", "GCC_10_3", "1",
                      "RegBL2, RegS, RegNS", "OFF", "Debug", True, "", ""),
                     # AN521_ARMCLANG_1_RegBL2_RegS_RegNS_Debug_BL2_SMALL_PSOFF
-                    ("arm/mps2/an521", "ARMCLANG_6_13", "1",
+                    ("arm/mps2/an521", "ARMCLANG_6_18", "1",
                      "RegBL2, RegS, RegNS", "OFF", "Debug", True, "profile_small", "PSOFF"),
                     # AN521_ARMCLANG_1_RegBL2_RegS_RegNS_Debug_BL2
-                    ("arm/mps2/an521", "ARMCLANG_6_13", "1",
+                    ("arm/mps2/an521", "ARMCLANG_6_18", "1",
                      "RegBL2, RegS, RegNS", "OFF", "Debug", True, "", ""),
                     # AN521_ARMCLANG_1_RegBL2_RegS_RegNS_Debug_BL2_IPC
-                    ("arm/mps2/an521", "ARMCLANG_6_13", "1",
+                    ("arm/mps2/an521", "ARMCLANG_6_18", "1",
                      "RegBL2, RegS, RegNS", "OFF", "Debug", True, "", "IPC"),
                     # AN521_ARMCLANG_2_RegBL2_RegS_RegNS_Release_BL2
-                    ("arm/mps2/an521", "ARMCLANG_6_13", "2",
+                    ("arm/mps2/an521", "ARMCLANG_6_18", "2",
                      "RegBL2, RegS, RegNS", "OFF", "Release", True, "", ""),
                     # AN521_ARMCLANG_3_RegBL2_RegS_RegNS_Minsizerel_BL2
-                    ("arm/mps2/an521", "ARMCLANG_6_13", "3",
+                    ("arm/mps2/an521", "ARMCLANG_6_18", "3",
                      "RegBL2, RegS, RegNS", "OFF", "Minsizerel", True, "", ""),
                     # AN521_ARMCLANG_1_RegBL2_RegS_RegNS_Debug_BL2_SMALL_PSOFF
-                    ("arm/mps2/an521", "ARMCLANG_6_13", "1",
+                    ("arm/mps2/an521", "ARMCLANG_6_18", "1",
                      "RegBL2, RegS, RegNS", "OFF", "Debug", True, "profile_small", "PSOFF"),
                     # AN521_GCC_1_RegBL2_RegS_RegNS_Debug_BL2
                     ("arm/mps2/an521", "GCC_10_3", "1",
@@ -254,7 +254,7 @@ config_pp_test = {"seed_params": {
                     ("arm/musca_b1", "GCC_10_3", "1",
                      "RegBL2, RegS, RegNS", "OFF", "Minsizerel", True, "", ""),
                     # MUSCA_S1_ARMCLANG_2_RegBL2_RegS_RegNS_Release_BL2
-                    ("arm/musca_s1", "ARMCLANG_6_13", "2",
+                    ("arm/musca_s1", "ARMCLANG_6_18", "2",
                      "RegBL2, RegS, RegNS", "OFF", "Release", True, "", ""),
                     # MUSCA_S1_GCC_1_RegBL2_RegS_RegNS_Debug_BL2
                     ("arm/musca_s1", "GCC_10_3", "1",
@@ -272,7 +272,7 @@ config_pp_test = {"seed_params": {
                     ("arm/rss/tc", "GCC_10_3", "2",
                      "RegS, RegNS", "OFF", "Release", True, "", "PSOFF"),
                     # stm32l562e_dk_ARMCLANG_1_RegS_RegNS_Release_BL2_CRYPTO_OFF
-                    ("stm/stm32l562e_dk", "ARMCLANG_6_13", "1",
+                    ("stm/stm32l562e_dk", "ARMCLANG_6_18", "1",
                      "RegS, RegNS", "OFF", "Release", True, "", "CRYPTO_OFF"),
                     # stm32l562e_dk_GCC_2_Release_BL2_CRYPTO_ON
                     ("stm/stm32l562e_dk", "GCC_10_3", "2",
@@ -284,7 +284,7 @@ config_pp_test = {"seed_params": {
                     ("stm/b_u585i_iot02a", "GCC_10_3", "1",
                      "RegS, RegNS", "OFF", "Release", True, "", ""),
                     # b_u585i_iot02a_ARMCLANG_2_RegS_RegNS_Release_BL2
-                    ("stm/b_u585i_iot02a", "ARMCLANG_6_13", "2",
+                    ("stm/b_u585i_iot02a", "ARMCLANG_6_18", "2",
                      "RegS, RegNS", "OFF", "Release", True, "", ""),
                     # psoc64_GCC_2_RegS_RegNS_Release
                     ("cypress/psoc64", "GCC_10_3", "2",
@@ -300,7 +300,7 @@ config_nightly_test = {"seed_params": {
                                      "arm/mps3/an524",
                                      "arm/musca_s1",
                                      "arm/musca_b1"],
-                "compiler":         ["GCC_10_3", "ARMCLANG_6_13"],
+                "compiler":         ["GCC_10_3", "ARMCLANG_6_18"],
                 "isolation_level":  ["1", "2", "3"],
                 "test_regression":  ["OFF", "RegBL2, RegS, RegNS"],
                 "test_psa_api":     ["OFF"],
@@ -320,7 +320,7 @@ config_release_test = {"seed_params": {
                                      "arm/mps3/an524",
                                      "arm/musca_b1",
                                      "arm/musca_s1"],
-                "compiler":         ["GCC_10_3", "ARMCLANG_6_13"],
+                "compiler":         ["GCC_10_3", "ARMCLANG_6_18"],
                 "isolation_level":  ["1", "2", "3"],
                 "test_regression":  ["OFF", "RegBL2, RegS, RegNS"],
                 "test_psa_api":     ["OFF"],
@@ -343,7 +343,7 @@ config_release_test = {"seed_params": {
 # Config groups for TF-M features
 config_profile_s = {"seed_params": {
                 "tfm_platform":     ["arm/mps2/an519", "arm/mps2/an521"],
-                "compiler":         ["GCC_10_3", "ARMCLANG_6_13"],
+                "compiler":         ["GCC_10_3", "ARMCLANG_6_18"],
                 "isolation_level":  ["1"],
                 "test_regression":  ["OFF", "RegBL2, RegS, RegNS"],
                 "test_psa_api":     ["OFF"],
@@ -363,7 +363,7 @@ config_profile_m = {"seed_params": {
                 "tfm_platform":     ["arm/mps2/an519",
                                      "arm/mps2/an521",
                                      "arm/musca_b1"],
-                "compiler":         ["GCC_10_3", "ARMCLANG_6_13"],
+                "compiler":         ["GCC_10_3", "ARMCLANG_6_18"],
                 "isolation_level":  ["2"],
                 "test_regression":  ["OFF", "RegBL2, RegS, RegNS"],
                 "test_psa_api":     ["OFF"],
@@ -378,7 +378,7 @@ config_profile_m = {"seed_params": {
 
 config_profile_m_arotless = {"seed_params": {
                 "tfm_platform":     ["arm/musca_b1"],
-                "compiler":         ["GCC_10_3", "ARMCLANG_6_13"],
+                "compiler":         ["GCC_10_3", "ARMCLANG_6_18"],
                 "isolation_level":  ["1"],
                 "test_regression":  ["OFF", "RegBL2, RegS, RegNS"],
                 "test_psa_api":     ["OFF"],
@@ -393,7 +393,7 @@ config_profile_m_arotless = {"seed_params": {
 
 config_profile_l = {"seed_params": {
                 "tfm_platform":     ["arm/mps2/an521"],
-                "compiler":         ["GCC_10_3", "ARMCLANG_6_13"],
+                "compiler":         ["GCC_10_3", "ARMCLANG_6_18"],
                 "isolation_level":  ["3"],
                 "test_regression":  ["OFF", "RegBL2, RegS, RegNS"],
                 "test_psa_api":     ["OFF"],
@@ -411,7 +411,7 @@ config_ipc_backend = {"seed_params": {
                                      "arm/mps2/an521",
                                      "arm/musca_s1",
                                      "arm/musca_b1"],
-                "compiler":         ["GCC_10_3", "ARMCLANG_6_13"],
+                "compiler":         ["GCC_10_3", "ARMCLANG_6_18"],
                 "isolation_level":  ["1"],
                 "test_regression":  ["OFF", "RegBL2, RegS, RegNS"],
                 "test_psa_api":     ["OFF"],
@@ -461,7 +461,7 @@ config_psa_api = {"seed_params": {
                 "tfm_platform":     ["arm/mps2/an521",
                                      "arm/musca_b1",
                                      "arm/musca_s1"],
-                "compiler":         ["GCC_10_3", "ARMCLANG_6_13"],
+                "compiler":         ["GCC_10_3", "ARMCLANG_6_18"],
                 "isolation_level":  ["1", "2", "3"],
                 "test_regression":  ["OFF"],
                 "test_psa_api":     ["IPC",
@@ -479,7 +479,7 @@ config_psa_api = {"seed_params": {
 
 config_nsce = {"seed_params": {
                "tfm_platform":      ["arm/mps2/an521"],
-                "compiler":         ["GCC_10_3", "ARMCLANG_6_13"],
+                "compiler":         ["GCC_10_3", "ARMCLANG_6_18"],
                 "isolation_level":  ["1", "2", "3"],
                 "test_regression":  ["RegBL2, RegS, RegNS"],
                 "test_psa_api":     ["OFF"],
@@ -494,7 +494,7 @@ config_nsce = {"seed_params": {
 
 config_mmio = {"seed_params": {
                "tfm_platform":      ["arm/mps2/an521"],
-                "compiler":         ["GCC_10_3", "ARMCLANG_6_13"],
+                "compiler":         ["GCC_10_3", "ARMCLANG_6_18"],
                 "isolation_level":  ["1"],
                 "test_regression":  ["RegBL2, RegS, RegNS"],
                 "test_psa_api":     ["OFF"],
@@ -653,7 +653,7 @@ config_cov_fp["seed_params"]["compiler"] = ["GCC_10_3"]
 # Config groups for platforms
 config_an519 = {"seed_params": {
                 "tfm_platform":     ["arm/mps2/an519"],
-                "compiler":         ["GCC_10_3", "ARMCLANG_6_13"],
+                "compiler":         ["GCC_10_3", "ARMCLANG_6_18"],
                 "isolation_level":  ["1", "2"],
                 "test_regression":  ["OFF", "RegBL2, RegS, RegNS"],
                 "test_psa_api":     ["OFF"],
@@ -668,7 +668,7 @@ config_an519 = {"seed_params": {
 
 config_an521 = {"seed_params": {
                 "tfm_platform":     ["arm/mps2/an521"],
-                "compiler":         ["GCC_10_3", "ARMCLANG_6_13"],
+                "compiler":         ["GCC_10_3", "ARMCLANG_6_18"],
                 "isolation_level":  ["1", "2", "3"],
                 "test_regression":  ["OFF", "RegBL2, RegS, RegNS"],
                 "test_psa_api":     ["OFF"],
@@ -683,7 +683,7 @@ config_an521 = {"seed_params": {
 
 config_an524 = {"seed_params": {
                 "tfm_platform":     ["arm/mps3/an524"],
-                "compiler":         ["GCC_10_3", "ARMCLANG_6_13"],
+                "compiler":         ["GCC_10_3", "ARMCLANG_6_18"],
                 "isolation_level":  ["1", "2"],
                 "test_regression":  ["OFF", "RegBL2, RegS, RegNS"],
                 "test_psa_api":     ["OFF"],
@@ -743,7 +743,7 @@ config_cs300_fvp = {"seed_params": {
 
 config_musca_b1 = {"seed_params": {
                 "tfm_platform":     ["arm/musca_b1"],
-                "compiler":         ["GCC_10_3", "ARMCLANG_6_13"],
+                "compiler":         ["GCC_10_3", "ARMCLANG_6_18"],
                 "isolation_level":  ["1", "2", "3"],
                 "test_regression":  ["OFF", "RegBL2, RegS, RegNS"],
                 "test_psa_api":     ["OFF"],
@@ -758,7 +758,7 @@ config_musca_b1 = {"seed_params": {
 
 config_musca_s1 = {"seed_params": {
                 "tfm_platform":     ["arm/musca_s1"],
-                "compiler":         ["GCC_10_3", "ARMCLANG_6_13"],
+                "compiler":         ["GCC_10_3", "ARMCLANG_6_18"],
                 "isolation_level":  ["1", "2"],
                 "test_regression":  ["OFF", "RegBL2, RegS, RegNS"],
                 "test_psa_api":     ["OFF"],
@@ -807,7 +807,7 @@ config_rss = {"seed_params": {
 
 config_psoc64 = {"seed_params": {
                 "tfm_platform":     ["cypress/psoc64"],
-                "compiler":         ["GCC_10_3", "ARMCLANG_6_13"],
+                "compiler":         ["GCC_10_3", "ARMCLANG_6_18"],
                 "isolation_level":  ["1", "2"],
                 "test_regression":  ["RegS, RegNS"],
                 "test_psa_api":     ["OFF"],
@@ -837,7 +837,7 @@ config_corstone1000 = {"seed_params": {
 
 config_stm32l562e_dk = {"seed_params": {
                 "tfm_platform":     ["stm/stm32l562e_dk"],
-                "compiler":         ["GCC_10_3", "ARMCLANG_6_13"],
+                "compiler":         ["GCC_10_3", "ARMCLANG_6_18"],
                 "isolation_level":  ["1", "2", "3"],
                 "test_regression":  ["OFF", "RegBL2, RegS, RegNS"],
                 "test_psa_api":     ["OFF"],
@@ -849,7 +849,7 @@ config_stm32l562e_dk = {"seed_params": {
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + [
                     # Oversize issue on config stm32l562e_dk_ARMCLANG_1_RegBL2_RegS_RegNS_Release_BL2
-                    ("stm/stm32l562e_dk", "ARMCLANG_6_13", "1",
+                    ("stm/stm32l562e_dk", "ARMCLANG_6_18", "1",
                      "RegBL2, RegS, RegNS", "OFF", "Release", True, "", "*"),
                     # all other tests are off when CRYPTO is ON
                     ("stm/stm32l562e_dk", "*", "*", "RegBL2, RegS, RegNS", "*",
@@ -862,7 +862,7 @@ config_stm32l562e_dk = {"seed_params": {
 
 config_b_u585i_iot02a = {"seed_params": {
                 "tfm_platform":     ["stm/b_u585i_iot02a"],
-                "compiler":         ["GCC_10_3", "ARMCLANG_6_13"],
+                "compiler":         ["GCC_10_3", "ARMCLANG_6_18"],
                 "isolation_level":  ["1", "2"],
                 "test_regression":  ["OFF", "RegS, RegNS"],
                 "test_psa_api":     ["OFF"],
@@ -982,7 +982,7 @@ config_m2354 = {"seed_params": {
 
 config_mem_footprint = {"seed_params": {
                "tfm_platform":      ["arm/mps2/an521"],
-                "compiler":         ["ARMCLANG_6_13"],
+                "compiler":         ["ARMCLANG_6_18"],
                 "isolation_level":  ["1"],
                 "test_regression":  ["OFF"],
                 "test_psa_api":     ["OFF"],
@@ -994,13 +994,13 @@ config_mem_footprint = {"seed_params": {
                 "common_params": _common_tfm_builder_cfg,
                 "valid": [
                     # AN521_ARMCLANG_1_Minsizerel_BL2_SMALL_PSOFF
-                    ("arm/mps2/an521", "ARMCLANG_6_13", "1",
+                    ("arm/mps2/an521", "ARMCLANG_6_18", "1",
                      "OFF", "OFF", "Minsizerel", True, "profile_small", "PSOFF"),
                     # AN521_ARMCLANG_2_Minsizerel_BL2_MEDIUM_PSOFF
-                    ("arm/mps2/an521", "ARMCLANG_6_13", "2",
+                    ("arm/mps2/an521", "ARMCLANG_6_18", "2",
                      "OFF", "OFF", "Minsizerel", True, "profile_medium", "PSOFF"),
                     # AN521_ARMCLANG_3_Minsizerel_BL2_LARGE_PSOFF
-                    ("arm/mps2/an521", "ARMCLANG_6_13", "3",
+                    ("arm/mps2/an521", "ARMCLANG_6_18", "3",
                      "OFF", "OFF", "Minsizerel", True, "profile_large", "PSOFF"),
                 ],
                 "invalid": _common_tfm_invalid_configs + []
@@ -1053,7 +1053,7 @@ config_debug_regr["seed_params"]["test_regression"] = ["RegBL2, RegS, RegNS"]
 
 config_debug_PSA_API = {"seed_params": {
                 "tfm_platform":     ["arm/mps2/an521"],
-                "compiler":         ["ARMCLANG_6_13"],
+                "compiler":         ["ARMCLANG_6_18"],
                 "isolation_level":  ["1"],
                 "test_regression":  ["OFF"],
                 "test_psa_api":     ["CRYPTO",
