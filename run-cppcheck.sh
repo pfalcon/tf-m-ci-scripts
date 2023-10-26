@@ -69,7 +69,7 @@ mypath=$(dirname $0)
 #The cmake_exported project file in json format
 cmake_commands=compile_commands.json
 
-. "$mypath/util_cmake.sh"
+. "$mypath/utils/util_cmake.sh"
 
 #Library file for cppcheck
 library_file="$(fix_win_path $(get_full_path $mypath))/cppcheck/arm-cortex-m.cfg"

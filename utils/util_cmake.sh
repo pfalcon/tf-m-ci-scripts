@@ -12,8 +12,8 @@
 ##
 ##This file can be "sourced" from other scripts to get access to variables and functions
 ##defined here.
-##Example \code{.sh}. <path-to-tfm-ci-repo>/util_cmake.sh\endcode
-##or \code{.sh}source <path-to-tfm-ci-repo>/util_cmake.sh\endcode
+##Example \code{.sh}. <path-to-tfm-ci-repo>/utils/util_cmake.sh\endcode
+##or \code{.sh}source <path-to-tfm-ci-repo>/utils/util_cmake.sh\endcode
 ##
 
 ##@fn fix_win_path(string path)

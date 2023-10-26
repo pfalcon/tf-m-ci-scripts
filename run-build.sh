@@ -13,8 +13,8 @@
 # Expected to have trusted-firmware-m cloned to same level as this git tree
 #
 
-. $(dirname $0)/util_cmake.sh
-. $(dirname $0)/util_git.sh
+. $(dirname $0)/utils/util_cmake.sh
+. $(dirname $0)/utils/util_git.sh
 
 # For dependency that differs from platforms, the versions need to be checkded
 # in each single build job.

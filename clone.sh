@@ -29,7 +29,7 @@
 
 set -ex
 
-. $(dirname $0)/util_git.sh
+. $(dirname $0)/utils/util_git.sh
 
 # Take into consideration non-CI runs where SHARE_FOLDER variable
 # may not be present
