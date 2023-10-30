@@ -31,6 +31,33 @@ set -ex
 
 . $(dirname $0)/utils/util_git.sh
 
+function clone_repo_to_share_folder() {
+    REPO_URL=$1
+    REPO_NAME=$2
+    REPO_REFSPEC=$3
+
+    echo "Repo: $REPO_URL $REPO_NAME $REPO_REFSPEC"
+
+    # In case repository is not defined, just skip it
+    if [ -z "${REPO_URL}" ]; then
+        echo "Repo ${REPO_NAME} not needed in this job. Skip download."
+        return 0
+    fi
+
+    if [ ! -d "${SHARE_FOLDER}/${REPO_NAME}" ]; then
+        git_clone $REPO_URL "${SHARE_FOLDER}/${REPO_NAME}"
+        git_checkout "${SHARE_FOLDER}/${REPO_NAME}" $REPO_REFSPEC
+    else
+        cd "${SHARE_FOLDER}/${REPO_NAME}"
+        echo -e "Share Folder ${REPO_NAME} $(git rev-parse --short HEAD)\n"
+        cd $OLDPWD
+    fi
+
+    # Copy repos into pwd dir (workspace in CI), so each job would work
+    # on its own workspace
+    cp -a -f "${SHARE_FOLDER}/${REPO_NAME}" "${WORKSPACE}/${REPO_NAME}"
+}
+
 # Take into consideration non-CI runs where SHARE_FOLDER variable
 # may not be present
 if [ -z "${SHARE_FOLDER}" ]; then
@@ -59,7 +86,7 @@ function parse_version() {
     echo "${VERSION}"
 }
 
-# Must projects
+# TF-M project
 if [ -n "${GERRIT_EVENT_HASH}" ]; then
     # If triggered by Gerrit, use its variables
     TFM_PROJECT="https://${GERRIT_HOST}/${GERRIT_PROJECT}"
@@ -69,31 +96,11 @@ fi
 TFM_REFSPEC="${GERRIT_REFSPEC:?}"
 TFM_NAME="trusted-firmware-m"
 
-# Array containing "<repo url>;"<repo name>;<refspec>" elements
-must_repos=(
-    "${TFM_PROJECT};${TFM_NAME};${TFM_REFSPEC}"
-)
-
-for repo in ${must_repos[@]}; do
-    # Parse the repo elements
-    REPO_URL="$(echo "${repo}" | awk -F ';' '{print $1}')"
-    REPO_NAME="$(echo "${repo}" | awk -F ';' '{print $2}')"
-    REPO_REFSPEC="$(echo "${repo}" | awk -F ';' '{print $3}')"
-    echo "Repo: $REPO_URL $REPO_NAME $REPO_REFSPEC"
-
-    if [ ! -d "${SHARE_FOLDER}/${REPO_NAME}" ]; then
-        git_clone $REPO_URL "${SHARE_FOLDER}/${REPO_NAME}"
-        git_checkout "${SHARE_FOLDER}/${REPO_NAME}" $REPO_REFSPEC
-    else
-        cd "${SHARE_FOLDER}/${REPO_NAME}"
-        echo -e "Share Folder ${REPO_NAME} $(git rev-parse --short HEAD)\n"
-        cd $OLDPWD
-    fi
-
-    # Copy repos into pwd dir (workspace in CI), so each job would work
-    # on its own workspace
-    cp -a -f "${SHARE_FOLDER}/${REPO_NAME}" "${WORKSPACE}/${REPO_NAME}"
-done
+clone_repo_to_share_folder "${TFM_PROJECT}" "${TFM_NAME}" "${TFM_REFSPEC}"
+if [ ! -d "${SHARE_FOLDER}/${TFM_NAME}" ]; then
+    echo "Fatal error: ${TFM_NAME} not downloaded!"
+    exit 1
+fi
 
 # Dependency projects
 TFM_TESTS_PROJECT="${TFM_TESTS_URL:-}"
@@ -145,23 +152,6 @@ for repo in ${dependency_repos[@]}; do
     REPO_URL="$(echo "${repo}" | awk -F ';' '{print $1}')"
     REPO_NAME="$(echo "${repo}" | awk -F ';' '{print $2}')"
     REPO_REFSPEC="$(echo "${repo}" | awk -F ';' '{print $3}')"
-    echo "Repo: $REPO_URL $REPO_NAME $REPO_REFSPEC"
 
-    # In case repository is not defined, just skip it
-    if [ -z "${REPO_URL}" ]; then
-        continue
-    fi
-
-    if [ ! -d "${SHARE_FOLDER}/${REPO_NAME}" ]; then
-        git_clone $REPO_URL "${SHARE_FOLDER}/${REPO_NAME}"
-        git_checkout "${SHARE_FOLDER}/${REPO_NAME}" $REPO_REFSPEC
-    else
-        cd "${SHARE_FOLDER}/${REPO_NAME}"
-        echo -e "Share Folder ${REPO_NAME} $(git rev-parse --short HEAD)\n"
-        cd $OLDPWD
-    fi
-
-    # Copy repos into pwd dir (workspace in CI), so each job would work
-    # on its own workspace
-    cp -a -f "${SHARE_FOLDER}/${REPO_NAME}" "${WORKSPACE}/${REPO_NAME}"
+    clone_repo_to_share_folder "${REPO_URL}" "${REPO_NAME}" "${REPO_REFSPEC}"
 done
