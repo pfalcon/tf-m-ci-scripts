@@ -69,14 +69,9 @@ fi
 TFM_REFSPEC="${GERRIT_REFSPEC:?}"
 TFM_NAME="trusted-firmware-m"
 
-SCRIPTS_PROJECT="${CI_SCRIPTS_REPO:?}"
-SCRIPTS_REFSPEC="${CI_SCRIPTS_BRANCH:?}"
-SCRIPTS_NAME="tf-m-ci-scripts"
-
 # Array containing "<repo url>;"<repo name>;<refspec>" elements
 must_repos=(
     "${TFM_PROJECT};${TFM_NAME};${TFM_REFSPEC}"
-    "${SCRIPTS_PROJECT};${SCRIPTS_NAME};${SCRIPTS_REFSPEC}"
 )
 
 for repo in ${must_repos[@]}; do
