@@ -88,7 +88,7 @@ _common_tfm_builder_cfg = {
     # Keys will append extra commands when matching target_platform
     "post_build": {"arm/corstone1000": ("dd conv=notrunc bs=1 if=%(ci_build_root_dir)s/spe/bin/bl1_1.bin of=%(ci_build_root_dir)s/spe/bin/bl1.bin seek=0;"
                                         "dd conv=notrunc bs=1 if=%(ci_build_root_dir)s/spe/bin/bl1_provisioning_bundle.bin of=%(ci_build_root_dir)s/spe/bin/bl1.bin seek=40960;"
-                                        "../platform/ext/target/arm/corstone1000/create-flash-image.sh %(ci_build_root_dir)s/spe/bin/ cs1000.bin;"),
+                                        "%(codebase_root_dir)s/platform/ext/target/arm/corstone1000/create-flash-image.sh %(ci_build_root_dir)s/spe/bin/ cs1000.bin;"),
                     "arm/musca_b1": ("srec_cat "
                                      "%(ci_build_root_dir)s/spe/bin/"
                                      "bl2.bin "
@@ -851,7 +851,7 @@ config_corstone1000 = {"seed_params": {
                 "cmake_build_type": ["Debug"],
                 "with_bl2":         [True],
                 "profile":          [""],
-                "extra_params":     ["CS1K_TEST, FVP", "CS1K_TEST, FPGA"]
+                "extra_params":     ["NSOFF, CS1K_TEST, FVP", "NSOFF, CS1K_TEST, FPGA"]
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + []

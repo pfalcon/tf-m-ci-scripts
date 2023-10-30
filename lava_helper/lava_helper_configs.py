@@ -149,8 +149,8 @@ fvp_corstone1000 = {
     "platforms": {"arm/corstone1000": ""},
     "data_bin_offset": "0x68000000",
     "binaries": {
-        "application": "bl1.bin",
-        "data": "cs1000.bin"
+        "application": "spe/bin/bl1.bin",
+        "data": "spe/bin/cs1000.bin"
     },
     "monitors": {
         'reg_tests': reg_tests_monitors if "FVP" in os.getenv('EXTRA_PARAMS') else [],
