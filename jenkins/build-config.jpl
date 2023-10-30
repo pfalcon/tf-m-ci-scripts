@@ -35,10 +35,18 @@ timestamps {
       }
       stage("Post") {
         archiveArtifacts 'ci_build/spe/bin/**'
-        archiveArtifacts 'ci_build/nspe/bin/**'
-        archiveArtifacts 'ci_build/nspe/*.bin'
         archiveArtifacts 'ci_build/spe/api_ns/bin/**'
         archiveArtifacts 'ci_build/spe/api_ns/interface/**'
+        try {
+          archiveArtifacts 'ci_build/nspe/bin/**'
+        } catch (Exception e) {
+          print("ci_build/nspe/bin not exists")
+        }
+        try {
+          archiveArtifacts 'ci_build/nspe/*.bin'
+        } catch (Exception e) {
+          print("ci_build/nspe/*.bin not exists")
+        }
         def upstreamProject = getUpstreamJob()[0].upstreamProject
         if (upstreamProject == "tf-m-build-and-test") {
           archiveArtifacts 'ci_build/spe/build-spe/generated/**'

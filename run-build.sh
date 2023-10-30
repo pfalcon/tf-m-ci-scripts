@@ -119,5 +119,9 @@ if [ "$spe_cmake_config_cmd" != 0 ] ; then
     rm -rf ci_build/*
     eval $spe_cmake_config_cmd
 fi
+eval $spe_cmake_build_cmd
 
-eval "$spe_cmake_build_cmd; $nspe_cmake_config_cmd; $nspe_cmake_build_cmd; $post_build_cmd"
+eval $nspe_cmake_config_cmd
+eval $nspe_cmake_build_cmd
+
+eval $post_build_cmd

@@ -418,6 +418,11 @@ class TFM_Build_Manager(structuredTask):
         build_cfg["nspe_cmake_build"] %= overwrite_params
         build_cfg["post_build"] %= overwrite_params
 
+        # Disable NSPE CMake commands when NS is OFF
+        if "NSOFF" in i.extra_params:
+            build_cfg["nspe_config_template"] = ""
+            build_cfg["nspe_cmake_build"] = ""
+
         return build_cfg
 
     def post_eval(self):
