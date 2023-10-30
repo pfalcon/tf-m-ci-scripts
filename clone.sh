@@ -115,10 +115,6 @@ MCUBOOT_PROJECT="${MCUBOOT_URL:-}"
 MCUBOOT_REFSPEC="${MCUBOOT_REFSPEC:-"$(parse_version config/config_base.cmake MCUBOOT_VERSION)"}"
 MCUBOOT_NAME="mcuboot"
 
-PSA_ARCH_TESTS_PROJECT="${PSA_ARCH_TESTS_URL:-}"
-PSA_ARCH_TESTS_REFSPEC="${PSA_ARCH_TESTS_VERSION:-"$(parse_version config/config_base.cmake PSA_ARCH_TESTS_VERSION)"}"
-PSA_ARCH_TESTS_NAME="psa-arch-tests"
-
 QCBOR_PROJECT="${QCBOR_URL:-}"
 QCBOR_REFSPEC="${QCBOR_VERSION:-"$(parse_version lib/ext/qcbor/CMakeLists.txt QCBOR_VERSION)"}"
 QCBOR_NAME="qcbor"
@@ -140,7 +136,6 @@ dependency_repos=(
     "${TFM_TESTS_PROJECT};${TFM_TESTS_NAME};${TFM_TESTS_REFSPEC}"
     "${MBEDTLS_PROJECT};${MBEDTLS_NAME};${MBEDTLS_REFSPEC}"
     "${MCUBOOT_PROJECT};${MCUBOOT_NAME};${MCUBOOT_REFSPEC}"
-    "${PSA_ARCH_TESTS_PROJECT};${PSA_ARCH_TESTS_NAME};${PSA_ARCH_TESTS_REFSPEC}"
     "${QCBOR_PROJECT};${QCBOR_NAME};${QCBOR_REFSPEC}"
     "${TFM_EXTRAS_PROJECT};${TFM_EXTRAS_NAME};${TFM_EXTRAS_REFSPEC}"
     "${TFM_TOOLS_PROJECT};${TFM_TOOLS_NAME};${TFM_TOOLS_REFSPEC}"
@@ -155,3 +150,9 @@ for repo in ${dependency_repos[@]}; do
 
     clone_repo_to_share_folder "${REPO_URL}" "${REPO_NAME}" "${REPO_REFSPEC}"
 done
+
+PSA_ARCH_TESTS_PROJECT="${PSA_ARCH_TESTS_URL:-}"
+PSA_ARCH_TESTS_REFSPEC="${PSA_ARCH_TESTS_VERSION:-"$(parse_version ../tf-m-tests/tests_psa_arch/fetch_repo/CMakeLists.txt PSA_ARCH_TESTS_VERSION)"}"
+PSA_ARCH_TESTS_NAME="psa-arch-tests"
+
+clone_repo_to_share_folder "${PSA_ARCH_TESTS_PROJECT}" "${PSA_ARCH_TESTS_NAME}" "${PSA_ARCH_TESTS_REFSPEC}"
