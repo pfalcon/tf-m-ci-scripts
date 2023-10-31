@@ -266,6 +266,12 @@ config_pp_test = {"seed_params": {
                     # AN521_GCC_1_RegBL2_RegS_RegNS_Debug_BL2
                     ("arm/mps2/an521", "GCC_10_3", "1",
                      "RegBL2, RegS, RegNS", "OFF", "Debug", True, "", ""),
+                    # AN521_GCC_1_FF_Release_BL2
+                    ("arm/mps2/an521", "GCC_10_3", "1",
+                     "OFF", "IPC", "Release", True, "", ""),
+                    # AN521_ARMCLANG_2_STORAGE_Debug_BL2
+                    ("arm/mps2/an521", "ARMCLANG_6_18", "2",
+                     "OFF", "STORAGE", "Debug", True, "", ""),
                     # CS300_FVP_GNUARM_2_RegBL2_RegS_RegNS_Debug_BL2
                     ("arm/mps3/corstone300/fvp", "GCC_10_3", "2",
                      "RegBL2, RegS, RegNS", "OFF", "Debug", True, "", ""),
