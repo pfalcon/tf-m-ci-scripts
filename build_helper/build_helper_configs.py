@@ -278,6 +278,9 @@ config_pp_test = {"seed_params": {
                     # CS300_FVP_GNUARM_2_RegBL2_RegS_RegNS_Release_BL2
                     ("arm/mps3/corstone300/fvp", "GCC_10_3", "2",
                      "RegBL2, RegS, RegNS", "OFF", "Release", True, "", ""),
+                    # corstone1000_GCC_2_RegS_Debug_BL2_NSOFF_CS1K_TEST_FVP
+                    ("arm/corstone1000", "GCC_10_3", "2",
+                     "RegS", "OFF", "Debug", True, "", "NSOFF, CS1K_TEST, FVP"),
                     # MUSCA_B1_GCC_1_RegBL2_RegS_RegNS_Minsizerel_BL2
                     ("arm/musca_b1", "GCC_10_3", "1",
                      "RegBL2, RegS, RegNS", "OFF", "Minsizerel", True, "", ""),
@@ -848,7 +851,7 @@ config_psoc64 = {"seed_params": {
 config_corstone1000 = {"seed_params": {
                 "tfm_platform":     ["arm/corstone1000"],
                 "compiler":         ["GCC_10_3"],
-                "isolation_level":  ["1"],
+                "isolation_level":  ["1", "2"],
                 "test_regression":  ["RegS"],
                 "test_psa_api":     ["OFF"],
                 "cmake_build_type": ["Debug"],
@@ -1095,9 +1098,8 @@ config_debug_PSA_API = {"seed_params": {
                 }
 
 _builtin_configs = {
-                    # per-patch test groups
+                    # per-patch test group
                     "pp_test": config_pp_test,
-                    "pp_corstone1000": config_corstone1000,
 
                     # nightly test groups
                     "nightly_test": config_nightly_test,
