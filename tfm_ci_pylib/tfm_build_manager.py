@@ -72,12 +72,18 @@ class TFM_Build_Manager(structuredTask):
 
         super(TFM_Build_Manager, self).__init__(name="TFM_Build_Manager")
 
-    def choose_toolchain(self, compiler):
+    def choose_toolchain(self, compiler, s_build):
         toolchain = ""
-        if "GCC"in compiler:
-            toolchain = "toolchain_GNUARM.cmake"
-        elif "ARMCLANG" in compiler:
-            toolchain = "toolchain_ARMCLANG.cmake"
+        if s_build:
+            if "GCC"in compiler:
+                toolchain = "toolchain_GNUARM.cmake"
+            elif "ARMCLANG" in compiler:
+                toolchain = "toolchain_ARMCLANG.cmake"
+        else:
+            if "GCC"in compiler:
+                toolchain = "toolchain_ns_GNUARM.cmake"
+            elif "ARMCLANG" in compiler:
+                toolchain = "toolchain_ns_ARMCLANG.cmake"
 
         return toolchain
 
@@ -380,7 +386,8 @@ class TFM_Build_Manager(structuredTask):
                             "tfm_tests_root_dir":  build_cfg["codebase_root_dir"] + "/../tf-m-tests",
                             "ci_build_root_dir":  build_cfg["codebase_root_dir"] + "/../ci_build",
                             "tfm_platform": i.tfm_platform,
-                            "compiler": self.choose_toolchain(i.compiler),
+                            "s_compiler": self.choose_toolchain(i.compiler, s_build = True),
+                            "ns_compiler": self.choose_toolchain(i.compiler, s_build = False),
                             "isolation_level": i.isolation_level,
                             "test_regression": self.map_params(i.test_regression, mapRegTest),
                             "test_psa_api": i.test_psa_api,

@@ -49,7 +49,7 @@ _common_tfm_builder_cfg = {
         "-S %(tfm_tests_root_dir)s/%(test_root_dir)s/spe " + \
         "-B %(ci_build_root_dir)s/spe " + \
         "-DTFM_PLATFORM=%(tfm_platform)s " + \
-        "-DTFM_TOOLCHAIN_FILE=%(codebase_root_dir)s/%(compiler)s " + \
+        "-DTFM_TOOLCHAIN_FILE=%(codebase_root_dir)s/%(s_compiler)s " + \
         "-DTFM_ISOLATION_LEVEL=%(isolation_level)s " + \
         "%(test_regression)s " + \
         "-DCMAKE_BUILD_TYPE=%(cmake_build_type)s " + \
@@ -68,6 +68,7 @@ _common_tfm_builder_cfg = {
         "-S %(tfm_tests_root_dir)s/%(test_root_dir)s " + \
         "-B %(ci_build_root_dir)s/nspe " + \
         "-DCONFIG_SPE_PATH=%(ci_build_root_dir)s/spe/api_ns " + \
+        "-DTFM_TOOLCHAIN_FILE=%(ci_build_root_dir)s/spe/api_ns/cmake/%(ns_compiler)s " + \
         "%(extra_params)s " + \
         "-DQCBOR_PATH=%(codebase_root_dir)s/../qcbor ",
 
