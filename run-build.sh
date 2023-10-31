@@ -93,10 +93,10 @@ if [ "$cnt" != "0" ] ; then
     cd -
 fi
 
-cnt=$(ls trusted-firmware-m/lib/ext/psa_arch_tests/*.patch 2> /dev/null | wc -l)
+cnt=$(ls tf-m-tests/tests_psa_arch/fetch_repo/*.patch 2> /dev/null | wc -l)
 if [ "$cnt" != "0" ] ; then
     cd psa-arch-tests
-    git apply ../trusted-firmware-m/lib/ext/psa_arch_tests/*.patch
+    git apply ../tf-m-tests/tests_psa_arch/fetch_repo/*.patch
     cd -
 fi
 
