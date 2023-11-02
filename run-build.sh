@@ -52,6 +52,8 @@ nspe_cmake_config_cmd=$(python3 tf-m-ci-scripts/configs.py -b nspe_cmake_config 
 nspe_cmake_build_cmd=$(python3 tf-m-ci-scripts/configs.py -b nspe_cmake_build -j ${BUILD_JOBS:-2} $CONFIG_NAME)
 post_build_cmd=$(python3 tf-m-ci-scripts/configs.py -b post_build $CONFIG_NAME)
 
+cmake_config_cmd="$cmake_config_cmd -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON"
+
 set +e
 echo "output current build environment"
 cat /etc/issue
