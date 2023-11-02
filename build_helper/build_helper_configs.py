@@ -343,6 +343,30 @@ config_pp_test = {"seed_params": {
                 "invalid": _common_tfm_invalid_configs + []
                 }
 
+config_pp_test_debug = {"seed_params": {
+                # AN519_ARMCLANG_IPC_1_RegBL2_RegS_RegNS_Debug_BL2
+                "tfm_platform":     ["arm/mps2/an519"],
+                "compiler":         ["ARMCLANG_6_21"],
+                "isolation_level":  ["1"],
+                "test_regression":  ["RegBL2, RegS, RegNS"],
+                "test_psa_api":     ["OFF"],
+                "cmake_build_type": ["Debug"],
+                "with_bl2":         [True],
+                "profile":          [""],
+                "extra_params":     [""]
+                },
+                "common_params": _common_tfm_builder_cfg,
+                "valid": [
+                    # AN519_ARMCLANG_2_RegBL2_RegS_RegNS_Release_BL2
+                    ("arm/mps2/an519", "ARMCLANG_6_21", "2",
+                     "RegBL2, RegS, RegNS", "OFF", "Release", True, "",  ""),
+                    # AN521_ARMCLANG_1_RegBL2_RegS_RegNS_Debug_BL2_SMALL_PSOFF
+                    ("arm/mps2/an521", "ARMCLANG_6_21", "1",
+                     "RegBL2, RegS, RegNS", "OFF", "Debug", True, "profile_small", "PSOFF"),
+                ],
+                "invalid": _common_tfm_invalid_configs + []
+                }
+
 # Config group for nightly job
 config_nightly_test = {"seed_params": {
                "tfm_platform":      ["arm/mps2/an519",
@@ -1167,6 +1191,7 @@ config_debug_PSA_API = {"seed_params": {
 _builtin_configs = {
                     # per-patch test group
                     "pp_test": config_pp_test,
+                    "pp_test_debug": config_pp_test_debug,
 
                     # nightly test groups
                     "nightly_test": config_nightly_test,
