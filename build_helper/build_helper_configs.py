@@ -46,7 +46,7 @@ _common_tfm_builder_cfg = {
     # provided in the seed dictionary.
 
     "spe_config_template": "cmake -G Ninja " + \
-        "-S %(tfm_tests_root_dir)s/%(test_root_dir)s/spe " + \
+        "-S %(spe_root_dir)s " + \
         "-B %(ci_build_root_dir)s/spe " + \
         "-DTFM_PLATFORM=%(tfm_platform)s " + \
         "-DTFM_TOOLCHAIN_FILE=%(codebase_root_dir)s/%(s_compiler)s " + \
@@ -65,7 +65,7 @@ _common_tfm_builder_cfg = {
         "-DTFM_EXTRAS_REPO_PATH=%(codebase_root_dir)s/../tf-m-extras ",
 
     "nspe_config_template": "cmake -G Ninja " + \
-        "-S %(tfm_tests_root_dir)s/%(test_root_dir)s " + \
+        "-S %(nspe_root_dir)s " + \
         "-B %(ci_build_root_dir)s/nspe " + \
         "-DCONFIG_SPE_PATH=%(ci_build_root_dir)s/spe/api_ns " + \
         "-DTFM_TOOLCHAIN_FILE=%(ci_build_root_dir)s/spe/api_ns/cmake/%(ns_compiler)s " + \

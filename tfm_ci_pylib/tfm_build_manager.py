@@ -383,7 +383,8 @@ class TFM_Build_Manager(structuredTask):
 
         # Overwrite parameters of build configs
         overwrite_params = {"codebase_root_dir":   build_cfg["codebase_root_dir"],
-                            "tfm_tests_root_dir":  build_cfg["codebase_root_dir"] + "/../tf-m-tests",
+                            "spe_root_dir":  build_cfg["codebase_root_dir"] + "/../tf-m-tests/tests_reg/spe",
+                            "nspe_root_dir":  build_cfg["codebase_root_dir"] + "/../tf-m-tests/tests_reg",
                             "ci_build_root_dir":  build_cfg["codebase_root_dir"] + "/../ci_build",
                             "tfm_platform": i.tfm_platform,
                             "s_compiler": self.choose_toolchain(i.compiler, s_build = True),
@@ -407,9 +408,11 @@ class TFM_Build_Manager(structuredTask):
 
         # Test root dir
         if i.test_psa_api != "OFF":
-            overwrite_params["test_root_dir"] = "tests_psa_arch"
-        else:
-            overwrite_params["test_root_dir"] = "tests_reg"
+            overwrite_params["spe_root_dir"] = build_cfg["codebase_root_dir"] + "/../tf-m-tests/tests_psa_arch/spe"
+            overwrite_params["nspe_root_dir"] = build_cfg["codebase_root_dir"] + "/../tf-m-tests/tests_psa_arch"
+        elif "PROF" in i.extra_params:
+            overwrite_params["spe_root_dir"] = build_cfg["codebase_root_dir"]
+            overwrite_params["nspe_root_dir"] = build_cfg["codebase_root_dir"] + "/../tf-m-tools/profiling/profiling_cases/tfm_profiling"
 
         # Overwrite commands for building TF-M image
         build_cfg["spe_config_template"] %= overwrite_params

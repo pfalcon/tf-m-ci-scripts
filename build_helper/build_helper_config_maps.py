@@ -96,7 +96,7 @@ mapExtraParams = {
     "TEST_CBOR"    : "-DTEST_NS_QCBOR=ON ",
 
     # Profiling test
-    "PROF"         : "-DCONFIG_TFM_ENALBE_PROFILING=ON -DTFM_TOOLS_PATH=%(codebase_root_dir)s/../tf-m-tools ",
+    "PROF"         : ("-DTFM_EXTRA_CONFIG_PATH=%(codebase_root_dir)s/../tf-m-tools/profiling/profiling_cases/prof_psa_client_api/partitions/config_spe.cmake "),
 
     # tf-m-extras example support
     "EXAMPLE_VAD"             : ("-DNS_EVALUATION_APP_PATH=%(codebase_root_dir)s/../tf-m-extras/examples/vad_an552/ns_side "

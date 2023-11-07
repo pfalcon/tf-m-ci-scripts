@@ -44,7 +44,7 @@ def get_file_size(filename):
     '''
     This function uses fromelf of ARMCLANG to get the sizes of a file in the build binary directory of TF-M
     '''
-    f_path = os.path.join(os.getenv('WORKSPACE'), 'trusted-firmware-m', 'build', 'bin', filename)
+    f_path = os.path.join(os.getenv('WORKSPACE'), 'ci_build', 'spe', 'bin', filename)
     if os.path.exists(f_path) :
         data_fromelf = utils.fromelf(f_path)
         print(data_fromelf[1])  # Output of fromelf
