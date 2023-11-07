@@ -144,7 +144,7 @@ def send_squad(user_args, job_dir, config_name):
 def main(user_args):
     if user_args.generate_memory:
         # Export ARMClang v6.13 to ENV PATH
-        os.environ['PATH'] += os.pathsep + os.getenv('ARMCLANG_6_18_PATH')
+        os.environ['PATH'] += os.pathsep + os.getenv('ARMCLANG_6_20_PATH')
         if os.getenv('CONFIG_NAME') in mem_configs.keys():
             print('Configuration ' + os.getenv('CONFIG_NAME') + ' is a reference')
 
