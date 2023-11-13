@@ -110,13 +110,13 @@ cd ci_build
 
 set +e
 eval $spe_cmake_config_cmd
-cmake_cfg_error=$?
+declare -i cmake_cfg_error=$?
 set -e
 
 check_dependency_version
 
-if [ "$spe_cmake_config_cmd" != 0 ] ; then
-    rm -rf ci_build/*
+if [ $cmake_cfg_error != 0 ] ; then
+    rm -rf ./*
     eval $spe_cmake_config_cmd
 fi
 eval $spe_cmake_build_cmd
