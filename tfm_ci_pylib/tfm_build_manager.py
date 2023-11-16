@@ -399,6 +399,10 @@ class TFM_Build_Manager(structuredTask):
         # these also need to be substituted
         overwrite_params["extra_params"] = self.map_params(i.extra_params, mapExtraParams) % overwrite_params
 
+        # Print more cmake command details to debug issue on Profile large
+        if i.profile == "profile_large":
+            overwrite_params["extra_params"] += " -DCMAKE_VERBOSE_MAKEFILE=ON"
+
         if i.test_psa_api == "IPC":
             overwrite_params["test_psa_api"] += " -DINCLUDE_PANIC_TESTS=1"
         if i.test_psa_api == "CRYPTO" and "musca" in i.tfm_platform:
