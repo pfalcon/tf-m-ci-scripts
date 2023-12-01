@@ -34,7 +34,7 @@ timestamps {
         // Activate UBL license for ArmClang.
         if (env.CONFIG_NAME.contains("ARMCLANG")) {
           withCredentials([string(credentialsId: 'ARMCLANG_UBL_CODE', variable: 'ARMCLANG_UBL_CODE')]) {
-            sh(script: 'varname=${COMPILER}_PATH; eval COMP_PATH=\\$$varname; ${COMP_PATH}/armlm activate --code ${ARMCLANG_UBL_CODE}; ${COMP_PATH}/armlm inspect')
+            sh "tf-m-ci-scripts/jenkins/armclang-ubl.sh"
           }
         }
 
