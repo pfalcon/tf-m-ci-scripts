@@ -51,14 +51,14 @@ def coverage_reports(jobs, user_args):
 
             def dl_artifact(fname):
                 lava.fetch_file(
-                    metadata["build_job_url"] + "artifact/ci_build/spe/bin/" + fname,
-                    os.path.join(job_dir, fname)
+                    metadata["build_job_url"] + "artifact/ci_build/" + fname,
+                    os.path.join(job_dir, os.path.basename(fname))
                 )
 
             _log.info("Producing coverage report for job %d", job_id)
-            dl_artifact("bl2.axf")
-            dl_artifact("tfm_s.axf")
-            dl_artifact("tfm_ns.axf")
+            dl_artifact("spe/bin/bl2.axf")
+            dl_artifact("spe/bin/tfm_s.axf")
+            dl_artifact("nspe/bin/tfm_ns.axf")
             run("python3 $SHARE_FOLDER/qa-tools/coverage-tool/coverage-reporting/intermediate_layer.py --config-json $SHARE_FOLDER/tf-m-ci-scripts/lava_helper/trace2covjson.json --local-workspace $SHARE_FOLDER", cwd=job_dir)
             run("python3 $SHARE_FOLDER/qa-tools/coverage-tool/coverage-reporting/generate_info_file.py --workspace $SHARE_FOLDER --json covjson.json", cwd=job_dir)
             # Remove sources, coverage of which we're not interested in (e.g.
