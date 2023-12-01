@@ -12,5 +12,10 @@ set -ex
 varname=${COMPILER}_PATH
 eval COMP_PATH=\$$varname
 
-${COMP_PATH}/armlm activate --code ${ARMCLANG_UBL_CODE}
+if ! ${COMP_PATH}/armlm activate --code ${ARMCLANG_UBL_CODE}; then
+    ls -l ~/.armlm/logs/*.log
+    cat ~/.armlm/logs/*.log
+    exit 1
+fi
+
 ${COMP_PATH}/armlm inspect
