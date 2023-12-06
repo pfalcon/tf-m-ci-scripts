@@ -75,14 +75,21 @@ timestamps {
       def device_type = filterTestDevice()
 
       withCredentials([usernamePassword(credentialsId: env.LAVA_CREDENTIALS, passwordVariable: 'LAVA_TOKEN', usernameVariable: 'LAVA_USER')]) {
-        print("Generating LAVA jobs...")
-        try {
-          submitJobs(device_type)
-        } catch (Exception ex) {
-          print("LAVA-Submit failed! Exception: ${ex}")
-          print("Try to submit again...")
-          submitJobs(device_type)
-          currentBuild.setDescription(currentBuild.getDescription() + " Submitted twice!")
+        print("Submitting LAVA jobs...")
+        def success = false
+        for (i = 0; i < 5; i++) {
+          try {
+            submitJobs(device_type)
+            success = true
+            break
+          } catch (Exception ex) {
+            print("LAVA-Submit failed! Exception: ${ex}")
+            print("Try to submit again...")
+            sleep(i * 3000)
+          }
+        }
+        if (!success) {
+          throw new Exception("LAVA submission failed")
         }
       }
     }
