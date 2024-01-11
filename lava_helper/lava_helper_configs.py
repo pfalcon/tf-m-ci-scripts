@@ -333,7 +333,7 @@ lava_gen_config_map_bl2 = {
     "fvp_corstone1000": fvp_corstone1000,
     "qemu_mps2_bl2": qemu_mps2_bl2,
     "musca_b1": musca_b1_bl2,
-    "stm32l562e_dk": stm32l562e_dk,
+# remove this platform trmporary to enable progress   "stm32l562e_dk": stm32l562e_dk,
     "b_u585i_iot02a": b_u585i_iot02a,
 }
 
