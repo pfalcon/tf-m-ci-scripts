@@ -18,7 +18,7 @@ for cfg in $(python3 ./tf-m-ci-scripts/configs.py -g "$FILTER_GROUP"); do
     (cd psa-arch-tests; git checkout .; git clean -fq)
     (cd trusted-firmware-m; git checkout .; git clean -fq)
     eclair_tfm_set_toolchain_path
-    detachLicense 3000
+    detachLicense 4000
     tf-m-ci-scripts/run-build.sh
     cnt=$((cnt + 1))
 done
