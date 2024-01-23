@@ -312,6 +312,9 @@ config_pp_test = {"seed_params": {
                     # RSE_TC_GCC_2_Release_BL2_PSOFF
                     ("arm/rse/tc", "GCC_10_3", "2",
                      "RegS, RegNS", "OFF", "Release", True, "", "PSOFF"),
+                    # RSE_RDFremont_GCC_2_Release_BL2_NSOFF_PSOFF_CFG0
+                    ("arm/rse/rdfremont", "GCC_10_3", "2",
+                     "OFF", "OFF", "Release", True, "", "NSOFF, PSOFF, CFG0"),
                     # stm32l562e_dk_ARMCLANG_1_RegS_RegNS_Release_BL2_CRYPTO_OFF
                     ("stm/stm32l562e_dk", "ARMCLANG_6_21", "1",
                      "RegS, RegNS", "OFF", "Release", True, "", "CRYPTO_OFF"),
@@ -852,6 +855,21 @@ config_rse = {"seed_params": {
                 ]
                 }
 
+config_rse_rdfremont = {"seed_params": {
+                "tfm_platform":     ["arm/rse/rdfremont"],
+                "compiler":         ["GCC_10_3"],
+                "isolation_level":  ["1", "2"],
+                "test_regression":  ["OFF"],
+                "test_psa_api":     ["OFF"],
+                "cmake_build_type": ["Debug", "Release"],
+                "with_bl2":         [True],
+                "profile":          [""],
+                "extra_params":     ["NSOFF, PSOFF, CFG0"]
+                },
+                "common_params": _common_tfm_builder_cfg,
+                "invalid": _common_tfm_invalid_configs + []
+                }
+
 config_psoc64 = {"seed_params": {
                 "tfm_platform":     ["cypress/psoc64"],
                 "compiler":         ["GCC_10_3", "ARMCLANG_6_21"],
@@ -1153,6 +1171,7 @@ _builtin_configs = {
                     "nightly_corstone310": config_corstone310,
                     "nightly_corstone1000": config_corstone1000,
                     "nightly_rse": config_rse,
+                    "nightly_rse_rdfremont": config_rse_rdfremont,
                     "nightly_psoc64": config_psoc64,
 # remove a broken platfrom temporary "nightly_stm32l562e_dk": config_stm32l562e_dk,
                     "nightly_b_u585i_iot02a": config_b_u585i_iot02a,
@@ -1176,6 +1195,7 @@ _builtin_configs = {
                     "release_cs300_fvp": config_cs300_fvp,
                     "release_corstone310": config_corstone310,
                     "release_rse": config_rse,
+                    "release_rse_rdfremont": config_rse_rdfremont,
                     "release_psoc64": config_psoc64,
 # remove a broken platfrom temporary "release_stm32l562e_dk": config_stm32l562e_dk,
                     "release_b_u585i_iot02a": config_b_u585i_iot02a,
@@ -1206,6 +1226,7 @@ _builtin_configs = {
                     "musca_s1": config_musca_s1,
                     "corstone310": config_corstone310,
                     "rse": config_rse,
+                    "rse_rdfremont": config_rse_rdfremont,
                     "cypress_psoc64": config_psoc64,
                     "corstone1000": config_corstone1000,
 # remove a broken platfrom temporary "stm_stm32l562e_dk": config_stm32l562e_dk,
