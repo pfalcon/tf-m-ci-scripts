@@ -1123,7 +1123,7 @@ _builtin_configs = {
                     "nightly_corstone1000": config_corstone1000,
                     "nightly_rss": config_rss,
                     "nightly_psoc64": config_psoc64,
-# remove a broken platfrom temporary "nightly_stm32l562e_dk": config_stm32l562e_dk,
+                    "nightly_stm32l562e_dk": config_stm32l562e_dk,
                     "nightly_b_u585i_iot02a": config_b_u585i_iot02a,
                     "nightly_lpcxpresso55s69": config_lpcxpresso55s69,
 
@@ -1145,7 +1145,7 @@ _builtin_configs = {
                     "release_corstone310": config_corstone310,
                     "release_rss": config_rss,
                     "release_psoc64": config_psoc64,
-# remove a broken platfrom temporary "release_stm32l562e_dk": config_stm32l562e_dk,
+                    "release_stm32l562e_dk": config_stm32l562e_dk,
                     "release_b_u585i_iot02a": config_b_u585i_iot02a,
                     "release_lpcxpresso55s69": config_lpcxpresso55s69,
 
@@ -1175,7 +1175,7 @@ _builtin_configs = {
                     "rss": config_rss,
                     "cypress_psoc64": config_psoc64,
                     "corstone1000": config_corstone1000,
-# remove a broken platfrom temporary "stm_stm32l562e_dk": config_stm32l562e_dk,
+                    "stm_stm32l562e_dk": config_stm32l562e_dk,
                     "stm_b_u585i_iot02a": config_b_u585i_iot02a,
                     "stm_nucleo_l552ze_q": config_nucleo_l552ze_q,
                     "nxp_lpcxpresso55s69": config_lpcxpresso55s69,
