@@ -285,6 +285,24 @@ b_u585i_iot02a = {
     }
 }
 
+# STM32H5 STM32H573I-DK
+stm32h573i_dk = {
+    "templ": "stm32h573i_dk.jinja2",
+    "job_name": "stm32h573i_dk",
+    "device_type": "stm32h573i-dk",
+    "job_timeout": 5,
+    "action_timeout": 3,
+    "monitor_timeout": 3,
+    "poweroff_timeout": 2,
+    "platforms": {"stm/stm32h573i_dk": ""},
+    "binaries": {
+        "tarball": "spe/api_ns/bin/stm32h573i_dk-tfm.tar.bz2",
+    },
+    "monitors": {
+        'reg_tests': reg_tests_monitors,
+    }
+}
+
 # LPCxpresso55S69
 lpcxpresso55s69 = {
     "templ": "lpcxpresso55s69.jinja2",
@@ -335,6 +353,7 @@ lava_gen_config_map_bl2 = {
     "musca_b1": musca_b1_bl2,
     "stm32l562e_dk": stm32l562e_dk,
     "b_u585i_iot02a": b_u585i_iot02a,
+    "stm32h573i_dk": stm32h573i_dk
 }
 
 # Configs without bl2

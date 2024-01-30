@@ -131,7 +131,17 @@ _common_tfm_builder_cfg = {
                                           "bin/tfm_s_signed.bin "
                                           "image_signing/scripts/tfm_ns_signed.bin ;"
                                           "popd"),
-                  "nxp/lpcxpresso55s69": ("echo 'LPCXpresso55S69 board post process\n';"
+                   "stm/stm32h573i_dk": ("echo 'STM32H573I-DK board post process';"
+                                          "%(ci_build_root_dir)s/spe/api_ns/postbuild.sh;"
+                                          "pushd %(ci_build_root_dir)s/spe/api_ns;"
+                                          "mkdir -p image_signing/scripts ;"
+                                          "cp %(ci_build_root_dir)s/nspe/bin/tfm_ns_signed.bin image_signing/scripts ;"
+                                          "tar jcf ./bin/stm32h573i_dk-tfm.tar.bz2 regression.sh TFM_UPDATE.sh "
+                                          "bin/bl2.bin "
+                                          "bin/tfm_s_signed.bin "
+                                          "image_signing/scripts/tfm_ns_signed.bin ;"
+                                          "popd"),
+                   "nxp/lpcxpresso55s69": ("echo 'LPCXpresso55S69 board post process\n';"
                                             "if [ -f \"%(ci_build_root_dir)s/spe/bin/bl2.hex\" ]; then FLASH_FILE='flash_bl2_JLink.py'; else FLASH_FILE='flash_JLink.py'; fi;"
                                             "mkdir -p %(codebase_root_dir)s/build/bin ;"
                                             # Workaround for flash_JLink.py
@@ -316,6 +326,12 @@ config_pp_test = {"seed_params": {
                      "RegS, RegNS", "OFF", "Release", True, "", ""),
                     # b_u585i_iot02a_ARMCLANG_2_RegS_RegNS_Release_BL2
                     ("stm/b_u585i_iot02a", "ARMCLANG_6_21", "2",
+                     "RegS, RegNS", "OFF", "Release", True, "", ""),
+                    # stm32h573i_dk_GCC_1_RegS_RegNS_Release_BL2
+                    ("stm/stm32h573i_dk", "GCC_10_3", "1",
+                     "RegS, RegNS", "OFF", "Release", True, "", ""),
+                    # stm32h573i_dk_ARMCLANG_2_RegS_RegNS_Release_BL2
+                    ("stm/stm32h573i_dk", "ARMCLANG_6_21", "2",
                      "RegS, RegNS", "OFF", "Release", True, "", ""),
                     # psoc64_GCC_2_RegS_RegNS_Release
                     ("cypress/psoc64", "GCC_10_3", "2",
@@ -906,6 +922,21 @@ config_b_u585i_iot02a = {"seed_params": {
                 "invalid": _common_tfm_invalid_configs + []
                 }
 
+config_stm32h573i_dk = {"seed_params": {
+                "tfm_platform":     ["stm/stm32h573i_dk"],
+                "compiler":         ["GCC_10_3", "ARMCLANG_6_21"],
+                "isolation_level":  ["1", "2"],
+                "test_regression":  ["OFF", "RegS, RegNS"],
+                "test_psa_api":     ["OFF"],
+                "cmake_build_type": ["Release"],
+                "with_bl2":         [True],
+                "profile":          [""],
+                "extra_params":     [""]
+                },
+                "common_params": _common_tfm_builder_cfg,
+                "invalid": _common_tfm_invalid_configs + []
+                }
+
 config_nucleo_l552ze_q = {"seed_params": {
                 "tfm_platform":     ["stm/nucleo_l552ze_q"],
                 "compiler":         ["GCC_10_3"],
@@ -1125,6 +1156,7 @@ _builtin_configs = {
                     "nightly_psoc64": config_psoc64,
                     "nightly_stm32l562e_dk": config_stm32l562e_dk,
                     "nightly_b_u585i_iot02a": config_b_u585i_iot02a,
+                    "nightly_stm32h573i_dk": config_stm32h573i_dk,
                     "nightly_lpcxpresso55s69": config_lpcxpresso55s69,
 
                     # release test groups
@@ -1147,6 +1179,7 @@ _builtin_configs = {
                     "release_psoc64": config_psoc64,
                     "release_stm32l562e_dk": config_stm32l562e_dk,
                     "release_b_u585i_iot02a": config_b_u585i_iot02a,
+                    "release_stm32h573i_dk": config_stm32h573i_dk,
                     "release_lpcxpresso55s69": config_lpcxpresso55s69,
 
                     # code coverage test groups
@@ -1177,6 +1210,7 @@ _builtin_configs = {
                     "corstone1000": config_corstone1000,
                     "stm_stm32l562e_dk": config_stm32l562e_dk,
                     "stm_b_u585i_iot02a": config_b_u585i_iot02a,
+                    "stm_stm32h573i_dk": config_stm32h573i_dk,
                     "stm_nucleo_l552ze_q": config_nucleo_l552ze_q,
                     "nxp_lpcxpresso55s69": config_lpcxpresso55s69,
                     "laird_bl5340": config_bl5340,
