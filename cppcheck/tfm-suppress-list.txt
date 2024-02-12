@@ -1,5 +1,5 @@
 //-------------------------------------------------------------------------------
-// Copyright (c) 2018-2022, Arm Limited and Contributors. All rights reserved.
+// Copyright (c) 2018-2024, Arm Limited and Contributors. All rights reserved.
 //
 // SPDX-License-Identifier: BSD-3-Clause
 //
@@ -55,6 +55,7 @@ missingInclude:*/tfm_secure_api.h:11
 *:*/mcuboot/*
 *:*/mbedtls/*
 *:lib/ext/qcbor-src/*
+*:lib/ext/cmsis-src/*
 
 //cppcheck shouldn't complain about unused function.
 unusedFunction
