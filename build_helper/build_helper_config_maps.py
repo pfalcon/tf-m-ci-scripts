@@ -24,7 +24,7 @@ mapPlatform = {
     "arm/musca_s1"                       : "MUSCA_S1",
     "arm/corstone1000"                   : "corstone1000",
     "arm/mps3/corstone310/fvp"           : "corstone310",
-    "arm/rss/tc"                         : "RSS",
+    "arm/rse/tc"                         : "RSE",
     "cypress/psoc64"                     : "psoc64",
     "lairdconnectivity/bl5340_dvk_cpuapp": "BL5340",
     "nordic_nrf/nrf5340dk_nrf5340_cpuapp": "nrf5340dk",

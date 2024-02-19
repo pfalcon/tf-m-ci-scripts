@@ -299,8 +299,8 @@ config_pp_test = {"seed_params": {
                     # MUSCA_S1_GCC_1_RegBL2_RegS_RegNS_Release_BL2_CC_DRIVER_PSA
                     ("arm/musca_s1", "GCC_10_3", "1",
                      "RegBL2, RegS, RegNS", "OFF", "Release", True, "", "CC_DRIVER_PSA"),
-                    # RSS_TC_GCC_2_Release_BL2_PSOFF
-                    ("arm/rss/tc", "GCC_10_3", "2",
+                    # RSE_TC_GCC_2_Release_BL2_PSOFF
+                    ("arm/rse/tc", "GCC_10_3", "2",
                      "RegS, RegNS", "OFF", "Release", True, "", "PSOFF"),
                     # stm32l562e_dk_ARMCLANG_1_RegS_RegNS_Release_BL2_CRYPTO_OFF
                     ("stm/stm32l562e_dk", "ARMCLANG_6_21", "1",
@@ -817,8 +817,8 @@ config_corstone310 = {"seed_params": {
                 "invalid": _common_tfm_invalid_configs + []
                 }
 
-config_rss = {"seed_params": {
-                "tfm_platform":     ["arm/rss/tc"],
+config_rse = {"seed_params": {
+                "tfm_platform":     ["arm/rse/tc"],
                 "compiler":         ["GCC_10_3"],
                 "isolation_level":  ["1", "2"],
                 "test_regression":  ["OFF", "RegBL2, RegS, RegNS"],
@@ -830,8 +830,8 @@ config_rss = {"seed_params": {
                 },
                 "common_params": _common_tfm_builder_cfg,
                 "invalid": _common_tfm_invalid_configs + [
-                    # BL2 is too large for RSS in Debug builds with tests
-                    ("arm/rss/tc", "GCC_10_3", "*", "RegBL2, RegS, RegNS", "*",
+                    # BL2 is too large for RSE in Debug builds with tests
+                    ("arm/rse/tc", "GCC_10_3", "*", "RegBL2, RegS, RegNS", "*",
                      "Debug", True, "*", "*"),
                 ]
                 }
@@ -1121,7 +1121,7 @@ _builtin_configs = {
                     "nightly_cs300_fvp": config_cs300_fvp,
                     "nightly_corstone310": config_corstone310,
                     "nightly_corstone1000": config_corstone1000,
-                    "nightly_rss": config_rss,
+                    "nightly_rse": config_rse,
                     "nightly_psoc64": config_psoc64,
 # remove a broken platfrom temporary "nightly_stm32l562e_dk": config_stm32l562e_dk,
                     "nightly_b_u585i_iot02a": config_b_u585i_iot02a,
@@ -1143,7 +1143,7 @@ _builtin_configs = {
                     "release_cs300_an552": config_cs300_an552,
                     "release_cs300_fvp": config_cs300_fvp,
                     "release_corstone310": config_corstone310,
-                    "release_rss": config_rss,
+                    "release_rse": config_rse,
                     "release_psoc64": config_psoc64,
 # remove a broken platfrom temporary "release_stm32l562e_dk": config_stm32l562e_dk,
                     "release_b_u585i_iot02a": config_b_u585i_iot02a,
@@ -1172,7 +1172,7 @@ _builtin_configs = {
                     "musca_b1": config_musca_b1,
                     "musca_s1": config_musca_s1,
                     "corstone310": config_corstone310,
-                    "rss": config_rss,
+                    "rse": config_rse,
                     "cypress_psoc64": config_psoc64,
                     "corstone1000": config_corstone1000,
 # remove a broken platfrom temporary "stm_stm32l562e_dk": config_stm32l562e_dk,
