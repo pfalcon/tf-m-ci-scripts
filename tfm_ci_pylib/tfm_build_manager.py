@@ -415,8 +415,8 @@ class TFM_Build_Manager(structuredTask):
             overwrite_params["spe_root_dir"] = build_cfg["codebase_root_dir"] + "/../tf-m-tests/tests_psa_arch/spe"
             overwrite_params["nspe_root_dir"] = build_cfg["codebase_root_dir"] + "/../tf-m-tests/tests_psa_arch"
         elif "PROF" in i.extra_params:
-            overwrite_params["spe_root_dir"] = build_cfg["codebase_root_dir"]
-            overwrite_params["nspe_root_dir"] = build_cfg["codebase_root_dir"] + "/../tf-m-tools/profiling/profiling_cases/tfm_profiling"
+            overwrite_params["spe_root_dir"] = build_cfg["codebase_root_dir"] + "/../tf-m-tests/tests_reg/spe"
+            overwrite_params["nspe_root_dir"] = build_cfg["codebase_root_dir"] + "/../tf-m-tests/tests_reg"
 
         # Overwrite commands for building TF-M image
         build_cfg["spe_config_template"] %= overwrite_params
