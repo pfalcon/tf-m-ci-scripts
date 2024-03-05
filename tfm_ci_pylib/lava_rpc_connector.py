@@ -185,7 +185,7 @@ class LAVA_RPC_connector(xmlrpc.client.ServerProxy, object):
 
         try:
             if not self.validate_job_yaml(job_definition):
-                print("Served rejected job's syntax")
+                _log.error("Server rejected job's syntax")
                 raise Exception("Invalid job")
             with open(job_definition, "r") as F:
                 job_data = F.read()
