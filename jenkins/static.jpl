@@ -1,6 +1,6 @@
 #!/usr/bin/env groovy
 //-------------------------------------------------------------------------------
-// Copyright (c) 2020-2021, Arm Limited and Contributors. All rights reserved.
+// Copyright (c) 2020-2024, Arm Limited and Contributors. All rights reserved.
 //
 // SPDX-License-Identifier: BSD-3-Clause
 //
@@ -34,7 +34,7 @@ def trigger(job_name) {
 def status = 1
 
 timestamps {
-  node("docker-amd64-tf-m-bionic") {
+  node("docker-amd64-tf-m-jammy") {
     stage("Init") {
       cleanWs()
       dir("tf-m-ci-scripts") {
