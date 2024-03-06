@@ -21,10 +21,12 @@ __project__ = "Trusted Firmware-M Open CI"
 __version__ = "1.4.0"
 
 import xmlrpc.client
+import os
 import time
 import yaml
 import requests
 import shutil
+import subprocess
 import logging
 
 
@@ -194,6 +196,23 @@ class LAVA_RPC_connector(xmlrpc.client.ServerProxy, object):
                   job_definition)
             print(e)
             return None, None
+
+        device_type = self.device_type_from_def(job_data)
+
+        if device_type == "fvp" and os.environ["USE_TUXSUITE_FVP"] == "1":
+            output = subprocess.check_output(
+                "python3 -u -m tuxsuite test submit --no-wait --device fvp-lava --job-definition %s" % job_definition,
+                shell=True,
+            )
+
+            job_id = job_url = None
+            for l in output.decode().split("\n"):
+                _log.debug(l)
+                if l.startswith("uid:"):
+                    job_id = l.split(None, 1)[1].strip()
+                    job_url = "https://tuxapi.tuxsuite.com/v1/groups/tfc/projects/ci/tests/" + job_id
+            return (job_id, job_url)
+
         try:
             if self.has_device_type(job_data):
                 job_id = self.scheduler.submit_job(job_data)
