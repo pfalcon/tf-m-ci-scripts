@@ -10,7 +10,7 @@
 import org.trustedfirmware.Gerrit
 
 timestamps {
-  node("docker-amd64-tf-m-bionic") {
+  node("docker-amd64-tf-m-jammy") {
     // Clone TF-M repositories so share folder can be reused by downstream jobs
     stage("Init") {
       cleanWs()

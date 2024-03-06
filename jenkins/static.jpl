@@ -34,7 +34,7 @@ def trigger(job_name) {
 def status = 1
 
 timestamps {
-  node("docker-amd64-tf-m-bionic") {
+  node("docker-amd64-tf-m-jammy") {
     stage("Init") {
       cleanWs()
       dir("tf-m-ci-scripts") {

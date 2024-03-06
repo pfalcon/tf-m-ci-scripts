@@ -322,7 +322,7 @@ def builds = [:]
 def results = [:]
 
 timestamps {
-  node("docker-amd64-tf-m-bionic") {
+  node("docker-amd64-tf-m-jammy") {
     stage("Init") {
       cleanWs()
       dir("tf-m-ci-scripts") {

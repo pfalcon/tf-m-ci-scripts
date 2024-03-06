@@ -9,7 +9,7 @@
 @Library('trustedfirmware') _
 import org.trustedfirmware.Gerrit
 
-def nodeLabel = "docker-amd64-tf-m-bionic"
+def nodeLabel = "docker-amd64-tf-m-jammy"
 
 @NonCPS
 def getUpstreamJob() {
