@@ -85,7 +85,7 @@ timestamps {
           } catch (Exception ex) {
             print("LAVA-Submit failed! Exception: ${ex}")
             print("Try to submit again...")
-            sleep(i * 3000)
+            sleep(i * 10)
           }
         }
         if (!success) {
