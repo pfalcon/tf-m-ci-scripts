@@ -1,6 +1,6 @@
 #!/usr/bin/env groovy
 //-------------------------------------------------------------------------------
-// Copyright (c) 2020-2022, Arm Limited and Contributors. All rights reserved.
+// Copyright (c) 2020-2024, Arm Limited and Contributors. All rights reserved.
 //
 // SPDX-License-Identifier: BSD-3-Clause
 //
@@ -9,7 +9,7 @@
 @Library('trustedfirmware') _
 import org.trustedfirmware.Gerrit
 
-def nodeLabel = "docker-amd64-tf-m-bionic"
+def nodeLabel = "docker-amd64-tf-m-jammy"
 
 @NonCPS
 def getUpstreamJob() {
