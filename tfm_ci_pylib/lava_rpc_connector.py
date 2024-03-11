@@ -23,6 +23,7 @@ __version__ = "1.4.0"
 import xmlrpc.client
 import os
 import time
+import json
 import yaml
 import requests
 import shutil
@@ -73,6 +74,14 @@ class LAVA_RPC_connector(xmlrpc.client.ServerProxy, object):
 
         cmd = "self.%s(%s)" % (cmd, params if params else "")
         return eval(cmd)
+
+    @staticmethod
+    def is_tux_id(job_id):
+        job_id = str(job_id)
+        if job_id.isdigit() and len(job_id) < 22:
+            return False
+        else:
+            return True
 
     def ls_cmd(self):
         """ Return a list of supported commands """
@@ -129,6 +138,19 @@ class LAVA_RPC_connector(xmlrpc.client.ServerProxy, object):
         self.fetch_file(config_url, config_out_file)
 
     def get_job_info(self, job_id, yaml_out_file=None):
+        if self.is_tux_id(job_id):
+            assert yaml_out_file is None
+            job_info = subprocess.check_output(
+                "python3 -u -m tuxsuite test get --json %s" % job_id,
+                shell=True,
+            )
+            job_info = json.loads(job_info.decode())
+            # Convert a bit to match LAVA output, as expected by
+            # the rest of code.
+            job_info["state"] = job_info["state"].capitalize()
+            job_info["health"] = {"pass": "Complete"}.get(job_info["result"], job_info["result"])
+            return job_info
+
         job_info = self.scheduler.jobs.show(job_id)
         if yaml_out_file:
             with open(yaml_out_file, "w") as F:
