@@ -112,10 +112,16 @@ class LAVA_RPC_connector(xmlrpc.client.ServerProxy, object):
         return def_o
 
     def get_job_log(self, job_id, target_out_file):
-        auth_headers = {"Authorization": "Token %s" % self.token}
-        log_url = "{server_url}/jobs/{job_id}/logs/".format(
-            server_url=self.server_api, job_id=job_id
-        )
+        if self.is_tux_id(job_id):
+            auth_headers = {}
+            log_url = "https://storage.tuxsuite.com/public/tfc/ci/tests/{job_id}/lava-logs.yaml".format(
+                job_id=job_id
+            )
+        else:
+            auth_headers = {"Authorization": "Token %s" % self.token}
+            log_url = "{server_url}/jobs/{job_id}/logs/".format(
+                server_url=self.server_api, job_id=job_id
+            )
         with requests.get(log_url, stream=True, headers=auth_headers) as r:
             r.raise_for_status()
             log_list = yaml.load(r.content, Loader=yaml.SafeLoader)
