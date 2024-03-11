@@ -202,7 +202,7 @@ class LAVA_RPC_connector(xmlrpc.client.ServerProxy, object):
             else:
                 raise Exception("No devices online with required device_type")
         except Exception as e:
-            print(e)
+            _log.exception("Exception submitting job to LAVA", e)
             return(None, None)
 
     def resubmit_job(self, job_id):
