@@ -144,6 +144,7 @@ class LAVA_RPC_connector(xmlrpc.client.ServerProxy, object):
                 "python3 -u -m tuxsuite test get --json %s" % job_id,
                 shell=True,
             )
+            _log.info("tuxsuite test get %s: %s", job_id, job_info.decode())
             job_info = json.loads(job_info.decode())
             # Convert a bit to match LAVA output, as expected by
             # the rest of code.
