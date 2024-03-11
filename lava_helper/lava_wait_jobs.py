@@ -34,7 +34,6 @@ _log = logging.getLogger("lavaci")
 
 def wait_for_jobs(user_args):
     job_list = user_args.job_ids.split(",")
-    job_list = [int(x) for x in job_list if x != '']
     lava = test_lava_dispatch_credentials(user_args)
     finished_jobs = get_finished_jobs(job_list, user_args, lava)
     resubmit_jobs = resubmit_failed_jobs(finished_jobs, user_args)
@@ -86,7 +85,6 @@ def resubmit_failed_jobs(jobs, user_args):
     for failed_job_id in failed_job:
         jobs.pop(failed_job_id)
     resubmitted_jobs = submit_lava_jobs(user_args, job_dir='failed_jobs')
-    resubmitted_jobs = [int(x) for x in resubmitted_jobs if x != '']
     return resubmitted_jobs
 
 def fetch_artifacts(jobs, user_args, lava):
