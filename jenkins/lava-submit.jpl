@@ -65,6 +65,9 @@ timestamps {
       cleanWs()
       dir("tf-m-ci-scripts") {
         checkout([$class: 'GitSCM', branches: [[name: '$CI_SCRIPTS_BRANCH']], userRemoteConfigs: [[credentialsId: 'GIT_SSH_KEY', url: '$CI_SCRIPTS_REPO']]])
+        withCredentials([string(credentialsId: 'TUXSUITE_TOKEN', variable: 'TUXSUITE_TOKEN')]) {
+          sh "jenkins/tuxsuite-setup.sh"
+        }
       }
     }
     stage("LAVA") {
