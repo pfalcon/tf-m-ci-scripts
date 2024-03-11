@@ -55,7 +55,7 @@ def coverage_reports(jobs, user_args):
                     os.path.join(job_dir, os.path.basename(fname))
                 )
 
-            _log.info("Producing coverage report for job %d", job_id)
+            _log.info("Producing coverage report for job %s", job_id)
             dl_artifact("spe/bin/bl2.axf")
             dl_artifact("spe/bin/tfm_s.axf")
             dl_artifact("nspe/bin/tfm_ns.axf")

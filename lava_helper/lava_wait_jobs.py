@@ -75,7 +75,7 @@ def resubmit_failed_jobs(jobs, user_args):
     for job_id, info in jobs.items():
         if not (info['health'] == "Complete" and info['state'] == "Finished"):
             _log.warning(
-                "Will resubmit job %d because of its state: %s, health: %s",
+                "Will resubmit job %s because of its state: %s, health: %s",
                 job_id, info["state"], info["health"]
             )
             job_dir = info['job_dir']
