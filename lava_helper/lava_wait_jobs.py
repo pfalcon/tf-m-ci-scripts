@@ -102,8 +102,8 @@ def fetch_artifacts(jobs, user_args, lava):
                 target_log = os.path.join(job_dir, 'target_log.txt')
                 config = os.path.join(job_dir, 'config.tar.bz2')
                 results_file = os.path.join(job_dir, 'results.yaml')
-                definition = lava.get_job_definition(job_id, def_path)
-                jobs[job_id]['metadata'] = definition.get('metadata', [])
+                definition = lava.get_job_definition(job_id, info, def_path)
+                jobs[job_id]['metadata'] = definition.get('metadata', {})
                 time.sleep(0.2) # be friendly to LAVA
                 lava.get_job_log(job_id, target_log)
                 time.sleep(0.2)

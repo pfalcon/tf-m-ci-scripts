@@ -106,11 +106,15 @@ class LAVA_RPC_connector(xmlrpc.client.ServerProxy, object):
         results_url = "{}/yaml".format(self.server_results_prefix % job_id)
         return(self.fetch_file(results_url, yaml_out_file))
 
-    def get_job_definition(self, job_id, yaml_out_file=None):
+    def get_job_definition(self, job_id, job_info, yaml_out_file=None):
         if self.is_tux_id(job_id):
-            return {}
+            url = job_info["extra"]["download_url"] + job_info["extra"]["job_definition"]
+            with requests.get(url) as r:
+                r.raise_for_status()
+                job_def = r.text
+        else:
+            job_def = self.scheduler.jobs.definition(job_id)
 
-        job_def = self.scheduler.jobs.definition(job_id)
         if yaml_out_file:
             with open(yaml_out_file, "w") as F:
                 F.write(str(job_def))
