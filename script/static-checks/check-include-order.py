@@ -173,7 +173,7 @@ def patch_is_correct(base_commit, end_commit):
     if gitlog.returncode != 0:
         return False
 
-    gitlines = gitlog.stdout.decode("utf-8").splitlines()
+    gitlines = gitlog.stdout.decode("utf-8", "replace").splitlines()
     all_files_correct = True
     for commit, comlines in group_commits(gitlines):
         for path, lines in group_files(comlines):
