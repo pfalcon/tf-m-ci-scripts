@@ -52,7 +52,7 @@ else
     "$CI_ROOT"/script/static-checks/static-checks-include-order.sh .
 fi
 if [ "$?" != 0 ]; then
-  echo "Include order test: FAILURE"
+  echo "Include order test: FAILURE (warning)"
   ((WARNING_COUNT++))
 else
   echo "Include order test: PASS"
