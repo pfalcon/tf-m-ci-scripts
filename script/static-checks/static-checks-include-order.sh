@@ -7,6 +7,8 @@
 
 # unittest-include-order.sh <path-to-root-folder> [patch]
 
+set -o pipefail
+
 LOG_FILE=$(mktemp -t include-order-check.XXXX)
 
 if [[ "$2" == "patch" ]]; then
