@@ -99,11 +99,11 @@ class LAVA_RPC_connector(xmlrpc.client.ServerProxy, object):
                 shutil.copyfileobj(r.raw, f)
         return(out_file)
 
-    def get_job_results(self, job_id, yaml_out_file):
+    def get_job_results(self, job_id, job_info, yaml_out_file):
         if self.is_tux_id(job_id):
-            return
-
-        results_url = "{}/yaml".format(self.server_results_prefix % job_id)
+            results_url = job_info["extra"]["download_url"] + "lava-results.yaml"
+        else:
+            results_url = "{}/yaml".format(self.server_results_prefix % job_id)
         return(self.fetch_file(results_url, yaml_out_file))
 
     def get_job_definition(self, job_id, job_info, yaml_out_file=None):
