@@ -24,7 +24,7 @@ import logging
 import json
 from xmlrpc.client import ProtocolError
 from jinja2 import Environment, FileSystemLoader
-from lava_helper import test_lava_dispatch_credentials
+from lava_helper import test_lava_dispatch_credentials, LAVA_RPC_connector
 from lava_submit_jobs import submit_lava_jobs
 import codecov_helper
 
@@ -125,7 +125,10 @@ def fetch_artifacts(jobs, user_args, lava):
 
 
 def lava_id_to_url(id, user_args):
-    return "{}/scheduler/job/{}".format(user_args.lava_url, id)
+    if LAVA_RPC_connector.is_tux_id(id):
+        return "https://tuxapi.tuxsuite.com/v1/groups/tfc/projects/ci/tests/{}".format(id)
+    else:
+        return "{}/scheduler/job/{}".format(user_args.lava_url, id)
 
 def job_links(jobs, user_args):
     job_links = ""
