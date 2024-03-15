@@ -133,6 +133,7 @@ def lava_id_to_url(id, user_args):
 def job_links(jobs, user_args):
     job_links = ""
     for job, info in jobs.items():
+        _log.info("info: %s", info)
         job_links += "\nLAVA Test Config:\n"
         job_links += "Config Name: {}\n".format(info['metadata']['build_name'])
         job_links += "Test Result: {}\n".format(info['result'])
