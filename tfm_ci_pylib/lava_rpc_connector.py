@@ -169,6 +169,10 @@ class LAVA_RPC_connector(xmlrpc.client.ServerProxy, object):
             # the rest of code.
             job_info["state"] = job_info["state"].capitalize()
             job_info["health"] = {"pass": "Complete"}.get(job_info["result"], job_info["result"])
+            # There's no "job_name" aka "description" in Tux data, but we utilize
+            # the fact that it's included in the original name of the job definition
+            # file, that info included in the Tux data.
+            job_info["description"] = job_info["extra"]["job_definition"].split("/", 1)[1].split(".", 1)[0]
             return job_info
 
         job_info = self.scheduler.jobs.show(job_id)
