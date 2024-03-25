@@ -87,40 +87,49 @@ def resubmit_failed_jobs(jobs, user_args):
     resubmitted_jobs = submit_lava_jobs(user_args, job_dir='failed_jobs')
     return resubmitted_jobs
 
+
+def fetch_artifacts_for_job(job_id, info, user_args, lava):
+    if not user_args.artifacts_path:
+        return
+    job_dir = info['job_dir']
+    t = time.time()
+
+    retry_delay = 3
+    for retry in range(3, 0, -1):
+        try:
+            os.makedirs(job_dir, exist_ok=True)
+            def_path = os.path.join(job_dir, 'definition.yaml')
+            target_log = os.path.join(job_dir, 'target_log.txt')
+            config = os.path.join(job_dir, 'config.tar.bz2')
+            results_file = os.path.join(job_dir, 'results.yaml')
+            definition = lava.get_job_definition(job_id, info, def_path)
+            info['metadata'] = definition.get('metadata', {})
+            time.sleep(0.2) # be friendly to LAVA
+            lava.get_job_log(job_id, target_log)
+            time.sleep(0.2)
+            lava.get_job_config(job_id, config)
+            time.sleep(0.2)
+            lava.get_job_results(job_id, info, results_file)
+            break
+        except (ProtocolError, IOError, yaml.error.YAMLError) as e:
+            if retry == 1:
+                raise
+            else:
+                _log.warning("fetch_artifacts(%s): Error %r occurred, retrying", job_id, e)
+                time.sleep(retry_delay)
+                retry_delay *= 2
+
+    _log.info("Fetched artifacts for job %s in %ds", job_id, time.time() - t)
+    codecov_helper.extract_trace_data(target_log, job_dir)
+
+
 def fetch_artifacts(jobs, user_args, lava):
     if not user_args.artifacts_path:
         return
+
     for job_id, info in jobs.items():
-        job_dir = info['job_dir']
-        t = time.time()
+        fetch_artifacts_for_job(job_id, info, user_args, lava)
 
-        retry_delay = 3
-        for retry in range(3, 0, -1):
-            try:
-                os.makedirs(job_dir, exist_ok=True)
-                def_path = os.path.join(job_dir, 'definition.yaml')
-                target_log = os.path.join(job_dir, 'target_log.txt')
-                config = os.path.join(job_dir, 'config.tar.bz2')
-                results_file = os.path.join(job_dir, 'results.yaml')
-                definition = lava.get_job_definition(job_id, info, def_path)
-                jobs[job_id]['metadata'] = definition.get('metadata', {})
-                time.sleep(0.2) # be friendly to LAVA
-                lava.get_job_log(job_id, target_log)
-                time.sleep(0.2)
-                lava.get_job_config(job_id, config)
-                time.sleep(0.2)
-                lava.get_job_results(job_id, info, results_file)
-                break
-            except (ProtocolError, IOError, yaml.error.YAMLError) as e:
-                if retry == 1:
-                    raise
-                else:
-                    _log.warning("fetch_artifacts(%s): Error %r occurred, retrying", job_id, e)
-                    time.sleep(retry_delay)
-                    retry_delay *= 2
-
-        _log.info("Fetched artifacts for job %s in %ds", job_id, time.time() - t)
-        codecov_helper.extract_trace_data(target_log, job_dir)
     return(jobs)
 
 
