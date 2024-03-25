@@ -396,7 +396,7 @@ timestamps {
             }
             withCredentials([usernamePassword(credentialsId: env.LAVA_CREDENTIALS, passwordVariable: 'LAVA_TOKEN', usernameVariable: 'LAVA_USER')]) {
               sh(script: """./tf-m-ci-scripts/lava_helper/lava_wait_jobs.py --job-ids ${all_jobs.join(",")} \
-                         --lava-url ${env.LAVA_URL} --lava-user ${LAVA_USER} --lava-token ${LAVA_TOKEN} \
+                         --lava-url ${env.LAVA_URL} --lava-user \${LAVA_USER} --lava-token \${LAVA_TOKEN} \
                          --artifacts-path cfgs --lava-timeout ${lava_timeout} > output.log
                          """)
               if (env.CODE_COVERAGE_EN == "TRUE") {
