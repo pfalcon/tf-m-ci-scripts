@@ -12,7 +12,7 @@ __copyright__ = """
  """
 
 """
-Script for waiting for LAVA jobs and parsing the results
+Script for waiting for device test backend (LAVA/Tux) jobs and parsing the results
 """
 
 import os
@@ -50,7 +50,7 @@ def process_finished_jobs(finished_jobs, user_args):
     codecov_helper.coverage_reports(finished_jobs, user_args)
 
 def get_finished_jobs(job_list, user_args, lava):
-    _log.info("Waiting for %d LAVA jobs", len(job_list))
+    _log.info("Waiting for %d LAVA/Tux jobs", len(job_list))
     finished_jobs = lava.block_wait_for_jobs(job_list, user_args.dispatch_timeout, 5)
     unfinished_jobs = [item for item in job_list if item not in finished_jobs]
     for job in unfinished_jobs:
@@ -203,7 +203,7 @@ def render_jinja(data):
 
 def print_lava_urls(jobs, user_args):
     output = [lava_id_to_url(x, user_args) for x in jobs]
-    info_print("LAVA jobs triggered for this build: {}".format(output))
+    info_print("LAVA/Tux jobs triggered for this build: {}".format(output))
 
 
 def info_print(line, silent=True):
