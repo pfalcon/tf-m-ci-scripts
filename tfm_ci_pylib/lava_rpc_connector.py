@@ -297,7 +297,7 @@ class LAVA_RPC_connector(xmlrpc.client.ServerProxy, object):
                 break
         return self.scheduler.job_health(job_id)["job_health"]
 
-    def block_wait_for_jobs(self, job_ids, timeout, poll_freq=10):
+    def block_wait_for_jobs(self, job_ids, timeout, poll_freq=10, callback=None):
         """ Wait for multiple LAVA job ids to finish and return finished list """
 
         start_t = int(time.time())
@@ -332,6 +332,8 @@ class LAVA_RPC_connector(xmlrpc.client.ServerProxy, object):
                         cur_status['health'],
                         len(job_ids) - len(finished_jobs)
                     )
+                    if callback:
+                        callback(job_id, cur_status)
                 if len(job_ids) == len(finished_jobs):
                     break
                 else:

@@ -51,7 +51,20 @@ def process_finished_jobs(finished_jobs, user_args):
 
 def get_finished_jobs(job_list, user_args, lava):
     _log.info("Waiting for %d LAVA/Tux jobs", len(job_list))
-    finished_jobs = lava.block_wait_for_jobs(job_list, user_args.dispatch_timeout, 5)
+
+    fetched_artifacts = set()
+
+    def inline_fetch_artifacts(job_id, info):
+        try:
+            if user_args.artifacts_path:
+                info['job_dir'] = os.path.join(user_args.artifacts_path, "{}_{}".format(job_id, info['description']))
+            fetch_artifacts_for_job(job_id, info, user_args, lava)
+            fetched_artifacts.add(job_id)
+        except Exception as e:
+            _log.exception("")
+            _log.warning("Failed to fetch artifacts for job %s inline, will retry later", job_id)
+
+    finished_jobs = lava.block_wait_for_jobs(job_list, user_args.dispatch_timeout, 5, callback=inline_fetch_artifacts)
     unfinished_jobs = [item for item in job_list if item not in finished_jobs]
     for job in unfinished_jobs:
         _log.info("Cancelling unfinished job %d because of timeout.", job)
@@ -61,8 +74,9 @@ def get_finished_jobs(job_list, user_args, lava):
     if user_args.artifacts_path:
         for job, info in finished_jobs.items():
             info['job_dir'] = os.path.join(user_args.artifacts_path, "{}_{}".format(str(job), info['description']))
-            finished_jobs[job] = info
-    finished_jobs = fetch_artifacts(finished_jobs, user_args, lava)
+        to_fetch = {job_id: info for job_id, info in finished_jobs.items() if job_id not in fetched_artifacts}
+        _log.info("Fetching artifacts for remaining jobs: %s", to_fetch.keys())
+        fetch_artifacts(to_fetch, user_args, lava)
     return finished_jobs
 
 def resubmit_failed_jobs(jobs, user_args):
@@ -129,8 +143,6 @@ def fetch_artifacts(jobs, user_args, lava):
 
     for job_id, info in jobs.items():
         fetch_artifacts_for_job(job_id, info, user_args, lava)
-
-    return(jobs)
 
 
 def lava_id_to_url(id, user_args):
