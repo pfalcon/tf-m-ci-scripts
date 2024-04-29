@@ -114,8 +114,10 @@ TFM_TOOLS_PROJECT="${TFM_TOOLS_URL:-}"
 TFM_TOOLS_REFSPEC="${TFM_TOOLS_REFSPEC:-"$(parse_version lib/ext/tf-m-tools/CMakeLists.txt set\(TFM_TOOLS_VERSION \" 2)"}"
 TFM_TOOLS_NAME="tf-m-tools"
 
-QA_TOOLS_PROJECT="https://review.trustedfirmware.org/ci/qa-tools"
-QA_TOOLS_REFSPEC="openci"
+#QA_TOOLS_PROJECT="https://review.trustedfirmware.org/ci/qa-tools"
+#QA_TOOLS_REFSPEC="openci"
+QA_TOOLS_PROJECT="https://git.gitlab.arm.com/tooling/qa-tools.git"
+QA_TOOLS_REFSPEC="master"
 QA_TOOLS_NAME="qa-tools"
 
 # Array containing "<repo url>;"<repo name>;<refspec>" elements
