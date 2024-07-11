@@ -17,7 +17,6 @@ context:
 
 actions:
 - deploy:
-    namespace: docker
     to: fvp
     images:
 {% for name, img in binaries.items() %}
@@ -26,7 +25,6 @@ actions:
 {% endfor %}
 - boot:
     failure_retry: 3
-    namespace: docker
     method: fvp
     docker:
       name: {{ docker_prefix }}/fvp:fvp_tc2_0.0_8294_linux64
@@ -57,7 +55,6 @@ actions:
     - '(.*)'
 
 - test:
-    namespace: target
     monitors:
     {%- for monitor in monitors %}
     - name: "{{monitor.name}}"
